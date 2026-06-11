@@ -108,10 +108,13 @@
   #killBanner .kb-title{font-size:clamp(18px,4vw,28px); font-weight:900; color:#ffd24a; letter-spacing:.06em;}
   #killBanner .kb-gold{font-size:14px; color:var(--gold); margin-top:2px;}
 
-  /* ===== NEXT BOSS BUTTON ===== */
-  #nextBossBtn{display:none; margin-top:5px; padding:5px 10px; background:#7a4ab0; color:#fff;
-    border:1px solid #9a6ad0; border-radius:7px; font-weight:700; font-size:12px; cursor:pointer; width:100%;}
+  /* ===== BOSS NAV BUTTONS ===== */
+  #nextBossBtn,#prevBossBtn{display:none; margin-top:5px; padding:5px 10px; color:#fff;
+    border-radius:7px; font-weight:700; font-size:12px; cursor:pointer; width:100%;}
+  #nextBossBtn{background:#7a4ab0; border:1px solid #9a6ad0;}
   #nextBossBtn:hover{background:#8a5ac0;}
+  #prevBossBtn{background:var(--panel2); border:1px solid var(--line); color:var(--txt);}
+  #prevBossBtn:hover{border-color:var(--accent);}
 
   /* ===== HUD ===== */
   #hud{position:absolute; top:10px; left:10px; z-index:10;
@@ -179,7 +182,8 @@
   </div>
   <div id="stageTag">討伐数 <b id="stStage">1</b><br><span id="stWave">BOSS 1/11</span>
     <br><span style="color:var(--sub)" id="stPres"></span>
-    <button id="nextBossBtn">次のボスへ ▶</button></div>
+    <button id="nextBossBtn">次のボスへ ▶</button>
+    <button id="prevBossBtn">◀ 前のボスへ</button></div>
   <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
 
   <div id="bossPlate">
@@ -266,13 +270,13 @@ const BOSS=[
 // pos = fixed battlefield position (left/bottom %) to avoid overlap
 const UNITS=[
  {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:42,b:12}},
- {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:31,b:14}},
+ {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:31,b:14}, flip:true},
  {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:48,b:14}},
- {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:20,b:17}},
+ {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:20,b:17}, flip:true},
  {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:54,b:11}},
  {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:37,b:11}},
- {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:25,b:20}},
- {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}},
+ {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:25,b:20}, flip:true},
+ {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, flip:true},
  {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:13}},
  {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:6, b:24}},
  {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:14,b:27}},
@@ -352,6 +356,7 @@ function updateStageTag(){
    nb.style.display="block";
    nb.textContent=S.bossWave>=BOSS.length?"最初のボスへ ▶":"次のボスへ ▶";
  } else { nb.style.display="none"; }
+ $("#prevBossBtn").style.display=S.bossWave>1?"block":"none";
 }
 
 function dealDamage(amt,x,y,kind,gold){
@@ -386,6 +391,11 @@ function killBoss(){
 
 $("#nextBossBtn").addEventListener("click",()=>{
  S.bossWave=S.bossWave>=BOSS.length?1:S.bossWave+1;
+ spawnBoss(true); renderCards(); updateHud(); save();
+});
+$("#prevBossBtn").addEventListener("click",()=>{
+ if(S.bossWave<=1) return;
+ S.bossWave--;
  spawnBoss(true); renderCards(); updateHud(); save();
 });
 
@@ -490,7 +500,7 @@ function renderUnits(){
   el.dataset.type=u.id;
   el.style.left=u.pos.l+"%";
   el.style.bottom=u.pos.b+"%";
-  el.innerHTML='<img src="assets/'+u.sprite+'" alt="">';
+  el.innerHTML='<img src="assets/'+u.sprite+'"'+(u.flip?' style="transform:scaleX(-1)"':'')+' alt="">';
   // level badge
   if(S.ulvl[u.id]>0){
     const b=document.createElement("div"); b.className="badge";
