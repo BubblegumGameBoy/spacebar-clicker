@@ -77,20 +77,19 @@
   .particle{position:absolute; z-index:7; width:6px; height:6px; border-radius:50%;
     background:var(--gold); pointer-events:none;}
 
-  /* ===== VICTORY OVERLAY ===== */
-  #victory{position:absolute; inset:0; z-index:20; display:none;
-    flex-direction:column; align-items:center; justify-content:center;
-    background:rgba(8,10,14,.72); backdrop-filter:blur(2px); text-align:center;}
-  #victory.on{display:flex;}
-  #victory .vtitle{font-size:clamp(28px,7vw,56px); font-weight:900; letter-spacing:.08em;
-    color:#ffd24a; text-shadow:0 3px 8px #000,0 0 16px rgba(255,180,40,.5);}
-  #victory .vboss{font-size:clamp(14px,2.6vw,20px); color:#f0e6d2; margin-top:6px; text-shadow:0 2px 4px #000;}
-  #victory .vgold{font-size:clamp(16px,3vw,24px); color:var(--gold); font-weight:700; margin:10px 0 18px;}
-  #victory .vbtns{display:flex; gap:12px; flex-wrap:wrap; justify-content:center;}
-  #victory button{padding:12px 18px; border-radius:10px; border:1px solid var(--line);
-    font-weight:700; font-size:15px; cursor:pointer;}
-  #vFarm{background:var(--panel2); color:var(--txt);}
-  #vNext{background:#7a4ab0; color:#fff; border-color:#9a6ad0;}
+  /* ===== KILL BANNER ===== */
+  #killBanner{position:absolute; top:18%; left:50%; transform:translateX(-50%); z-index:20;
+    background:rgba(10,8,4,.82); border:1px solid #f3c34a; border-radius:10px;
+    padding:8px 20px; text-align:center; pointer-events:none;
+    opacity:0; transition:opacity .25s;}
+  #killBanner.on{opacity:1;}
+  #killBanner .kb-title{font-size:clamp(18px,4vw,28px); font-weight:900; color:#ffd24a; letter-spacing:.06em;}
+  #killBanner .kb-gold{font-size:14px; color:var(--gold); margin-top:2px;}
+
+  /* ===== NEXT BOSS BUTTON ===== */
+  #nextBossBtn{display:none; margin-top:5px; padding:5px 10px; background:#7a4ab0; color:#fff;
+    border:1px solid #9a6ad0; border-radius:7px; font-weight:700; font-size:12px; cursor:pointer; width:100%;}
+  #nextBossBtn:hover{background:#8a5ac0;}
 
   /* ===== HUD ===== */
   #hud{position:absolute; top:10px; left:10px; z-index:10;
@@ -157,7 +156,8 @@
     <div class="row"><span class="k">DPS</span><span class="v" id="hDps">0</span></div>
   </div>
   <div id="stageTag">討伐数 <b id="stStage">1</b><br><span id="stWave">BOSS 1/11</span>
-    <br><span style="color:var(--sub)" id="stPres"></span></div>
+    <br><span style="color:var(--sub)" id="stPres"></span>
+    <button id="nextBossBtn">次のボスへ ▶</button></div>
   <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
 
   <div id="bossPlate">
@@ -168,14 +168,9 @@
 
   <div id="boss"><img id="bossImg" alt="boss" src="assets/boss01_rat.webp"></div>
 
-  <div id="victory">
-    <div class="vtitle">VICTORY</div>
-    <div class="vboss" id="vBoss"></div>
-    <div class="vgold" id="vGold"></div>
-    <div class="vbtns">
-      <button id="vFarm">同じボスで稼ぐ</button>
-      <button id="vNext">次のボスへ</button>
-    </div>
+  <div id="killBanner">
+    <div class="kb-title">DEFEATED!</div>
+    <div class="kb-gold" id="kbGold"></div>
   </div>
 </div>
 
@@ -254,16 +249,17 @@ const UNITS=[
 ];
 
 const HERO=[
- {id:"click",jp:"クリック強化",base:50,  scale:1.5, ef:o=>`クリックダメージ +${12*o}`},
+ {id:"click",jp:"クリック強化",base:50,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
  {id:"crate",jp:"クリティカル率",base:300, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
  {id:"cmult",jp:"クリティカル倍率",base:800,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
  {id:"gold", jp:"ゴールド獲得量",base:500, scale:1.55,ef:o=>`ゴールド +${10*o}%`},
- {id:"combo",jp:"コンボマスタリー",base:1200,scale:1.65,ef:o=>`コンボ強化 +${10*o}%`},
+ {id:"combo",jp:"ゴールドラッシュ",base:1200,scale:1.65,ef:o=>`クリック時G獲得 +${5*(o+1)}%`},
 ];
 
 let S;
 function freshState(){
  return { gold:0, globalWave:1, bossWave:1, prestige:0,
+  clearedBossWave:0,
   owned:{sword:0,arch:0,mage:0,bers:0,drag:0},
   ulvl:{sword:0,arch:0,mage:0,bers:0,drag:0},
   hero:{click:0,crate:0,cmult:0,gold:0,combo:0},
@@ -276,6 +272,7 @@ function load(){
      S.ulvl=Object.assign({sword:0,arch:0,mage:0,bers:0,drag:0},r.ulvl||{});
      S.hero=Object.assign({click:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
+     if(!S.clearedBossWave) S.clearedBossWave=0;
      return; } }catch(e){}
  S=freshState();
 }
@@ -287,14 +284,13 @@ function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); 
 function unitDmg(u){ return u.dmg*(1+0.5*S.ulvl[u.id]); }
 function unitDPS(u){ return S.owned[u.id]*unitDmg(u)/u.iv; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
-function comboMul(){ const tiers=Math.floor(combo/10); return 1+tiers*(0.15*(1+0.1*S.hero.combo)); }
-function clickDmg(){ return (8+12*S.hero.click)*(1+0.04*combo)*comboMul(); }
+function clickDmg(){ return 1+2*S.hero.click; }
 function critRate(){ return Math.min(0.6,0.05+0.02*S.hero.crate); }
 function critMul(){ return 2+0.3*S.hero.cmult; }
 function goldMul(){ return (1+0.1*S.hero.gold)*Math.pow(2,S.prestige); }
 
 let bossIndex=0, bossDead=false;
-function bossMaxHp(){ return 500*Math.pow(3.5,S.bossWave-1); }
+function bossMaxHp(){ return 250*Math.pow(3.5,S.bossWave-1); }
 function goldReward(){ return 80*Math.pow(2.2,S.bossWave-1)*goldMul(); }
 function spawnBoss(reset){
  bossDead=false;
@@ -317,6 +313,11 @@ function updateStageTag(){
  $("#stStage").textContent=S.globalWave-1;
  $("#stWave").textContent="BOSS "+S.bossWave+"/11";
  $("#stPres").textContent=S.prestige>0?("転生 ×"+Math.pow(2,S.prestige)):"";
+ const nb=$("#nextBossBtn");
+ if(S.clearedBossWave>=S.bossWave){
+   nb.style.display="block";
+   nb.textContent=S.bossWave>=BOSS.length?"最初のボスへ ▶":"次のボスへ ▶";
+ } else { nb.style.display="none"; }
 }
 
 function dealDamage(amt,x,y,kind,gold){
@@ -330,34 +331,24 @@ function dealDamage(amt,x,y,kind,gold){
 function killBoss(){
  bossDead=true; S.bossHp=0; updateBossBar();
  const g=goldReward(); S.gold+=g;
+ S.globalWave++;
+ if(S.clearedBossWave<S.bossWave) S.clearedBossWave=S.bossWave;
  bossEl.classList.add("dying");
  sndKill();
  const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
- const cx=(r.left-fr.left+r.width/2)/fr.width*100;
- const cy=(r.top-fr.top+r.height/2)/fr.height*100;
- spawnFx("explode",cx,cy);
  for(let i=0;i<14;i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
  floatDmg(g,72,16,"click",true);
  sndGold();
- setTimeout(()=>showVictory(g),720);
- save();
+ // brief banner
+ const kb=$("#killBanner"); $("#kbGold").textContent="+"+fmt(g)+" G";
+ kb.classList.add("on");
+ setTimeout(()=>kb.classList.remove("on"),1400);
+ // auto-respawn same boss
+ setTimeout(()=>{ spawnBoss(true); renderCards(); updateHud(); save(); }, 1500);
+ updateStageTag(); save();
 }
 
-function showVictory(g){
- $("#vBoss").textContent=BOSS[bossIndex].name+" を撃破！";
- $("#vGold").textContent="+"+fmt(g)+" G";
- $("#victory").classList.add("on");
- const last=S.bossWave>=BOSS.length;
- $("#vNext").textContent=last?"最初のボスへ":"次のボスへ";
-}
-function hideVictory(){ $("#victory").classList.remove("on"); }
-$("#vFarm").addEventListener("click",()=>{
- hideVictory();
- spawnBoss(true); renderCards(); updateHud(); save();
-});
-$("#vNext").addEventListener("click",()=>{
- hideVictory();
- S.globalWave++;
+$("#nextBossBtn").addEventListener("click",()=>{
  S.bossWave=S.bossWave>=BOSS.length?1:S.bossWave+1;
  spawnBoss(true); renderCards(); updateHud(); save();
 });
@@ -406,9 +397,8 @@ function bossHitPt(){ return {x:rnd(74,90), y:rnd(20,46)}; }
 let combo=0, comboTimer=0;
 function addCombo(){
  combo++; comboTimer=2;
- const t=$("#comboTag");
- if(combo>=2){ t.classList.add("on"); $("#comboNum").textContent=combo;
-   $("#comboMul").textContent="×"+comboMul().toFixed(1); }
+ if(combo>=2){ $("#comboTag").classList.add("on"); $("#comboNum").textContent=combo;
+   $("#comboMul").textContent=""; }
 }
 
 function heroAttack(){
@@ -419,7 +409,7 @@ function heroAttack(){
  if(crit) sndCrit(); else sndClick();
  const pt=bossHitPt();
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
- S.gold+=Math.max(1,Math.floor(goldReward()*0.01));
+ S.gold+=Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.hero.combo+1))));
  // lunge melee units
  document.querySelectorAll(".unit-sprite.melee").forEach(u=>{ u.classList.remove("attacking"); void u.offsetWidth; u.classList.add("attacking"); });
 }
@@ -449,9 +439,9 @@ function renderUnits(){
      el.style.left=Math.min(45,left)+"%";
      el.style.bottom=row+"%";
    } else {
-     const right=12+ ( (seed%9) * 2 ); // 12..28
-     el.style.right=Math.min(30,right)+"%";
-     el.style.bottom=(12+ (seed%5))+"%";
+     const left=36+ ( (seed%9) * 3 ); // 36..60, well away from boss at right:8%
+     el.style.left=Math.min(60,left)+"%";
+     el.style.bottom=(11+ (seed%5))+"%";
    }
    el.style.animationDelay=((seed%13)*0.07)+"s";
    el.innerHTML='<img src="assets/'+u.sprite+'" alt="">';
@@ -481,9 +471,6 @@ function doUnitVolley(u){
    const r=sprites[0].getBoundingClientRect();
    const fx=(r.left-fr.left)/fr.width*100, fy=(r.top-fr.top)/fr.height*100;
    projectile(fx,fy,u.proj);
- } else if(!u.ranged){
-   const pt=bossHitPt();
-   spawnFx("slash",pt.x,pt.y);
  }
  const delay=u.ranged?360:120;
  setTimeout(()=>{ if(bossDead) return; const pt=bossHitPt(); dealDamage(total,pt.x,pt.y,"unit"); },delay);
@@ -535,7 +522,7 @@ $("#prestigeBtn").addEventListener("click",()=>{ if(!$("#prestigeBtn").disabled)
 $("#mNo").addEventListener("click",()=>$("#modal").classList.remove("on"));
 $("#mYes").addEventListener("click",()=>{
  const p=S.prestige+1; S=freshState(); S.prestige=p;
- $("#modal").classList.remove("on"); hideVictory();
+ $("#modal").classList.remove("on");
  spawnBoss(true); renderUnits(); renderCards(); updateHud(); save();
 });
 
@@ -551,7 +538,7 @@ let gpmRate=0, gpmTimer=0, lastGold=0, gpmWindow=[];
 function loop(now){
  const dt=Math.min(0.25,(now-lastT)/1000); lastT=now;
  if(comboTimer>0){ comboTimer-=dt; if(comboTimer<=0){ combo=0; $("#comboTag").classList.remove("on"); } }
- if(!$("#victory").classList.contains("on")) unitTick(dt);
+ unitTick(dt);
  gpmTimer+=dt;
  if(gpmTimer>=1){ const earned=Math.max(0,S.gold-lastGold);
    gpmWindow.push(earned); if(gpmWindow.length>10) gpmWindow.shift();
