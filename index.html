@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPACEBAR BOSS RUSH</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a12;
+    --panel: #12121e;
+    --border: #2a2a45;
+    --accent: #7c3aed;
+    --accent2: #ec4899;
+    --gold: #f59e0b;
+    --text: #e2e8f0;
+    --text-dim: #64748b;
+    --hp-bar: #ef4444;
+    --hp-bar2: #22c55e;
+    --dmg: #fbbf24;
+    --crit: #f87171;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 16px 0 8px;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .game-wrap {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 12px 24px;
+    align-items: flex-start;
+  }
+
+  /* ─── LEFT PANEL: Upgrades ─── */
+  .upgrades-panel {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .panel-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 4px 0 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+
+  .upgrade-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    text-align: left;
+    width: 100%;
+  }
+  .upgrade-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #1a1a2e;
+    transform: translateY(-1px);
+  }
+  .upgrade-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .upgrade-btn:active:not(:disabled) { transform: scale(0.98); }
+
+  .upg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .upg-name {
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  .upg-level {
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 700;
+    background: rgba(124,58,237,0.15);
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+  .upg-desc {
+    font-size: 0.74rem;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .upg-cost {
+    font-size: 0.78rem;
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* ─── CENTER: Battle ─── */
+  .battle-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .gold-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .gold-display span { font-size: 1.5rem; }
+
+  .stage-info {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .boss-arena {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 1;
+    background: radial-gradient(ellipse at 50% 60%, #1a0a2e 0%, #0a0a12 70%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .boss-arena::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 100%, rgba(124,58,237,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .boss-sprite {
+    font-size: 7rem;
+    transition: filter 0.1s;
+    filter: drop-shadow(0 0 24px rgba(124,58,237,0.5));
+    animation: float 3s ease-in-out infinite;
+    pointer-events: none;
+    position: relative;
+    z-index: 2;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .boss-sprite.hit {
+    filter: drop-shadow(0 0 30px rgba(255,100,100,0.9)) brightness(2);
+    animation: none;
+    transform: scale(0.93);
+  }
+
+  .boss-dead {
+    animation: bossExplode 0.6s forwards;
+  }
+
+  @keyframes bossExplode {
+    0%   { transform: scale(1); opacity: 1; }
+    40%  { transform: scale(1.4) rotate(10deg); opacity: 1; }
+    100% { transform: scale(0) rotate(30deg); opacity: 0; }
+  }
+
+  /* HP bar */
+  .hp-wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+  .hp-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .boss-name-label { font-weight: 700; color: var(--text); }
+  .hp-bar-bg {
+    width: 100%;
+    height: 18px;
+    background: #1e1e30;
+    border-radius: 9px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .hp-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #b91c1c, #ef4444);
+    border-radius: 9px;
+    transition: width 0.1s;
+    position: relative;
+  }
+  .hp-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 8px; right: 8px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+  }
+
+  /* Click button */
+  .click-btn {
+    width: 100%;
+    max-width: 420px;
+    padding: 18px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.08s, box-shadow 0.08s;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+  }
+  .click-btn:hover { box-shadow: 0 6px 28px rgba(124,58,237,0.6); }
+  .click-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(124,58,237,0.3); }
+
+  .hint-text {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+  }
+
+  /* ─── RIGHT PANEL: Stats & Log ─── */
+  .stats-panel {
+    width: 220px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stat-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--text-dim); }
+  .stat-val { font-weight: 700; color: var(--text); }
+  .stat-val.gold { color: var(--gold); }
+  .stat-val.purple { color: var(--accent); }
+
+  .kill-log {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 260px;
+  }
+  .kill-log-item {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    animation: fadeIn 0.3s;
+  }
+  .kill-log-item:last-child { border-bottom: none; }
+  .kill-log-item .kl-name { color: var(--text); font-weight: 600; }
+  .kill-log-item .kl-gold { color: var(--gold); }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+
+  /* Damage numbers */
+  .dmg-number {
+    position: absolute;
+    font-weight: 900;
+    pointer-events: none;
+    animation: dmgFloat 0.9s ease-out forwards;
+    z-index: 10;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+  .dmg-normal { color: var(--dmg); font-size: 1.3rem; }
+  .dmg-crit   { color: var(--crit); font-size: 1.9rem; }
+  .dmg-auto   { color: #93c5fd; font-size: 1rem; opacity: 0.8; }
+
+  @keyframes dmgFloat {
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-80px) scale(0.7); opacity: 0; }
+  }
+
+  /* Particle effects */
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9;
+  }
+
+  /* Arena hit flash */
+  .arena-flash {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,100,100,0.15);
+    border-radius: 16px;
+    pointer-events: none;
+    z-index: 1;
+    animation: flashFade 0.15s forwards;
+  }
+  @keyframes flashFade { to { opacity: 0; } }
+
+  /* Boss transition overlay */
+  .boss-transition {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,10,18,0.92);
+    border-radius: 16px;
+    z-index: 20;
+    animation: fadeIn 0.3s;
+  }
+  .boss-transition h2 {
+    font-size: 1.6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), #fde68a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .boss-transition p {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    animation: pulse 0.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* Combo display */
+  .combo-display {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    text-align: right;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .combo-num {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--accent2);
+    line-height: 1;
+    transition: transform 0.1s;
+    text-shadow: 0 0 12px rgba(236,72,153,0.7);
+  }
+  .combo-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .combo-display.hidden { opacity: 0; }
+
+  /* Progress bar (boss stages) */
+  .progress-wrap {
+    width: 100%;
+    max-width: 420px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .progress-bg {
+    width: 100%;
+    height: 6px;
+    background: #1e1e30;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Prestige glow */
+  @keyframes rainbowBorder {
+    0%   { border-color: #7c3aed; box-shadow: 0 0 20px #7c3aed44; }
+    25%  { border-color: #ec4899; box-shadow: 0 0 20px #ec489944; }
+    50%  { border-color: #f59e0b; box-shadow: 0 0 20px #f59e0b44; }
+    75%  { border-color: #22c55e; box-shadow: 0 0 20px #22c55e44; }
+    100% { border-color: #7c3aed; box-shadow: 0 0 20px #7c3aed44; }
+  }
+
+  .prestige-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    color: var(--gold);
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 4px;
+  }
+  .prestige-btn:hover { background: rgba(245,158,11,0.1); }
+  .prestige-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+  }
+  .modal h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .modal p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 20px; }
+  .modal-btns { display: flex; gap: 10px; justify-content: center; }
+  .modal-confirm {
+    background: linear-gradient(135deg, var(--gold), #fde68a);
+    color: #000;
+    font-weight: 800;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .modal-cancel {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 24px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .game-wrap { flex-direction: column; align-items: center; }
+    .upgrades-panel, .stats-panel { width: 100%; max-width: 420px; }
+    .upgrades-panel { order: 2; }
+    .battle-panel   { order: 1; }
+    .stats-panel    { order: 3; }
+  }
+</style>
+</head>
+<body>
+
+<h1>⚔️ Spacebar Boss Rush</h1>
+<p class="subtitle">Spam to destroy — Upgrade to conquer</p>
+
+<div class="game-wrap">
+  <!-- LEFT: Upgrades -->
+  <div class="upgrades-panel">
+    <div class="panel-title">⚡ Upgrades</div>
+    <div id="upgrades-container"></div>
+    <button class="prestige-btn" id="prestige-btn" disabled onclick="openPrestige()">
+      ✨ Prestige (Stage 50+)
+    </button>
+  </div>
+
+  <!-- CENTER: Battle -->
+  <div class="battle-panel">
+    <div class="gold-display">
+      <span>💰</span>
+      <span id="gold-amount">0</span>
+    </div>
+    <div class="stage-info" id="stage-info">Stage 1 · Wave 1/10</div>
+
+    <!-- Boss Arena -->
+    <div class="boss-arena" id="boss-arena" onclick="handleClick(event)">
+      <div class="combo-display hidden" id="combo-display">
+        <div class="combo-num" id="combo-num">0</div>
+        <div class="combo-label">Combo</div>
+      </div>
+      <div class="boss-sprite" id="boss-sprite">👾</div>
+    </div>
+
+    <!-- HP Bar -->
+    <div class="hp-wrap">
+      <div class="hp-label">
+        <span class="boss-name-label" id="boss-name">???</span>
+        <span id="hp-text">1000 / 1000</span>
+      </div>
+      <div class="hp-bar-bg">
+        <div class="hp-bar-fill" id="hp-bar" style="width:100%"></div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Progress</span>
+        <span id="progress-label">Stage 1</span>
+      </div>
+      <div class="progress-bg">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Click Button -->
+    <button class="click-btn" id="click-btn" onclick="handleClick(event)">
+      ⚔️ ATTACK! [SPACE]
+    </button>
+    <div class="hint-text">Click the boss or press SPACEBAR</div>
+  </div>
+
+  <!-- RIGHT: Stats & Log -->
+  <div class="stats-panel">
+    <div class="panel-title">📊 Stats</div>
+    <div class="stat-box" id="stat-box"></div>
+
+    <div class="panel-title" style="margin-top:8px">📜 Kill Log</div>
+    <div class="kill-log" id="kill-log">
+      <div class="kill-log-item" style="color:var(--text-dim);font-style:italic">No kills yet…</div>
+    </div>
+  </div>
+</div>
+
+<!-- Prestige Modal -->
+<div class="modal-overlay" id="prestige-modal">
+  <div class="modal">
+    <h2>✨ Prestige</h2>
+    <p>
+      Reset your progress and upgrades in exchange for a permanent <strong>×2 gold multiplier</strong> per prestige.<br><br>
+      Current Prestige: <strong id="prestige-count-modal">0</strong><br>
+      After prestige: <strong id="prestige-mult-modal">×2 Gold</strong>
+    </p>
+    <div class="modal-btns">
+      <button class="modal-confirm" onclick="doPrestige()">Prestige!</button>
+      <button class="modal-cancel" onclick="closePrestige()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// BOSS DATA
+// ═══════════════════════════════════════════════
+const BOSS_POOL = [
+  { name: "Slime King",        emoji: "🟢", color: "#22c55e" },
+  { name: "Undead Lord",       emoji: "💀", color: "#94a3b8" },
+  { name: "Fire Drake",        emoji: "🐉", color: "#ef4444" },
+  { name: "Shadow Witch",      emoji: "🧙", color: "#7c3aed" },
+  { name: "Iron Golem",        emoji: "🤖", color: "#64748b" },
+  { name: "Sea Serpent",       emoji: "🐍", color: "#06b6d4" },
+  { name: "Vampire Lord",      emoji: "🧛", color: "#be185d" },
+  { name: "Thunder Bird",      emoji: "⚡", color: "#eab308" },
+  { name: "Chaos Demon",       emoji: "👿", color: "#dc2626" },
+  { name: "Ancient Dragon",    emoji: "🐲", color: "#f97316" },
+  { name: "Lich King",         emoji: "☠️", color: "#8b5cf6" },
+  { name: "Crystal Golem",     emoji: "💎", color: "#38bdf8" },
+  { name: "Lava Titan",        emoji: "🌋", color: "#ea580c" },
+  { name: "Abyss Horror",      emoji: "🌑", color: "#1e1b4b" },
+  { name: "Storm Giant",       emoji: "🌪️", color: "#67e8f9" },
+  { name: "Void Emperor",      emoji: "🕳️", color: "#312e81" },
+  { name: "Solar Phoenix",     emoji: "🔥", color: "#fbbf24" },
+  { name: "Frost Wraith",      emoji: "❄️", color: "#bae6fd" },
+  { name: "Death Knight",      emoji: "⚔️", color: "#475569" },
+  { name: "Cosmic Leviathan",  emoji: "🌀", color: "#a855f7" },
+];
+
+// ═══════════════════════════════════════════════
+// UPGRADES CONFIG
+// ═══════════════════════════════════════════════
+const UPGRADES = [
+  {
+    id: "clickDmg",
+    name: "⚔️ Click Power",
+    desc: () => `+${fmt(game.upgrades.clickDmg.level * UPGRADES[0].base)} dmg per click`,
+    base: 2,
+    baseCost: 15,
+    costMult: 1.35,
+    maxLevel: 9999,
+    apply: () => {},
+  },
+  {
+    id: "autoDps",
+    name: "🤖 Auto Striker",
+    desc: () => `+${fmt(game.upgrades.autoDps.level * UPGRADES[1].base)} DPS (idle damage)`,
+    base: 1,
+    baseCost: 80,
+    costMult: 1.4,
+    maxLevel: 9999,
+    apply: () => {},
+  },
+  {
+    id: "critChance",
+    name: "🎯 Critical Eye",
+    desc: () => `+5% crit chance (now ${Math.min(95, game.upgrades.critChance.level * 5)}%)`,
+    base: 5,
+    baseCost: 120,
+    costMult: 1.5,
+    maxLevel: 19,
+    apply: () => {},
+  },
+  {
+    id: "critMult",
+    name: "💥 Critical Force",
+    desc: () => `+0.5× crit multiplier (now ${(2 + game.upgrades.critMult.level * 0.5).toFixed(1)}×)`,
+    base: 0.5,
+    baseCost: 200,
+    costMult: 1.6,
+    maxLevel: 50,
+    apply: () => {},
+  },
+  {
+    id: "goldBoost",
+    name: "💰 Gold Rush",
+    desc: () => `+25% gold per boss (now ×${(1 + game.upgrades.goldBoost.level * 0.25).toFixed(2)})`,
+    base: 0.25,
+    baseCost: 300,
+    costMult: 1.7,
+    maxLevel: 40,
+    apply: () => {},
+  },
+  {
+    id: "comboBoost",
+    name: "🔥 Combo Mastery",
+    desc: () => `Combo bonus ×${(1 + game.upgrades.comboBoost.level * 0.1).toFixed(1)} per 10 hits`,
+    base: 0.1,
+    baseCost: 500,
+    costMult: 1.8,
+    maxLevel: 30,
+    apply: () => {},
+  },
+  {
+    id: "multiHit",
+    name: "⚡ Multi-Strike",
+    desc: () => `+${game.upgrades.multiHit.level} extra hit(s) per click`,
+    base: 1,
+    baseCost: 1000,
+    costMult: 2.0,
+    maxLevel: 10,
+    apply: () => {},
+  },
+  {
+    id: "bossGold",
+    name: "👑 Boss Bounty",
+    desc: () => `+50% gold from bosses (now ×${(1 + game.upgrades.bossGold.level * 0.5).toFixed(1)})`,
+    base: 0.5,
+    baseCost: 2000,
+    costMult: 2.2,
+    maxLevel: 20,
+    apply: () => {},
+  },
+];
+
+// ═══════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════
+let game = createInitialState();
+
+function createInitialState() {
+  const upgrades = {};
+  UPGRADES.forEach(u => { upgrades[u.id] = { level: 0 }; });
+  return {
+    gold: 0,
+    totalGold: 0,
+    stage: 1,
+    wave: 1,        // 1–10 within a stage
+    bossIndex: 0,   // which boss in BOSS_POOL
+    bossHp: 0,
+    bossMaxHp: 0,
+    bossesKilled: 0,
+    totalClicks: 0,
+    totalDamage: 0,
+    combo: 0,
+    comboTimer: null,
+    prestige: 0,
+    upgrades,
+    killLog: [],
+  };
+}
+
+// ═══════════════════════════════════════════════
+// FORMULAS
+// ═══════════════════════════════════════════════
+function bossHpForStage(stage) {
+  return Math.floor(80 * Math.pow(1.25, stage - 1));
+}
+
+function bossGoldForStage(stage) {
+  const base = Math.floor(8 * Math.pow(1.18, stage - 1));
+  const goldMult = (1 + game.upgrades.goldBoost.level * 0.25)
+                 * (1 + game.upgrades.bossGold.level * 0.5)
+                 * Math.pow(2, game.prestige);
+  return Math.floor(base * goldMult);
+}
+
+function clickDamage(isCrit) {
+  const lvl   = game.upgrades.clickDmg.level;
+  const base  = 1 + lvl * 2;
+  const extra = game.upgrades.multiHit.level; // handled in handleClick
+  let dmg = base;
+  if (isCrit) {
+    const mult = 2 + game.upgrades.critMult.level * 0.5;
+    dmg = Math.floor(dmg * mult);
+  }
+  // Combo multiplier
+  const comboTier = Math.floor(game.combo / 10);
+  const comboMult = 1 + comboTier * (game.upgrades.comboBoost.level * 0.1);
+  dmg = Math.floor(dmg * comboMult);
+  return dmg;
+}
+
+function autoDps() {
+  return game.upgrades.autoDps.level * 1;
+}
+
+function critChance() {
+  return Math.min(0.95, game.upgrades.critChance.level * 0.05);
+}
+
+function upgradeCost(upg) {
+  const u = game.upgrades[upg.id];
+  return Math.floor(upg.baseCost * Math.pow(upg.costMult, u.level));
+}
+
+// ═══════════════════════════════════════════════
+// INIT BOSS
+// ═══════════════════════════════════════════════
+function globalStage() {
+  return game.stage * 10 + game.wave - 10;
+}
+
+function initBoss() {
+  const gs = globalStage();
+  game.bossMaxHp = bossHpForStage(gs);
+  game.bossHp    = game.bossMaxHp;
+
+  const bossData = BOSS_POOL[game.bossIndex % BOSS_POOL.length];
+  document.getElementById('boss-sprite').textContent = bossData.emoji;
+  document.getElementById('boss-sprite').style.filter = `drop-shadow(0 0 24px ${bossData.color}88)`;
+  document.getElementById('boss-name').textContent = bossData.name;
+  document.getElementById('stage-info').textContent = `Stage ${game.stage} · Wave ${game.wave}/10`;
+
+  updateHpBar();
+}
+
+// ═══════════════════════════════════════════════
+// DAMAGE
+// ═══════════════════════════════════════════════
+function dealDamage(dmg, type, x, y) {
+  if (game.bossHp <= 0) return;
+  game.bossHp = Math.max(0, game.bossHp - dmg);
+  game.totalDamage += dmg;
+  updateHpBar();
+  showDmgNumber(dmg, type, x, y);
+  if (game.bossHp <= 0) onBossDead();
+}
+
+function updateHpBar() {
+  const pct = Math.max(0, game.bossHp / game.bossMaxHp * 100);
+  document.getElementById('hp-bar').style.width = pct + '%';
+  document.getElementById('hp-text').textContent =
+    `${fmt(Math.ceil(game.bossHp))} / ${fmt(game.bossMaxHp)}`;
+}
+
+// ═══════════════════════════════════════════════
+// BOSS DEATH
+// ═══════════════════════════════════════════════
+function onBossDead() {
+  const gs = globalStage();
+  const gold = bossGoldForStage(gs);
+  game.gold += gold;
+  game.totalGold += gold;
+  game.bossesKilled++;
+  game.bossIndex++;
+
+  const bossName = BOSS_POOL[(game.bossIndex - 1) % BOSS_POOL.length].name;
+  addKillLog(bossName, gold, gs);
+
+  // Boss death animation
+  const sprite = document.getElementById('boss-sprite');
+  sprite.classList.add('boss-dead');
+
+  spawnDeathParticles();
+
+  setTimeout(() => {
+    sprite.classList.remove('boss-dead');
+    advanceWave();
+  }, 650);
+}
+
+function advanceWave() {
+  if (game.wave >= 10) {
+    game.wave = 1;
+    game.stage++;
+  } else {
+    game.wave++;
+  }
+  updateProgress();
+  initBoss();
+  updatePrestigeBtn();
+  renderUpgrades();
+}
+
+function updateProgress() {
+  const gs = globalStage();
+  const pct = ((gs - 1) % 100) / 100 * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `Stage ${game.stage}`;
+}
+
+// ═══════════════════════════════════════════════
+// CLICK HANDLER
+// ═══════════════════════════════════════════════
+function handleClick(e) {
+  if (game.bossHp <= 0) return;
+  game.totalClicks++;
+  updateCombo();
+
+  const arena = document.getElementById('boss-arena');
+  const rect  = arena.getBoundingClientRect();
+  const cx    = rect.left + rect.width / 2;
+  const cy    = rect.top  + rect.height / 2;
+
+  // Determine hit position relative to arena
+  let rx = rect.width * 0.5, ry = rect.height * 0.5;
+  if (e && e.clientX) {
+    rx = e.clientX - rect.left;
+    ry = e.clientY - rect.top;
+  }
+
+  // Boss hit animation
+  const sprite = document.getElementById('boss-sprite');
+  sprite.classList.add('hit');
+  setTimeout(() => sprite.classList.remove('hit'), 120);
+
+  // Arena flash
+  const flash = document.createElement('div');
+  flash.className = 'arena-flash';
+  arena.appendChild(flash);
+  setTimeout(() => flash.remove(), 150);
+
+  const hits = 1 + game.upgrades.multiHit.level;
+  for (let i = 0; i < hits; i++) {
+    const isCrit = Math.random() < critChance();
+    const dmg    = clickDamage(isCrit);
+    const offX   = rx + (Math.random() - 0.5) * 60;
+    const offY   = ry + (Math.random() - 0.5) * 40;
+    dealDamage(dmg, isCrit ? 'crit' : 'normal', offX, offY);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// COMBO
+// ═══════════════════════════════════════════════
+function updateCombo() {
+  game.combo++;
+  if (game.comboTimer) clearTimeout(game.comboTimer);
+  game.comboTimer = setTimeout(() => {
+    game.combo = 0;
+    const cd = document.getElementById('combo-display');
+    cd.classList.add('hidden');
+  }, 2000);
+
+  const cd  = document.getElementById('combo-display');
+  const num = document.getElementById('combo-num');
+  cd.classList.remove('hidden');
+  num.textContent = game.combo;
+  num.style.transform = 'scale(1.25)';
+  setTimeout(() => num.style.transform = '', 100);
+}
+
+// ═══════════════════════════════════════════════
+// DAMAGE NUMBERS
+// ═══════════════════════════════════════════════
+function showDmgNumber(dmg, type, x, y) {
+  const arena = document.getElementById('boss-arena');
+  const el    = document.createElement('div');
+  el.className = `dmg-number dmg-${type}`;
+  el.textContent = (type === 'crit' ? '⚡ ' : '') + fmt(dmg);
+  el.style.left = (x - 30) + 'px';
+  el.style.top  = (y - 20) + 'px';
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
+
+// ═══════════════════════════════════════════════
+// PARTICLES ON BOSS DEATH
+// ═══════════════════════════════════════════════
+function spawnDeathParticles() {
+  const arena  = document.getElementById('boss-arena');
+  const colors = ['#f59e0b','#ef4444','#ec4899','#7c3aed','#22c55e','#38bdf8'];
+  for (let i = 0; i < 24; i++) {
+    const p   = document.createElement('div');
+    p.className = 'particle';
+    p.style.background = colors[i % colors.length];
+    p.style.left = (30 + Math.random() * 60) + '%';
+    p.style.top  = (30 + Math.random() * 40) + '%';
+    const tx = (Math.random() - 0.5) * 200;
+    const ty = (Math.random() - 0.5) * 200 - 60;
+    p.style.animation = 'none';
+    arena.appendChild(p);
+    p.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: `translate(${tx}px,${ty}px) scale(0)`, opacity: 0 },
+    ], { duration: 600 + Math.random() * 400, easing: 'ease-out', fill: 'forwards' })
+     .onfinish = () => p.remove();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// AUTO DPS TICK
+// ═══════════════════════════════════════════════
+setInterval(() => {
+  const dps = autoDps();
+  if (dps > 0 && game.bossHp > 0) {
+    const arena = document.getElementById('boss-arena');
+    const w = arena.offsetWidth, h = arena.offsetHeight;
+    dealDamage(dps / 10, 'auto', w * 0.5 + (Math.random()-0.5)*80, h * 0.5 + (Math.random()-0.5)*60);
+  }
+  renderStats();
+  renderGold();
+}, 100);
+
+// ═══════════════════════════════════════════════
+// KILL LOG
+// ═══════════════════════════════════════════════
+function addKillLog(name, gold, stage) {
+  game.killLog.unshift({ name, gold, stage, time: Date.now() });
+  if (game.killLog.length > 50) game.killLog.pop();
+  renderKillLog();
+}
+
+function renderKillLog() {
+  const el = document.getElementById('kill-log');
+  if (game.killLog.length === 0) {
+    el.innerHTML = '<div class="kill-log-item" style="color:var(--text-dim);font-style:italic">No kills yet…</div>';
+    return;
+  }
+  el.innerHTML = game.killLog.slice(0, 20).map(k =>
+    `<div class="kill-log-item">
+      <span class="kl-name">${k.name}</span>
+      <span style="color:var(--text-dim)"> (S${k.stage})</span>
+      +<span class="kl-gold">💰${fmt(k.gold)}</span>
+    </div>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════════
+// UPGRADES UI
+// ═══════════════════════════════════════════════
+function renderUpgrades() {
+  const container = document.getElementById('upgrades-container');
+  container.innerHTML = '';
+  UPGRADES.forEach((upg, idx) => {
+    const level = game.upgrades[upg.id].level;
+    const cost  = upgradeCost(upg);
+    const canAfford = game.gold >= cost;
+    const maxed = level >= upg.maxLevel;
+
+    const btn = document.createElement('button');
+    btn.className = 'upgrade-btn';
+    btn.disabled  = !canAfford || maxed;
+    btn.innerHTML = `
+      <div class="upg-header">
+        <span class="upg-name">${upg.name}</span>
+        <span class="upg-level">Lv ${level}${maxed ? ' MAX' : ''}</span>
+      </div>
+      <div class="upg-desc">${upg.desc()}</div>
+      <div class="upg-cost">${maxed ? '—' : '💰 ' + fmt(cost)}</div>
+    `;
+    btn.onclick = () => buyUpgrade(upg.id);
+    container.appendChild(btn);
+  });
+}
+
+function buyUpgrade(id) {
+  const upg  = UPGRADES.find(u => u.id === id);
+  const cost = upgradeCost(upg);
+  if (game.gold < cost || game.upgrades[id].level >= upg.maxLevel) return;
+  game.gold -= cost;
+  game.upgrades[id].level++;
+  renderUpgrades();
+  renderGold();
+}
+
+// ═══════════════════════════════════════════════
+// STATS UI
+// ═══════════════════════════════════════════════
+function renderStats() {
+  const el = document.getElementById('stat-box');
+  const clickDmgVal = clickDamage(false);
+  const dps = autoDps();
+  el.innerHTML = `
+    <div class="stat-row">
+      <span class="stat-label">Click DMG</span>
+      <span class="stat-val">${fmt(clickDmgVal)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Auto DPS</span>
+      <span class="stat-val purple">${fmt(dps)}/s</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Crit Chance</span>
+      <span class="stat-val">${(critChance()*100).toFixed(0)}%</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Crit Mult</span>
+      <span class="stat-val">${(2 + game.upgrades.critMult.level * 0.5).toFixed(1)}×</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Total Kills</span>
+      <span class="stat-val">${fmt(game.bossesKilled)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Total Clicks</span>
+      <span class="stat-val">${fmt(game.totalClicks)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Total DMG</span>
+      <span class="stat-val">${fmt(game.totalDamage)}</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Prestige</span>
+      <span class="stat-val gold">×${Math.pow(2, game.prestige).toFixed(0)} 💰</span>
+    </div>
+  `;
+}
+
+function renderGold() {
+  document.getElementById('gold-amount').textContent = fmt(game.gold);
+  renderUpgrades();
+}
+
+// ═══════════════════════════════════════════════
+// PRESTIGE
+// ═══════════════════════════════════════════════
+function updatePrestigeBtn() {
+  const btn = document.getElementById('prestige-btn');
+  btn.disabled = globalStage() < 50;
+}
+
+function openPrestige() {
+  if (globalStage() < 50) return;
+  document.getElementById('prestige-count-modal').textContent = game.prestige;
+  document.getElementById('prestige-mult-modal').textContent  = `×${Math.pow(2, game.prestige + 1).toFixed(0)} Gold`;
+  document.getElementById('prestige-modal').classList.add('open');
+}
+
+function closePrestige() {
+  document.getElementById('prestige-modal').classList.remove('open');
+}
+
+function doPrestige() {
+  game.prestige++;
+  const savedPrestige = game.prestige;
+  game = createInitialState();
+  game.prestige = savedPrestige;
+  closePrestige();
+  initBoss();
+  renderUpgrades();
+  renderStats();
+  renderGold();
+  renderKillLog();
+  updatePrestigeBtn();
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════
+function fmt(n) {
+  n = Math.floor(n);
+  if (n >= 1e15) return (n / 1e15).toFixed(2) + 'Q';
+  if (n >= 1e12) return (n / 1e12).toFixed(2) + 'T';
+  if (n >= 1e9)  return (n / 1e9).toFixed(2) + 'B';
+  if (n >= 1e6)  return (n / 1e6).toFixed(2) + 'M';
+  if (n >= 1e3)  return (n / 1e3).toFixed(1) + 'K';
+  return String(n);
+}
+
+// ═══════════════════════════════════════════════
+// KEYBOARD
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !e.repeat) {
+    e.preventDefault();
+    handleClick(null);
+    // visual feedback on button
+    const btn = document.getElementById('click-btn');
+    btn.style.transform = 'scale(0.96)';
+    setTimeout(() => btn.style.transform = '', 80);
+  }
+});
+
+// ═══════════════════════════════════════════════
+// SAVE / LOAD
+// ═══════════════════════════════════════════════
+function saveGame() {
+  try {
+    localStorage.setItem('sbr_save', JSON.stringify({
+      gold: game.gold,
+      totalGold: game.totalGold,
+      stage: game.stage,
+      wave: game.wave,
+      bossIndex: game.bossIndex,
+      bossHp: game.bossHp,
+      bossMaxHp: game.bossMaxHp,
+      bossesKilled: game.bossesKilled,
+      totalClicks: game.totalClicks,
+      totalDamage: game.totalDamage,
+      prestige: game.prestige,
+      upgrades: game.upgrades,
+      killLog: game.killLog.slice(0, 20),
+    }));
+  } catch(e) {}
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem('sbr_save');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    game.gold        = s.gold        || 0;
+    game.totalGold   = s.totalGold   || 0;
+    game.stage       = s.stage       || 1;
+    game.wave        = s.wave        || 1;
+    game.bossIndex   = s.bossIndex   || 0;
+    game.bossHp      = s.bossHp      || 0;
+    game.bossMaxHp   = s.bossMaxHp   || 0;
+    game.bossesKilled= s.bossesKilled|| 0;
+    game.totalClicks = s.totalClicks || 0;
+    game.totalDamage = s.totalDamage || 0;
+    game.prestige    = s.prestige    || 0;
+    game.killLog     = s.killLog     || [];
+    // merge upgrades (support new upgrades added later)
+    if (s.upgrades) {
+      UPGRADES.forEach(u => {
+        if (s.upgrades[u.id]) game.upgrades[u.id] = s.upgrades[u.id];
+      });
+    }
+    // If boss was mid-fight, restore
+    if (game.bossMaxHp > 0 && game.bossHp > 0) {
+      const bossData = BOSS_POOL[game.bossIndex % BOSS_POOL.length];
+      document.getElementById('boss-sprite').textContent = bossData.emoji;
+      document.getElementById('boss-name').textContent   = bossData.name;
+      document.getElementById('stage-info').textContent  =
+        `Stage ${game.stage} · Wave ${game.wave}/10`;
+      updateHpBar();
+    } else {
+      initBoss();
+    }
+    renderKillLog();
+    updatePrestigeBtn();
+    updateProgress();
+  } catch(e) {}
+}
+
+// Auto-save every 10s
+setInterval(saveGame, 10000);
+
+// ═══════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════
+loadGame();
+if (game.bossMaxHp === 0) initBoss();
+renderUpgrades();
+renderStats();
+renderGold();
+</script>
+</body>
+</html>
