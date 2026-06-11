@@ -548,6 +548,10 @@ function loop(now){
  requestAnimationFrame(loop);
 }
 
+if(new URLSearchParams(location.search).has("reset")){
+ try{ localStorage.removeItem("sbr_save2"); }catch(e){}
+ history.replaceState(null,"",location.pathname);
+}
 load();
 spawnBoss(); renderUnits(); renderCards(); updateHud();
 lastGold=S.gold;
