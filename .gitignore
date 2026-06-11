@@ -1,1 +1,4 @@
 node_modules/
+# original source images (converted versions live in assets/)
+*.png
+!assets/*.png
