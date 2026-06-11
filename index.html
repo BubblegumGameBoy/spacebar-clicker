@@ -500,10 +500,14 @@ function doUnitVolley(u){
 /* ===== CARDS ===== */
 function card(o){
  const dis=S.gold<o.cost;
- return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}">
+ return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.cost}">
    <div class="top"><span class="nm">${o.nm}</span><span class="lv">${o.lv}</span></div>
    <div class="ef">${o.ef}</div>
    <div class="cost">${fmt(o.cost)} G</div></div>`;
+}
+// re-evaluate affordability live so cards unlock the moment gold is enough
+function refreshAffordable(){
+ $$(".card").forEach(c=>c.classList.toggle("dis",S.gold<+c.dataset.cost));
 }
 function renderCards(){
  let h="";
@@ -575,6 +579,7 @@ function loop(now){
    gpmRate=gpmWindow.reduce((a,b)=>a+b,0)/gpmWindow.length*60;
    lastGold=S.gold; gpmTimer=0; }
  updateHud();
+ refreshAffordable();
  requestAnimationFrame(loop);
 }
 
