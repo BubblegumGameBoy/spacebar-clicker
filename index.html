@@ -507,14 +507,19 @@ function card(o){
 }
 function renderCards(){
  let h="";
+ let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
-  if(!unitOwned(u)){
-   h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
-     ef:`DPS ${fmt(u.dmg/u.iv)} (初期)`,cost:unitBuyCost(u)});
-  } else {
+  if(unitOwned(u)){
    const nextDmg=u.dmg*(1+0.9*(S.ulvl[u.id]+1));
    h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+S.ulvl[u.id],
      ef:`DPS ${fmt(unitDPS(u))} → ${fmt(nextDmg/u.iv)} (次)`,cost:unitUpgCost(u)});
+   prevOwned=true;
+  } else if(prevOwned){
+   h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
+     ef:`DPS ${fmt(u.dmg/u.iv)} (初期)`,cost:unitBuyCost(u)});
+   prevOwned=false;
+  } else {
+   prevOwned=false;
   }
  });
  $("#pane-summon").innerHTML=h;
