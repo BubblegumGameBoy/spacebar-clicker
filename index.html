@@ -452,6 +452,9 @@ function addCombo(){
    $("#comboMul").textContent=""; }
 }
 
+// gold granted per hit (clicks and unit attacks alike)
+function hitGold(){ return Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.hero.combo+1)))); }
+
 function heroAttack(){
  if(bossDead) return;
  addCombo();
@@ -461,7 +464,7 @@ function heroAttack(){
  const pt=bossHitPt();
  if(crit) spawnImgFx("crit",pt.x,pt.y);
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
- S.gold+=Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.hero.combo+1))));
+ S.gold+=hitGold();
  // lunge melee units
  document.querySelectorAll(".unit-sprite.melee").forEach(u=>{ u.classList.remove("attacking"); void u.offsetWidth; u.classList.add("attacking"); });
 }
@@ -524,6 +527,7 @@ function doUnitVolley(u){
    const pt=bossHitPt();
    if(u.fx) spawnAtkFx(u.fx,pt.x,pt.y);
    dealDamage(total,pt.x,pt.y,"unit");
+   S.gold+=hitGold();
  },delay);
 }
 
