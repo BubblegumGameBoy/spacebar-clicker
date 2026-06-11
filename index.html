@@ -183,7 +183,10 @@
   }
 
   .boss-sprite {
-    font-size: 7rem;
+    max-width: 78%;
+    max-height: 78%;
+    object-fit: contain;
+    border-radius: 12px;
     transition: filter 0.1s;
     filter: drop-shadow(0 0 24px rgba(124,58,237,0.5));
     animation: float 3s ease-in-out infinite;
@@ -563,7 +566,7 @@
         <div class="combo-num" id="combo-num">0</div>
         <div class="combo-label">Combo</div>
       </div>
-      <div class="boss-sprite" id="boss-sprite">👾</div>
+      <img class="boss-sprite" id="boss-sprite" src="" alt="boss" draggable="false">
     </div>
 
     <!-- HP Bar -->
@@ -628,26 +631,17 @@
 // BOSS DATA
 // ═══════════════════════════════════════════════
 const BOSS_POOL = [
-  { name: "Slime King",        emoji: "🟢", color: "#22c55e" },
-  { name: "Undead Lord",       emoji: "💀", color: "#94a3b8" },
-  { name: "Fire Drake",        emoji: "🐉", color: "#ef4444" },
-  { name: "Shadow Witch",      emoji: "🧙", color: "#7c3aed" },
-  { name: "Iron Golem",        emoji: "🤖", color: "#64748b" },
-  { name: "Sea Serpent",       emoji: "🐍", color: "#06b6d4" },
-  { name: "Vampire Lord",      emoji: "🧛", color: "#be185d" },
-  { name: "Thunder Bird",      emoji: "⚡", color: "#eab308" },
-  { name: "Chaos Demon",       emoji: "👿", color: "#dc2626" },
-  { name: "Ancient Dragon",    emoji: "🐲", color: "#f97316" },
-  { name: "Lich King",         emoji: "☠️", color: "#8b5cf6" },
-  { name: "Crystal Golem",     emoji: "💎", color: "#38bdf8" },
-  { name: "Lava Titan",        emoji: "🌋", color: "#ea580c" },
-  { name: "Abyss Horror",      emoji: "🌑", color: "#1e1b4b" },
-  { name: "Storm Giant",       emoji: "🌪️", color: "#67e8f9" },
-  { name: "Void Emperor",      emoji: "🕳️", color: "#312e81" },
-  { name: "Solar Phoenix",     emoji: "🔥", color: "#fbbf24" },
-  { name: "Frost Wraith",      emoji: "❄️", color: "#bae6fd" },
-  { name: "Death Knight",      emoji: "⚔️", color: "#475569" },
-  { name: "Cosmic Leviathan",  emoji: "🌀", color: "#a855f7" },
+  { name: "下水の魔鼠 ラトキン",       img: "assets/boss01_rat.webp",       color: "#a16207" },
+  { name: "夜翼の影 ノクターン",       img: "assets/boss02_nightwing.webp", color: "#7c3aed" },
+  { name: "凶鳥 ザルファク",           img: "assets/boss03_direbird.webp",  color: "#0ea5e9" },
+  { name: "蠢く粘塊 グロブス",         img: "assets/boss04_blob.webp",      color: "#22c55e" },
+  { name: "深淵の狩人 ヴォルグ",       img: "assets/boss05_hunter.webp",    color: "#dc2626" },
+  { name: "焔霊 イグニス",             img: "assets/boss06_flame.webp",     color: "#f97316" },
+  { name: "天空の鬼神 アエロス",       img: "assets/boss07_skyfiend.webp",  color: "#67e8f9" },
+  { name: "時喰いの猟犬 クロノファング", img: "assets/boss08_hound.webp",   color: "#64748b" },
+  { name: "極北の獣神 ボレアス",       img: "assets/boss09_beast.webp",     color: "#bae6fd" },
+  { name: "嵐の古神 ストラトス",       img: "assets/boss10_stormgod.webp",  color: "#eab308" },
+  { name: "刻の支配者 エルダーマインド", img: "assets/boss11_eldermind.webp", color: "#a855f7" },
 ];
 
 // ═══════════════════════════════════════════════
@@ -820,7 +814,7 @@ function initBoss() {
   game.bossHp    = game.bossMaxHp;
 
   const bossData = BOSS_POOL[game.bossIndex % BOSS_POOL.length];
-  document.getElementById('boss-sprite').textContent = bossData.emoji;
+  document.getElementById('boss-sprite').src = bossData.img;
   document.getElementById('boss-sprite').style.filter = `drop-shadow(0 0 24px ${bossData.color}88)`;
   document.getElementById('boss-name').textContent = bossData.name;
   document.getElementById('stage-info').textContent = `Stage ${game.stage} · Wave ${game.wave}/10`;
@@ -1226,7 +1220,7 @@ function loadGame() {
     // If boss was mid-fight, restore
     if (game.bossMaxHp > 0 && game.bossHp > 0) {
       const bossData = BOSS_POOL[game.bossIndex % BOSS_POOL.length];
-      document.getElementById('boss-sprite').textContent = bossData.emoji;
+      document.getElementById('boss-sprite').src = bossData.img;
       document.getElementById('boss-name').textContent   = bossData.name;
       document.getElementById('stage-info').textContent  =
         `Stage ${game.stage} · Wave ${game.wave}/10`;
@@ -1246,6 +1240,7 @@ setInterval(saveGame, 10000);
 // ═══════════════════════════════════════════════
 // START
 // ═══════════════════════════════════════════════
+BOSS_POOL.forEach(b => { const i = new Image(); i.src = b.img; });
 loadGame();
 if (game.bossMaxHp === 0) initBoss();
 renderUpgrades();
