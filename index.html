@@ -78,6 +78,16 @@
     box-shadow:0 0 10px #bf60ff;animation:mfx .48s ease-out forwards;}
   @keyframes mfx{0%{opacity:1;transform:translate(-50%,-50%) scale(0) rotate(0deg);}
     100%{opacity:0;transform:translate(-50%,-50%) scale(1.8) rotate(120deg);}}
+  .imgfx{position:absolute;z-index:8;pointer-events:none;}
+  .imgfx img{display:block;width:100%;height:auto;image-rendering:pixelated;}
+  .imgfx.crit{width:9%;animation:critfx .3s ease-out forwards;}
+  @keyframes critfx{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-20deg);}
+    30%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(-20deg);}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(-20deg);}}
+  .imgfx.boom{width:24%;animation:boomfx .6s ease-out forwards;}
+  @keyframes boomfx{0%{opacity:0;transform:translate(-50%,-50%) scale(.3);}
+    25%{opacity:1;transform:translate(-50%,-50%) scale(1);}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1.5);}}
 
   .dmg{position:absolute; z-index:9; font-weight:800; pointer-events:none;
     text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6); animation:flo .8s ease-out forwards; white-space:nowrap;}
@@ -255,11 +265,19 @@ const BOSS=[
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
 // pos = fixed battlefield position (left/bottom %) to avoid overlap
 const UNITS=[
- {id:"sword",jp:"剣士",  sprite:"unit_sword.png",base:80,    dmg:2,  iv:1.0, ranged:false, fx:"slash", pos:{l:40,b:12}},
- {id:"arch", jp:"弓兵",  sprite:"unit_arch.png", base:600,   dmg:6,  iv:1.2, ranged:true,  proj:"➳",   pos:{l:28,b:15}},
- {id:"mage", jp:"魔導士",sprite:"unit_mage.png", base:5000,  dmg:22, iv:2.0, ranged:true,  proj:"✦",fx:"magic", pos:{l:16,b:19}},
- {id:"bers", jp:"狂戦士",sprite:"unit_bers.png", base:50000, dmg:5,  iv:0.55,ranged:false, fx:"shock", pos:{l:48,b:13}},
- {id:"drag", jp:"竜騎士",sprite:"unit_drag.png", base:800000,dmg:80, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:22}},
+ {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:42,b:12}},
+ {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:31,b:14}},
+ {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:48,b:14}},
+ {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:20,b:17}},
+ {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:54,b:11}},
+ {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:37,b:11}},
+ {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:25,b:20}},
+ {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}},
+ {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:13}},
+ {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:6, b:24}},
+ {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:14,b:27}},
+ {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:22,b:30}},
+ {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:4, b:33}},
 ];
 
 const HERO=[
@@ -271,19 +289,20 @@ const HERO=[
 ];
 
 let S;
+function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
 function freshState(){
  return { gold:0, globalWave:1, bossWave:1, prestige:0,
   clearedBossWave:0,
-  owned:{sword:0,arch:0,mage:0,bers:0,drag:0},
-  ulvl:{sword:0,arch:0,mage:0,bers:0,drag:0},
+  owned:zeroUnits(),
+  ulvl:zeroUnits(),
   hero:{click:0,crate:0,cmult:0,gold:0,combo:0},
   bossHpMax:0, bossHp:0 };
 }
 function load(){
  try{ const r=JSON.parse(localStorage.getItem("sbr_save2"));
    if(r){ S=Object.assign(freshState(),r);
-     S.owned=Object.assign({sword:0,arch:0,mage:0,bers:0,drag:0},r.owned||{});
-     S.ulvl=Object.assign({sword:0,arch:0,mage:0,bers:0,drag:0},r.ulvl||{});
+     S.owned=Object.assign(zeroUnits(),r.owned||{});
+     S.ulvl=Object.assign(zeroUnits(),r.ulvl||{});
      S.hero=Object.assign({click:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
      if(!S.clearedBossWave) S.clearedBossWave=0;
@@ -351,6 +370,8 @@ function killBoss(){
  bossEl.classList.add("dying");
  sndKill();
  const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
+ const bx=(r.left-fr.left+r.width/2)/fr.width*100, by=(r.top-fr.top+r.height/2)/fr.height*100;
+ spawnImgFx("boom",bx,by);
  for(let i=0;i<14;i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
  floatDmg(g,72,16,"click",true);
  sndGold();
@@ -397,6 +418,14 @@ function particle(x,y){
    {duration:600,easing:"ease-out"});
  field.appendChild(p); setTimeout(()=>p.remove(),600);
 }
+function spawnImgFx(kind,xPct,yPct){
+ const f=document.createElement("div");
+ f.className="imgfx "+kind;
+ f.innerHTML='<img src="assets/'+(kind==="boom"?"fx_explode.png":"fx_slash.png")+'" alt="">';
+ f.style.left=xPct+"%"; f.style.top=yPct+"%";
+ field.appendChild(f);
+ setTimeout(()=>f.remove(),kind==="boom"?620:320);
+}
 function spawnAtkFx(kind,xPct,yPct){
  const f=document.createElement("div");
  f.className="atk-fx "+kind;
@@ -430,6 +459,7 @@ function heroAttack(){
  if(crit) dmg*=critMul();
  if(crit) sndCrit(); else sndClick();
  const pt=bossHitPt();
+ if(crit) spawnImgFx("crit",pt.x,pt.y);
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  S.gold+=Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.hero.combo+1))));
  // lunge melee units
