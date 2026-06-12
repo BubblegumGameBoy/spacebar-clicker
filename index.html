@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SPACEBAR BOSS RUSH</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;
+      -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
+  html,body,#field{
+    touch-action:manipulation; /* シングルタップのみ、長押し挙動ブロック */
+    -webkit-user-select:none;
+  }
   :root{
     --panel:#161b21; --panel2:#1e252e; --line:#2c3742;
     --gold:#f3c34a; --txt:#d7e0e8; --sub:#8a99a8;
