@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SPACEBAR BOSS RUSH</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CH13VBXKD9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-CH13VBXKD9');
+</script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;
       -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
@@ -432,7 +440,11 @@ function killBoss(){
  bossDead=true; S.bossHp=0; updateBossBar();
  const g=goldReward(); S.gold+=g;
  S.globalWave++;
- if(S.clearedBossWave<S.bossWave) S.clearedBossWave=S.bossWave;
+ if(S.clearedBossWave<S.bossWave){
+   S.clearedBossWave=S.bossWave;
+   // first kill of this boss — progress milestone for analytics
+   try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name}); }catch(e){}
+ }
  bossEl.classList.add("dying");
  sndKill();
  const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
@@ -651,7 +663,8 @@ $("#panels").addEventListener("click",e=>{
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
  const act=c.dataset.act, id=c.dataset.id;
  if(act==="buy"){ const u=UNITS.find(x=>x.id===id), cst=unitBuyCost(u);
-   if(S.gold>=cst && !unitOwned(u)){ S.gold-=cst; S.owned[id]=1; renderUnits(); sndLevelUp(); } }
+   if(S.gold>=cst && !unitOwned(u)){ S.gold-=cst; S.owned[id]=1; renderUnits(); sndLevelUp();
+     try{ gtag('event','unit_buy',{unit_id:id,unit_name:u.jp}); }catch(e){} } }
  else if(act==="upg"){ const u=UNITS.find(x=>x.id===id), cst=unitUpgCost(u);
    if(S.gold>=cst){ S.gold-=cst; S.ulvl[id]++; renderUnits(); sndLevelUp(); } }
  else if(act==="hero"){ const o=HERO.find(x=>x.id===id), cst=heroCost(o);
@@ -668,7 +681,9 @@ $$(".tab").forEach(t=>t.addEventListener("click",()=>{
 $("#prestigeBtn").addEventListener("click",()=>{ if(!$("#prestigeBtn").disabled) $("#modal").classList.add("on"); });
 $("#mNo").addEventListener("click",()=>$("#modal").classList.remove("on"));
 $("#mYes").addEventListener("click",()=>{
- const p=S.prestige+1; S=freshState(); S.prestige=p;
+ const p=S.prestige+1;
+ try{ gtag('event','prestige',{prestige_count:p}); }catch(e){}
+ S=freshState(); S.prestige=p;
  $("#modal").classList.remove("on");
  spawnBoss(true); renderUnits(); renderCards(); updateHud(); save();
 });
