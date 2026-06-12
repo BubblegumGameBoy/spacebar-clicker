@@ -73,13 +73,16 @@
     font-size:10px; font-weight:700; color:#fff;
     background:rgba(0,0,0,.6); border:1px solid var(--line); border-radius:8px; padding:0 5px; white-space:nowrap;}
   @keyframes ubob{ 0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);} }
-  /* flying units float in the sky with a gentle bob */
-  .unit-sprite.fly{ animation:floatBob 3s ease-in-out infinite alternate; }
-  @keyframes floatBob{ 0%{transform:translateY(6px);} 100%{transform:translateY(-6px);} }
+  /* flying units drift on a slow loop; attack anim goes on the inner img so the float never stops */
+  .unit-sprite.fly{ animation:floatFly 3.6s ease-in-out infinite; }
+  @keyframes floatFly{ 0%{transform:translate(0,0);} 25%{transform:translate(5px,-9px);}
+    50%{transform:translate(0,-16px);} 75%{transform:translate(-5px,-8px);} 100%{transform:translate(0,0);} }
   .unit-sprite.melee.attacking{ animation:lunge .3s ease; }
   @keyframes lunge{ 0%{transform:translateX(0);}40%{transform:translateX(8px);}100%{transform:translateX(0);} }
   .unit-sprite.ranged.attacking{ animation:rfire .3s ease; }
   @keyframes rfire{ 0%{transform:translateY(0);}40%{transform:translateY(-5px);}100%{transform:translateY(0);} }
+  .unit-sprite.fly.attacking{ animation:floatFly 3.6s ease-in-out infinite; }
+  .unit-sprite.fly.attacking img{ animation:rfire .3s ease; }
 
   .proj{position:absolute; z-index:8; font-size:18px; pointer-events:none; will-change:transform;}
 
@@ -591,7 +594,11 @@ function renderUnits(){
   el.dataset.type=u.id;
   el.style.left=u.pos.l+"%";
   el.style.bottom=u.pos.b+"%";
-  if(u.fly) el.style.animationDelay=(UNITS.indexOf(u)*0.4)+"s";
+  if(u.fly){ const i=UNITS.indexOf(u);
+    el.style.animationDelay=(-i*0.7)+"s";           /* negative: stagger without a start pause */
+    el.style.animationDuration=(3+(i%4)*0.45)+"s"; } /* different speeds so they never sync */
+  // drop "attacking" once its anim ends so the idle bob/float resumes
+  el.addEventListener("animationend",e=>{ if(e.animationName==="lunge"||e.animationName==="rfire") el.classList.remove("attacking"); });
   el.innerHTML='<img src="assets/'+u.sprite+'"'+(u.flip?' style="transform:scaleX(-1)"':'')+' alt="">';
   // level badge
   if(S.ulvl[u.id]>0){
