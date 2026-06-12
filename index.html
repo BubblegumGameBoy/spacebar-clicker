@@ -48,7 +48,7 @@
     text-shadow:0 1px 2px #000; color:#fff;}
 
   /* ===== UNITS ===== */
-  .unit-sprite{position:absolute; height:10%; z-index:4; transform-origin:bottom center;
+  .unit-sprite{position:absolute; height:10%; z-index:6; transform-origin:bottom center;
     animation:ubob 1.6s ease-in-out infinite; will-change:transform;}
   .unit-sprite img{height:100%; width:auto; display:block; image-rendering:pixelated;
     filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));}
@@ -61,10 +61,10 @@
   .unit-sprite.ranged.attacking{ animation:rfire .3s ease; }
   @keyframes rfire{ 0%{transform:translateY(0);}40%{transform:translateY(-5px);}100%{transform:translateY(0);} }
 
-  .proj{position:absolute; z-index:6; font-size:18px; pointer-events:none; will-change:transform;}
+  .proj{position:absolute; z-index:8; font-size:18px; pointer-events:none; will-change:transform;}
 
   /* per-unit attack effects */
-  .atk-fx{position:absolute;z-index:7;pointer-events:none;border-radius:50%;}
+  .atk-fx{position:absolute;z-index:8;pointer-events:none;border-radius:50%;}
   .atk-fx.slash{width:72px;height:7px;border-radius:4px;
     background:linear-gradient(90deg,transparent,#ff5533 20%,#ffcc66);
     animation:sfx .28s ease-out forwards;}
@@ -78,17 +78,6 @@
     box-shadow:0 0 10px #bf60ff;animation:mfx .48s ease-out forwards;}
   @keyframes mfx{0%{opacity:1;transform:translate(-50%,-50%) scale(0) rotate(0deg);}
     100%{opacity:0;transform:translate(-50%,-50%) scale(1.8) rotate(120deg);}}
-  .imgfx{position:absolute;z-index:8;pointer-events:none;}
-  .imgfx img{display:block;width:100%;height:auto;image-rendering:pixelated;}
-  .imgfx.crit{width:9%;animation:critfx .3s ease-out forwards;}
-  @keyframes critfx{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(-20deg);}
-    30%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(-20deg);}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(-20deg);}}
-  .imgfx.boom{width:24%;animation:boomfx .6s ease-out forwards;}
-  @keyframes boomfx{0%{opacity:0;transform:translate(-50%,-50%) scale(.3);}
-    25%{opacity:1;transform:translate(-50%,-50%) scale(1);}
-    100%{opacity:0;transform:translate(-50%,-50%) scale(1.5);}}
-
   .dmg{position:absolute; z-index:9; font-weight:800; pointer-events:none;
     text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6); animation:flo .8s ease-out forwards; white-space:nowrap;}
   @keyframes flo{ 0%{transform:translate(-50%,0) scale(.6); opacity:0;}
@@ -96,7 +85,7 @@
     100%{transform:translate(-50%,-52px) scale(1); opacity:0;} }
   .dmg.click{color:#ffe14a; font-size:22px;} .dmg.crit{color:#ff5a4a; font-size:26px;}
   .dmg.unit{color:#e8eef2; font-size:13px;}
-  .particle{position:absolute; z-index:7; width:6px; height:6px; border-radius:50%;
+  .particle{position:absolute; z-index:8; width:6px; height:6px; border-radius:50%;
     background:var(--gold); pointer-events:none;}
 
   /* ===== KILL BANNER ===== */
@@ -269,8 +258,10 @@ const BOSS=[
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
 // pos = fixed battlefield position (left/bottom %) to avoid overlap
 const UNITS=[
+ {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}},
  {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:42,b:12}},
  {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:31,b:14}, flip:true},
+ {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:27,b:17}},
  {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:48,b:14}},
  {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:20,b:17}, flip:true},
  {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:54,b:11}},
@@ -286,7 +277,8 @@ const UNITS=[
 
 const HERO=[
  {id:"click",jp:"クリック強化",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
- {id:"crate",jp:"クリティカル率",base:350, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
+ {id:"gpk", jp:"コイン袋", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
+ {id:"crate",jp:"クリティカル率",base:250, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
  {id:"cmult",jp:"クリティカル倍率",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
  {id:"gold", jp:"ゴールド獲得量",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
  {id:"combo",jp:"ゴールドラッシュ",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
@@ -299,7 +291,7 @@ function freshState(){
   clearedBossWave:0,
   owned:zeroUnits(),
   ulvl:zeroUnits(),
-  hero:{click:0,crate:0,cmult:0,gold:0,combo:0},
+  hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},
   bossHpMax:0, bossHp:0 };
 }
 function load(){
@@ -307,7 +299,7 @@ function load(){
    if(r){ S=Object.assign(freshState(),r);
      S.owned=Object.assign(zeroUnits(),r.owned||{});
      S.ulvl=Object.assign(zeroUnits(),r.ulvl||{});
-     S.hero=Object.assign({click:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
+     S.hero=Object.assign({click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
      if(!S.clearedBossWave) S.clearedBossWave=0;
      return; } }catch(e){}
@@ -320,7 +312,7 @@ function unitBuyCost(u){ return u.base; }
 function unitUpgCost(u){ return Math.floor(u.base*1.8*Math.pow(1.38,S.ulvl[u.id])); }
 function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); }
 function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id]); }
-function unitDPS(u){ return unitOwned(u)?unitDmg(u)/u.iv:0; }
+function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 function clickDmg(){ return 1+2*S.hero.click; }
 function critRate(){ return Math.min(0.6,0.05+0.02*S.hero.crate); }
@@ -329,7 +321,7 @@ function goldMul(){ return (1+0.1*S.hero.gold)*Math.pow(2,S.prestige); }
 
 let bossIndex=0, bossDead=false;
 function bossMaxHp(){ return 300*Math.pow(4,S.bossWave-1); }
-function goldReward(){ return 80*Math.pow(2.8,S.bossWave-1)*goldMul(); }
+function goldReward(){ return 80*Math.pow(2.8,S.bossWave-1)*goldMul()*(1+0.2*S.hero.gpk); }
 function spawnBoss(reset){
  bossDead=false;
  bossIndex=(S.bossWave-1)%BOSS.length;
@@ -375,8 +367,6 @@ function killBoss(){
  bossEl.classList.add("dying");
  sndKill();
  const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
- const bx=(r.left-fr.left+r.width/2)/fr.width*100, by=(r.top-fr.top+r.height/2)/fr.height*100;
- spawnImgFx("boom",bx,by);
  for(let i=0;i<14;i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
  floatDmg(g,72,16,"click",true);
  sndGold();
@@ -410,15 +400,6 @@ function floatDmg(amt,xPct,yPct,kind,gold){
  field.appendChild(d);
  setTimeout(()=>d.remove(),820);
 }
-function spawnFx(kind,xPct,yPct){
- const f=document.createElement("div");
- f.className="fx "+kind;
- f.innerHTML='<img src="assets/'+(kind==="slash"?"fx_slash.png":"fx_explode.png")+'" alt="">';
- f.style.left=xPct+"%"; f.style.top=yPct+"%";
- f.style.transform="translate(-50%,-50%)";
- field.appendChild(f);
- setTimeout(()=>f.remove(),kind==="explode"?600:280);
-}
 function particle(x,y){
  const p=document.createElement("div"); p.className="particle";
  p.style.left=x+"px"; p.style.top=y+"px";
@@ -427,14 +408,6 @@ function particle(x,y){
    {transform:`translate(${Math.cos(a)*dist}px,${Math.sin(a)*dist}px)`,opacity:0}],
    {duration:600,easing:"ease-out"});
  field.appendChild(p); setTimeout(()=>p.remove(),600);
-}
-function spawnImgFx(kind,xPct,yPct){
- const f=document.createElement("div");
- f.className="imgfx "+kind;
- f.innerHTML='<img src="assets/'+(kind==="boom"?"fx_explode.png":"fx_slash.png")+'" alt="">';
- f.style.left=xPct+"%"; f.style.top=yPct+"%";
- field.appendChild(f);
- setTimeout(()=>f.remove(),kind==="boom"?620:320);
 }
 function spawnAtkFx(kind,xPct,yPct){
  const f=document.createElement("div");
@@ -448,9 +421,14 @@ function projectile(fromX,fromY,emoji){
  const p=document.createElement("div"); p.className="proj"; p.textContent=emoji;
  p.style.left=fromX+"%"; p.style.top=fromY+"%";
  field.appendChild(p);
- const tx=(84-fromX), ty=(40-fromY);
- p.animate([{transform:"translate(0,0)"},{transform:`translate(${tx}vw,${ty}vh)`}],
-   {duration:380,easing:"linear"});
+ const fr=field.getBoundingClientRect();
+ const tx=(82-fromX)/100*fr.width;
+ const ty=(38-fromY)/100*fr.height;
+ p.animate([
+   {transform:"translate(0,0)"},
+   {transform:`translate(${tx*0.5}px,${ty*0.5-fr.height*0.06}px)`},
+   {transform:`translate(${tx}px,${ty}px)`}
+ ],{duration:380,easing:"linear"});
  setTimeout(()=>p.remove(),380);
 }
 function bossHitPt(){ return {x:rnd(74,90), y:rnd(20,46)}; }
@@ -472,7 +450,6 @@ function heroAttack(){
  if(crit) dmg*=critMul();
  if(crit) sndCrit(); else sndClick();
  const pt=bossHitPt();
- if(crit) spawnImgFx("crit",pt.x,pt.y);
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  S.gold+=hitGold();
  // lunge melee units
@@ -520,9 +497,22 @@ function unitTick(dt){
  });
 }
 function doUnitVolley(u){
- if(bossDead||!unitOwned(u)) return;
- const total=unitDmg(u);
+ if(!unitOwned(u)) return;
  const sprites=field.querySelectorAll('.unit-sprite[data-type="'+u.id+'"]');
+ if(u.gold){
+   const g=hitGold()*(1+S.ulvl[u.id]); S.gold+=g;
+   sprites.forEach(el=>{ el.classList.remove("attacking"); void el.offsetWidth; el.classList.add("attacking"); });
+   if(sprites.length){
+     const fr=field.getBoundingClientRect();
+     const r=sprites[0].getBoundingClientRect();
+     const gx=(r.left-fr.left+r.width/2)/fr.width*100, gy=(r.top-fr.top)/fr.height*100;
+     floatDmg(g,gx,gy,"unit",true);
+   }
+   sndGold();
+   return;
+ }
+ if(bossDead) return;
+ const total=unitDmg(u);
  sndUnitHit();
  sprites.forEach(el=>{ el.classList.remove("attacking"); void el.offsetWidth; el.classList.add("attacking"); });
  if(u.ranged && sprites.length){
@@ -558,13 +548,14 @@ function renderCards(){
  let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
   if(unitOwned(u)){
-   const nextDmg=u.dmg*(1+0.9*(S.ulvl[u.id]+1));
-   h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+S.ulvl[u.id],
-     ef:`DPS ${fmt(unitDPS(u))} → ${fmt(nextDmg/u.iv)} (次)`,cost:unitUpgCost(u)});
+   const ef=u.gold
+     ? `収集 ${fmt(hitGold()*(1+S.ulvl[u.id]))}G → ${fmt(hitGold()*(2+S.ulvl[u.id]))}G (次)`
+     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(S.ulvl[u.id]+1))/u.iv)} (次)`;
+   h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+S.ulvl[u.id],ef,cost:unitUpgCost(u)});
    prevOwned=true;
   } else if(prevOwned){
    h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
-     ef:`DPS ${fmt(u.dmg/u.iv)} (初期)`,cost:unitBuyCost(u)});
+     ef:u.gold?`ゴールドを自動収集`:`DPS ${fmt(u.dmg/u.iv)} (初期)`,cost:unitBuyCost(u)});
    prevOwned=false;
   } else {
    prevOwned=false;
