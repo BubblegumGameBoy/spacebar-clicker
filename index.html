@@ -169,9 +169,9 @@
   #adBox{margin:14px auto 6px; text-align:center; max-width:100%; overflow:hidden;
     min-height:0;}
   #adBox iframe,#adBox img{max-width:100% !important;}
-  #prestigeBtn{margin:6px; padding:9px; background:#3a2150; color:#e7d6ff; border:1px solid #6a4a90;
-    border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;
-    margin-bottom:calc(6px + env(safe-area-inset-bottom, 0px));}
+  #prestigeBtn{display:block; width:100%; margin-top:10px; padding:9px;
+    background:#3a2150; color:#e7d6ff; border:1px solid #6a4a90;
+    border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
   #prestigeBtn:disabled{opacity:.45; cursor:not-allowed;}
 
   #modal{position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:none;
@@ -228,6 +228,7 @@
     <div id="panels">
       <div class="pane active" id="pane-summon"></div>
       <div class="pane" id="pane-hero"></div>
+      <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
       <div id="adBox">
         <!-- admax : 1024px未満のみ、ここ（スクロール最下部）に表示。680px以下はスマホタグ -->
         <script>
@@ -241,7 +242,6 @@
         <!-- admax -->
       </div>
     </div>
-    <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
   </div>
   <div id="adSide">
     <!-- admax : PC(1024px以上)は右サイドに常時表示 -->
