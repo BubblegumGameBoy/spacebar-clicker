@@ -44,6 +44,8 @@
   #boss{position:absolute; right:8%; bottom:14%; height:62%; max-width:48%; transform-origin:bottom center;
     z-index:5; pointer-events:none;}
   #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block; animation:bob 2.6s ease-in-out infinite;}
+  /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
+  #boss.wide{height:46%; max-width:72%; right:2%;}
   @keyframes bob{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-1%) rotate(-.4deg);} }
   #boss.hit img{ animation:bob 2.6s ease-in-out infinite, shake .15s; filter:brightness(1.8) saturate(1.4); }
   @keyframes shake{ 0%{transform:translate(0,0);}25%{transform:translate(-6px,2px);}50%{transform:translate(5px,-1px);}75%{transform:translate(-3px,1px);}100%{transform:translate(0,0);} }
@@ -71,6 +73,9 @@
     font-size:10px; font-weight:700; color:#fff;
     background:rgba(0,0,0,.6); border:1px solid var(--line); border-radius:8px; padding:0 5px; white-space:nowrap;}
   @keyframes ubob{ 0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);} }
+  /* flying units float in the sky with a gentle bob */
+  .unit-sprite.fly{ animation:floatBob 3s ease-in-out infinite alternate; }
+  @keyframes floatBob{ 0%{transform:translateY(6px);} 100%{transform:translateY(-6px);} }
   .unit-sprite.melee.attacking{ animation:lunge .3s ease; }
   @keyframes lunge{ 0%{transform:translateX(0);}40%{transform:translateX(8px);}100%{transform:translateX(0);} }
   .unit-sprite.ranged.attacking{ animation:rfire .3s ease; }
@@ -171,6 +176,7 @@
   .card .top{display:flex; justify-content:space-between; align-items:baseline;}
   .card .nm{font-weight:700; font-size:14px;}
   .card .lv{font-size:11px; color:var(--accent); font-weight:700;}
+  .card .desc{font-size:10px; color:var(--sub); opacity:.85; line-height:1.3;}
   .card .ef{font-size:11px; color:var(--sub);}
   .card .cost{font-size:13px; font-weight:700; color:var(--gold); margin-top:2px;}
   .card.dis .cost{color:#a06a4a;}
@@ -321,7 +327,7 @@ function sndGold(){ snd(440,'sine',0.08,0.12); }
 const BOSS=[
  {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
  {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン"},
- {img:"boss03_direbird.webp",name:"凶鳥 ザルファク"},
+ {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
  {img:"boss04_blob.webp",name:"蠢く粘塊 グロブス"},
  {img:"boss05_hunter.webp",name:"深淵の狩人 ヴォルグ"},
  {img:"boss06_flame.webp",name:"焔霊 イグニス"},
@@ -329,7 +335,7 @@ const BOSS=[
  {img:"boss08_hound.webp",name:"時喰いの猟犬 クロノファング"},
  {img:"boss09_beast.webp",name:"極北の獣神 ボレアス"},
  {img:"boss10_stormgod.webp",name:"嵐の古神 ストラトス"},
- {img:"boss11_eldermind.webp",name:"刻の支配者 エルダーマインド"},
+ {img:"boss11_shantak.webp",name:"終焉の魔鳥 シャンタク",wide:true},
 ];
 
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
@@ -346,19 +352,19 @@ const UNITS=[
  {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:25,b:20}, flip:true},
  {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, flip:true},
  {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:13}},
- {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:6, b:24}},
- {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:14,b:27}},
- {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:22,b:30}},
- {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:4, b:33}},
+ {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:6, b:46}, fly:true},
+ {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:16,b:52}, fly:true},
+ {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:26,b:58}, fly:true},
+ {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:3, b:60}, fly:true},
 ];
 
 const HERO=[
- {id:"click",jp:"クリック強化",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
- {id:"gpk", jp:"コイン袋", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
- {id:"crate",jp:"クリティカル率",base:250, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
- {id:"cmult",jp:"クリティカル倍率",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
- {id:"gold", jp:"ゴールド獲得量",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
- {id:"combo",jp:"ゴールドラッシュ",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
+ {id:"click",jp:"クリック強化",icon:"👆",desc:"タップ/スペースキーのダメージを上げる",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
+ {id:"gpk", jp:"コイン袋",icon:"💰",desc:"ボス撃破時のゴールドが増える", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
+ {id:"crate",jp:"クリティカル率",icon:"🎯",desc:"クリティカル発生率アップ",base:250, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
+ {id:"cmult",jp:"クリティカル倍率",icon:"💥",desc:"クリティカル時のダメージ倍率アップ",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
+ {id:"gold", jp:"ゴールド獲得量",icon:"✨",desc:"全てのゴールド獲得量アップ",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
+ {id:"combo",jp:"ゴールドラッシュ",icon:"⚡",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
 ];
 
 let S;
@@ -406,6 +412,7 @@ function spawnBoss(reset){
  S.bossHpMax=bossMaxHp();
  if(reset||!S.bossHp||S.bossHp>S.bossHpMax) S.bossHp=S.bossHpMax;
  bossImg.src="assets/"+b.img;
+ bossEl.classList.toggle("wide",!!b.wide);
  $("#bossName").textContent=b.name;
  $("#bossLv").textContent=S.bossWave;
  bossEl.classList.remove("dying");
@@ -503,8 +510,15 @@ function projectile(fromX,fromY,emoji){
  p.style.left=fromX+"%"; p.style.top=fromY+"%";
  field.appendChild(p);
  const fr=field.getBoundingClientRect();
- const tx=(82-fromX)/100*fr.width;
- const ty=(38-fromY)/100*fr.height;
+ // aim at the boss image's actual rendered centre rather than a fixed point
+ const br=bossImg.getBoundingClientRect();
+ let toXpct=82, toYpct=38;
+ if(br.width&&fr.width){
+   toXpct=(br.left-fr.left+br.width*0.5)/fr.width*100;
+   toYpct=(br.top-fr.top+br.height*0.5)/fr.height*100;
+ }
+ const tx=(toXpct-fromX)/100*fr.width;
+ const ty=(toYpct-fromY)/100*fr.height;
  p.animate([
    {transform:"translate(0,0)"},
    {transform:`translate(${tx*0.5}px,${ty*0.5-fr.height*0.06}px)`},
@@ -512,7 +526,17 @@ function projectile(fromX,fromY,emoji){
  ],{duration:380,easing:"linear"});
  setTimeout(()=>p.remove(),380);
 }
-function bossHitPt(){ return {x:rnd(74,90), y:rnd(20,46)}; }
+// Anchor hit FX / damage numbers to the boss IMAGE's actual rendered box.
+// Spawns within the central ~50% of the image rect, expressed as % of #field,
+// so it matches every boss regardless of aspect ratio / transparent padding.
+function bossHitPt(){
+ const r=bossImg.getBoundingClientRect(), fr=field.getBoundingClientRect();
+ if(!r.width||!fr.width) return {x:82, y:38};
+ // central 50% band of the rect
+ const cx=r.left-fr.left + r.width*rnd(0.25,0.75);
+ const cy=r.top-fr.top  + r.height*rnd(0.25,0.75);
+ return {x:cx/fr.width*100, y:cy/fr.height*100};
+}
 
 let combo=0, comboTimer=0;
 function addCombo(){
@@ -563,10 +587,11 @@ function renderUnits(){
  UNITS.forEach(u=>{
   if(!unitOwned(u)) return;
   const el=document.createElement("div");
-  el.className="unit-sprite "+(u.ranged?"ranged":"melee");
+  el.className="unit-sprite "+(u.ranged?"ranged":"melee")+(u.fly?" fly":"");
   el.dataset.type=u.id;
   el.style.left=u.pos.l+"%";
   el.style.bottom=u.pos.b+"%";
+  if(u.fly) el.style.animationDelay=(UNITS.indexOf(u)*0.4)+"s";
   el.innerHTML='<img src="assets/'+u.sprite+'"'+(u.flip?' style="transform:scaleX(-1)"':'')+' alt="">';
   // level badge
   if(S.ulvl[u.id]>0){
@@ -626,6 +651,7 @@ function card(o){
  const dis=S.gold<o.cost;
  return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.cost}">
    <div class="top"><span class="nm">${o.nm}</span><span class="lv">${o.lv}</span></div>
+   ${o.desc?`<div class="desc">${o.desc}</div>`:''}
    <div class="ef">${o.ef}</div>
    <div class="cost">${fmt(o.cost)} G</div></div>`;
 }
@@ -653,7 +679,7 @@ function renderCards(){
  });
  $("#pane-summon").innerHTML=h;
  let hh="";
- HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:o.jp,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o)}); });
+ HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:(o.icon?o.icon+" ":"")+o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o)}); });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
  if(S.bossWave>=7){ pb.disabled=false; pb.textContent=`転生する (永続ゴールド ×${Math.pow(2,S.prestige+1)})`; }
