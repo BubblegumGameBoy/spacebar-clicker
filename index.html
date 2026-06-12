@@ -19,7 +19,8 @@
   }
   /* ===== BATTLEFIELD ===== */
   #field{
-    position:relative; width:100%; height:62vh; overflow:hidden; cursor:crosshair;
+    position:relative; width:100%; height:62vh; overflow:hidden;
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><g transform='rotate(45 16 16)'><rect x='14.5' y='2' width='3' height='17' rx='1' fill='%23dfe7ee' stroke='%23222' stroke-width='1'/><polygon points='16,0 14.5,3 17.5,3' fill='%23f4f9ff' stroke='%23222' stroke-width='.6'/><rect x='10' y='18.5' width='12' height='3' rx='1.2' fill='%23b88a2e' stroke='%23222' stroke-width='1'/><rect x='14.6' y='21.5' width='2.8' height='7' rx='1.2' fill='%236b4a1d' stroke='%23222' stroke-width='1'/><circle cx='16' cy='30' r='1.8' fill='%23f3c34a' stroke='%23222' stroke-width='.8'/></g></svg>") 4 4, crosshair;
     flex:0 0 auto;
   }
   #bgImg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
@@ -78,6 +79,20 @@
     box-shadow:0 0 10px #bf60ff;animation:mfx .48s ease-out forwards;}
   @keyframes mfx{0%{opacity:1;transform:translate(-50%,-50%) scale(0) rotate(0deg);}
     100%{opacity:0;transform:translate(-50%,-50%) scale(1.8) rotate(120deg);}}
+
+  /* player click slash: bright arc streak, random angle set via --ang */
+  .clickfx{position:absolute;z-index:8;pointer-events:none;width:90px;height:90px;}
+  .clickfx::before{content:"";position:absolute;inset:0;border-radius:50%;
+    border:4px solid transparent;
+    border-top-color:#fff;border-right-color:#ffe96b;
+    filter:drop-shadow(0 0 6px rgba(255,235,120,.9));
+    animation:clkarc .22s ease-out forwards;}
+  @keyframes clkarc{
+    0%{opacity:0;transform:rotate(calc(var(--ang) - 120deg)) scale(.5);}
+    25%{opacity:1;}
+    100%{opacity:0;transform:rotate(calc(var(--ang) + 60deg)) scale(1.15);}}
+  .clickfx.crit{width:130px;height:130px;}
+  .clickfx.crit::before{border-width:6px;border-top-color:#ff8a5a;border-right-color:#ffd24a;}
   .dmg{position:absolute; z-index:9; font-weight:800; pointer-events:none;
     text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6); animation:flo .8s ease-out forwards; white-space:nowrap;}
   @keyframes flo{ 0%{transform:translate(-50%,0) scale(.6); opacity:0;}
@@ -247,8 +262,24 @@ function snd(freq,type,dur,vol=0.3,decay=0.8){
     o.start(); o.stop(ctx.currentTime+dur);
   }catch(e){}
 }
-function sndClick(){ snd(180,'square',0.06,0.15); }
-function sndCrit(){ snd(320,'sawtooth',0.12,0.25); snd(480,'sine',0.1,0.15); }
+// noise burst for slash "swish" — white noise through a falling bandpass
+function sndSwish(vol=0.22,dur=0.09,freq=2600){
+  try{
+    const ctx=ac(); if(ctx.state==="suspended") ctx.resume();
+    const len=ctx.sampleRate*dur, buf=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const f=ctx.createBiquadFilter(); f.type="bandpass"; f.Q.value=1.2;
+    f.frequency.setValueAtTime(freq,ctx.currentTime);
+    f.frequency.exponentialRampToValueAtTime(freq*0.35,ctx.currentTime+dur);
+    const g=ctx.createGain(); g.gain.value=vol;
+    src.connect(f); f.connect(g); g.connect(ctx.destination);
+    src.start();
+  }catch(e){}
+}
+function sndClick(){ sndSwish(0.2,0.08,2400); snd(95,'square',0.07,0.22); }
+function sndCrit(){ sndSwish(0.3,0.12,3200); snd(70,'square',0.12,0.3); snd(480,'sawtooth',0.1,0.18); }
 function sndUnitHit(){ snd(120,'square',0.04,0.08); }
 function sndKill(){ [200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.18,0.2),i*60)); }
 function sndLevelUp(){ [300,400,500,650].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.15,0.25),i*80)); }
@@ -456,6 +487,16 @@ function addCombo(){
 // gold granted per hit (clicks and unit attacks alike)
 function hitGold(){ return Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.hero.combo+1)))); }
 
+function spawnClickFx(xPct,yPct,crit){
+ if(field.querySelectorAll(".clickfx").length>10) return;
+ const f=document.createElement("div");
+ f.className="clickfx"+(crit?" crit":"");
+ f.style.left=xPct+"%"; f.style.top=yPct+"%";
+ f.style.setProperty("--ang",Math.floor(rnd(0,360))+"deg");
+ f.style.marginLeft=(crit?-65:-45)+"px"; f.style.marginTop=(crit?-65:-45)+"px";
+ field.appendChild(f);
+ setTimeout(()=>f.remove(),240);
+}
 function heroAttack(){
  if(bossDead) return;
  addCombo();
@@ -463,10 +504,9 @@ function heroAttack(){
  if(crit) dmg*=critMul();
  if(crit) sndCrit(); else sndClick();
  const pt=bossHitPt();
+ spawnClickFx(pt.x,pt.y,crit);
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  S.gold+=hitGold();
- // lunge melee units
-
 }
 field.addEventListener("pointerdown",e=>{ heroAttack(); });
 const _heldKeys=new Set();
