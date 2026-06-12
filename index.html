@@ -137,7 +137,12 @@
   #comboTag small{display:block; font-size:11px; color:var(--sub);}
 
   /* ===== CONTROL DECK ===== */
-  #deck{flex:1 1 auto; display:flex; flex-direction:column; background:var(--panel); border-top:2px solid var(--line); min-height:0;}
+  #deck{flex:1 1 auto; display:flex; flex-direction:row; background:var(--panel); border-top:2px solid var(--line); min-height:0;}
+  #deckMain{flex:1 1 auto; display:flex; flex-direction:column; min-width:0;}
+  /* PC: ad lives in a fixed right column, fully visible without scrolling */
+  #adSide{flex:0 0 320px; display:none; align-items:center; justify-content:center;
+    border-left:1px solid var(--line); background:var(--panel2); padding:10px; overflow:hidden;}
+  @media(min-width:1024px){ #adSide{display:flex;} }
   #tabs{display:flex; flex:0 0 auto;}
   .tab{flex:1; padding:10px; text-align:center; font-weight:700; font-size:14px; cursor:pointer;
     background:var(--panel2); color:var(--sub); border-right:1px solid var(--line); border-bottom:2px solid transparent;}
@@ -208,25 +213,38 @@
 </div>
 
 <div id="deck">
-  <div id="tabs">
-    <div class="tab active" data-t="summon">召喚</div>
-    <div class="tab" data-t="hero">強化</div>
-  </div>
-  <div id="panels">
-    <div class="pane active" id="pane-summon"></div>
-    <div class="pane" id="pane-hero"></div>
-    <div id="adBox">
-      <!-- admax : PC/スマホを画面幅で出し分け -->
-      <script>
-        document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/'+
-          (window.innerWidth<=680?'372db9c680f72d97237d54267563e357'
-                                 :'dce5f7f5ae36fcbf75f25a36c4409c63')+
-          '"><\/scr'+'ipt>');
-      </script>
-      <!-- admax -->
+  <div id="deckMain">
+    <div id="tabs">
+      <div class="tab active" data-t="summon">召喚</div>
+      <div class="tab" data-t="hero">強化</div>
     </div>
+    <div id="panels">
+      <div class="pane active" id="pane-summon"></div>
+      <div class="pane" id="pane-hero"></div>
+      <div id="adBox">
+        <!-- admax : 1024px未満のみ、ここ（スクロール最下部）に表示。680px以下はスマホタグ -->
+        <script>
+          if(window.innerWidth<1024){
+            document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/'+
+              (window.innerWidth<=680?'372db9c680f72d97237d54267563e357'
+                                     :'dce5f7f5ae36fcbf75f25a36c4409c63')+
+              '"><\/scr'+'ipt>');
+          }
+        </script>
+        <!-- admax -->
+      </div>
+    </div>
+    <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
   </div>
-  <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
+  <div id="adSide">
+    <!-- admax : PC(1024px以上)は右サイドに常時表示 -->
+    <script>
+      if(window.innerWidth>=1024){
+        document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/dce5f7f5ae36fcbf75f25a36c4409c63"><\/scr'+'ipt>');
+      }
+    </script>
+    <!-- admax -->
+  </div>
 </div>
 
 <div id="modal"><div class="mbox">
