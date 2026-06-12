@@ -361,7 +361,7 @@ const UNITS=[
 const HERO=[
  {id:"click",jp:"クリック強化",icon:"👆",desc:"タップ/スペースキーのダメージを上げる",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
  {id:"gpk", jp:"コイン袋",icon:"💰",desc:"ボス撃破時のゴールドが増える", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
- {id:"crate",jp:"クリティカル率",icon:"🎯",desc:"クリティカル発生率アップ",base:250, scale:1.6, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
+ {id:"crate",jp:"クリティカル率",icon:"🎯",desc:"クリティカル発生率アップ（上限60%）",base:250, scale:1.6, max:28, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
  {id:"cmult",jp:"クリティカル倍率",icon:"💥",desc:"クリティカル時のダメージ倍率アップ",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
  {id:"gold", jp:"ゴールド獲得量",icon:"✨",desc:"全てのゴールド獲得量アップ",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
  {id:"combo",jp:"ゴールドラッシュ",icon:"⚡",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
@@ -648,12 +648,12 @@ function doUnitVolley(u){
 
 /* ===== CARDS ===== */
 function card(o){
- const dis=S.gold<o.cost;
- return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.cost}">
+ const dis=o.maxed||S.gold<o.cost;
+ return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.maxed?'Infinity':o.cost}">
    <div class="top"><span class="nm">${o.nm}</span><span class="lv">${o.lv}</span></div>
    ${o.desc?`<div class="desc">${o.desc}</div>`:''}
    <div class="ef">${o.ef}</div>
-   <div class="cost">${fmt(o.cost)} G</div></div>`;
+   <div class="cost">${o.maxed?'MAX':fmt(o.cost)+' G'}</div></div>`;
 }
 // re-evaluate affordability live so cards unlock the moment gold is enough
 function refreshAffordable(){
@@ -679,7 +679,7 @@ function renderCards(){
  });
  $("#pane-summon").innerHTML=h;
  let hh="";
- HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:(o.icon?o.icon+" ":"")+o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o)}); });
+ HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:(o.icon?o.icon+" ":"")+o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max}); });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
  if(S.bossWave>=7){ pb.disabled=false; pb.textContent=`転生する (永続ゴールド ×${Math.pow(2,S.prestige+1)})`; }
@@ -694,7 +694,7 @@ $("#panels").addEventListener("click",e=>{
  else if(act==="upg"){ const u=UNITS.find(x=>x.id===id), cst=unitUpgCost(u);
    if(S.gold>=cst){ S.gold-=cst; S.ulvl[id]++; renderUnits(); sndLevelUp(); } }
  else if(act==="hero"){ const o=HERO.find(x=>x.id===id), cst=heroCost(o);
-   if(S.gold>=cst){ S.gold-=cst; S.hero[id]++; sndLevelUp(); } }
+   if(!(o.max&&S.hero[id]>=o.max) && S.gold>=cst){ S.gold-=cst; S.hero[id]++; sndLevelUp(); } }
  renderCards(); updateHud(); save();
 });
 $$(".tab").forEach(t=>t.addEventListener("click",()=>{
