@@ -45,7 +45,7 @@
     z-index:5; pointer-events:none;}
   #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block; animation:bob 2.6s ease-in-out infinite;}
   /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
-  #boss.wide{height:46%; max-width:72%; right:2%;}
+  #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;} /* flying final boss hovers above the ground units */
   @keyframes bob{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-1%) rotate(-.4deg);} }
   #boss.hit img{ animation:bob 2.6s ease-in-out infinite, shake .15s; filter:brightness(1.8) saturate(1.4); }
   @keyframes shake{ 0%{transform:translate(0,0);}25%{transform:translate(-6px,2px);}50%{transform:translate(5px,-1px);}75%{transform:translate(-3px,1px);}100%{transform:translate(0,0);} }
@@ -191,9 +191,9 @@
     border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
   #prestigeBtn:disabled{opacity:.45; cursor:not-allowed;}
 
-  #modal{position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:none;
+  #modal,.cmodal{position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:none;
     align-items:center; justify-content:center;}
-  #modal.on{display:flex;}
+  #modal.on,.cmodal.on{display:flex;}
   .mbox{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px; max-width:340px; text-align:center;}
   .mbox h3{margin-bottom:8px; color:#e7d6ff;}
   .mbox p{font-size:13px; color:var(--sub); margin-bottom:16px; line-height:1.5;}
@@ -270,6 +270,15 @@
     <!-- admax -->
   </div>
 </div>
+
+<div id="creditsModal" class="cmodal"><div class="mbox">
+  <h3>🎉 THANK YOU FOR PLAYING!</h3>
+  <p>全11体のボスを討伐しました！<br><br>
+  <b>SPACEBAR BOSS RUSH</b><br>
+  制作: Bubblegum<br><br>
+  転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！</p>
+  <button class="yes" id="creditsClose">閉じる</button>
+</div></div>
 
 <div id="modal"><div class="mbox">
   <h3>転生しますか？</h3>
@@ -374,7 +383,7 @@ let S;
 function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
 function freshState(){
  return { gold:0, globalWave:1, bossWave:1, prestige:0,
-  clearedBossWave:0,
+  clearedBossWave:0, gameCleared:false,
   owned:zeroUnits(),
   ulvl:zeroUnits(),
   hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},
@@ -454,6 +463,12 @@ function killBoss(){
    S.clearedBossWave=S.bossWave;
    // first kill of this boss — progress milestone for analytics
    try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name}); }catch(e){}
+   // first full clear: roll credits (once per player, survives prestige)
+   if(S.bossWave>=BOSS.length && !S.gameCleared){
+     S.gameCleared=true;
+     try{ gtag('event','game_clear',{prestige_count:S.prestige}); }catch(e){}
+     setTimeout(()=>$("#creditsModal").classList.add("on"),1600);
+   }
  }
  bossEl.classList.add("dying");
  sndKill();
@@ -713,10 +728,11 @@ $$(".tab").forEach(t=>t.addEventListener("click",()=>{
 
 $("#prestigeBtn").addEventListener("click",()=>{ if(!$("#prestigeBtn").disabled) $("#modal").classList.add("on"); });
 $("#mNo").addEventListener("click",()=>$("#modal").classList.remove("on"));
+$("#creditsClose").addEventListener("click",()=>$("#creditsModal").classList.remove("on"));
 $("#mYes").addEventListener("click",()=>{
- const p=S.prestige+1;
+ const p=S.prestige+1, cleared=S.gameCleared;
  try{ gtag('event','prestige',{prestige_count:p}); }catch(e){}
- S=freshState(); S.prestige=p;
+ S=freshState(); S.prestige=p; S.gameCleared=cleared;
  $("#modal").classList.remove("on");
  spawnBoss(true); renderUnits(); renderCards(); updateHud(); save();
 });
