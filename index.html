@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SPACEBAR BOSS RUSH</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;
@@ -169,7 +169,8 @@
     min-height:0;}
   #adBox iframe,#adBox img{max-width:100% !important;}
   #prestigeBtn{margin:6px; padding:9px; background:#3a2150; color:#e7d6ff; border:1px solid #6a4a90;
-    border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
+    border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;
+    margin-bottom:calc(6px + env(safe-area-inset-bottom, 0px));}
   #prestigeBtn:disabled{opacity:.45; cursor:not-allowed;}
 
   #modal{position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:none;
