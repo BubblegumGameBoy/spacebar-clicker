@@ -466,7 +466,7 @@ function heroAttack(){
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  S.gold+=hitGold();
  // lunge melee units
- document.querySelectorAll(".unit-sprite.melee").forEach(u=>{ u.classList.remove("attacking"); void u.offsetWidth; u.classList.add("attacking"); });
+
 }
 field.addEventListener("pointerdown",e=>{ heroAttack(); });
 const _heldKeys=new Set();
