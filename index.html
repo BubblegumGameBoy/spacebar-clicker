@@ -140,6 +140,9 @@
   .card .ef{font-size:11px; color:var(--sub);}
   .card .cost{font-size:13px; font-weight:700; color:var(--gold); margin-top:2px;}
   .card.dis .cost{color:#a06a4a;}
+  #adBox{margin:14px auto 6px; text-align:center; max-width:100%; overflow:hidden;
+    min-height:0;}
+  #adBox iframe,#adBox img{max-width:100% !important;}
   #prestigeBtn{margin:6px; padding:9px; background:#3a2150; color:#e7d6ff; border:1px solid #6a4a90;
     border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
   #prestigeBtn:disabled{opacity:.45; cursor:not-allowed;}
@@ -197,6 +200,16 @@
   <div id="panels">
     <div class="pane active" id="pane-summon"></div>
     <div class="pane" id="pane-hero"></div>
+    <div id="adBox">
+      <!-- admax : PC/スマホを画面幅で出し分け -->
+      <script>
+        document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/'+
+          (window.innerWidth<=680?'372db9c680f72d97237d54267563e357'
+                                 :'dce5f7f5ae36fcbf75f25a36c4409c63')+
+          '"><\/scr'+'ipt>');
+      </script>
+      <!-- admax -->
+    </div>
   </div>
   <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
 </div>
