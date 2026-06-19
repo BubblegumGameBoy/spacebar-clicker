@@ -406,28 +406,32 @@ const BOSS=[
 // pos = fixed battlefield position (left/bottom %) to avoid overlap
 const UNITS=[
  // 近接兵=ボス手前(右)に前線、弓兵/村人(gold)=後方(左)。先に召喚する兵ほど最前列に。
- {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}},
- {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:12}},
- {id:"dwarfb", jp:"ドワーフ戦士",sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:56,b:16}},
- {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:30,b:14}, flip:true},
- {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:26,b:21}},
- {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:53,b:12}},
- {id:"dwarfw", jp:"鋼のドワーフ",sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:50,b:17}},
- {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:22,b:16}, flip:true},
- {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:47,b:11}},
- {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:44,b:15}},
- {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:18,b:20}, flip:true},
- {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, flip:true},
- {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:41,b:13}},
- {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:44}, fly:true},
- {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:20,b:50}, fly:true},
- {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:34,b:46}, fly:true},
- {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:2, b:62}, fly:true},
- {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:14,b:62}, fly:true},
- {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:40,b:58}, fly:true},
- {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:27,b:64}, fly:true},
- {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:38,b:18}},
+ // pos = PC横画面、posM = スマホ縦画面（左半分に圧縮してボスと重ならないように）
+ {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}, posM:{l:24,b:17}},
+ {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:12}, posM:{l:45,b:11}},
+ {id:"dwarfb", jp:"ドワーフ戦士",sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:56,b:16}, posM:{l:41,b:16}},
+ {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:30,b:14}, posM:{l:22,b:13}, flip:true},
+ {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:26,b:21}, posM:{l:15,b:20}},
+ {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:53,b:12}, posM:{l:44,b:9}},
+ {id:"dwarfw", jp:"鋼のドワーフ",sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:50,b:17}, posM:{l:38,b:15}},
+ {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:22,b:16}, posM:{l:13,b:16}, flip:true},
+ {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:47,b:11}, posM:{l:41,b:8}},
+ {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:44,b:15}, posM:{l:35,b:13}},
+ {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:18,b:20}, posM:{l:9,b:19}, flip:true},
+ {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, posM:{l:4,b:20}, flip:true},
+ {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:41,b:13}, posM:{l:38,b:11}},
+ {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:44}, posM:{l:4, b:42}, fly:true},
+ {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:20,b:50}, posM:{l:18,b:48}, fly:true},
+ {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:34,b:46}, posM:{l:32,b:44}, fly:true},
+ {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:2, b:62}, posM:{l:2, b:60}, fly:true},
+ {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:14,b:62}, posM:{l:14,b:60}, fly:true},
+ {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:40,b:58}, posM:{l:30,b:56}, fly:true},
+ {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:27,b:64}, posM:{l:24,b:62}, fly:true},
+ {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:38,b:18}, posM:{l:33,b:17}},
 ];
+// 縦画面（スマホ）判定：画面が縦長 かつ 幅が狭い
+function isPortrait(){ return window.matchMedia("(max-width:680px)").matches && window.innerHeight>window.innerWidth; }
+function unitPos(u){ return (isPortrait() && u.posM) ? u.posM : u.pos; }
 
 const HERO=[
  {id:"click",jp:"クリック強化",desc:"タップ/スペースキーのダメージを上げる",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
@@ -491,10 +495,13 @@ function spawnBoss(reset){
  bossEl.classList.toggle("flip",!!b.flip);
  bossEl.classList.toggle("fly",!!b.fly);
  const baseH=b.wide?46:62, baseMW=b.wide?72:48, sc=b.scale||1;
+ // スマホ縦画面では味方を置く左半分を空けるため、ボスを右に寄せて横幅を抑える
+ const port=isPortrait();
+ const mwFactor=port?0.82:1;
  bossEl.style.height=(baseH*sc)+"%";
- bossEl.style.maxWidth=(baseMW*sc)+"%";
+ bossEl.style.maxWidth=(baseMW*sc*mwFactor)+"%";
  bossEl.style.bottom=(b.bottom!=null?b.bottom:(b.wide?34:14))+"%";
- bossEl.style.right=(b.right!=null?b.right:(b.wide?2:8))+"%";
+ bossEl.style.right=(b.right!=null?b.right:(b.wide?2:(port?3:8)))+"%";
  // drop-shadow grounds the cut-out art; per-boss filter tames over-bright sprites
  bossImg.style.filter="drop-shadow(0 7px 11px rgba(0,0,0,.5))"+(b.filter?" "+b.filter:"");
  // 画像ロード中に古い絵が新サイズに引き伸ばされるフラッシュを防ぐ
@@ -688,8 +695,9 @@ function renderUnits(){
   const el=document.createElement("div");
   el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":"");
   el.dataset.type=u.id;
-  el.style.left=u.pos.l+"%";
-  el.style.bottom=u.pos.b+"%";
+  const p=unitPos(u);
+  el.style.left=p.l+"%";
+  el.style.bottom=p.b+"%";
   if(u.fly){ const i=UNITS.indexOf(u);
     el.style.animationDelay=(-i*0.7)+"s";           /* negative: stagger without a start pause */
     el.style.animationDuration=(3+(i%4)*0.45)+"s"; } /* different speeds so they never sync */
@@ -862,6 +870,16 @@ load();
 spawnBoss(); renderUnits(); renderCards(); updateHud();
 lastGold=S.gold;
 requestAnimationFrame(loop);
+
+// 画面回転・リサイズで縦/横レイアウトを切り替え（位置を取り直す）
+let _wasPortrait=isPortrait(), _reflowT=null;
+window.addEventListener("resize",()=>{
+  clearTimeout(_reflowT);
+  _reflowT=setTimeout(()=>{
+    const p=isPortrait();
+    if(p!==_wasPortrait){ _wasPortrait=p; spawnBoss(); renderUnits(); }
+  },180);
+});
 
 setInterval(save,10000);
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) save(); });
