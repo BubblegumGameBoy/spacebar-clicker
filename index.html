@@ -356,10 +356,10 @@ const BOSS=[
  {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
  {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール"},
  {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト"},
+ {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
  {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン",fly:true},
  {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント",fly:true},
  {img:"boss_serpentman.webp",name:"古の蛇人 サーペントマン"},
- {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
  {img:"boss_migo.webp",name:"冥王星の菌類 ミ＝ゴ",fly:true,scale:1.28},
  {img:"boss_shaggai.webp",name:"シャッガイの蟲 ノフ＝ケー",fly:true},
  {img:"boss04_blob.webp",name:"蠢く粘塊 グロブス"},
@@ -483,7 +483,6 @@ function spawnBoss(reset){
  const b=BOSS[bossIndex];
  S.bossHpMax=bossMaxHp();
  if(reset||!S.bossHp||S.bossHp>S.bossHpMax) S.bossHp=S.bossHpMax;
- bossImg.src="assets/"+b.img;
  bossEl.classList.toggle("wide",!!b.wide);
  bossEl.classList.toggle("flip",!!b.flip);
  bossEl.classList.toggle("fly",!!b.fly);
@@ -494,6 +493,11 @@ function spawnBoss(reset){
  bossEl.style.right=(b.right!=null?b.right:(b.wide?2:8))+"%";
  // drop-shadow grounds the cut-out art; per-boss filter tames over-bright sprites
  bossImg.style.filter="drop-shadow(0 7px 11px rgba(0,0,0,.5))"+(b.filter?" "+b.filter:"");
+ // 画像ロード中に古い絵が新サイズに引き伸ばされるフラッシュを防ぐ
+ bossImg.style.opacity="0";
+ bossImg.onload=()=>{ bossImg.style.opacity="1"; };
+ bossImg.src="assets/"+b.img;
+ if(bossImg.complete) bossImg.style.opacity="1";
  $("#bossName").textContent=b.name;
  $("#bossLv").textContent=S.bossWave;
  bossEl.classList.remove("dying");
