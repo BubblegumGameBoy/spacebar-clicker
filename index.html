@@ -51,12 +51,16 @@
   /* ===== BOSS ===== */
   #boss{position:absolute; right:8%; bottom:14%; height:62%; max-width:48%; transform-origin:bottom center;
     z-index:5; pointer-events:none;}
-  #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block; animation:bob 2.6s ease-in-out infinite;}
+  #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block;
+    transform-origin:bottom center; animation:breathe 3.6s ease-in-out infinite;}
   /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
-  #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;} /* flying final boss hovers above the ground units */
+  #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;}
   #boss.flip{transform:scaleX(-1);} /* mirror right-facing boss art to face the player's units */
-  @keyframes bob{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-1%) rotate(-.4deg);} }
-  #boss.hit img{ animation:bob 2.6s ease-in-out infinite, shake .15s; filter:brightness(1.8) saturate(1.4); }
+  /* grounded bosses only "breathe" in place; winged / floating bosses get the vertical hover */
+  @keyframes breathe{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.015);} }
+  @keyframes bobFly{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-3%) rotate(-.6deg);} }
+  #boss.fly img{ animation:bobFly 2.9s ease-in-out infinite; }
+  #boss.hit img{ animation:shake .15s; filter:brightness(1.8) saturate(1.4)!important; }
   @keyframes shake{ 0%{transform:translate(0,0);}25%{transform:translate(-6px,2px);}50%{transform:translate(5px,-1px);}75%{transform:translate(-3px,1px);}100%{transform:translate(0,0);} }
   #boss.dying img{ animation:die .7s forwards; }
   @keyframes die{ to{ transform:translateY(8%) rotate(12deg) scale(.85); opacity:0; filter:saturate(0) brightness(.4);} }
@@ -254,7 +258,7 @@
     <div id="panels">
       <div class="pane active" id="pane-summon"></div>
       <div class="pane" id="pane-hero"></div>
-      <button id="prestigeBtn" disabled>転生 (15体討伐で解放)</button>
+      <button id="prestigeBtn" disabled>転生 (BOSS 10で解放)</button>
       <div id="adBox">
         <!-- admax : 1024px未満のみ、ここ（スクロール最下部）に表示。680px以下はスマホタグ -->
         <script>
@@ -284,14 +288,15 @@
   <h3>🎉 THANK YOU FOR PLAYING!</h3>
   <p>全41体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br>
   <b>SPACEBAR BOSS RUSH</b><br>
-  制作: Bubblegum<br><br>
+  制作: Bubblegum<br>
+  神話生物グラフィック: インスマス計画<br><br>
   転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！</p>
   <button class="yes" id="creditsClose">閉じる</button>
 </div></div>
 
 <div id="modal"><div class="mbox">
   <h3>転生しますか？</h3>
-  <p>全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的にゴールド獲得 ×2 を得ます。</p>
+  <p>全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。</p>
   <button class="yes" id="mYes">転生する</button>
   <button class="no" id="mNo">やめる</button>
 </div></div>
@@ -348,82 +353,83 @@ function sndGold(){ snd(440,'sine',0.08,0.12); }
 
 const BOSS=[
  // ---- wave 1-11 : 通常の魔物 / 怪物 ----
+ // flip = 素材が右向きなので左(味方側)へ反転。fly = 浮遊する上下アニメ。scale = 表示倍率。
  {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
- {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール",flip:true},
- {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト",flip:true},
- {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン"},
- {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント"},
+ {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール"},
+ {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト"},
+ {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン",fly:true},
+ {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント",fly:true},
  {img:"boss_serpentman.webp",name:"古の蛇人 サーペントマン"},
  {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
- {img:"boss_migo.webp",name:"冥王星の菌類 ミ＝ゴ"},
- {img:"boss_shaggai.webp",name:"シャッガイの蟲 ノフ＝ケー",flip:true},
+ {img:"boss_migo.webp",name:"冥王星の菌類 ミ＝ゴ",fly:true,scale:1.28},
+ {img:"boss_shaggai.webp",name:"シャッガイの蟲 ノフ＝ケー",fly:true},
  {img:"boss04_blob.webp",name:"蠢く粘塊 グロブス"},
- {img:"boss_glaaki.webp",name:"湖底の死霊 グラーキ"},
+ {img:"boss_glaaki.webp",name:"湖底の死霊 グラーキ",scale:1.15},
  // ---- wave 12-25 : より強大な怪異 ----
- {img:"boss05_hunter.webp",name:"深淵の狩人 ヴォルグ"},
+ {img:"boss05_hunter.webp",name:"深淵の狩人 ヴォルグ",fly:true},
  {img:"boss_moonbeast.webp",name:"月の獣 ムーンビースト"},
- {img:"boss_gug.webp",name:"洞窟の巨鬼 ガグ",flip:true},
- {img:"boss06_flame.webp",name:"焔霊 イグニス"},
- {img:"boss_iwife.webp",name:"イスの偉大なる種族 イ夫人",flip:true},
+ {img:"boss_gug.webp",name:"洞窟の巨鬼 ガグ"},
+ {img:"boss06_flame.webp",name:"焔霊 イグニス",fly:true},
+ {img:"boss_iwife.webp",name:"イスの偉大なる種族 イ夫人"},
  {img:"boss_deepone.webp",name:"深海の眷属 ディープ・ワン"},
  {img:"boss_gogfhoul.webp",name:"屍肉の主 ゴグ＝フール"},
  {img:"boss_mordiggian.webp",name:"屍食の神 モルディギアン"},
- {img:"boss07_skyfiend.webp",name:"天空の鬼神 アエロス"},
+ {img:"boss07_skyfiend.webp",name:"天空の鬼神 アエロス",fly:true},
  {img:"boss_tsathoggua.webp",name:"旧支配者 ツァトゥグァ"},
- {img:"boss_chaugnar.webp",name:"象牙の神 チャウグナル・ファウグン",flip:true},
+ {img:"boss_chaugnar.webp",name:"象牙の神 チャウグナル・ファウグン"},
  {img:"boss_objectx.webp",name:"擬態する恐怖 物体Ｘ"},
  {img:"boss_aihot.webp",name:"千の仔 アイホート"},
  {img:"boss_hellplant.webp",name:"地獄の食人花 ヘル・プラント"},
  // ---- wave 26-40 : 古き神々 ----
- {img:"boss_formless.webp",name:"無形の落とし子 フォルムレス・スポーン"},
+ {img:"boss_formless.webp",name:"無形の落とし子 フォルムレス・スポーン",flip:true,fly:true},
  {img:"boss08_hound.webp",name:"時喰いの猟犬 クロノファング"},
  {img:"boss_tindalos.webp",name:"角より来たる ティンダロスの猟犬"},
  {img:"boss_hunter2.webp",name:"忌まわしき狩人 ザ・ハンター"},
  {img:"boss_blackgoat.webp",name:"黒山羊の落とし子 シュブ＝ニグラス"},
- {img:"boss_shantak2.webp",name:"虚空の魔鳥 シャンタク"},
+ {img:"boss_shantak2.webp",name:"虚空の魔鳥 シャンタク",fly:true},
  {img:"boss09_beast.webp",name:"極北の獣神 ボレアス"},
- {img:"boss11_eldermind.webp",name:"刻の支配者 エルダーマインド"},
- {img:"boss11_shantak.webp",name:"終焉の魔鳥 グレーター・シャンタク",wide:true},
- {img:"boss10_stormgod.webp",name:"嵐の古神 ストラトス"},
- {img:"boss_igoronak.webp",name:"汚辱の旧神 イゴーロナク"},
- {img:"boss_tawil.webp",name:"門の守護者 タウィル・アト＝ウムル",flip:true},
- {img:"boss_cthugha.webp",name:"生ける炎 クトゥグァ"},
- {img:"boss_hastur.webp",name:"名状しがたきもの ハスター"},
- {img:"boss_nyarlathotep.webp",name:"這い寄る混沌 ニャルラトテップ"},
+ {img:"boss11_eldermind.webp",name:"刻の支配者 エルダーマインド",fly:true},
+ {img:"boss11_shantak.webp",name:"終焉の魔鳥 グレーター・シャンタク",wide:true,fly:true},
+ {img:"boss10_stormgod.webp",name:"嵐の古神 ストラトス",fly:true,scale:1.32},
+ {img:"boss_igoronak.webp",name:"汚辱の旧神 イゴーロナク",flip:true},
+ {img:"boss_tawil.webp",name:"門の守護者 タウィル・アト＝ウムル",filter:"brightness(.82) saturate(1.2) contrast(1.06)"},
+ {img:"boss_cthugha.webp",name:"生ける炎 クトゥグァ",fly:true},
+ {img:"boss_hastur.webp",name:"名状しがたきもの ハスター",fly:true},
+ {img:"boss_nyarlathotep.webp",name:"這い寄る混沌 ニャルラトテップ",scale:1.32},
  // ---- wave 41 : 終焉の古神 ----
- {img:"boss_cthulhu.webp",name:"終焉の古神 クトゥルフ",wide:true},
+ {img:"boss_cthulhu.webp",name:"終焉の古神 クトゥルフ",wide:true,scale:1.5,bottom:8,right:3},
 ];
 
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
 // pos = fixed battlefield position (left/bottom %) to avoid overlap
 const UNITS=[
- {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}},
- {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:42,b:12}},
- {id:"dwarfb", jp:"ドワーフ戦士",sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:39,b:16}},
- {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:31,b:14}, flip:true},
- {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:45,b:21}},
- {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:48,b:14}},
- {id:"dwarfw", jp:"鋼のドワーフ",sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:52,b:17}},
- {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:20,b:17}, flip:true},
- {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:54,b:11}},
- {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:37,b:11}},
- {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:25,b:20}, flip:true},
- {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, flip:true},
- {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:13}},
- {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:6, b:46}, fly:true},
- {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:16,b:52}, fly:true},
- {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:26,b:58}, fly:true},
- {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:3, b:60}, fly:true},
- {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:8, b:53}, fly:true},
- {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:18,b:56}, fly:true},
- {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:6, b:63}, fly:true},
- {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:64,b:16}},
+ {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:42,b:17}},
+ {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:50,b:12}},
+ {id:"dwarfb", jp:"ドワーフ戦士",sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:46,b:16}},
+ {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:36,b:14}, flip:true},
+ {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:54,b:20}},
+ {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:52,b:13}},
+ {id:"dwarfw", jp:"鋼のドワーフ",sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:48,b:18}},
+ {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:28,b:16}, flip:true},
+ {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:58,b:11}},
+ {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:44,b:11}},
+ {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:32,b:20}, flip:true},
+ {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:22,b:20}, flip:true},
+ {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:62,b:14}},
+ {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:44}, fly:true},
+ {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:20,b:50}, fly:true},
+ {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:34,b:46}, fly:true},
+ {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:2, b:62}, fly:true},
+ {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:14,b:62}, fly:true},
+ {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:40,b:58}, fly:true},
+ {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:27,b:64}, fly:true},
+ {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:56,b:18}},
 ];
 
 const HERO=[
  {id:"click",jp:"クリック強化",desc:"タップ/スペースキーのダメージを上げる",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
  {id:"gpk", jp:"コイン袋",desc:"ボス撃破時のゴールドが増える", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
- {id:"crate",jp:"クリティカル率",desc:"クリティカル発生率アップ（上限60%）",base:250, scale:1.6, max:28, ef:o=>`クリ率 ${Math.round(Math.min(60,5+2*o))}%`},
+ {id:"crate",jp:"クリティカル率",desc:"クリティカル発生率アップ（上限75%）",base:250, scale:1.6, max:35, ef:o=>`クリ率 ${Math.round(Math.min(75,5+2*o))}%`},
  {id:"cmult",jp:"クリティカル倍率",desc:"クリティカル時のダメージ倍率アップ",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
  {id:"gold", jp:"ゴールド獲得量",desc:"全てのゴールド獲得量アップ",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
  {id:"combo",jp:"ゴールドラッシュ",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
@@ -432,7 +438,7 @@ const HERO=[
 let S;
 function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
 function freshState(){
- return { gold:0, globalWave:1, bossWave:1, prestige:0,
+ return { gold:0, globalWave:1, bossWave:1, prestige:0, goldBonus:1,
   clearedBossWave:0, gameCleared:false,
   owned:zeroUnits(),
   ulvl:zeroUnits(),
@@ -447,6 +453,8 @@ function load(){
      S.hero=Object.assign({click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
      if(!S.clearedBossWave) S.clearedBossWave=0;
+     // migrate old saves: prestige used to give a flat 2^prestige multiplier
+     if(S.goldBonus==null) S.goldBonus=Math.pow(2,S.prestige||0);
      return; } }catch(e){}
  S=freshState();
 }
@@ -461,9 +469,11 @@ function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0;
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 const CHEAT=new URLSearchParams(location.search).has("cheat");
 function clickDmg(){ return CHEAT ? (bossMaxHp()*0.5+1e9) : (1+2*S.hero.click); }
-function critRate(){ return Math.min(0.6,0.05+0.02*S.hero.crate); }
+function critRate(){ return Math.min(0.75,0.05+0.02*S.hero.crate); }
 function critMul(){ return 2+0.3*S.hero.cmult; }
-function goldMul(){ return (1+0.1*S.hero.gold)*Math.pow(2,S.prestige); }
+function goldMul(){ return (1+0.1*S.hero.gold)*(S.goldBonus||1); }
+// 転生報酬: 今回到達したボスが深いほど倍率が大きくなる（永続・複利で積み上がる）
+function prestigeFactor(){ return 1+0.2*Math.max(1,S.clearedBossWave); }
 
 let bossIndex=0, bossDead=false;
 function bossMaxHp(){ return Math.floor(300*Math.pow(2.42,S.bossWave-1)); }
@@ -477,6 +487,14 @@ function spawnBoss(reset){
  bossImg.src="assets/"+b.img;
  bossEl.classList.toggle("wide",!!b.wide);
  bossEl.classList.toggle("flip",!!b.flip);
+ bossEl.classList.toggle("fly",!!b.fly);
+ const baseH=b.wide?46:62, baseMW=b.wide?72:48, sc=b.scale||1;
+ bossEl.style.height=(baseH*sc)+"%";
+ bossEl.style.maxWidth=(baseMW*sc)+"%";
+ bossEl.style.bottom=(b.bottom!=null?b.bottom:(b.wide?34:14))+"%";
+ bossEl.style.right=(b.right!=null?b.right:(b.wide?2:8))+"%";
+ // drop-shadow grounds the cut-out art; per-boss filter tames over-bright sprites
+ bossImg.style.filter="drop-shadow(0 7px 11px rgba(0,0,0,.5))"+(b.filter?" "+b.filter:"");
  $("#bossName").textContent=b.name;
  $("#bossLv").textContent=S.bossWave;
  bossEl.classList.remove("dying");
@@ -490,7 +508,7 @@ function updateBossBar(){
 function updateStageTag(){
  $("#stStage").textContent=S.globalWave-1;
  $("#stWave").textContent="BOSS "+S.bossWave;
- $("#stPres").textContent=S.prestige>0?("転生 ×"+Math.pow(2,S.prestige)):"";
+ $("#stPres").textContent=S.prestige>0?("転生"+S.prestige+"回 G×"+fmt(S.goldBonus)):"";
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
    nb.style.display="block";
@@ -767,8 +785,10 @@ function renderCards(){
  HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max}); });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
- if(S.bossWave>=15){ pb.disabled=false; pb.textContent=`転生する (永続ゴールド ×${Math.pow(2,S.prestige)} → ×${Math.pow(2,S.prestige+1)})`; }
- else { pb.disabled=true; pb.textContent=`転生 (BOSS 15到達で解放) 現在 BOSS ${S.bossWave}`; }
+ if(S.bossWave>=10){ pb.disabled=false;
+   const nb=S.goldBonus*prestigeFactor();
+   pb.textContent=`転生する (永続ゴールド ×${fmt(S.goldBonus)} → ×${fmt(nb)})`; }
+ else { pb.disabled=true; pb.textContent=`転生 (BOSS 10到達で解放) 現在 BOSS ${S.bossWave}`; }
 }
 $("#panels").addEventListener("click",e=>{
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
@@ -794,8 +814,9 @@ $("#mNo").addEventListener("click",()=>$("#modal").classList.remove("on"));
 $("#creditsClose").addEventListener("click",()=>$("#creditsModal").classList.remove("on"));
 $("#mYes").addEventListener("click",()=>{
  const p=S.prestige+1, cleared=S.gameCleared;
- try{ gtag('event','prestige',{prestige_count:p}); }catch(e){}
- S=freshState(); S.prestige=p; S.gameCleared=cleared;
+ const newBonus=S.goldBonus*prestigeFactor();
+ try{ gtag('event','prestige',{prestige_count:p,gold_bonus:Math.round(newBonus)}); }catch(e){}
+ S=freshState(); S.prestige=p; S.gameCleared=cleared; S.goldBonus=newBonus;
  $("#modal").classList.remove("on");
  spawnBoss(true); renderUnits(); renderCards(); updateHud(); save();
 });
