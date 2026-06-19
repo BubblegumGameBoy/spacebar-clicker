@@ -690,8 +690,9 @@ window.addEventListener("keyup",e=>{ if(e.code==="Space"){ _heldKeys.delete("Spa
 /* ===== UNIT RENDERING ===== */
 function renderUnits(){
  field.querySelectorAll(".unit-sprite").forEach(e=>e.remove());
- UNITS.forEach(u=>{
-  if(!unitOwned(u)) return;
+ // 2.5D depth: 足元が奥(b大)のユニットを先に描き、手前(b小)を後に描いて前面に重ねる
+ const drawn=UNITS.filter(unitOwned).slice().sort((a,b)=>unitPos(b).b-unitPos(a).b);
+ drawn.forEach(u=>{
   const el=document.createElement("div");
   el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":"");
   el.dataset.type=u.id;
