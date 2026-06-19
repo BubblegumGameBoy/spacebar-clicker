@@ -52,12 +52,11 @@
   #boss{position:absolute; right:8%; bottom:14%; height:62%; max-width:48%; transform-origin:bottom center;
     z-index:5; pointer-events:none;}
   #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block;
-    transform-origin:bottom center; animation:breathe 3.6s ease-in-out infinite;}
+    transform-origin:bottom center;}
   /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
   #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;}
   #boss.flip{transform:scaleX(-1);} /* mirror right-facing boss art to face the player's units */
-  /* grounded bosses only "breathe" in place; winged / floating bosses get the vertical hover */
-  @keyframes breathe{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.015);} }
+  /* grounded bosses stay perfectly still; only winged / floating bosses (.fly) hover */
   @keyframes bobFly{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-3%) rotate(-.6deg);} }
   #boss.fly img{ animation:bobFly 2.9s ease-in-out infinite; }
   #boss.hit img{ animation:shake .15s; filter:brightness(1.8) saturate(1.4)!important; }
