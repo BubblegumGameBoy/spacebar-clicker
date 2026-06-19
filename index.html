@@ -54,6 +54,7 @@
   #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block; animation:bob 2.6s ease-in-out infinite;}
   /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
   #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;} /* flying final boss hovers above the ground units */
+  #boss.flip{transform:scaleX(-1);} /* mirror right-facing boss art to face the player's units */
   @keyframes bob{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-1%) rotate(-.4deg);} }
   #boss.hit img{ animation:bob 2.6s ease-in-out infinite, shake .15s; filter:brightness(1.8) saturate(1.4); }
   @keyframes shake{ 0%{transform:translate(0,0);}25%{transform:translate(-6px,2px);}50%{transform:translate(5px,-1px);}75%{transform:translate(-3px,1px);}100%{transform:translate(0,0);} }
@@ -253,7 +254,7 @@
     <div id="panels">
       <div class="pane active" id="pane-summon"></div>
       <div class="pane" id="pane-hero"></div>
-      <button id="prestigeBtn" disabled>転生 (8体討伐で解放)</button>
+      <button id="prestigeBtn" disabled>転生 (15体討伐で解放)</button>
       <div id="adBox">
         <!-- admax : 1024px未満のみ、ここ（スクロール最下部）に表示。680px以下はスマホタグ -->
         <script>
@@ -281,7 +282,7 @@
 
 <div id="creditsModal" class="cmodal"><div class="mbox">
   <h3>🎉 THANK YOU FOR PLAYING!</h3>
-  <p>全11体のボスを討伐しました！<br><br>
+  <p>全41体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br>
   <b>SPACEBAR BOSS RUSH</b><br>
   制作: Bubblegum<br><br>
   転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！</p>
@@ -346,17 +347,51 @@ function sndLevelUp(){ [300,400,500,650].forEach((f,i)=>setTimeout(()=>snd(f,'si
 function sndGold(){ snd(440,'sine',0.08,0.12); }
 
 const BOSS=[
+ // ---- wave 1-11 : 通常の魔物 / 怪物 ----
  {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
+ {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール",flip:true},
+ {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト",flip:true},
  {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン"},
+ {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント"},
+ {img:"boss_serpentman.webp",name:"古の蛇人 サーペントマン"},
  {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
+ {img:"boss_migo.webp",name:"冥王星の菌類 ミ＝ゴ"},
+ {img:"boss_shaggai.webp",name:"シャッガイの蟲 ノフ＝ケー",flip:true},
  {img:"boss04_blob.webp",name:"蠢く粘塊 グロブス"},
+ {img:"boss_glaaki.webp",name:"湖底の死霊 グラーキ"},
+ // ---- wave 12-25 : より強大な怪異 ----
  {img:"boss05_hunter.webp",name:"深淵の狩人 ヴォルグ"},
+ {img:"boss_moonbeast.webp",name:"月の獣 ムーンビースト"},
+ {img:"boss_gug.webp",name:"洞窟の巨鬼 ガグ",flip:true},
  {img:"boss06_flame.webp",name:"焔霊 イグニス"},
+ {img:"boss_iwife.webp",name:"イスの偉大なる種族 イ夫人",flip:true},
+ {img:"boss_deepone.webp",name:"深海の眷属 ディープ・ワン"},
+ {img:"boss_gogfhoul.webp",name:"屍肉の主 ゴグ＝フール"},
+ {img:"boss_mordiggian.webp",name:"屍食の神 モルディギアン"},
  {img:"boss07_skyfiend.webp",name:"天空の鬼神 アエロス"},
+ {img:"boss_tsathoggua.webp",name:"旧支配者 ツァトゥグァ"},
+ {img:"boss_chaugnar.webp",name:"象牙の神 チャウグナル・ファウグン",flip:true},
+ {img:"boss_objectx.webp",name:"擬態する恐怖 物体Ｘ"},
+ {img:"boss_aihot.webp",name:"千の仔 アイホート"},
+ {img:"boss_hellplant.webp",name:"地獄の食人花 ヘル・プラント"},
+ // ---- wave 26-40 : 古き神々 ----
+ {img:"boss_formless.webp",name:"無形の落とし子 フォルムレス・スポーン"},
  {img:"boss08_hound.webp",name:"時喰いの猟犬 クロノファング"},
+ {img:"boss_tindalos.webp",name:"角より来たる ティンダロスの猟犬"},
+ {img:"boss_hunter2.webp",name:"忌まわしき狩人 ザ・ハンター"},
+ {img:"boss_blackgoat.webp",name:"黒山羊の落とし子 シュブ＝ニグラス"},
+ {img:"boss_shantak2.webp",name:"虚空の魔鳥 シャンタク"},
  {img:"boss09_beast.webp",name:"極北の獣神 ボレアス"},
+ {img:"boss11_eldermind.webp",name:"刻の支配者 エルダーマインド"},
+ {img:"boss11_shantak.webp",name:"終焉の魔鳥 グレーター・シャンタク",wide:true},
  {img:"boss10_stormgod.webp",name:"嵐の古神 ストラトス"},
- {img:"boss11_shantak.webp",name:"終焉の魔鳥 シャンタク",wide:true},
+ {img:"boss_igoronak.webp",name:"汚辱の旧神 イゴーロナク"},
+ {img:"boss_tawil.webp",name:"門の守護者 タウィル・アト＝ウムル",flip:true},
+ {img:"boss_cthugha.webp",name:"生ける炎 クトゥグァ"},
+ {img:"boss_hastur.webp",name:"名状しがたきもの ハスター"},
+ {img:"boss_nyarlathotep.webp",name:"這い寄る混沌 ニャルラトテップ"},
+ // ---- wave 41 : 終焉の古神 ----
+ {img:"boss_cthulhu.webp",name:"終焉の古神 クトゥルフ",wide:true},
 ];
 
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
@@ -379,6 +414,10 @@ const UNITS=[
  {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:16,b:52}, fly:true},
  {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:26,b:58}, fly:true},
  {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:3, b:60}, fly:true},
+ {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:8, b:53}, fly:true},
+ {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:18,b:56}, fly:true},
+ {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:6, b:63}, fly:true},
+ {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:64,b:16}},
 ];
 
 const HERO=[
@@ -426,8 +465,8 @@ function critMul(){ return 2+0.3*S.hero.cmult; }
 function goldMul(){ return (1+0.1*S.hero.gold)*Math.pow(2,S.prestige); }
 
 let bossIndex=0, bossDead=false;
-function bossMaxHp(){ return 300*Math.pow(4,S.bossWave-1); }
-function goldReward(){ return 80*Math.pow(2.8,S.bossWave-1)*goldMul()*(1+0.2*S.hero.gpk); }
+function bossMaxHp(){ return Math.floor(300*Math.pow(2.42,S.bossWave-1)); }
+function goldReward(){ return Math.floor(80*Math.pow(2.05,S.bossWave-1)*goldMul()*(1+0.2*S.hero.gpk)); }
 function spawnBoss(reset){
  bossDead=false;
  bossIndex=(S.bossWave-1)%BOSS.length;
@@ -436,6 +475,7 @@ function spawnBoss(reset){
  if(reset||!S.bossHp||S.bossHp>S.bossHpMax) S.bossHp=S.bossHpMax;
  bossImg.src="assets/"+b.img;
  bossEl.classList.toggle("wide",!!b.wide);
+ bossEl.classList.toggle("flip",!!b.flip);
  $("#bossName").textContent=b.name;
  $("#bossLv").textContent=S.bossWave;
  bossEl.classList.remove("dying");
@@ -667,13 +707,20 @@ function doUnitVolley(u){
    const fr=field.getBoundingClientRect();
    const r=sprites[0].getBoundingClientRect();
    const fx=(r.left-fr.left)/fr.width*100, fy=(r.top-fr.top)/fr.height*100;
-   projectile(fx,fy,u.proj);
+   if(u.multiProj){
+     const offs=[0,-3,3,-6,6];
+     for(let i=0;i<u.multiProj;i++){ projectile(fx,fy+(offs[i]||0),u.proj); }
+   } else {
+     projectile(fx,fy,u.proj);
+   }
  }
  const delay=u.ranged?370:100;
  setTimeout(()=>{
    if(bossDead) return;
    const pt=bossHitPt();
    if(u.fx) spawnAtkFx(u.fx,pt.x,pt.y);
+   if(u.fx2) spawnAtkFx(u.fx2,pt.x,pt.y);
+   if(u.fxBoss) spawnAtkFx(u.fxBoss,pt.x,pt.y);
    dealDamage(total,pt.x,pt.y,"unit");
    S.gold+=hitGold();
  },delay);
@@ -715,8 +762,8 @@ function renderCards(){
  HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max}); });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
- if(S.bossWave>=7){ pb.disabled=false; pb.textContent=`転生する (永続ゴールド ×${Math.pow(2,S.prestige+1)})`; }
- else { pb.disabled=true; pb.textContent=`転生 (BOSS 7到達で解放) 現在 BOSS ${S.bossWave}`; }
+ if(S.bossWave>=15){ pb.disabled=false; pb.textContent=`転生する (永続ゴールド ×${Math.pow(2,S.prestige)} → ×${Math.pow(2,S.prestige+1)})`; }
+ else { pb.disabled=true; pb.textContent=`転生 (BOSS 15到達で解放) 現在 BOSS ${S.bossWave}`; }
 }
 $("#panels").addEventListener("click",e=>{
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
