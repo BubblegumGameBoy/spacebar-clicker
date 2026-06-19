@@ -85,6 +85,10 @@
     font-size:10px; font-weight:700; color:#fff;
     background:rgba(0,0,0,.6); border:1px solid var(--line); border-radius:8px; padding:0 5px; white-space:nowrap;}
   @keyframes ubob{ 0%,100%{transform:translateY(0);}50%{transform:translateY(-3px);} }
+  /* gold collectors: a little squat-then-hop instead of a melee lunge */
+  .unit-sprite.collecting{ animation:collect .55s ease; }
+  @keyframes collect{ 0%{transform:translateY(0) scaleY(1);} 25%{transform:translateY(5px) scaleY(.82);}
+    55%{transform:translateY(-11px) scaleY(1.08);} 78%{transform:translateY(0) scaleY(.95);} 100%{transform:translateY(0) scaleY(1);} }
   /* flying units drift on a slow loop; attack anim goes on the inner img so the float never stops */
   .unit-sprite.fly{ animation:floatFly 3.6s ease-in-out infinite; }
   @keyframes floatFly{ 0%{transform:translate(0,0);} 25%{transform:translate(5px,-9px);}
@@ -682,7 +686,7 @@ function renderUnits(){
  UNITS.forEach(u=>{
   if(!unitOwned(u)) return;
   const el=document.createElement("div");
-  el.className="unit-sprite "+(u.ranged?"ranged":"melee")+(u.fly?" fly":"");
+  el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":"");
   el.dataset.type=u.id;
   el.style.left=u.pos.l+"%";
   el.style.bottom=u.pos.b+"%";
@@ -690,7 +694,8 @@ function renderUnits(){
     el.style.animationDelay=(-i*0.7)+"s";           /* negative: stagger without a start pause */
     el.style.animationDuration=(3+(i%4)*0.45)+"s"; } /* different speeds so they never sync */
   // drop "attacking" once its anim ends so the idle bob/float resumes
-  el.addEventListener("animationend",e=>{ if(e.animationName==="lunge"||e.animationName==="rfire") el.classList.remove("attacking"); });
+  el.addEventListener("animationend",e=>{ if(e.animationName==="lunge"||e.animationName==="rfire") el.classList.remove("attacking");
+    if(e.animationName==="collect") el.classList.remove("collecting"); });
   el.innerHTML='<img src="assets/'+u.sprite+'"'+(u.flip?' style="transform:scaleX(-1)"':'')+' alt="">';
   // level badge
   if(S.ulvl[u.id]>0){
@@ -715,12 +720,14 @@ function doUnitVolley(u){
  const sprites=field.querySelectorAll('.unit-sprite[data-type="'+u.id+'"]');
  if(u.gold){
    const g=hitGold()*(1+S.ulvl[u.id]); S.gold+=g;
-   sprites.forEach(el=>{ el.classList.remove("attacking"); void el.offsetWidth; el.classList.add("attacking"); });
+   sprites.forEach(el=>{ el.classList.remove("collecting"); void el.offsetWidth; el.classList.add("collecting"); });
    if(sprites.length){
      const fr=field.getBoundingClientRect();
      const r=sprites[0].getBoundingClientRect();
      const gx=(r.left-fr.left+r.width/2)/fr.width*100, gy=(r.top-fr.top)/fr.height*100;
      floatDmg(g,gx,gy,"unit",true);
+     // coin sparkle bursting upward from the collector
+     for(let i=0;i<3;i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height*0.3);
    }
    sndGold();
    return;
