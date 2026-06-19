@@ -225,7 +225,7 @@
     <div class="row"><span class="k">G/分</span><span class="v" id="hGpm">0</span></div>
     <div class="row"><span class="k">DPS</span><span class="v" id="hDps">0</span></div>
   </div>
-  <div id="stageTag">討伐数 <b id="stStage">1</b><br><span id="stWave">BOSS 1/11</span>
+  <div id="stageTag">討伐数 <b id="stStage">1</b><br><span id="stWave">BOSS 1</span>
     <br><span style="color:var(--sub)" id="stPres"></span>
     <button id="nextBossBtn">次のボスへ ▶</button>
     <button id="prevBossBtn">◀ 前のボスへ</button></div>
@@ -459,7 +459,8 @@ function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); 
 function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id]); }
 function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
-function clickDmg(){ return 1+2*S.hero.click; }
+const CHEAT=new URLSearchParams(location.search).has("cheat");
+function clickDmg(){ return CHEAT ? (bossMaxHp()*0.5+1e9) : (1+2*S.hero.click); }
 function critRate(){ return Math.min(0.6,0.05+0.02*S.hero.crate); }
 function critMul(){ return 2+0.3*S.hero.cmult; }
 function goldMul(){ return (1+0.1*S.hero.gold)*Math.pow(2,S.prestige); }
@@ -488,7 +489,7 @@ function updateBossBar(){
 }
 function updateStageTag(){
  $("#stStage").textContent=S.globalWave-1;
- $("#stWave").textContent="BOSS "+S.bossWave+"/11";
+ $("#stWave").textContent="BOSS "+S.bossWave;
  $("#stPres").textContent=S.prestige>0?("転生 ×"+Math.pow(2,S.prestige)):"";
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
@@ -640,15 +641,19 @@ function heroAttack(){
 }
 field.addEventListener("pointerdown",e=>{ heroAttack(); });
 const _heldKeys=new Set();
+let _cheatTimer=null;
 window.addEventListener("keydown",e=>{
  if(e.code==="Space"||e.key===" "){
   e.preventDefault();
   if(_heldKeys.has("Space")) return;
   _heldKeys.add("Space");
   heroAttack();
+  // cheat mode: hold spacebar to auto-fire rapidly
+  if(CHEAT && !_cheatTimer){ _cheatTimer=setInterval(heroAttack,60); }
  }
 });
-window.addEventListener("keyup",e=>{ if(e.code==="Space") _heldKeys.delete("Space"); });
+window.addEventListener("keyup",e=>{ if(e.code==="Space"){ _heldKeys.delete("Space");
+ if(_cheatTimer){ clearInterval(_cheatTimer); _cheatTimer=null; } } });
 
 /* ===== UNIT RENDERING ===== */
 function renderUnits(){
