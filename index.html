@@ -81,6 +81,17 @@
     animation:ubob 1.6s ease-in-out infinite; will-change:transform;}
   .unit-sprite img{height:100%; width:auto; display:block; image-rendering:pixelated;
     filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  /* 覚醒ユニット（Lv.50以上）：tier毎に輝きの色が強くなる */
+  .unit-sprite.awakened1 img{ filter:drop-shadow(0 3px 4px rgba(0,0,0,.55)) drop-shadow(0 0 6px rgba(120,200,255,.9)); }
+  .unit-sprite.awakened2 img{ filter:drop-shadow(0 3px 4px rgba(0,0,0,.55)) drop-shadow(0 0 8px rgba(255,200,80,.95)); }
+  .unit-sprite.awakened3 img{ filter:drop-shadow(0 3px 4px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,100,255,1)) drop-shadow(0 0 3px #fff); }
+  @keyframes aurapulse{ 0%,100%{opacity:.7;} 50%{opacity:1;} }
+  .unit-sprite.awakened1::after,.unit-sprite.awakened2::after,.unit-sprite.awakened3::after{
+    content:""; position:absolute; inset:-4px; border-radius:4px; pointer-events:none;
+    animation:aurapulse 1.6s ease-in-out infinite; }
+  .unit-sprite.awakened1::after{ box-shadow:0 0 8px 2px rgba(120,200,255,.5); }
+  .unit-sprite.awakened2::after{ box-shadow:0 0 10px 3px rgba(255,200,80,.6); }
+  .unit-sprite.awakened3::after{ box-shadow:0 0 14px 5px rgba(255,100,255,.7),0 0 4px 1px #fff; }
   .unit-sprite .badge{position:absolute; top:-13px; left:50%; transform:translateX(-50%);
     font-size:10px; font-weight:700; color:#fff;
     background:rgba(0,0,0,.6); border:1px solid var(--line); border-radius:8px; padding:0 5px; white-space:nowrap;}
@@ -507,7 +518,9 @@ function unitOwned(u){ return S.owned[u.id]>=1; }
 function unitBuyCost(u){ return u.base; }
 function unitUpgCost(u){ return Math.floor(u.base*1.8*Math.pow(1.38,S.ulvl[u.id])); }
 function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); }
-function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id]); }
+// Lv.50ごとに×50の覚醒乗数。Lv50=×50, Lv100=×2500, Lv150=×125000…
+function awakenMul(u){ return Math.pow(50, Math.floor(S.ulvl[u.id]/50)); }
+function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id])*awakenMul(u); }
 function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 const CHEAT=new URLSearchParams(location.search).has("cheat");
@@ -740,7 +753,9 @@ function renderUnits(){
  const drawn=UNITS.filter(unitOwned).slice().sort((a,b)=>unitPos(b).b-unitPos(a).b);
  drawn.forEach(u=>{
   const el=document.createElement("div");
-  el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":"");
+  const atier=Math.min(3,Math.floor(S.ulvl[u.id]/50));
+  const aclass=atier>0?" awakened"+atier:"";
+  el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":"")+aclass;
   el.dataset.type=u.id;
   const p=unitPos(u);
   el.style.left=p.l+"%";
@@ -842,10 +857,13 @@ function renderCards(){
  let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
   if(unitOwned(u)){
+   const lv=S.ulvl[u.id], nextAwaken=Math.ceil((lv+1)/50)*50;
+   const awTier=Math.floor(lv/50), awHint=(lv<150&&nextAwaken-lv<=10)
+     ?`<br><span style="color:#7fc8ff">あと${nextAwaken-lv}で覚醒Lv${awTier+1}（×${Math.pow(50,awTier+1).toExponential(0)}）</span>`:"";
    const ef=u.gold
-     ? `収集 ${fmt(hitGold()*(1+S.ulvl[u.id]))}G → ${fmt(hitGold()*(2+S.ulvl[u.id]))}G (次)`
-     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(S.ulvl[u.id]+1))/u.iv)} (次)`;
-   h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+S.ulvl[u.id],ef,cost:unitUpgCost(u)});
+     ? `収集 ${fmt(hitGold()*(1+lv))}G → ${fmt(hitGold()*(2+lv))}G (次)`
+     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/u.iv)} (次)`+awHint;
+   h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
    prevOwned=true;
   } else if(prevOwned){
    h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
