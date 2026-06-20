@@ -511,8 +511,8 @@ function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id]); }
 function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 const CHEAT=new URLSearchParams(location.search).has("cheat");
-// レベルで指数的に伸ばしつつ、武器が進化する10レベルごとに追加スパイク(×1.6)
-function clickBaseDmg(lv){ return Math.max(1, Math.round(3*Math.pow(1.30,lv)*Math.pow(1.6,Math.floor(lv/10)))); }
+// クリックは補助。序盤は有効、中盤以降は自動が主体になる程度に抑える
+function clickBaseDmg(lv){ return Math.max(1, Math.round(2*Math.pow(1.18,lv)*Math.pow(1.3,Math.floor(lv/10)))); }
 function clickDmg(){ return CHEAT ? (bossMaxHp()*0.5+1e9) : clickBaseDmg(S.hero.click); }
 function critRate(){ return Math.min(0.75,0.05+0.02*S.hero.crate); }
 function critMul(){ return 2+0.3*S.hero.cmult; }
@@ -702,7 +702,7 @@ function spawnClickFx(xPct,yPct,crit){
 
 function weaponEvolveFx(w){
  const t=$("#weaponToast"); if(!t) return;
- t.innerHTML=`<div class="wt-lead">⚔ 武器進化！</div><div class="wt-name">${w.ic} ${w.n}</div>`;
+ t.innerHTML=`<div class="wt-lead">武器進化</div><div class="wt-name">${w.n}</div>`;
  t.classList.remove("on"); void t.offsetWidth; t.classList.add("on");
  sndEvolve();
 }
@@ -830,8 +830,8 @@ function clickCard(o){
  const tierNow=Math.floor(lv/10), tierNext=Math.floor((lv+1)/10);
  const evolving = tierNext>tierNow && tierNext<WEAPONS.length;
  let ef=`ダメージ ${fmt(cur)} → ${fmt(next)}`;
- if(evolving) ef+=`<br><span style="color:#ffd24a">✦ 次で「${WEAPONS[tierNext].n}」に進化</span>`;
- return card({act:"hero",id:"click",nm:`${w.ic} ${w.n}`,desc:o.desc,lv:"Lv."+weaponSubLevel(),ef,cost});
+ if(evolving) ef+=`<br><span style="color:#ffd24a">次で「${WEAPONS[tierNext].n}」に進化</span>`;
+ return card({act:"hero",id:"click",nm:w.n,desc:o.desc,lv:"Lv."+weaponSubLevel(),ef,cost});
 }
 // re-evaluate affordability live so cards unlock the moment gold is enough
 function refreshAffordable(){
