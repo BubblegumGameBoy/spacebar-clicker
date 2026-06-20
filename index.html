@@ -518,8 +518,8 @@ function unitOwned(u){ return S.owned[u.id]>=1; }
 function unitBuyCost(u){ return u.base; }
 function unitUpgCost(u){ return Math.floor(u.base*1.8*Math.pow(1.38,S.ulvl[u.id])); }
 function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); }
-// Lv.50ごとに×50の覚醒乗数。Lv50=×50, Lv100=×2500, Lv150=×125000…
-function awakenMul(u){ return Math.pow(50, Math.floor(S.ulvl[u.id]/50)); }
+// Lv.50で1回だけ×50。それ以降は通常成長のまま（重ねがけしない）
+function awakenMul(u){ return S.ulvl[u.id]>=50 ? 50 : 1; }
 function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id])*awakenMul(u); }
 function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
@@ -857,9 +857,9 @@ function renderCards(){
  let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
   if(unitOwned(u)){
-   const lv=S.ulvl[u.id], nextAwaken=Math.ceil((lv+1)/50)*50;
-   const awTier=Math.floor(lv/50), awHint=(lv<150&&nextAwaken-lv<=10)
-     ?`<br><span style="color:#7fc8ff">あと${nextAwaken-lv}で覚醒Lv${awTier+1}（×${Math.pow(50,awTier+1).toExponential(0)}）</span>`:"";
+   const lv=S.ulvl[u.id];
+   const awHint=(lv<50&&50-lv<=10)
+     ?`<br><span style="color:#7fc8ff">あと${50-lv}で覚醒（ダメージ×50）</span>`:"";
    const ef=u.gold
      ? `収集 ${fmt(hitGold()*(1+lv))}G → ${fmt(hitGold()*(2+lv))}G (次)`
      : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/u.iv)} (次)`+awHint;
