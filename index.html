@@ -122,15 +122,27 @@
   .clickfx{position:absolute;z-index:8;pointer-events:none;width:90px;height:90px;}
   .clickfx::before{content:"";position:absolute;inset:0;border-radius:50%;
     border:4px solid transparent;
-    border-top-color:#fff;border-right-color:#ffe96b;
-    filter:drop-shadow(0 0 6px rgba(255,235,120,.9));
+    border-top-color:#fff;border-right-color:var(--wcol,#ffe96b);
+    filter:drop-shadow(0 0 6px var(--wcol,rgba(255,235,120,.9)));
     animation:clkarc .22s ease-out forwards;}
   @keyframes clkarc{
     0%{opacity:0;transform:rotate(calc(var(--ang) - 120deg)) scale(.5);}
     25%{opacity:1;}
     100%{opacity:0;transform:rotate(calc(var(--ang) + 60deg)) scale(1.15);}}
   .clickfx.crit{width:130px;height:130px;}
-  .clickfx.crit::before{border-width:6px;border-top-color:#ff8a5a;border-right-color:#ffd24a;}
+  .clickfx.crit::before{border-width:6px;border-top-color:#fff;border-right-color:var(--wcol,#ffd24a);}
+
+  /* weapon evolution toast */
+  #weaponToast{position:absolute; top:30%; left:50%; transform:translate(-50%,-50%) scale(.6);
+    z-index:21; background:rgba(10,8,4,.85); border:1px solid #ffd24a; border-radius:10px;
+    padding:8px 18px; text-align:center; pointer-events:none; opacity:0; white-space:nowrap;}
+  #weaponToast.on{animation:wtoast 1.5s ease forwards;}
+  @keyframes wtoast{ 0%{opacity:0; transform:translate(-50%,-50%) scale(.6);}
+    14%{opacity:1; transform:translate(-50%,-50%) scale(1.12);}
+    28%{transform:translate(-50%,-50%) scale(1);} 80%{opacity:1;}
+    100%{opacity:0; transform:translate(-50%,-62%) scale(1);} }
+  #weaponToast .wt-lead{font-size:13px; color:#ffd24a; font-weight:700; letter-spacing:.05em;}
+  #weaponToast .wt-name{font-size:19px; font-weight:900; color:#fff; margin-top:2px;}
   .dmg{position:absolute; z-index:9; font-weight:800; pointer-events:none;
     text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6); animation:flo .8s ease-out forwards; white-space:nowrap;}
   @keyframes flo{ 0%{transform:translate(-50%,0) scale(.6); opacity:0;}
@@ -250,6 +262,8 @@
     <div class="kb-title">DEFEATED!</div>
     <div class="kb-gold" id="kbGold"></div>
   </div>
+
+  <div id="weaponToast"></div>
 </div>
 
 <div id="deck">
@@ -347,8 +361,9 @@ function sndSwish(vol=0.22,dur=0.09,freq=2600){
     src.start();
   }catch(e){}
 }
-function sndClick(){ sndSwish(0.2,0.08,2400); snd(95,'square',0.07,0.22); }
-function sndCrit(){ sndSwish(0.3,0.12,3200); snd(70,'square',0.12,0.3); snd(480,'sawtooth',0.1,0.18); }
+function sndClick(){ const s=curWeapon().snd; sndSwish(0.2,0.08,s.sw); snd(s.f,s.w,0.07,0.22); }
+function sndCrit(){ const s=curWeapon().snd; sndSwish(0.3,0.12,s.sw+800); snd(s.f*0.7,s.w,0.12,0.3); snd(s.f*3,'sawtooth',0.1,0.18); }
+function sndEvolve(){ [330,440,550,740].forEach((f,i)=>setTimeout(()=>snd(f,'triangle',0.16,0.22),i*70)); }
 function sndUnitHit(){ snd(120,'square',0.04,0.08); }
 function sndKill(){ [200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.18,0.2),i*60)); }
 function sndLevelUp(){ [300,400,500,650].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.15,0.25),i*80)); }
@@ -442,6 +457,27 @@ const HERO=[
  {id:"combo",jp:"ゴールドラッシュ",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
 ];
 
+// クリック武器ランク：10レベルごとに進化。col=斬撃エフェクト色, snd=効果音(f:基本周波数,w:波形,sw:スウィッシュ高域)
+const WEAPONS=[
+ {n:"キッチンナイフ", ic:"🔪", col:"#e8edf2", snd:{f:320,w:"square",  sw:2400}},
+ {n:"ダガー",         ic:"🗡️", col:"#cdd6df", snd:{f:360,w:"square",  sw:2700}},
+ {n:"ショートソード", ic:"⚔️", col:"#bfeaff", snd:{f:300,w:"triangle",sw:2500}},
+ {n:"ロングソード",   ic:"🗡️", col:"#9fd8ff", snd:{f:260,w:"triangle",sw:2300}},
+ {n:"バトルアックス", ic:"🪓", col:"#ffcaa0", snd:{f:160,w:"sawtooth",sw:1500}},
+ {n:"ウォーハンマー", ic:"🔨", col:"#ffb27a", snd:{f:110,w:"square",  sw:1100}},
+ {n:"グレートソード", ic:"⚔️", col:"#d7b6ff", snd:{f:220,w:"sawtooth",sw:2000}},
+ {n:"妖刀ムラマサ",   ic:"🌸", col:"#ff9bd0", snd:{f:380,w:"triangle",sw:3200}},
+ {n:"竜殺しの剣",     ic:"🐉", col:"#8affc0", snd:{f:240,w:"sawtooth",sw:2600}},
+ {n:"神剣エクスカリバー", ic:"✨", col:"#ffe066", snd:{f:520,w:"triangle",sw:3600}},
+];
+function weaponTier(lv){ return Math.min(WEAPONS.length-1, Math.floor((lv!=null?lv:S.hero.click)/10)); }
+function curWeapon(){ return WEAPONS[weaponTier()]; }
+// 表示レベル：最終武器に到達後はそのまま伸び続ける。それ以外は1〜10で循環
+function weaponSubLevel(){
+ const lv=S.hero.click, last=WEAPONS.length-1;
+ return Math.floor(lv/10)>=last ? (lv-last*10)+1 : (lv%10)+1;
+}
+
 let S;
 function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
 function freshState(){
@@ -475,7 +511,9 @@ function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id]); }
 function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 const CHEAT=new URLSearchParams(location.search).has("cheat");
-function clickDmg(){ return CHEAT ? (bossMaxHp()*0.5+1e9) : (1+2*S.hero.click); }
+// レベルで指数的に伸ばしつつ、武器が進化する10レベルごとに追加スパイク(×1.6)
+function clickBaseDmg(lv){ return Math.max(1, Math.round(3*Math.pow(1.30,lv)*Math.pow(1.6,Math.floor(lv/10)))); }
+function clickDmg(){ return CHEAT ? (bossMaxHp()*0.5+1e9) : clickBaseDmg(S.hero.click); }
 function critRate(){ return Math.min(0.75,0.05+0.02*S.hero.crate); }
 function critMul(){ return 2+0.3*S.hero.cmult; }
 function goldMul(){ return (1+0.1*S.hero.gold)*(S.goldBonus||1); }
@@ -656,9 +694,17 @@ function spawnClickFx(xPct,yPct,crit){
  f.className="clickfx"+(crit?" crit":"");
  f.style.left=xPct+"%"; f.style.top=yPct+"%";
  f.style.setProperty("--ang",Math.floor(rnd(0,360))+"deg");
+ f.style.setProperty("--wcol",curWeapon().col);
  f.style.marginLeft=(crit?-65:-45)+"px"; f.style.marginTop=(crit?-65:-45)+"px";
  field.appendChild(f);
  setTimeout(()=>f.remove(),240);
+}
+
+function weaponEvolveFx(w){
+ const t=$("#weaponToast"); if(!t) return;
+ t.innerHTML=`<div class="wt-lead">⚔ 武器進化！</div><div class="wt-name">${w.ic} ${w.n}</div>`;
+ t.classList.remove("on"); void t.offsetWidth; t.classList.add("on");
+ sndEvolve();
 }
 function heroAttack(){
  if(bossDead) return;
@@ -777,6 +823,16 @@ function card(o){
    <div class="ef">${o.ef}</div>
    <div class="cost">${o.maxed?'MAX':fmt(o.cost)+' G'}</div></div>`;
 }
+// クリック強化カードは武器名・武器レベル・進化予告を表示する特別版
+function clickCard(o){
+ const lv=S.hero.click, w=curWeapon(), cost=heroCost(o);
+ const cur=clickBaseDmg(lv), next=clickBaseDmg(lv+1);
+ const tierNow=Math.floor(lv/10), tierNext=Math.floor((lv+1)/10);
+ const evolving = tierNext>tierNow && tierNext<WEAPONS.length;
+ let ef=`ダメージ ${fmt(cur)} → ${fmt(next)}`;
+ if(evolving) ef+=`<br><span style="color:#ffd24a">✦ 次で「${WEAPONS[tierNext].n}」に進化</span>`;
+ return card({act:"hero",id:"click",nm:`${w.ic} ${w.n}`,desc:o.desc,lv:"Lv."+weaponSubLevel(),ef,cost});
+}
 // re-evaluate affordability live so cards unlock the moment gold is enough
 function refreshAffordable(){
  $$(".card").forEach(c=>c.classList.toggle("dis",S.gold<+c.dataset.cost));
@@ -801,7 +857,10 @@ function renderCards(){
  });
  $("#pane-summon").innerHTML=h;
  let hh="";
- HERO.forEach(o=>{ hh+=card({act:"hero",id:o.id,nm:o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max}); });
+ HERO.forEach(o=>{
+   if(o.id==="click"){ hh+=clickCard(o); return; }
+   hh+=card({act:"hero",id:o.id,nm:o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max});
+ });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
  if(S.bossWave>=10){ pb.disabled=false;
@@ -818,7 +877,13 @@ $("#panels").addEventListener("click",e=>{
  else if(act==="upg"){ const u=UNITS.find(x=>x.id===id), cst=unitUpgCost(u);
    if(S.gold>=cst){ S.gold-=cst; S.ulvl[id]++; renderUnits(); sndLevelUp(); } }
  else if(act==="hero"){ const o=HERO.find(x=>x.id===id), cst=heroCost(o);
-   if(!(o.max&&S.hero[id]>=o.max) && S.gold>=cst){ S.gold-=cst; S.hero[id]++; sndLevelUp(); } }
+   if(!(o.max&&S.hero[id]>=o.max) && S.gold>=cst){
+     const before=(id==="click")?Math.floor(S.hero.click/10):0;
+     S.gold-=cst; S.hero[id]++;
+     if(id==="click"){ const after=Math.floor(S.hero.click/10);
+       if(after>before && after<WEAPONS.length){ weaponEvolveFx(WEAPONS[after]); } else { sndLevelUp(); } }
+     else sndLevelUp();
+   } }
  renderCards(); updateHud(); save();
 });
 $$(".tab").forEach(t=>t.addEventListener("click",()=>{
