@@ -455,6 +455,7 @@ const HERO=[
  {id:"cmult",jp:"クリティカル倍率",desc:"クリティカル時のダメージ倍率アップ",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
  {id:"gold", jp:"ゴールド獲得量",desc:"全てのゴールド獲得量アップ",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
  {id:"combo",jp:"ゴールドラッシュ",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
+ {id:"aspd", jp:"攻撃速度",desc:"味方全員の攻撃間隔を短縮する",base:800,scale:1.8,max:8,ef:o=>`攻撃速度 +${25*o}% → +${25*(o+1)}%`},
 ];
 
 // クリック武器ランク：10レベルごとに進化。col=斬撃エフェクト色, snd=効果音(f:基本周波数,w:波形,sw:スウィッシュ高域)
@@ -485,7 +486,7 @@ function freshState(){
   clearedBossWave:0, gameCleared:false,
   owned:zeroUnits(),
   ulvl:zeroUnits(),
-  hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},
+  hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0},
   bossHpMax:0, bossHp:0 };
 }
 function load(){
@@ -493,7 +494,7 @@ function load(){
    if(r){ S=Object.assign(freshState(),r);
      S.owned=Object.assign(zeroUnits(),r.owned||{});
      S.ulvl=Object.assign(zeroUnits(),r.ulvl||{});
-     S.hero=Object.assign({click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0},r.hero||{});
+     S.hero=Object.assign({click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0},r.hero||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
      if(!S.clearedBossWave) S.clearedBossWave=0;
      // migrate old saves: prestige used to give a flat 2^prestige multiplier
@@ -510,7 +511,9 @@ function heroCost(h){ return Math.floor(h.base*Math.pow(h.scale,S.hero[h.id])); 
 // Lv.50ごとに×50乗算。Lv50=×50, Lv100=×2500, Lv150=×125000
 function awakenMul(u){ return Math.pow(50, Math.floor(S.ulvl[u.id]/50)); }
 function unitDmg(u){ return u.dmg*(1+0.9*S.ulvl[u.id])*awakenMul(u); }
-function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/u.iv:0; }
+// 攻撃速度強化：最大8レベルで+200%（3倍速）。最低インターバルは元の25%
+function unitIv(u){ return u.iv/Math.min(3, 1+0.25*S.hero.aspd); }
+function unitDPS(u){ if(u.gold) return 0; return unitOwned(u)?unitDmg(u)/unitIv(u):0; }
 function totalDPS(){ let d=0; UNITS.forEach(u=>d+=unitDPS(u)); return d; }
 const CHEAT=new URLSearchParams(location.search).has("cheat");
 // クリックは補助。序盤は有効、中盤以降は自動が主体になる程度に抑える
@@ -771,7 +774,7 @@ function unitTick(dt){
  UNITS.forEach(u=>{
   if(S.owned[u.id]<=0) return;
   utimers[u.id]-=dt;
-  if(utimers[u.id]<=0){ utimers[u.id]=u.iv; doUnitVolley(u); }
+  if(utimers[u.id]<=0){ utimers[u.id]=unitIv(u); doUnitVolley(u); }
  });
 }
 function doUnitVolley(u){
@@ -851,12 +854,13 @@ function renderCards(){
      ?`<br><span style="color:#7fc8ff">あと${nextAwaken-lv}で覚醒Lv${awTier+1}（×${Math.pow(50,awTier+1).toLocaleString()}）</span>`:"";
    const ef=u.gold
      ? `収集 ${fmt(hitGold()*(1+lv))}G → ${fmt(hitGold()*(2+lv))}G (次)`
-     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/u.iv)} (次)`+awHint;
-   h+=card({act:"upg",id:u.id,nm:u.jp+" 強化",lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
+     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/unitIv(u))} (次)`+awHint;
+   const awLabel=lv>=50?"【覚醒】":"";
+   h+=card({act:"upg",id:u.id,nm:awLabel+u.jp+" 強化",lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
    prevOwned=true;
   } else if(prevOwned){
    h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
-     ef:u.gold?`ゴールドを自動収集`:`DPS ${fmt(u.dmg/u.iv)} (初期)`,cost:unitBuyCost(u)});
+     ef:u.gold?`ゴールドを自動収集`:`DPS ${fmt(u.dmg/unitIv(u))} (初期)`,cost:unitBuyCost(u)});
    prevOwned=false;
   } else {
    prevOwned=false;
