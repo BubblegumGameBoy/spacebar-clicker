@@ -412,7 +412,7 @@ const BOSS=[
  {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
  {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール",scale:.88},
  {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト",scale:.9},
- {img:"boss03_sanddweller.png",name:"砂漠の徘徊者 ザルファク"},
+ {img:"boss03_sanddweller.webp",name:"砂漠の徘徊者 ザルファク"},
  {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン",fly:true},
  {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント",fly:true},
  {img:"boss_serpentman.webp",name:"古の蛇人 サーペントマン",scale:.85},
@@ -588,6 +588,8 @@ function spawnBoss(reset){
  // 画像ロード中に古い絵が新サイズに引き伸ばされるフラッシュを防ぐ
  bossImg.style.opacity="0";
  bossImg.onload=()=>{ bossImg.style.opacity="1"; };
+ // 読み込み失敗時も非表示のまま固まらないよう復帰させる（保険）
+ bossImg.onerror=()=>{ bossImg.style.opacity="1"; };
  bossImg.src="assets/"+b.img;
  if(bossImg.complete) bossImg.style.opacity="1";
  setBossName(b.name);
