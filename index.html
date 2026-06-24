@@ -92,8 +92,8 @@
   #bossHpText{position:absolute; inset:0; z-index:6; display:flex; flex-direction:column;
     align-items:center; justify-content:center; line-height:1.12; padding-top:14px;
     text-shadow:0 1px 3px #000,0 0 5px #000; color:#fff;}
-  #hptext{font-size:13px; font-weight:700; letter-spacing:.04em;}
-  #bossRem{font-size:8.5px; font-weight:600; letter-spacing:.05em; color:#ffd9b0; margin-top:2px;}
+  #hptext{font-size:13px; font-weight:700; letter-spacing:.04em; white-space:nowrap;}
+  #bossRem{font-size:8.5px; font-weight:600; letter-spacing:.05em; color:#ffd9b0; margin-top:2px; white-space:nowrap;}
   /* 名前バナー：半透過でオーブ上部に重ねる */
   #bossNameFrame{position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:7;
     display:inline-block; max-width:min(78vw,360px); white-space:nowrap; padding:3px 22px;
@@ -599,7 +599,10 @@ function spawnBoss(reset){
 function updateBossBar(){
  const p=Math.max(0,Math.min(100,S.bossHp/S.bossHpMax*100));
  $("#bossLiquid").style.height=p+"%";
- $("#hptext").textContent=fmt(Math.max(0,S.bossHp))+" / "+fmt(S.bossHpMax);
+ const txt=fmt(Math.max(0,S.bossHp))+" / "+fmt(S.bossHpMax);
+ const el=$("#hptext"); el.textContent=txt;
+ // 桁数に応じてフォントを自動縮小し、常に1行に収める（折り返しのチラつき防止）
+ el.style.fontSize=Math.max(8,Math.min(13,80/(txt.length*0.55))).toFixed(1)+"px";
 }
 // ボス名を名前バナーに反映。長くて1行に収まらない名前だけ、二つ名(epithet)を
 // 上段に分けて表示（B案）。判定は文字数（全角想定）で行い、レイアウト計測に依存しない。
