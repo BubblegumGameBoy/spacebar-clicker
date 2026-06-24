@@ -65,19 +65,47 @@
   #boss.dying img{ animation:die .7s forwards; }
   @keyframes die{ to{ transform:translateY(8%) rotate(12deg) scale(.85); opacity:0; filter:saturate(0) brightness(.4);} }
 
-  #bossPlate{position:absolute; top:5%; left:50%; transform:translateX(-50%); width:min(440px,72%); z-index:8;
+  #bossPlate{position:absolute; top:4%; left:50%; transform:translateX(-50%); z-index:8;
     text-align:center; pointer-events:none;}
-  #bossName{font-size:clamp(14px,2.4vw,20px); font-weight:700; letter-spacing:.04em;
-    text-shadow:0 2px 4px #000,0 0 8px rgba(0,0,0,.7); color:#f0e6d2;}
-  #bossSub{font-size:11px; color:var(--sub); margin-bottom:4px;}
-  #bossPeace{font-size:clamp(9px,1.4vw,11px); font-weight:500; letter-spacing:.02em;
-    margin-top:3px; color:var(--sub); text-shadow:0 1px 2px #000;}
-  .hpwrap{height:16px; border:2px solid #5a4636; border-radius:9px; background:#1a120c;
-    box-shadow:inset 0 1px 3px #000, 0 1px 2px rgba(0,0,0,.5); overflow:hidden; position:relative;}
-  #hpfill{height:100%; width:100%;
-    background:linear-gradient(#e8584a,#9c1f1f); transition:width .18s linear;}
-  #hptext{position:absolute; inset:0; font-size:10px; line-height:14px; font-weight:600;
-    text-shadow:0 1px 2px #000; color:#fff;}
+
+  /* ===== Diablo風 HP球体オーブ ===== */
+  #bossOrb{position:relative; width:96px; height:96px; border-radius:50%; margin:0 auto;
+    background:radial-gradient(circle at 36% 28%, #4a1414 0%, #220a0a 55%, #0a0303 100%);
+    box-shadow:inset 0 -8px 16px rgba(0,0,0,.7), inset 0 4px 10px rgba(255,150,120,.15),
+      0 0 0 2px #1c130c, 0 0 0 4px #8a6c30, 0 0 0 5px #cfab54, 0 0 0 6px #4a3718,
+      0 6px 16px rgba(0,0,0,.7), 0 0 14px rgba(255,80,60,.25);
+    overflow:hidden;}
+  #bossLiquid{position:absolute; left:0; right:0; bottom:0; height:100%;
+    background:linear-gradient(#ff6b54 0%, #e02a22 40%, #7c1212 100%);
+    box-shadow:inset 0 8px 16px rgba(255,150,110,.5), inset 0 -6px 14px rgba(0,0,0,.4);
+    transition:height .18s linear;}
+  /* 液面の波：横にゆっくり流して常時ゆらぎを出す（seamlessにループ） */
+  #orbWave{position:absolute; top:-9px; left:0; width:200%; height:14px; display:block; fill:#ff7a60;
+    animation:orbwave 3.5s linear infinite;}
+  @keyframes orbwave{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  #orbGloss{position:absolute; top:7px; left:16px; width:40px; height:26px; border-radius:50%; z-index:4;
+    background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.75), rgba(255,255,255,.1) 60%, transparent 72%);}
+  #orbRim{position:absolute; inset:0; border-radius:50%; z-index:5; pointer-events:none;
+    box-shadow:inset 0 2px 6px rgba(255,255,255,.25), inset 0 -3px 8px rgba(0,0,0,.55);}
+  #bossHpText{position:absolute; inset:0; z-index:6; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; line-height:1.12; padding-top:14px;
+    text-shadow:0 1px 3px #000,0 0 5px #000; color:#fff;}
+  #hptext{font-size:12px; font-weight:800;}
+  #bossRem{font-size:8px; font-weight:600; color:#ffd9b0; margin-top:1px;}
+  /* 名前バナー：半透過でオーブ上部に重ねる */
+  #bossNameFrame{position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:7;
+    display:inline-block; max-width:min(78vw,360px); white-space:nowrap; padding:3px 22px;
+    background:linear-gradient(rgba(24,16,9,.62),rgba(8,5,3,.66));
+    border-top:1.5px solid rgba(200,150,70,.85); border-bottom:1.5px solid rgba(110,83,32,.85);
+    box-shadow:0 2px 8px rgba(0,0,0,.55); backdrop-filter:blur(1.5px); -webkit-backdrop-filter:blur(1.5px);}
+  #bossNameFrame::before,#bossNameFrame::after{content:""; position:absolute; top:50%; width:8px; height:8px;
+    transform:translateY(-50%) rotate(45deg); background:linear-gradient(135deg,#d9b35a,#7a5c24);}
+  #bossNameFrame::before{left:-4px;} #bossNameFrame::after{right:-4px;}
+  .bn-line{font-size:clamp(13px,2.2vw,16px); font-weight:700; letter-spacing:.04em; color:#f0e6d2; text-shadow:0 1px 3px #000;}
+  #bossNameFrame.split .bn-epi{display:block; font-size:10px; font-weight:600; letter-spacing:.12em;
+    color:#e6c674; text-shadow:0 1px 2px #000; line-height:1.1;}
+  #bossNameFrame.split .bn-main{display:block; font-size:clamp(14px,2.4vw,17px); font-weight:800;
+    letter-spacing:.03em; color:#f0e6d2; text-shadow:0 1px 3px #000; line-height:1.15;}
 
   /* ===== UNITS ===== */
   .unit-sprite{position:absolute; height:10%; z-index:6; transform-origin:bottom center;
@@ -254,10 +282,13 @@
   <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
 
   <div id="bossPlate">
-    <div id="bossSub">WAVE <span id="bossLv">1</span></div>
-    <div id="bossName">下水の魔鼠 ラトキン</div>
-    <div class="hpwrap"><div id="hpfill"></div><div id="hptext">0/0</div></div>
-    <div id="bossPeace"></div>
+    <div id="bossOrb">
+      <div id="bossLiquid"><svg id="orbWave" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0,7 Q12.5,4 25,7 T50,7 T75,7 T100,7 T125,7 T150,7 T175,7 T200,7 V14 H0 Z"/></svg></div>
+      <div id="orbRim"></div>
+      <div id="orbGloss"></div>
+      <div id="bossHpText"><div id="hptext">0 / 0</div><div id="bossRem"></div></div>
+    </div>
+    <div id="bossNameFrame"></div>
   </div>
 
   <div id="boss"><img id="bossImg" alt="boss" src="assets/boss01_rat.webp"></div>
@@ -557,22 +588,40 @@ function spawnBoss(reset){
  bossImg.onload=()=>{ bossImg.style.opacity="1"; };
  bossImg.src="assets/"+b.img;
  if(bossImg.complete) bossImg.style.opacity="1";
- $("#bossName").textContent=b.name;
- $("#bossLv").textContent=S.bossWave;
+ setBossName(b.name);
  bossEl.classList.remove("dying");
  updateBossBar(); updateStageTag();
 }
 function updateBossBar(){
- const p=Math.max(0,S.bossHp/S.bossHpMax*100);
- $("#hpfill").style.width=p+"%";
- $("#hptext").textContent=fmt(S.bossHp)+" / "+fmt(S.bossHpMax);
+ const p=Math.max(0,Math.min(100,S.bossHp/S.bossHpMax*100));
+ $("#bossLiquid").style.height=p+"%";
+ $("#hptext").textContent=fmt(Math.max(0,S.bossHp))+" / "+fmt(S.bossHpMax);
+}
+// ボス名を名前バナーに反映。長くて1行に収まらない名前だけ、二つ名(epithet)を
+// 上段に分けて表示（B案）。判定は文字数（全角想定）で行い、レイアウト計測に依存しない。
+function setBossName(full){
+ const frame=$("#bossNameFrame");
+ const idx=Math.max(full.lastIndexOf(" "), full.lastIndexOf("　"));
+ const epi=idx>0?full.slice(0,idx):"";
+ const main=idx>0?full.slice(idx+1):full;
+ // 12文字以上（区切りスペース含む）になると1行では窮屈なので二つ名を分ける
+ if(epi && full.length>=12){
+   frame.classList.add("split");
+   frame.innerHTML='<span class="bn-epi"></span><span class="bn-main"></span>';
+   frame.children[0].textContent=epi;
+   frame.children[1].textContent=main;
+ } else {
+   frame.classList.remove("split");
+   frame.innerHTML='<span class="bn-line"></span>';
+   frame.firstChild.textContent=full;
+ }
 }
 function updateStageTag(){
  $("#stStage").textContent=S.globalWave-1;
  $("#stWave").textContent="BOSS "+S.bossWave;
- // ラスボスまで残り何体かを控えめに表示（HPバー下）。最終ボスでは「あと0体」になる
+ // ラスボスまで残り何体かをオーブ内に表示。最終ボスでは「残り：0 体」
  const remain=Math.max(0,BOSS.length-S.bossWave);
- $("#bossPeace").textContent=`ラスボスまで ${remain} 体`;
+ $("#bossRem").textContent=`残り：${remain} 体`;
  $("#stPres").textContent=S.prestige>0?("転生"+S.prestige+"回 G×"+fmt(S.goldBonus)):"";
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
