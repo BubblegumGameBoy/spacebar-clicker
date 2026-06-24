@@ -66,7 +66,9 @@
   @keyframes die{ to{ transform:translateY(8%) rotate(12deg) scale(.85); opacity:0; filter:saturate(0) brightness(.4);} }
 
   #bossPlate{position:absolute; top:4%; left:50%; transform:translateX(-50%); z-index:8;
-    text-align:center; pointer-events:none;}
+    text-align:center; pointer-events:none;
+    /* 渋い見た目：欧文はセリフ、和文は明朝（端末標準フォント。外部読込なし） */
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Noto Serif CJK JP",serif;}
 
   /* ===== Diablo風 HP球体オーブ ===== */
   #bossOrb{position:relative; width:96px; height:96px; border-radius:50%; margin:0 auto;
@@ -90,8 +92,8 @@
   #bossHpText{position:absolute; inset:0; z-index:6; display:flex; flex-direction:column;
     align-items:center; justify-content:center; line-height:1.12; padding-top:14px;
     text-shadow:0 1px 3px #000,0 0 5px #000; color:#fff;}
-  #hptext{font-size:12px; font-weight:800;}
-  #bossRem{font-size:8px; font-weight:600; color:#ffd9b0; margin-top:1px;}
+  #hptext{font-size:13px; font-weight:700; letter-spacing:.04em;}
+  #bossRem{font-size:8.5px; font-weight:600; letter-spacing:.05em; color:#ffd9b0; margin-top:2px;}
   /* 名前バナー：半透過でオーブ上部に重ねる */
   #bossNameFrame{position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:7;
     display:inline-block; max-width:min(78vw,360px); white-space:nowrap; padding:3px 22px;
