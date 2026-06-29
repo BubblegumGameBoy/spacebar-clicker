@@ -1,0 +1,249 @@
+<!--
+  はてなブログ貼り付け用 埋め込みスニペット（SPACEBAR BOSS RUSH）
+  スマホでもページ内のiframeでそのまま遊べるように変更（外部サイトへ飛ばさない＝SEO的に有利）。
+  変更点は @media (max-width: 768px) のブロックのみ。
+-->
+<style>
+  /* ▼ サイドバー消す */
+  #box2, .sidebar {
+    display: none !important;
+  }
+  /* ▼ メインを全幅に */
+  #main, #container, .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .entry-content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  /* ▼ iframeを画面いっぱいに */
+  .full-iframe {
+    width: 100vw;
+    height: 105vh;
+    margin-left: calc(50% - 50vw + 25px);
+    border: none;
+    transform: scale(0.85);
+    transform-origin: top center;
+  }
+  h2.section-head {
+    font-size: 118% !important;
+    font-weight: bold !important;
+    background-color: #555555 !important;
+    color: #ffffff !important;
+    padding: 10px 14px !important;
+    border-top: 4px solid #aaaaaa !important;
+    border-bottom: 4px solid #aaaaaa !important;
+    box-shadow: inset 0px 1px 0px #ffffff, inset 0px -1px 0px #ffffff;
+    margin-top: 48px !important;
+    margin-bottom: 20px !important;
+    border-left: none !important;
+  }
+  .note-box {
+    background: #fffde6;
+    border: 1px solid #e8d44d;
+    border-radius: 5px;
+    padding: 13px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.8;
+  }
+  .note-box .note-label { font-weight: bold; color: #555; margin-right: 4px; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .data-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    line-height: 1.7;
+    background: #fff;
+    vertical-align: top;
+  }
+  .data-table tr:nth-child(even) td { background: #f9f9f9; }
+  .data-table th[scope="row"] {
+    background: #f5f5f5;
+    color: #333333;
+    font-weight: bold;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: 9px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+  }
+  .sp-banner {
+    display: block;
+    text-align: center;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none !important;
+  }
+  .sp-banner strong { color: #7a4ab0; }
+  .play-btn-wrap { text-align: center; margin: 26px 0; }
+  .play-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #7a4ab0;
+    color: #ffffff !important;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none !important;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+    transition: all 0.18s;
+  }
+  .play-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .play-btn-sub { display: block; font-size: 12px; color: #888; margin-top: 8px; }
+  .faq-list dt {
+    font-weight: bold; background: #f5f5f5; padding: 10px 14px; margin-top: 12px;
+    border-left: 4px solid #555555; font-size: 14.5px;
+  }
+  .faq-list dd {
+    padding: 10px 14px 14px 18px; margin: 0; font-size: 14px;
+    line-height: 1.85; border-bottom: 1px solid #eee;
+  }
+  ul, ol { padding-left: 1.5em; }
+  li { margin-bottom: 6px; line-height: 1.8; }
+  p { margin-bottom: 1.4em; }
+  @media (max-width: 520px) {
+    .data-table, .data-table tbody, .data-table tr, .data-table td {
+      display: block; width: 100%; box-sizing: border-box;
+    }
+    .data-table th[scope="row"] {
+      display: block; width: 100%; box-sizing: border-box;
+      padding: 6px 10px; font-size: 11px; color: #666;
+      background: #f5f5f5; border-bottom: 1px solid #f0f0f0;
+    }
+    .data-table tr {
+      border: 1px solid #e0e0e0; border-radius: 6px;
+      margin-bottom: 10px; overflow: hidden;
+    }
+    .data-table td {
+      padding: 7px 10px; border-bottom: 1px solid #f0f0f0; font-size: 13px;
+    }
+    .data-table td:last-child { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: #ffffff; }
+    .play-btn { font-size: 16px; padding: 13px 24px; }
+  }
+  /* ▼ スマホでもiframeをページ内に表示（外部サイトへ飛ばさない＝SEO的に有利） */
+  .mobile-play-cta { display: none; }
+  @media (max-width: 768px) {
+    /* PC用のフル幅ブレイクアウト/縮小(scale)を解除し、記事幅の“通常サイズ”で埋め込む */
+    .full-iframe {
+      display: block !important;
+      width: 100% !important;
+      height: 88vh;
+      min-height: 540px;
+      margin-left: 0 !important;
+      transform: none !important;
+    }
+    /* PCでは縮小ぶんを詰める負マージン。スマホは縮小しないので通常マージンに戻す */
+    .post-iframe-ad { margin-top: 16px !important; }
+    /* iframeを出すので外部誘導ボタンは不要 */
+    .mobile-play-cta { display: none !important; }
+  }
+</style>
+<p>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "SPACEBAR BOSS RUSH",
+  "alternateName": "スペースバー・ボスラッシュ",
+  "url": "https://bubblegumgameboy.github.io/spacebar-clicker/",
+  "genre": ["クリッカーゲーム", "放置ゲーム", "ボスラッシュ"],
+  "gamePlatform": ["Web Browser", "PC", "Smartphone"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "playMode": "SinglePlayer",
+  "inLanguage": "ja",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+</p>
+<p>スペースキー連打でボスを倒す無料のブラウザゲーム「SPACEBAR BOSS RUSH」を公開しました。インストール不要・登録不要・スマホ対応で、この下のゲーム画面からそのまま遊べます。</p>
+<p>ボス素材／デザイン 提供者様：<br />@Kome_to_Matsuri 様<br />あんきも【インスマス計劃】様</p>
+<p><a href="https://bubblegumgameboy.github.io/spacebar-clicker/" target="_blank" rel="noopener" class="sp-banner">スマホでプレイするなら <strong>こちらから別タブで開く →</strong></a></p>
+<p style="margin-bottom: 0;"><iframe class="full-iframe" src="https://bubblegumgameboy.github.io/spacebar-clicker/" title="SPACEBAR BOSS RUSH（スペースキー連打ゲーム）" loading="lazy" allow="fullscreen"></iframe><a href="https://bubblegumgameboy.github.io/spacebar-clicker/" target="_blank" rel="noopener" class="mobile-play-cta">▶ いますぐ全画面でプレイ無料・スマホ対応・インストール不要</a></p>
+<div class="post-iframe-ad" style="text-align: center; margin: -16vh 0 24px 0; overflow: hidden;"><ins class="adsbygoogle" style="display: block;" data-ad-client="ca-pub-2203567155161909" data-ad-slot="1400091008" data-ad-format="horizontal" data-full-width-responsive="true"> </ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+<div class="note-box"><span class="note-label">操作のコツ：</span>スペースキーで攻撃するには、先にゲーム画面の中を一度クリックしてください。スマホはそのままタップ連打でOKです。</div>
+<p>[:contents]</p>
+<h2 class="section-head">基本情報</h2>
+<table class="data-table">
+<tbody>
+<tr>
+<th style="width: 30%;" scope="row">タイトル</th>
+<td>SPACEBAR BOSS RUSH（スペースバー・ボスラッシュ）</td>
+</tr>
+<tr>
+<th scope="row">ジャンル</th>
+<td>放置系クリッカー / ボスラッシュ</td>
+</tr>
+<tr>
+<th scope="row">料金</th>
+<td>無料</td>
+</tr>
+<tr>
+<th scope="row">対応環境</th>
+<td>PC（Chrome / Edge / Firefox / Safari）・スマホ</td>
+</tr>
+<tr>
+<th scope="row">セーブ</th>
+<td>自動保存（ブラウザに保存）</td>
+</tr>
+<tr>
+<th scope="row">ボリューム</th>
+<td>ボス11体・ユニット17種・転生システム</td>
+</tr>
+</tbody>
+</table>
+<p>最初はクリック1回でダメージ1から。ゴールドを貯めて仲間を雇うと攻撃が自動化され、放置している間も軍団がボスを狩り続けるようになります。</p>
+<h2 class="section-head">遊び方</h2>
+<ol>
+<li><span style="font-weight: bold;">連打する</span>：スペースキー or 画面クリック（スマホはタップ）でボスを攻撃</li>
+<li><span style="font-weight: bold;">ゴールドを貯める</span>：攻撃するたびにゴールドが手に入る</li>
+<li><span style="font-weight: bold;">仲間を雇う</span>：味方が増えると自動化ができる</li>
+<li><span style="font-weight: bold;">強化する</span>：仲間もクリックも「強化」タブでパワーアップできる</li>
+<li><span style="font-weight: bold;">次のボスへ</span>：倒したボスは自動で復活して周回できる。準備ができたら右上の「次のボスへ ▶」で先へ（戻ることも可能）</li>
+<li><span style="font-weight: bold;">転生する</span>：BOSS 7で「転生」が解放。進行をリセットする代わり、ゴールド獲得が永続2倍に</li>
+</ol>
+<h2 class="section-head">攻略のヒント</h2>
+<ul>
+<li>序盤はクリックが最強。ユニットは「休んでいる間の稼ぎ役」と考える</li>
+<li>行き詰まったら前のボスに戻って稼ぐのが鉄則</li>
+<li>クリティカル率・倍率を上げるとクリックが化ける</li>
+<li>転生は解放されたら早めに。永続2倍の恩恵を長く受けられる</li>
+</ul>
+<h2 class="section-head">よくある質問</h2>
+<dl class="faq-list">
+<dt>スマホでも遊べますか？</dt>
+<dd>遊べます。スペースキーの代わりに画面タップで攻撃します。</dd>
+<dt>セーブデータが消えることはありますか？</dt>
+<dd>自動でブラウザに保存されますが、ブラウザのキャッシュやサイトデータを削除すると消えます。別の端末への引き継ぎもできません。</dd>
+<dt>記事内で遊んだデータは、フルスクリーン版に引き継がれますか？</dt>
+<dd>ブラウザの仕様により引き継がれない場合があります。やり込むなら最初からフルスクリーン版がおすすめです。</dd>
+</dl>
+<h2 class="section-head">他自作ゲームの紹介</h2>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F06%2F06%2F124954" title="【自作ゲーム】ソルジャータイピング。タイピングで戦う無料ゲーム - バブルガムのゲームブログ" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://babblegum.hatenablog.com/entry/2026/06/06/124954">babblegum.hatenablog.com</a></cite></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F06%2F16%2F191027" title="【放置型タイピングゲーム】ポップコーンタイピング - バブルガムのゲームブログ" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://babblegum.hatenablog.com/entry/2026/06/16/191027">babblegum.hatenablog.com</a></cite></p>
+<p>感想や要望はコメント欄で受け付けています。今後のアップデートの参考にします。</p>
+<p><span style="color: #ff0000;">6/19更新：</span><br /><span style="color: #ff0000;">◼︎アーティスト様から素材を購入し30体ボスを追加しました。<br />◼︎ゲームが進行するほど転生倍率があがる調整をしました。<br /></span><span style="color: #ff0000;">◼︎スマホ版<br /></span><span style="color: #ff0000;">味方ボットの位置の最適化をしました。</span></p>
+<div>
+<p><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/B/Babblegum/20260629/20260629164335.png" alt="スペースキー連打ゲーム　バブルガム" width="210" height="108" loading="lazy" title="" class="hatena-fotolife" itemprop="image" /></p>
+<p><br /><br /></p>
+</div>
