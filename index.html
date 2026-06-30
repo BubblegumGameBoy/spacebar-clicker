@@ -12,7 +12,7 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex, follow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SPACEBAR BOSS RUSH</title>
+<title>SPACEBAR Mythos Slayers</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-CH13VBXKD9"></script>
 <script>
@@ -325,7 +325,7 @@
 <div id="titleScreen">
   <div class="ts-crest">⚔️</div>
   <div class="ts-kicker">Spacebar</div>
-  <div class="ts-title">BOSS RUSH</div>
+  <div class="ts-title">Mythos Slayers</div>
   <div class="ts-rule"><i></i></div>
   <div class="ts-prompt">言語を選択 ・ Select Language ・ 选择语言</div>
   <div class="ts-langs">
@@ -340,15 +340,15 @@
   <img id="bgImg" src="assets/bg.png" alt="">
 
   <div id="hud">
-    <div class="row"><span class="k">ゴールド</span><span class="v" id="goldBig">0</span></div>
-    <div class="row"><span class="k">ユニット</span><span class="v" id="hUnits">0</span></div>
-    <div class="row"><span class="k">G/分</span><span class="v" id="hGpm">0</span></div>
+    <div class="row"><span class="k" data-i18n="gold">ゴールド</span><span class="v" id="goldBig">0</span></div>
+    <div class="row"><span class="k" data-i18n="units">ユニット</span><span class="v" id="hUnits">0</span></div>
+    <div class="row"><span class="k" data-i18n="gpm">G/分</span><span class="v" id="hGpm">0</span></div>
     <div class="row"><span class="k">DPS</span><span class="v" id="hDps">0</span></div>
   </div>
-  <div id="stageTag">討伐数 <b id="stStage">1</b><br><span id="stWave">BOSS 1</span>
+  <div id="stageTag"><span data-i18n="kills">討伐数</span> <b id="stStage">1</b><br><span id="stWave">BOSS 1</span>
     <br><span style="color:var(--sub)" id="stPres"></span>
     <button id="nextBossBtn">次のボスへ ▶</button>
-    <button id="prevBossBtn">◀ 前のボスへ</button></div>
+    <button id="prevBossBtn" data-i18n="to_prev_boss">◀ 前のボスへ</button></div>
   <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
 
   <div id="bossPlate">
@@ -364,7 +364,7 @@
   <div id="boss"><img id="bossImg" alt="boss" src="assets/boss01_rat.webp"></div>
 
   <div id="killBanner">
-    <div class="kb-title">DEFEATED!</div>
+    <div class="kb-title" data-i18n="defeated">DEFEATED!</div>
     <div class="kb-gold" id="kbGold"></div>
   </div>
 
@@ -374,8 +374,8 @@
 <div id="deck">
   <div id="deckMain">
     <div id="tabs">
-      <div class="tab active" data-t="summon">召喚</div>
-      <div class="tab" data-t="hero">強化</div>
+      <div class="tab active" data-t="summon" data-i18n="tab_summon">召喚</div>
+      <div class="tab" data-t="hero" data-i18n="tab_upgrade">強化</div>
     </div>
     <div id="panels">
       <div class="pane active" id="pane-summon"></div>
@@ -407,20 +407,20 @@
 </div>
 
 <div id="creditsModal" class="cmodal"><div class="mbox">
-  <h3>🎉 THANK YOU FOR PLAYING!</h3>
-  <p>全40体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br>
-  <b>SPACEBAR BOSS RUSH</b><br>
+  <h3 data-i18n="credits_title">🎉 THANK YOU FOR PLAYING!</h3>
+  <p data-i18n-html="credits_body">全40体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br>
+  <b>SPACEBAR Mythos Slayers</b><br>
   制作: Bubblegum<br>
   神話生物グラフィック: インスマス計画<br><br>
   転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！</p>
-  <button class="yes" id="creditsClose">閉じる</button>
+  <button class="yes" id="creditsClose" data-i18n="credits_close">閉じる</button>
 </div></div>
 
 <div id="modal"><div class="mbox">
-  <h3>転生しますか？</h3>
-  <p>全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。</p>
-  <button class="yes" id="mYes">転生する</button>
-  <button class="no" id="mNo">やめる</button>
+  <h3 data-i18n="prestige_title">転生しますか？</h3>
+  <p data-i18n-html="prestige_body">全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。</p>
+  <button class="yes" id="mYes" data-i18n="prestige_yes">転生する</button>
+  <button class="no" id="mNo" data-i18n="prestige_no">やめる</button>
 </div></div>
 
 <script>
@@ -434,6 +434,124 @@ function fmt(n){ n=Math.floor(n);
   return (i===0?n:(n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n)))+u[i];
 }
 function rnd(a,b){return a+Math.random()*(b-a);}
+
+/* ===== I18N ===== */
+// 言語は固有のlocalStorageキーで保持し、セーブ(sbr_save2)とは分離。
+// 訳が無いキーは ja に自動フォールバックするので、未訳があっても画面は壊れない。
+const I18N={
+ ja:{
+  gold:"ゴールド", units:"ユニット", gpm:"G/分", kills:"討伐数",
+  tab_summon:"召喚", tab_upgrade:"強化",
+  defeated:"撃破！", weapon_evolve:"武器進化",
+  not_summoned:"未召喚",
+  to_next_boss:"次のボスへ ▶", to_first_boss:"最初のボスへ ▶", to_prev_boss:"◀ 前のボスへ",
+  remaining:n=>`残り：${n} 体`,
+  prestige_count:(n,g)=>`転生${n}回 G×${g}`,
+  ef_autogold:"ゴールドを自動収集",
+  ef_dps_init:v=>`DPS ${v} (初期)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (次)`,
+  ef_collect:(a,b)=>`収集 ${a}G → ${b}G (次)`,
+  awaken_hint:(n,lv,m)=>`あと${n}で覚醒Lv${lv}（×${m}）`,
+  unit_upg_name:(n,aw)=>`${aw?"【覚醒】":""}${n} 強化`,
+  ef_click_dmg:(a,b)=>`ダメージ ${a} → ${b}`,
+  evolve_next:n=>`次で「${n}」に進化`,
+  prestige_do:(a,b)=>`転生する (永続ゴールド ×${a} → ×${b})`,
+  prestige_locked:w=>`転生 (BOSS 10到達で解放) 現在 BOSS ${w}`,
+  prestige_locked0:"転生 (BOSS 10で解放)",
+  credits_title:"🎉 遊んでくれてありがとう！",
+  credits_body:`全40体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br><b>SPACEBAR Mythos Slayers</b><br>制作: Bubblegum<br>神話生物グラフィック: インスマス計画<br><br>転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！`,
+  credits_close:"閉じる",
+  prestige_title:"転生しますか？",
+  prestige_body:`全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。`,
+  prestige_yes:"転生する", prestige_no:"やめる",
+  hero:{
+   click:{nm:"クリック強化",desc:"タップ/スペースキーのダメージを上げる",ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"コイン袋",desc:"ボス撃破時のゴールドが増える",ef:o=>`撃破ボーナス +${20*(o+1)}%`},
+   crate:{nm:"クリティカル率",desc:"クリティカル発生率アップ（上限75%）",ef:o=>`クリ率 ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"クリティカル倍率",desc:"クリティカル時のダメージ倍率アップ",ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"ゴールド獲得量",desc:"全てのゴールド獲得量アップ",ef:o=>`ゴールド +${10*(o+1)}%`},
+   combo:{nm:"ゴールドラッシュ",desc:"タップごとに得られるゴールドが増える",ef:o=>`クリック時G +${5*(o+1)}%`},
+   aspd:{nm:"疾風の加護",desc:"風神の加護が味方の動きを加速させる",ef:o=>`攻撃速度 +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+ en:{
+  gold:"Gold", units:"Units", gpm:"G/min", kills:"Kills",
+  tab_summon:"Summon", tab_upgrade:"Upgrade",
+  defeated:"DEFEATED!", weapon_evolve:"Weapon Evolved",
+  not_summoned:"Not Summoned",
+  to_next_boss:"Next Boss ▶", to_first_boss:"First Boss ▶", to_prev_boss:"◀ Prev Boss",
+  remaining:n=>`${n} left`,
+  prestige_count:(n,g)=>`Rebirth ×${n}  G×${g}`,
+  ef_autogold:"Auto-collects gold",
+  ef_dps_init:v=>`DPS ${v} (base)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (next)`,
+  ef_collect:(a,b)=>`Collect ${a}G → ${b}G (next)`,
+  awaken_hint:(n,lv,m)=>`${n} more to Awaken Lv${lv} (×${m})`,
+  unit_upg_name:(n,aw)=>`${aw?"★ ":""}${n} — Upgrade`,
+  ef_click_dmg:(a,b)=>`Damage ${a} → ${b}`,
+  evolve_next:n=>`Next: evolves to “${n}”`,
+  prestige_do:(a,b)=>`Rebirth (perm. Gold ×${a} → ×${b})`,
+  prestige_locked:w=>`Rebirth (unlocks at BOSS 10) — BOSS ${w}`,
+  prestige_locked0:"Rebirth (unlocks at BOSS 10)",
+  credits_title:"🎉 THANK YOU FOR PLAYING!",
+  credits_body:`You have slain all 40 bosses and cut down Cthulhu, the Final Old God!<br><br><b>SPACEBAR Mythos Slayers</b><br>Created by Bubblegum<br>Mythos creature art: Insmouth Project<br><br>Be reborn and climb higher, or lay down your sword here.<br>Thanks for playing!`,
+  credits_close:"Close",
+  prestige_title:"Be reborn?",
+  prestige_body:`Reset all progress (gold, units, upgrades, kills) to gain a permanent gold multiplier.<br>The deeper the boss you reached, the greater the multiplier.`,
+  prestige_yes:"Rebirth", prestige_no:"Cancel",
+  hero:{
+   click:{nm:"Click Power",desc:"Raises tap / spacebar damage",ef:o=>`Click damage ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"Coin Pouch",desc:"More gold from boss kills",ef:o=>`Kill bonus +${20*(o+1)}%`},
+   crate:{nm:"Crit Chance",desc:"Raises critical hit chance (max 75%)",ef:o=>`Crit rate ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"Crit Damage",desc:"Raises critical hit damage",ef:o=>`Crit mult ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"Gold Gain",desc:"Raises all gold gained",ef:o=>`Gold +${10*(o+1)}%`},
+   combo:{nm:"Gold Rush",desc:"More gold gained per tap",ef:o=>`Gold/tap +${5*(o+1)}%`},
+   aspd:{nm:"Gale Blessing",desc:"The wind god hastens your allies",ef:o=>`Atk speed +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+ zh:{
+  gold:"金币", units:"单位", gpm:"金币/分", kills:"击杀数",
+  tab_summon:"召唤", tab_upgrade:"强化",
+  defeated:"已击败！", weapon_evolve:"武器进化",
+  not_summoned:"未召唤",
+  to_next_boss:"下一个Boss ▶", to_first_boss:"第一个Boss ▶", to_prev_boss:"◀ 上一个Boss",
+  remaining:n=>`剩余 ${n}`,
+  prestige_count:(n,g)=>`转生${n}次 G×${g}`,
+  ef_autogold:"自动收集金币",
+  ef_dps_init:v=>`DPS ${v} (初始)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (下一级)`,
+  ef_collect:(a,b)=>`收集 ${a}G → ${b}G (下一级)`,
+  awaken_hint:(n,lv,m)=>`还差${n}级觉醒Lv${lv}（×${m}）`,
+  unit_upg_name:(n,aw)=>`${aw?"【觉醒】":""}${n} 强化`,
+  ef_click_dmg:(a,b)=>`伤害 ${a} → ${b}`,
+  evolve_next:n=>`下一级进化为「${n}」`,
+  prestige_do:(a,b)=>`转生（永久金币 ×${a} → ×${b}）`,
+  prestige_locked:w=>`转生（到达BOSS 10解锁）当前 BOSS ${w}`,
+  prestige_locked0:"转生（BOSS 10解锁）",
+  credits_title:"🎉 感谢游玩！",
+  credits_body:`你已讨伐全部40位Boss，击败终焉古神 克苏鲁！<br><br><b>SPACEBAR Mythos Slayers</b><br>制作：Bubblegum<br>神话生物图像：印斯茅斯计划<br><br>转生再攀高峰，或就此收剑。<br>感谢游玩！`,
+  credits_close:"关闭",
+  prestige_title:"要转生吗？",
+  prestige_body:`重置所有进度（金币・单位・强化・击杀数），获得永久金币倍率。<br>本次到达的Boss越深，获得的倍率越大。`,
+  prestige_yes:"转生", prestige_no:"取消",
+  hero:{
+   click:{nm:"点击强化",desc:"提升点击/空格键的伤害",ef:o=>`点击伤害 ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"钱袋",desc:"击败Boss获得更多金币",ef:o=>`击杀奖励 +${20*(o+1)}%`},
+   crate:{nm:"暴击率",desc:"提升暴击几率（上限75%）",ef:o=>`暴击率 ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"暴击倍率",desc:"提升暴击时的伤害倍率",ef:o=>`暴击倍率 ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"金币获取",desc:"提升所有金币获取量",ef:o=>`金币 +${10*(o+1)}%`},
+   combo:{nm:"黄金狂潮",desc:"每次点击获得更多金币",ef:o=>`点击金币 +${5*(o+1)}%`},
+   aspd:{nm:"疾风祝福",desc:"风神祝福加速我方行动",ef:o=>`攻速 +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+};
+let LANG=localStorage.getItem("sbr_lang")||"ja";
+const LANG_CHOSEN=!!localStorage.getItem("sbr_lang");
+function t(k,...a){ const d=I18N[LANG]||I18N.ja; let v=d[k]; if(v==null) v=I18N.ja[k]; if(v==null) return k;
+  return typeof v==="function"?v(...a):v; }
+// 固有名オブジェクト {ja,en,zh} から現在言語の値を取り出す（無ければ ja）
+function L(o){ if(o==null) return ""; const v=o[LANG]; return v!=null?v:(o.ja!=null?o.ja:o); }
+function heroT(id){ return (I18N[LANG]&&I18N[LANG].hero&&I18N[LANG].hero[id])||I18N.ja.hero[id]; }
 
 /* ===== SOUND ===== */
 let _ac=null;
@@ -474,52 +592,53 @@ function sndKill(){ [200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.1
 function sndLevelUp(){ [300,400,500,650].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.15,0.25),i*80)); }
 function sndGold(){ snd(440,'sine',0.08,0.12); }
 
+// name = {ja,en,zh} 各言語 [二つ名(epithet), 名前]。setBossNameが上段/下段に振り分ける。
 const BOSS=[
  // ---- wave 1-11 : 通常の魔物 / 怪物 ----
  // flip = 素材が右向きなので左(味方側)へ反転。fly = 浮遊する上下アニメ。scale = 表示倍率。
- {img:"boss01_rat.webp",name:"下水の魔鼠 ラトキン"},
- {img:"boss_ghoul.webp",name:"墓場の喰屍鬼 グール",scale:.88},
- {img:"boss_ghast.webp",name:"地底の餓鬼 ガスト",scale:.9},
- {img:"boss03_sanddweller.webp",name:"砂漠の徘徊者 ザルファク"},
- {img:"boss02_nightwing.webp",name:"夜翼の影 ノクターン",fly:true},
- {img:"boss_nightgaunt.webp",name:"夜陰の妖鬼 ナイトゴーント",fly:true},
- {img:"boss_serpentman.webp",name:"古の蛇人 サーペントマン",scale:.85},
- {img:"boss_migo.webp",name:"冥王星の菌類 ミ＝ゴ",fly:true,scale:1.28},
- {img:"boss_shaggai.webp",name:"シャッガイの蟲 ノフ＝ケー",fly:true},
- {img:"boss04_blob.webp",name:"蠢く粘塊 グロブス"},
- {img:"boss_glaaki.webp",name:"湖底の死霊 グラーキ",scale:1.15},
+ {img:"boss01_rat.webp",name:{ja:["下水の魔鼠","ラトキン"],en:["Sewer Vermin","Ratkin"],zh:["下水道魔鼠","拉特金"]}},
+ {img:"boss_ghoul.webp",name:{ja:["墓場の喰屍鬼","グール"],en:["Graveyard Eater","Ghoul"],zh:["墓地食尸鬼","古尔"]},scale:.88},
+ {img:"boss_ghast.webp",name:{ja:["地底の餓鬼","ガスト"],en:["Subterranean Famished","Ghast"],zh:["地底饿鬼","加斯特"]},scale:.9},
+ {img:"boss03_sanddweller.webp",name:{ja:["砂漠の徘徊者","ザルファク"],en:["Desert Wanderer","Zalfaq"],zh:["沙漠徘徊者","扎尔法克"]}},
+ {img:"boss02_nightwing.webp",name:{ja:["夜翼の影","ノクターン"],en:["Nightwing Shade","Nocturne"],zh:["夜翼之影","诺克顿"]},fly:true},
+ {img:"boss_nightgaunt.webp",name:{ja:["夜陰の妖鬼","ナイトゴーント"],en:["Gloom Wraith","Night-gaunt"],zh:["夜阴妖鬼","奈特冈特"]},fly:true},
+ {img:"boss_serpentman.webp",name:{ja:["古の蛇人","サーペントマン"],en:["Ancient Coils","Serpent Man"],zh:["古老蛇人","瑟彭特曼"]},scale:.85},
+ {img:"boss_migo.webp",name:{ja:["冥王星の菌類","ミ＝ゴ"],en:["Fungi from Pluto","Mi-go"],zh:["冥王星真菌","米戈"]},fly:true,scale:1.28},
+ {img:"boss_shaggai.webp",name:{ja:["シャッガイの蟲","ノフ＝ケー"],en:["Insect of Shaggai","Shan"],zh:["沙盖之虫","诺夫-凯"]},fly:true},
+ {img:"boss04_blob.webp",name:{ja:["蠢く粘塊","グロブス"],en:["Writhing Ooze","Globus"],zh:["蠕动粘块","格罗布斯"]}},
+ {img:"boss_glaaki.webp",name:{ja:["湖底の死霊","グラーキ"],en:["Lakebed Revenant","Glaaki"],zh:["湖底亡灵","格拉基"]},scale:1.15},
  // ---- wave 12-25 : より強大な怪異 ----
- {img:"boss05_hunter.webp",name:"深淵の狩人 ヴォルグ",flip:true,fly:true,scale:1.2},
- {img:"boss_moonbeast.webp",name:"月の獣 ムーンビースト",scale:.9,filter:"brightness(.7) saturate(1.2) contrast(1.12)"},
- {img:"boss_gug.webp",name:"洞窟の巨鬼 ガグ",scale:1.3},
- {img:"boss06_flame.webp",name:"焔霊 イグニス",fly:true},
- {img:"boss_iwife.webp",name:"イスの偉大なる種族 イ夫人",scale:.82},
- {img:"boss_deepone.webp",name:"深海の眷属 ディープ・ワン",scale:.85},
- {img:"boss_gogfhoul.webp",name:"屍肉の主 ゴグ＝フール"},
- {img:"boss_mordiggian.webp",name:"屍食の神 モルディギアン",scale:1.2},
- {img:"boss07_skyfiend.webp",name:"天空の鬼神 アエロス",scale:.95},
- {img:"boss_tsathoggua.webp",name:"旧支配者 ツァトゥグァ",scale:1.2},
- {img:"boss_chaugnar.webp",name:"象牙の神 チャウグナル・ファウグン"},
- {img:"boss_objectx.webp",name:"擬態する恐怖 物体Ｘ"},
- {img:"boss_aihot.webp",name:"千の仔 アイホート",scale:1.15},
- {img:"boss_hellplant.webp",name:"地獄の食人花 ヘル・プラント"},
+ {img:"boss05_hunter.webp",name:{ja:["深淵の狩人","ヴォルグ"],en:["Hunter of the Abyss","Vorg"],zh:["深渊猎手","沃尔格"]},flip:true,fly:true,scale:1.2},
+ {img:"boss_moonbeast.webp",name:{ja:["月の獣","ムーンビースト"],en:["Beast of the Moon","Moon-beast"],zh:["月之兽","蒙比斯特"]},scale:.9,filter:"brightness(.7) saturate(1.2) contrast(1.12)"},
+ {img:"boss_gug.webp",name:{ja:["洞窟の巨鬼","ガグ"],en:["Cavern Giant","Gug"],zh:["洞窟巨鬼","古革"]},scale:1.3},
+ {img:"boss06_flame.webp",name:{ja:["焔霊","イグニス"],en:["Flame Spirit","Ignis"],zh:["焰灵","伊格尼斯"]},fly:true},
+ {img:"boss_iwife.webp",name:{ja:["イスの偉大なる種族","イ夫人"],en:["Great Race of Yith","Madame Yith"],zh:["伊斯伟大种族","伊夫人"]},scale:.82},
+ {img:"boss_deepone.webp",name:{ja:["深海の眷属","ディープ・ワン"],en:["Kin of the Deep","Deep One"],zh:["深海眷族","深潜者"]},scale:.85},
+ {img:"boss_gogfhoul.webp",name:{ja:["屍肉の主","ゴグ＝フール"],en:["Lord of Carrion","Gogh-Hoor"],zh:["腐肉之主","戈格-胡尔"]}},
+ {img:"boss_mordiggian.webp",name:{ja:["屍食の神","モルディギアン"],en:["God of the Charnel","Mordiggian"],zh:["食尸之神","莫尔迪基安"]},scale:1.2},
+ {img:"boss07_skyfiend.webp",name:{ja:["天空の鬼神","アエロス"],en:["Sky Fiend","Aeros"],zh:["天空鬼神","埃罗斯"]},scale:.95},
+ {img:"boss_tsathoggua.webp",name:{ja:["旧支配者","ツァトゥグァ"],en:["The Great Old One","Tsathoggua"],zh:["旧日支配者","撒托古亚"]},scale:1.2},
+ {img:"boss_chaugnar.webp",name:{ja:["象牙の神","チャウグナル・ファウグン"],en:["The Ivory God","Chaugnar Faugn"],zh:["象牙之神","乔古纳·法格恩"]}},
+ {img:"boss_objectx.webp",name:{ja:["擬態する恐怖","物体Ｘ"],en:["Mimicking Terror","Object X"],zh:["拟态恐惧","怪物X"]}},
+ {img:"boss_aihot.webp",name:{ja:["千の仔","アイホート"],en:["The Thousand Spawn","Eihort"],zh:["千子之母","艾霍特"]},scale:1.15},
+ {img:"boss_hellplant.webp",name:{ja:["地獄の食人花","ヘル・プラント"],en:["Devouring Bloom","Hell-Plant"],zh:["地狱食人花","海尔普兰特"]}},
  // ---- wave 26-40 : 古き神々 ----
- {img:"boss_formless.webp",name:"無形の落とし子 フォルムレス・スポーン",flip:true,fly:true,scale:1.2},
- {img:"boss08_hound.webp",name:"時喰いの猟犬 クロノファング"},
- {img:"boss_tindalos.webp",name:"角より来たる ティンダロスの猟犬",scale:1.3},
- {img:"boss_hunter2.webp",name:"忌まわしき狩人 ザ・ハンター"},
- {img:"boss_blackgoat.webp",name:"黒山羊の落とし子 シュブ＝ニグラス",scale:1.35},
- {img:"boss_shantak2.webp",name:"虚空の魔鳥 シャンタク",fly:true,scale:1.4},
- {img:"boss09_beast.webp",name:"極北の獣神 ボレアス",scale:1.22},
- {img:"boss11_eldermind.webp",name:"刻の支配者 エルダーマインド",fly:true},
- {img:"boss11_shantak.webp",name:"終焉の魔鳥 グレーター・シャンタク",wide:true,fly:true,scale:1.55,bottom:20},
- {img:"boss10_stormgod.webp",name:"嵐の古神 ストラトス",fly:true,scale:1.32},
- {img:"boss_igoronak.webp",name:"汚辱の旧神 イゴーロナク",flip:true},
- {img:"boss_cthugha.webp",name:"生ける炎 クトゥグァ",fly:true,scale:1.25},
- {img:"boss_hastur.webp",name:"名状しがたきもの ハスター",fly:true,scale:1.32},
- {img:"boss_nyarlathotep.webp",name:"這い寄る混沌 ニャルラトテップ",scale:1.32},
+ {img:"boss_formless.webp",name:{ja:["無形の落とし子","フォルムレス・スポーン"],en:["The Formless","Formless Spawn"],zh:["无形之子","无形孳生物"]},flip:true,fly:true,scale:1.2},
+ {img:"boss08_hound.webp",name:{ja:["時喰いの猟犬","クロノファング"],en:["Time-Eating Hound","Chronophang"],zh:["噬时猎犬","克罗诺方格"]}},
+ {img:"boss_tindalos.webp",name:{ja:["角より来たる","ティンダロスの猟犬"],en:["From the Angles","Hound of Tindalos"],zh:["自棱角而来","廷达罗斯猎犬"]},scale:1.3},
+ {img:"boss_hunter2.webp",name:{ja:["忌まわしき狩人","ザ・ハンター"],en:["The Abhorrent","The Hunter"],zh:["可憎猎手","猎人"]}},
+ {img:"boss_blackgoat.webp",name:{ja:["黒山羊の落とし子","シュブ＝ニグラス"],en:["The Black Goat's Spawn","Shub-Niggurath"],zh:["黑山羊之子","莎布·尼古拉斯"]},scale:1.35},
+ {img:"boss_shantak2.webp",name:{ja:["虚空の魔鳥","シャンタク"],en:["Bird of the Void","Shantak"],zh:["虚空魔鸟","单塔克"]},fly:true,scale:1.4},
+ {img:"boss09_beast.webp",name:{ja:["極北の獣神","ボレアス"],en:["Beast-God of the North","Boreas"],zh:["极北兽神","玻瑞阿斯"]},scale:1.22},
+ {img:"boss11_eldermind.webp",name:{ja:["刻の支配者","エルダーマインド"],en:["Master of Aeons","Elder Mind"],zh:["时之主宰","远古心智"]},fly:true},
+ {img:"boss11_shantak.webp",name:{ja:["終焉の魔鳥","グレーター・シャンタク"],en:["Bird of the End","Greater Shantak"],zh:["终焉魔鸟","至大单塔克"]},wide:true,fly:true,scale:1.55,bottom:20},
+ {img:"boss10_stormgod.webp",name:{ja:["嵐の古神","ストラトス"],en:["Old God of Storms","Stratos"],zh:["风暴古神","斯特拉托斯"]},fly:true,scale:1.32},
+ {img:"boss_igoronak.webp",name:{ja:["汚辱の旧神","イゴーロナク"],en:["The Defiler","Y'golonac"],zh:["污秽旧神","伊戈隆纳克"]},flip:true},
+ {img:"boss_cthugha.webp",name:{ja:["生ける炎","クトゥグァ"],en:["The Living Flame","Cthugha"],zh:["活体火焰","克图格亚"]},fly:true,scale:1.25},
+ {img:"boss_hastur.webp",name:{ja:["名状しがたきもの","ハスター"],en:["The Unspeakable","Hastur"],zh:["不可名状者","哈斯塔"]},fly:true,scale:1.32},
+ {img:"boss_nyarlathotep.webp",name:{ja:["這い寄る混沌","ニャルラトテップ"],en:["The Crawling Chaos","Nyarlathotep"],zh:["蔓行混沌","奈亚拉托提普"]},scale:1.32},
  // ---- wave 41 : 終焉の古神 ----
- {img:"boss_cthulhu.webp",name:"終焉の古神 クトゥルフ",scale:1.62,bottom:2,right:2},
+ {img:"boss_cthulhu.webp",name:{ja:["終焉の古神","クトゥルフ"],en:["The Final Old God","Cthulhu"],zh:["终焉古神","克苏鲁"]},scale:1.62,bottom:2,right:2},
 ];
 
 // dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
@@ -527,54 +646,55 @@ const BOSS=[
 const UNITS=[
  // 近接兵=ボス手前(右)に前線、弓兵/村人(gold)=後方(左)。先に召喚する兵ほど最前列に。
  // pos = PC横画面、posM = スマホ縦画面（左半分に圧縮してボスと重ならないように）
- {id:"farmer",  jp:"ファーマー", sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}, posM:{l:24,b:18}},
- {id:"sword",  jp:"剣士",        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:12}, posM:{l:46,b:9}},
- {id:"dwarfb", jp:"ドワーフ戦士",sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:56,b:16}, posM:{l:34,b:14}},
- {id:"arch",   jp:"弓兵",        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:30,b:14}, posM:{l:14,b:11}, flip:true},
- {id:"villager",jp:"村人",      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:26,b:21}, posM:{l:10,b:19}},
- {id:"heavy",  jp:"重装兵",      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:53,b:12}, posM:{l:40,b:16}},
- {id:"dwarfw", jp:"鋼のドワーフ",sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:50,b:17}, posM:{l:28,b:9}},
- {id:"mage",   jp:"魔導士",      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:22,b:16}, posM:{l:18,b:16}, flip:true},
- {id:"knight", jp:"騎士",        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:47,b:11}, posM:{l:42,b:7}},
- {id:"paladin",jp:"聖騎士",      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:44,b:15}, posM:{l:37,b:11}},
- {id:"elf",    jp:"エルフの射手",sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:18,b:20}, posM:{l:5,b:13}, flip:true},
- {id:"warlock",jp:"黒魔術師",    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, posM:{l:4,b:19}, flip:true},
- {id:"dark",   jp:"暗黒騎士",    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:41,b:13}, posM:{l:30,b:18}},
- {id:"dragong",jp:"翠竜",        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:44}, posM:{l:4, b:42}, fly:true},
- {id:"dragonp",jp:"紫竜",        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:20,b:50}, posM:{l:18,b:48}, fly:true},
- {id:"dragonr",jp:"紅竜",        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:34,b:46}, posM:{l:32,b:44}, fly:true},
- {id:"angel",  jp:"大天使",      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:2, b:62}, posM:{l:2, b:60}, fly:true},
- {id:"dragong2",jp:"古代翠竜",   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:14,b:62}, posM:{l:14,b:60}, fly:true},
- {id:"dragonr2",jp:"覚醒紅竜",   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:40,b:58}, posM:{l:30,b:56}, fly:true},
- {id:"angel2",  jp:"熾天使",     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:27,b:64}, posM:{l:24,b:62}, fly:true},
- {id:"darkgod", jp:"魔神",       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:38,b:18}, posM:{l:22,b:8}},
+ {id:"farmer",  name:{ja:"ファーマー",en:"Farmer",zh:"农夫"}, sprite:"unit_farmer.png",  base:25,   gold:true, iv:1.5, pos:{l:34,b:18}, posM:{l:24,b:18}},
+ {id:"sword",  name:{ja:"剣士",en:"Swordsman",zh:"剑士"},        sprite:"unit_sword.png",  base:80,    dmg:2,     iv:1.0, ranged:false, fx:"slash", pos:{l:60,b:12}, posM:{l:46,b:9}},
+ {id:"dwarfb", name:{ja:"ドワーフ戦士",en:"Dwarf Warrior",zh:"矮人战士"},sprite:"unit_dwarfb.png", base:280,   dmg:4,     iv:1.0, ranged:false, fx:"slash", pos:{l:56,b:16}, posM:{l:34,b:14}},
+ {id:"arch",   name:{ja:"弓兵",en:"Archer",zh:"弓兵"},        sprite:"unit_arch.png",   base:600,   dmg:6,     iv:1.2, ranged:true,  proj:"➳",   pos:{l:30,b:14}, posM:{l:14,b:11}, flip:true},
+ {id:"villager",name:{ja:"村人",en:"Villager",zh:"村民"},      sprite:"unit_villager.png",base:1500, gold:true, iv:1.2, pos:{l:26,b:21}, posM:{l:10,b:19}},
+ {id:"heavy",  name:{ja:"重装兵",en:"Heavy Infantry",zh:"重装兵"},      sprite:"unit_heavy.png",  base:3500,  dmg:18,    iv:1.5, ranged:false, fx:"shock", pos:{l:53,b:12}, posM:{l:40,b:16}},
+ {id:"dwarfw", name:{ja:"鋼のドワーフ",en:"Steel Dwarf",zh:"钢铁矮人"},sprite:"unit_dwarfw.png", base:8800,  dmg:20,    iv:1.0, ranged:false, fx:"slash", pos:{l:50,b:17}, posM:{l:28,b:9}},
+ {id:"mage",   name:{ja:"魔導士",en:"Wizard",zh:"魔导士"},      sprite:"unit_mage.png",   base:20000, dmg:60,    iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:22,b:16}, posM:{l:18,b:16}, flip:true},
+ {id:"knight", name:{ja:"騎士",en:"Knight",zh:"骑士"},        sprite:"unit_knight.png", base:100000,dmg:90,    iv:1.0, ranged:false, fx:"slash", pos:{l:47,b:11}, posM:{l:42,b:7}},
+ {id:"paladin",name:{ja:"聖騎士",en:"Paladin",zh:"圣骑士"},      sprite:"unit_paladin.png",base:500000,dmg:180,   iv:0.9, ranged:false, fx:"shock", pos:{l:44,b:15}, posM:{l:37,b:11}},
+ {id:"elf",    name:{ja:"エルフの射手",en:"Elf Archer",zh:"精灵射手"},sprite:"unit_elf.png",    base:2.5e6, dmg:600,   iv:1.2, ranged:true,  proj:"➳",   pos:{l:18,b:20}, posM:{l:5,b:13}, flip:true},
+ {id:"warlock",name:{ja:"黒魔術師",en:"Warlock",zh:"黑魔法师"},    sprite:"unit_warlock.png",base:12e6,  dmg:2600,  iv:2.0, ranged:true,  proj:"✦", fx:"magic", pos:{l:13,b:20}, posM:{l:4,b:19}, flip:true},
+ {id:"dark",   name:{ja:"暗黒騎士",en:"Dark Knight",zh:"暗黑骑士"},    sprite:"unit_dark.png",   base:60e6,  dmg:3200,  iv:1.0, ranged:false, fx:"slash", pos:{l:41,b:13}, posM:{l:30,b:18}},
+ {id:"dragong",name:{ja:"翠竜",en:"Jade Dragon",zh:"翠龙"},        sprite:"unit_dragong.png",base:300e6, dmg:14000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:5, b:44}, posM:{l:4, b:42}, fly:true},
+ {id:"dragonp",name:{ja:"紫竜",en:"Violet Dragon",zh:"紫龙"},        sprite:"unit_dragonp.png",base:1.5e9, dmg:36000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:20,b:50}, posM:{l:18,b:48}, fly:true},
+ {id:"dragonr",name:{ja:"紅竜",en:"Crimson Dragon",zh:"红龙"},        sprite:"unit_dragonr.png",base:8e9,   dmg:90000, iv:1.8, ranged:true,  proj:"🔥",  pos:{l:34,b:46}, posM:{l:32,b:44}, fly:true},
+ {id:"angel",  name:{ja:"大天使",en:"Archangel",zh:"大天使"},      sprite:"unit_angel.png",  base:40e9,  dmg:250000,iv:2.0, ranged:true,  proj:"✨",  pos:{l:2, b:62}, posM:{l:2, b:60}, fly:true},
+ {id:"dragong2",name:{ja:"古代翠竜",en:"Ancient Jade Dragon",zh:"远古翠龙"},   sprite:"unit_dragong.png",base:200e9, dmg:800000,  iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:14,b:62}, posM:{l:14,b:60}, fly:true},
+ {id:"dragonr2",name:{ja:"覚醒紅竜",en:"Awakened Crimson Dragon",zh:"觉醒红龙"},   sprite:"unit_dragonr.png",base:1e12,  dmg:3000000, iv:1.8, ranged:true, proj:"🔥", multiProj:3, pos:{l:40,b:58}, posM:{l:30,b:56}, fly:true},
+ {id:"angel2",  name:{ja:"熾天使",en:"Seraph",zh:"炽天使"},     sprite:"unit_angel.png",  base:5e12,  dmg:12000000,iv:2.0, ranged:true, proj:"✨", fxBoss:"magic", pos:{l:27,b:64}, posM:{l:24,b:62}, fly:true},
+ {id:"darkgod", name:{ja:"魔神",en:"Demon God",zh:"魔神"},       sprite:"unit_dark.png",   base:25e12, dmg:50000000,iv:1.0, ranged:false,fx:"slash", fx2:"shock", pos:{l:38,b:18}, posM:{l:22,b:8}},
 ];
 // 縦画面（スマホ）判定：画面が縦長 かつ 幅が狭い
 function isPortrait(){ return window.matchMedia("(max-width:680px)").matches && window.innerHeight>window.innerWidth; }
 function unitPos(u){ return (isPortrait() && u.posM) ? u.posM : u.pos; }
 
+// 表示名・説明・効果文(ef)は I18N.<lang>.hero[id] に分離。ここは数値パラメータのみ。
 const HERO=[
- {id:"click",jp:"クリック強化",desc:"タップ/スペースキーのダメージを上げる",base:60,  scale:1.5, ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
- {id:"gpk", jp:"コイン袋",desc:"ボス撃破時のゴールドが増える", base:120, scale:1.5, ef:o=>`撃破ボーナス +${20*(o+1)}%`},
- {id:"crate",jp:"クリティカル率",desc:"クリティカル発生率アップ（上限75%）",base:250, scale:1.6, max:35, ef:o=>`クリ率 ${Math.round(Math.min(75,5+2*o))}%`},
- {id:"cmult",jp:"クリティカル倍率",desc:"クリティカル時のダメージ倍率アップ",base:900,scale:1.7,ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
- {id:"gold", jp:"ゴールド獲得量",desc:"全てのゴールド獲得量アップ",base:500, scale:1.55,ef:o=>`ゴールド +${10*(o+1)}%`},
- {id:"combo",jp:"ゴールドラッシュ",desc:"タップごとに得られるゴールドが増える",base:1200,scale:1.65,ef:o=>`クリック時G +${5*(o+1)}%`},
- {id:"aspd", jp:"疾風の加護",desc:"風神の加護が味方の動きを加速させる",base:800,scale:1.3,max:40,ef:o=>`攻撃速度 +${5*o}% → +${5*(o+1)}%`},
+ {id:"click",base:60,  scale:1.5},
+ {id:"gpk",  base:120, scale:1.5},
+ {id:"crate",base:250, scale:1.6, max:35},
+ {id:"cmult",base:900, scale:1.7},
+ {id:"gold", base:500, scale:1.55},
+ {id:"combo",base:1200,scale:1.65},
+ {id:"aspd", base:800, scale:1.3, max:40},
 ];
 
 // クリック武器ランク：10レベルごとに進化。col=斬撃エフェクト色, snd=効果音(f:基本周波数,w:波形,sw:スウィッシュ高域)
 const WEAPONS=[
- {n:"キッチンナイフ", ic:"🔪", col:"#e8edf2", snd:{f:320,w:"square",  sw:2400}},
- {n:"ダガー",         ic:"🗡️", col:"#cdd6df", snd:{f:360,w:"square",  sw:2700}},
- {n:"ショートソード", ic:"⚔️", col:"#bfeaff", snd:{f:300,w:"triangle",sw:2500}},
- {n:"ロングソード",   ic:"🗡️", col:"#9fd8ff", snd:{f:260,w:"triangle",sw:2300}},
- {n:"バトルアックス", ic:"🪓", col:"#ffcaa0", snd:{f:160,w:"sawtooth",sw:1500}},
- {n:"ウォーハンマー", ic:"🔨", col:"#ffb27a", snd:{f:110,w:"square",  sw:1100}},
- {n:"グレートソード", ic:"⚔️", col:"#d7b6ff", snd:{f:220,w:"sawtooth",sw:2000}},
- {n:"妖刀ムラマサ",   ic:"🌸", col:"#ff9bd0", snd:{f:380,w:"triangle",sw:3200}},
- {n:"竜殺しの剣",     ic:"🐉", col:"#8affc0", snd:{f:240,w:"sawtooth",sw:2600}},
- {n:"神剣エクスカリバー", ic:"✨", col:"#ffe066", snd:{f:520,w:"triangle",sw:3600}},
+ {name:{ja:"キッチンナイフ",en:"Kitchen Knife",zh:"菜刀"}, ic:"🔪", col:"#e8edf2", snd:{f:320,w:"square",  sw:2400}},
+ {name:{ja:"ダガー",en:"Dagger",zh:"匕首"},         ic:"🗡️", col:"#cdd6df", snd:{f:360,w:"square",  sw:2700}},
+ {name:{ja:"ショートソード",en:"Short Sword",zh:"短剑"}, ic:"⚔️", col:"#bfeaff", snd:{f:300,w:"triangle",sw:2500}},
+ {name:{ja:"ロングソード",en:"Long Sword",zh:"长剑"},   ic:"🗡️", col:"#9fd8ff", snd:{f:260,w:"triangle",sw:2300}},
+ {name:{ja:"バトルアックス",en:"Battle Axe",zh:"战斧"}, ic:"🪓", col:"#ffcaa0", snd:{f:160,w:"sawtooth",sw:1500}},
+ {name:{ja:"ウォーハンマー",en:"War Hammer",zh:"战锤"}, ic:"🔨", col:"#ffb27a", snd:{f:110,w:"square",  sw:1100}},
+ {name:{ja:"グレートソード",en:"Greatsword",zh:"巨剑"}, ic:"⚔️", col:"#d7b6ff", snd:{f:220,w:"sawtooth",sw:2000}},
+ {name:{ja:"妖刀ムラマサ",en:"Muramasa Blade",zh:"妖刀村正"},   ic:"🌸", col:"#ff9bd0", snd:{f:380,w:"triangle",sw:3200}},
+ {name:{ja:"竜殺しの剣",en:"Dragonslayer",zh:"屠龙剑"},     ic:"🐉", col:"#8affc0", snd:{f:240,w:"sawtooth",sw:2600}},
+ {name:{ja:"神剣エクスカリバー",en:"Excalibur",zh:"神剑 王者之剑"}, ic:"✨", col:"#ffe066", snd:{f:520,w:"triangle",sw:3600}},
 ];
 function weaponTier(lv){ return Math.min(WEAPONS.length-1, Math.floor((lv!=null?lv:S.hero.click)/10)); }
 function curWeapon(){ return WEAPONS[weaponTier()]; }
@@ -672,15 +792,16 @@ function updateBossBar(){
  // 桁数に応じてフォントを自動縮小し、常に1行に収める（折り返しのチラつき防止）
  el.style.fontSize=Math.max(8,Math.min(13,80/(txt.length*0.55))).toFixed(1)+"px";
 }
-// ボス名を名前バナーに反映。長くて1行に収まらない名前だけ、二つ名(epithet)を
-// 上段に分けて表示（B案）。判定は文字数（全角想定）で行い、レイアウト計測に依存しない。
-function setBossName(full){
+// ボス名を名前バナーに反映。nameObj={ja,en,zh}、各値は [二つ名(epithet), 名前]。
+// 長い名前だけ二つ名を上段に分けて表示。和文/中文は文字数で判定、英語は語が
+// 長いので常に分割する（判定はレイアウト計測に依存しない）。
+function setBossName(nameObj){
  const frame=$("#bossNameFrame");
- const idx=Math.max(full.lastIndexOf(" "), full.lastIndexOf("　"));
- const epi=idx>0?full.slice(0,idx):"";
- const main=idx>0?full.slice(idx+1):full;
- // 12文字以上（区切りスペース含む）になると1行では窮屈なので二つ名を分ける
- if(epi && full.length>=12){
+ const arr=(nameObj&&(nameObj[LANG]||nameObj.ja))||["",""];
+ const epi=arr[0]||"", main=arr[1]!=null?arr[1]:(arr[0]||"");
+ const combinedLen=(epi?epi.length+1:0)+main.length;
+ const doSplit = !!epi && (LANG==="en" || combinedLen>=12);
+ if(doSplit){
    frame.classList.add("split");
    frame.innerHTML='<span class="bn-epi"></span><span class="bn-main"></span>';
    frame.children[0].textContent=epi;
@@ -688,7 +809,7 @@ function setBossName(full){
  } else {
    frame.classList.remove("split");
    frame.innerHTML='<span class="bn-line"></span>';
-   frame.firstChild.textContent=full;
+   frame.firstChild.textContent=epi?(epi+" "+main):main;
  }
 }
 function updateStageTag(){
@@ -696,12 +817,12 @@ function updateStageTag(){
  $("#stWave").textContent="BOSS "+S.bossWave;
  // ラスボスまで残り何体かをオーブ内に表示。最終ボスでは「残り：0 体」
  const remain=Math.max(0,BOSS.length-S.bossWave);
- $("#bossRem").textContent=`残り：${remain} 体`;
- $("#stPres").textContent=S.prestige>0?("転生"+S.prestige+"回 G×"+fmt(S.goldBonus)):"";
+ $("#bossRem").textContent=t('remaining',remain);
+ $("#stPres").textContent=S.prestige>0?t('prestige_count',S.prestige,fmt(S.goldBonus)):"";
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
    nb.style.display="block";
-   nb.textContent=S.bossWave>=BOSS.length?"最初のボスへ ▶":"次のボスへ ▶";
+   nb.textContent=S.bossWave>=BOSS.length?t('to_first_boss'):t('to_next_boss');
  } else { nb.style.display="none"; }
  $("#prevBossBtn").style.display=S.bossWave>1?"block":"none";
 }
@@ -721,7 +842,7 @@ function killBoss(){
  if(S.clearedBossWave<S.bossWave){
    S.clearedBossWave=S.bossWave;
    // first kill of this boss — progress milestone for analytics
-   try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name}); }catch(e){}
+   try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name.ja.join(" ")}); }catch(e){}
    // first full clear: roll credits (once per player, survives prestige)
    if(S.bossWave>=BOSS.length && !S.gameCleared){
      S.gameCleared=true;
@@ -838,12 +959,13 @@ function spawnClickFx(xPct,yPct,crit){
 }
 
 function weaponEvolveFx(w){
- const t=$("#weaponToast"); if(!t) return;
- t.innerHTML=`<div class="wt-lead">武器進化</div><div class="wt-name">${w.n}</div>`;
- t.classList.remove("on"); void t.offsetWidth; t.classList.add("on");
+ const toast=$("#weaponToast"); if(!toast) return;
+ toast.innerHTML=`<div class="wt-lead">${t('weapon_evolve')}</div><div class="wt-name">${L(w.name)}</div>`;
+ toast.classList.remove("on"); void toast.offsetWidth; toast.classList.add("on");
  sndEvolve();
 }
 function heroAttack(){
+ if(!$("#titleScreen").classList.contains("hidden")) return; // 言語選択中は入力無効
  if(bossDead) return;
  addCombo();
  let dmg=clickDmg(), crit=Math.random()<critRate();
@@ -968,9 +1090,9 @@ function clickCard(o){
  const cur=clickBaseDmg(lv), next=clickBaseDmg(lv+1);
  const tierNow=Math.floor(lv/10), tierNext=Math.floor((lv+1)/10);
  const evolving = tierNext>tierNow && tierNext<WEAPONS.length;
- let ef=`ダメージ ${fmt(cur)} → ${fmt(next)}`;
- if(evolving) ef+=`<br><span style="color:#ffd24a">次で「${WEAPONS[tierNext].n}」に進化</span>`;
- return card({act:"hero",id:"click",nm:w.n,desc:o.desc,lv:"Lv."+weaponSubLevel(),ef,cost});
+ let ef=t('ef_click_dmg',fmt(cur),fmt(next));
+ if(evolving) ef+=`<br><span style="color:#ffd24a">${t('evolve_next',L(WEAPONS[tierNext].name))}</span>`;
+ return card({act:"hero",id:"click",nm:L(w.name),desc:heroT('click').desc,lv:"Lv."+weaponSubLevel(),ef,cost});
 }
 // re-evaluate affordability live so cards unlock the moment gold is enough
 function refreshAffordable(){
@@ -983,16 +1105,15 @@ function renderCards(){
   if(unitOwned(u)){
    const lv=S.ulvl[u.id], nextAwaken=Math.ceil((lv+1)/50)*50;
    const awTier=Math.floor(lv/50), awHint=(nextAwaken-lv<=10&&awTier<3)
-     ?`<br><span style="color:#7fc8ff">あと${nextAwaken-lv}で覚醒Lv${awTier+1}（×${Math.pow(50,awTier+1).toLocaleString()}）</span>`:"";
+     ?`<br><span style="color:#7fc8ff">${t('awaken_hint',nextAwaken-lv,awTier+1,Math.pow(50,awTier+1).toLocaleString())}</span>`:"";
    const ef=u.gold
-     ? `収集 ${fmt(hitGold()*(1+lv))}G → ${fmt(hitGold()*(2+lv))}G (次)`
-     : `DPS ${fmt(unitDPS(u))} → ${fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/unitIv(u))} (次)`+awHint;
-   const awLabel=lv>=50?"【覚醒】":"";
-   h+=card({act:"upg",id:u.id,nm:awLabel+u.jp+" 強化",lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
+     ? t('ef_collect',fmt(hitGold()*(1+lv)),fmt(hitGold()*(2+lv)))
+     : t('ef_dps',fmt(unitDPS(u)),fmt(u.dmg*(1+0.9*(lv+1))*awakenMul(u)/unitIv(u)))+awHint;
+   h+=card({act:"upg",id:u.id,nm:t('unit_upg_name',L(u.name),lv>=50),lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
    prevOwned=true;
   } else if(prevOwned){
-   h+=card({act:"buy",id:u.id,nm:u.jp,lv:"未召喚",
-     ef:u.gold?`ゴールドを自動収集`:`DPS ${fmt(u.dmg/unitIv(u))} (初期)`,cost:unitBuyCost(u)});
+   h+=card({act:"buy",id:u.id,nm:L(u.name),lv:t('not_summoned'),
+     ef:u.gold?t('ef_autogold'):t('ef_dps_init',fmt(u.dmg/unitIv(u))),cost:unitBuyCost(u)});
    prevOwned=false;
   } else {
    prevOwned=false;
@@ -1002,21 +1123,22 @@ function renderCards(){
  let hh="";
  HERO.forEach(o=>{
    if(o.id==="click"){ hh+=clickCard(o); return; }
-   hh+=card({act:"hero",id:o.id,nm:o.jp,desc:o.desc,lv:"Lv."+S.hero[o.id],ef:o.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max});
+   const ht=heroT(o.id);
+   hh+=card({act:"hero",id:o.id,nm:ht.nm,desc:ht.desc,lv:"Lv."+S.hero[o.id],ef:ht.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max});
  });
  $("#pane-hero").innerHTML=hh;
  const pb=$("#prestigeBtn");
  if(S.bossWave>=10){ pb.disabled=false;
    const nb=S.goldBonus*prestigeFactor();
-   pb.textContent=`転生する (永続ゴールド ×${fmt(S.goldBonus)} → ×${fmt(nb)})`; }
- else { pb.disabled=true; pb.textContent=`転生 (BOSS 10到達で解放) 現在 BOSS ${S.bossWave}`; }
+   pb.textContent=t('prestige_do',fmt(S.goldBonus),fmt(nb)); }
+ else { pb.disabled=true; pb.textContent=t('prestige_locked',S.bossWave); }
 }
 $("#panels").addEventListener("click",e=>{
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
  const act=c.dataset.act, id=c.dataset.id;
  if(act==="buy"){ const u=UNITS.find(x=>x.id===id), cst=unitBuyCost(u);
    if(S.gold>=cst && !unitOwned(u)){ S.gold-=cst; S.owned[id]=1; renderUnits(); sndLevelUp();
-     try{ gtag('event','unit_buy',{unit_id:id,unit_name:u.jp}); }catch(e){} } }
+     try{ gtag('event','unit_buy',{unit_id:id,unit_name:u.name.ja}); }catch(e){} } }
  else if(act==="upg"){ const u=UNITS.find(x=>x.id===id), cst=unitUpgCost(u);
    if(S.gold>=cst){ S.gold-=cst; S.ulvl[id]++; renderUnits(); sndLevelUp(); } }
  else if(act==="hero"){ const o=HERO.find(x=>x.id===id), cst=heroCost(o);
@@ -1071,12 +1193,39 @@ function loop(now){
  requestAnimationFrame(loop);
 }
 
+/* ===== 言語適用 / タイトル画面 ===== */
+// 静的テキスト(data-i18n / data-i18n-html)を差し替え、動的描画を呼び直す。
+function applyLang(lang){
+ if(lang) LANG=lang;
+ document.documentElement.lang=LANG;
+ $$("[data-i18n]").forEach(e=>{ e.textContent=t(e.dataset.i18n); });
+ $$("[data-i18n-html]").forEach(e=>{ e.innerHTML=t(e.dataset.i18nHtml); });
+ const lc=$("#langBtnCode"); if(lc) lc.textContent=LANG.toUpperCase();
+ if(BOSS[bossIndex]) setBossName(BOSS[bossIndex].name);
+ renderCards(); updateStageTag(); updateHud();
+}
+function chooseLang(lang){
+ try{ localStorage.setItem("sbr_lang",lang); }catch(e){}
+ applyLang(lang);
+ $("#titleScreen").classList.add("hidden");
+ try{ ac().resume(); }catch(e){} // ユーザー操作のタイミングで音声を解禁
+}
+$$("#titleScreen .ts-lang").forEach(b=>{
+ const pick=()=>chooseLang(b.dataset.lang);
+ b.addEventListener("click",pick);
+ b.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+});
+$("#langBtn").addEventListener("click",()=>{ $("#titleScreen").classList.remove("hidden"); });
+
 if(new URLSearchParams(location.search).has("reset")){
  try{ localStorage.removeItem("sbr_save2"); }catch(e){}
  history.replaceState(null,"",location.pathname);
 }
 load();
 spawnBoss(); renderUnits(); renderCards(); updateHud();
+applyLang(LANG);
+// 初回（言語未選択）はタイトル画面を表示、選択済みなら隠す
+$("#titleScreen").classList.toggle("hidden", LANG_CHOSEN);
 lastGold=S.gold;
 requestAnimationFrame(loop);
 
