@@ -555,7 +555,28 @@ function heroT(id){ return (I18N[LANG]&&I18N[LANG].hero&&I18N[LANG].hero[id])||I
 
 /* ===== SOUND ===== */
 let _ac=null;
-function ac(){ if(!_ac) _ac=new (window.AudioContext||window.webkitAudioContext)(); return _ac; }
+function ac(){ if(!_ac){ _ac=new (window.AudioContext||window.webkitAudioContext)(); decodeSlash(); } return _ac; }
+
+// 斬撃音サンプル（クリック攻撃の効果音）。生バイト列を先読みし、AudioContext生成後にデコードする。
+let _slashBuf=null, _slashBytes=null, _slashDecoding=false;
+fetch("assets/slash.mp3").then(r=>r.arrayBuffer()).then(b=>{ _slashBytes=b; decodeSlash(); }).catch(()=>{});
+function decodeSlash(){
+  if(_slashBuf||_slashDecoding||!_slashBytes||!_ac) return;
+  _slashDecoding=true;
+  // decodeAudioDataはバッファを消費するのでコピーを渡す
+  _ac.decodeAudioData(_slashBytes.slice(0)).then(buf=>{_slashBuf=buf;}).catch(()=>{_slashDecoding=false;});
+}
+// 一発再生（クリックごとに新しいソースを作るので重なってもOK）。未デコードならfalseを返してsynthにフォールバック。
+function playSlash(vol=0.5,rate=1){
+  if(!_slashBuf) return false;
+  try{
+    const ctx=ac(); if(ctx.state==="suspended") ctx.resume();
+    const src=ctx.createBufferSource(); src.buffer=_slashBuf; src.playbackRate.value=rate;
+    const g=ctx.createGain(); g.gain.value=vol;
+    src.connect(g); g.connect(ctx.destination); src.start();
+    return true;
+  }catch(e){ return false; }
+}
 function snd(freq,type,dur,vol=0.3,decay=0.8){
   try{
     const ctx=ac();
@@ -584,8 +605,8 @@ function sndSwish(vol=0.22,dur=0.09,freq=2600){
     src.start();
   }catch(e){}
 }
-function sndClick(){ const s=curWeapon().snd; sndSwish(0.2,0.08,s.sw); snd(s.f,s.w,0.07,0.22); }
-function sndCrit(){ const s=curWeapon().snd; sndSwish(0.3,0.12,s.sw+800); snd(s.f*0.7,s.w,0.12,0.3); snd(s.f*3,'sawtooth',0.1,0.18); }
+function sndClick(){ if(playSlash(0.5,1)) return; const s=curWeapon().snd; sndSwish(0.2,0.08,s.sw); snd(s.f,s.w,0.07,0.22); }
+function sndCrit(){ if(playSlash(0.75,0.9)) return; const s=curWeapon().snd; sndSwish(0.3,0.12,s.sw+800); snd(s.f*0.7,s.w,0.12,0.3); snd(s.f*3,'sawtooth',0.1,0.18); }
 function sndEvolve(){ [330,440,550,740].forEach((f,i)=>setTimeout(()=>snd(f,'triangle',0.16,0.22),i*70)); }
 function sndUnitHit(){ snd(120,'square',0.04,0.08); }
 function sndKill(){ [200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.18,0.2),i*60)); }

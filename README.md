@@ -8,7 +8,7 @@ HTML1ファイルで完結する静的サイトで、本番は `main` ブラン�
 | パス | 役割 |
 |------|------|
 | `index.html` | ゲーム本体（HTML/CSS/JSすべて内包）。これ1つで動く。 |
-| `assets/` | ゲームが実際に使う画像。ボス（`boss_*.webp`）、味方ユニット（`unit_*.png`）、背景（`bg.png`）。 |
+| `assets/` | ゲームが実際に使う素材。ボス（`boss_*.webp`）、味方ユニット（`unit_*.png`）、背景（`bg.png`）、効果音（`slash.mp3` = クリック攻撃の斬撃音）。 |
 | `robots.txt` | クローラ設定。 |
 | `package.json` / `package-lock.json` | 開発用（playwrightでの動作確認）。配信には不要。 |
 | `.gitignore` | `node_modules/` と、ルート直下の原画 `*.png` を除外（`assets/` 配下は対象外）。 |
