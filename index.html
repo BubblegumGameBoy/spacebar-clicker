@@ -265,9 +265,77 @@
     #field{height:50vh;} .pane{grid-template-columns:1fr;}
     #hud{font-size:11px; min-width:120px;}
   }
+
+  /* ===== TITLE / LANGUAGE SELECT (Diablo風) ===== */
+  #titleScreen{
+    position:fixed; inset:0; z-index:100; padding:24px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse 72% 56% at 50% 40%, rgba(44,24,10,.34), rgba(3,2,1,.92) 78%),
+      linear-gradient(rgba(5,4,3,.62), rgba(2,1,1,.86));
+    backdrop-filter:blur(2.5px); -webkit-backdrop-filter:blur(2.5px);
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Noto Serif CJK JP",serif;
+    animation:tsFade .5s ease;
+  }
+  @keyframes tsFade{ from{opacity:0;} to{opacity:1;} }
+  #titleScreen.hidden{ display:none; }
+  .ts-crest{ font-size:30px; line-height:1; margin-bottom:8px;
+    filter:drop-shadow(0 0 10px rgba(243,195,74,.5)); }
+  .ts-kicker{ font-size:clamp(12px,2.6vw,15px); letter-spacing:.5em; text-indent:.5em;
+    color:#c2923f; text-transform:uppercase; margin-bottom:2px; }
+  .ts-title{ font-size:clamp(30px,8vw,54px); font-weight:800; letter-spacing:.06em; text-align:center;
+    background:linear-gradient(#fbe9a8 0%,#f3c34a 44%,#a3741f 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    text-shadow:0 2px 12px rgba(0,0,0,.6); line-height:1.04; }
+  .ts-rule{ display:flex; align-items:center; justify-content:center; gap:10px;
+    width:min(80vw,360px); margin:18px 0 15px; }
+  .ts-rule::before,.ts-rule::after{ content:""; height:1px; flex:1;
+    background:linear-gradient(90deg,transparent,#8a6c30 45%,#cfab54); }
+  .ts-rule::after{ background:linear-gradient(270deg,transparent,#8a6c30 45%,#cfab54); }
+  .ts-rule i{ width:7px; height:7px; transform:rotate(45deg); display:block;
+    background:linear-gradient(135deg,#d9b35a,#7a5c24); box-shadow:0 0 6px rgba(207,171,84,.5); }
+  .ts-prompt{ font-size:clamp(12px,2.6vw,14px); color:#cdbb93; letter-spacing:.08em;
+    margin-bottom:18px; text-align:center; line-height:1.5; }
+  .ts-langs{ display:flex; flex-direction:column; gap:13px; width:min(80vw,320px); }
+  .ts-lang{ position:relative; padding:12px 18px 11px; text-align:center; cursor:pointer;
+    color:#f0e6d2; font-size:19px; font-weight:700; letter-spacing:.04em;
+    background:linear-gradient(rgba(28,19,10,.80),rgba(10,6,4,.84));
+    border-top:1.5px solid rgba(207,171,84,.85); border-bottom:1.5px solid rgba(122,92,36,.9);
+    box-shadow:0 2px 10px rgba(0,0,0,.55), inset 0 0 18px rgba(0,0,0,.4); transition:.13s; }
+  .ts-lang::before,.ts-lang::after{ content:""; position:absolute; top:50%; width:9px; height:9px;
+    transform:translateY(-50%) rotate(45deg); background:linear-gradient(135deg,#d9b35a,#7a5c24); }
+  .ts-lang::before{ left:-5px; } .ts-lang::after{ right:-5px; }
+  .ts-lang .sub{ display:block; font-size:10.5px; font-weight:600; letter-spacing:.2em;
+    color:#b9893b; margin-top:3px; text-transform:uppercase; }
+  .ts-lang:hover,.ts-lang:focus-visible{ color:#fff; outline:none; border-top-color:#f3c34a;
+    background:linear-gradient(rgba(48,33,15,.92),rgba(20,12,6,.92));
+    box-shadow:0 0 16px rgba(243,195,74,.35), inset 0 0 22px rgba(243,195,74,.12);
+    transform:translateY(-1px); }
+  .ts-foot{ margin-top:22px; font-size:11px; color:#6f5f48; letter-spacing:.18em; text-transform:uppercase; }
+
+  /* 隅の言語変更ボタン（ゲーム中・初回選択後に表示） */
+  #langBtn{ position:absolute; left:10px; bottom:10px; z-index:11; cursor:pointer;
+    display:flex; align-items:center; gap:5px; padding:5px 9px; font-size:12px; font-weight:700;
+    color:#e8dcc0; background:rgba(14,18,22,.82); border:1px solid #6a5424; border-radius:8px;
+    backdrop-filter:blur(3px); letter-spacing:.04em; }
+  #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
 </head>
 <body>
+<div id="titleScreen">
+  <div class="ts-crest">⚔️</div>
+  <div class="ts-kicker">Spacebar</div>
+  <div class="ts-title">BOSS RUSH</div>
+  <div class="ts-rule"><i></i></div>
+  <div class="ts-prompt">言語を選択 ・ Select Language ・ 选择语言</div>
+  <div class="ts-langs">
+    <div class="ts-lang" data-lang="ja" tabindex="0">日本語<span class="sub">Japanese</span></div>
+    <div class="ts-lang" data-lang="en" tabindex="0">English<span class="sub">English</span></div>
+    <div class="ts-lang" data-lang="zh" tabindex="0">中文<span class="sub">Chinese</span></div>
+  </div>
+  <div class="ts-foot">MMXXVI · Bubblegum</div>
+</div>
+<div id="langBtn" title="言語 / Language"><span>🌐</span><span id="langBtnCode">JA</span></div>
 <div id="field">
   <img id="bgImg" src="assets/bg.png" alt="">
 
