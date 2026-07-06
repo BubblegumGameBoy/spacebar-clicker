@@ -194,11 +194,19 @@
   #killBanner.on{opacity:1;}
   #killBanner .kb-title{font-size:clamp(18px,4vw,28px); font-weight:900; color:#ffd24a; letter-spacing:.06em;}
   #killBanner .kb-gold{font-size:14px; color:var(--gold); margin-top:2px;}
-  #killBanner .kb-bonus{font-size:14px; font-weight:800; color:#ffe14a; margin-top:4px; display:none;
-    text-shadow:0 0 8px rgba(255,210,74,.7);}
-  #killBanner.bonus{border-color:#ffe14a; background:rgba(30,20,6,.9);
-    box-shadow:0 0 22px rgba(255,210,74,.55);}
-  #killBanner.bonus .kb-title{color:#fff;}
+  #killBanner .kb-bonus{position:relative; display:none; margin-top:6px; padding:2px 20px;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;
+    font-size:15px; font-weight:800; letter-spacing:.04em; color:#ffe6a8;
+    text-shadow:0 0 9px rgba(255,200,90,.5),0 1px 2px #000;}
+  #killBanner .kb-bonus::before,#killBanner .kb-bonus::after{content:""; position:absolute; top:50%;
+    width:7px; height:7px; transform:translateY(-50%) rotate(45deg);
+    background:linear-gradient(135deg,#e6c674,#7a5c24);}
+  #killBanner .kb-bonus::before{left:2px;} #killBanner .kb-bonus::after{right:2px;}
+  #killBanner.bonus{border-color:#cfab54;
+    background:linear-gradient(rgba(30,20,8,.93),rgba(14,9,4,.95));
+    box-shadow:0 0 22px rgba(207,171,84,.5), inset 0 0 20px rgba(243,195,74,.1);}
+  #killBanner.bonus .kb-title{color:#f5e6c0;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;}
 
   /* ===== BOSS NAV BUTTONS ===== */
   #nextBossBtn,#prevBossBtn{display:none; margin-top:5px; padding:5px 10px; color:#fff;
@@ -218,11 +226,15 @@
   #stageTag{position:absolute; top:10px; right:10px; z-index:10; text-align:right;
     background:rgba(14,18,22,.82); border:1px solid var(--line); border-radius:10px; padding:6px 12px; font-size:12px;}
   #stageTag b{font-size:16px; color:var(--accent);}
-  #bonusMeter{display:none; margin-top:5px; font-size:11px; font-weight:700; color:var(--gold);
-    letter-spacing:.02em; line-height:1.5;}
-  #bonusMeter .pips{font-size:12px; letter-spacing:1.5px; margin-right:3px;}
-  #bonusMeter .pf{color:var(--gold);}
-  #bonusMeter .pe{color:#5c4a24;}
+  #bonusMeter{display:none; margin-top:6px; line-height:1.5;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;}
+  #bonusMeter .pips{display:inline-block; vertical-align:middle; margin-right:6px; white-space:nowrap;}
+  #bonusMeter .pip{display:inline-block; width:7px; height:7px; margin:0 1.5px; transform:rotate(45deg);}
+  #bonusMeter .pip.pf{background:linear-gradient(135deg,#fbe9a8,#f3c34a 55%,#9c6e1f);
+    box-shadow:0 0 4px rgba(243,195,74,.55);}
+  #bonusMeter .pip.pe{background:rgba(0,0,0,.3); border:1px solid #5c4a24;}
+  #bonusMeter .btxt{vertical-align:middle; font-size:11.5px; font-weight:700; letter-spacing:.05em;
+    color:#e9c766; text-shadow:0 1px 2px #000;}
   #comboTag{position:absolute; top:48%; left:14px; z-index:10; transform:translateY(-50%);
     font-weight:800; font-size:clamp(18px,4vw,34px); color:#ffd24a; text-shadow:0 2px 6px #000;
     opacity:0; transition:opacity .2s;}
@@ -460,8 +472,8 @@ const I18N={
   remaining:n=>`残り：${n} 体`,
   bonus_get:"ボーナスコイン獲得！",
   bonus_hint:n=>`このボスを${n}回倒すと特別ボーナス！`,
-  bonus_meter:r=>`あと${r}回で★ボーナス`,
-  bonus_meter_next:"次の撃破で★ボーナス！",
+  bonus_meter:r=>`あと${r}回でボーナス`,
+  bonus_meter_next:"次の撃破でボーナス！",
   prestige_count:(n,g)=>`転生${n}回 G×${g}`,
   ef_autogold:"ゴールドを自動収集",
   ef_dps_init:v=>`DPS ${v} (初期)`,
@@ -499,8 +511,8 @@ const I18N={
   remaining:n=>`${n} left`,
   bonus_get:"BONUS COINS!",
   bonus_hint:n=>`Slay this boss ${n}× for a BONUS!`,
-  bonus_meter:r=>`${r} more to ★BONUS`,
-  bonus_meter_next:"Next kill = ★BONUS!",
+  bonus_meter:r=>`${r} more to BONUS`,
+  bonus_meter_next:"Next kill = BONUS!",
   prestige_count:(n,g)=>`Rebirth ×${n}  G×${g}`,
   ef_autogold:"Auto-collects gold",
   ef_dps_init:v=>`DPS ${v} (base)`,
@@ -538,8 +550,8 @@ const I18N={
   remaining:n=>`剩余 ${n}`,
   bonus_get:"获得奖励金币！",
   bonus_hint:n=>`击杀这个Boss ${n}次获得特别奖励！`,
-  bonus_meter:r=>`再击杀${r}次得★奖励`,
-  bonus_meter_next:"下次击杀得★奖励！",
+  bonus_meter:r=>`再击杀${r}次得奖励`,
+  bonus_meter_next:"下次击杀得奖励！",
   prestige_count:(n,g)=>`转生${n}次 G×${g}`,
   ef_autogold:"自动收集金币",
   ef_dps_init:v=>`DPS ${v} (初始)`,
@@ -878,9 +890,9 @@ function updateStageTag(){
  if(k>0){
    const into=k%REPEAT_BONUS_EVERY, remain=REPEAT_BONUS_EVERY-into;
    bm.style.display="block";
-   bm.innerHTML='<span class="pips"><span class="pf">'+"●".repeat(into)+'</span>'
-     +'<span class="pe">'+"○".repeat(remain)+'</span></span> '
-     +(remain===1?t('bonus_meter_next'):t('bonus_meter',remain));
+   const pips='<span class="pip pf"></span>'.repeat(into)+'<span class="pip pe"></span>'.repeat(remain);
+   bm.innerHTML='<span class="pips">'+pips+'</span><span class="btxt">'
+     +(remain===1?t('bonus_meter_next'):t('bonus_meter',remain))+'</span>';
  } else { bm.style.display="none"; }
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
@@ -931,13 +943,13 @@ function killBoss(){
  $("#kbGold").textContent="+"+fmt(g)+" G";
  kb.classList.toggle("bonus",isBonus);
  if(isBonus){
-   kbB.style.display="block";
-   kbB.textContent="🎉 "+t('bonus_get')+" +"+fmt(bonus)+" G";
+   kbB.style.display="inline-block";
+   kbB.textContent=t('bonus_get')+" +"+fmt(bonus)+" G";
    sndBonus();
    floatDmg(bonus,50,30,"crit",true);
  } else if(firstClear){
-   kbB.style.display="block";
-   kbB.textContent="⭐ "+t('bonus_hint',REPEAT_BONUS_EVERY);
+   kbB.style.display="inline-block";
+   kbB.textContent=t('bonus_hint',REPEAT_BONUS_EVERY);
  } else {
    kbB.style.display="none";
  }
