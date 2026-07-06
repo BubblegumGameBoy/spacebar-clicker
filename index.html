@@ -194,6 +194,11 @@
   #killBanner.on{opacity:1;}
   #killBanner .kb-title{font-size:clamp(18px,4vw,28px); font-weight:900; color:#ffd24a; letter-spacing:.06em;}
   #killBanner .kb-gold{font-size:14px; color:var(--gold); margin-top:2px;}
+  #killBanner .kb-bonus{font-size:14px; font-weight:800; color:#ffe14a; margin-top:4px; display:none;
+    text-shadow:0 0 8px rgba(255,210,74,.7);}
+  #killBanner.bonus{border-color:#ffe14a; background:rgba(30,20,6,.9);
+    box-shadow:0 0 22px rgba(255,210,74,.55);}
+  #killBanner.bonus .kb-title{color:#fff;}
 
   /* ===== BOSS NAV BUTTONS ===== */
   #nextBossBtn,#prevBossBtn{display:none; margin-top:5px; padding:5px 10px; color:#fff;
@@ -213,6 +218,11 @@
   #stageTag{position:absolute; top:10px; right:10px; z-index:10; text-align:right;
     background:rgba(14,18,22,.82); border:1px solid var(--line); border-radius:10px; padding:6px 12px; font-size:12px;}
   #stageTag b{font-size:16px; color:var(--accent);}
+  #bonusMeter{display:none; margin-top:5px; font-size:11px; font-weight:700; color:var(--gold);
+    letter-spacing:.02em; line-height:1.5;}
+  #bonusMeter .pips{font-size:12px; letter-spacing:1.5px; margin-right:3px;}
+  #bonusMeter .pf{color:var(--gold);}
+  #bonusMeter .pe{color:#5c4a24;}
   #comboTag{position:absolute; top:48%; left:14px; z-index:10; transform:translateY(-50%);
     font-weight:800; font-size:clamp(18px,4vw,34px); color:#ffd24a; text-shadow:0 2px 6px #000;
     opacity:0; transition:opacity .2s;}
@@ -347,6 +357,7 @@
   </div>
   <div id="stageTag"><span data-i18n="kills">討伐数</span> <b id="stStage">1</b><br><span id="stWave">BOSS 1</span>
     <br><span style="color:var(--sub)" id="stPres"></span>
+    <div id="bonusMeter"></div>
     <button id="nextBossBtn">次のボスへ ▶</button>
     <button id="prevBossBtn" data-i18n="to_prev_boss">◀ 前のボスへ</button></div>
   <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
@@ -366,6 +377,7 @@
   <div id="killBanner">
     <div class="kb-title" data-i18n="defeated">DEFEATED!</div>
     <div class="kb-gold" id="kbGold"></div>
+    <div class="kb-bonus" id="kbBonus"></div>
   </div>
 
   <div id="weaponToast"></div>
@@ -446,6 +458,10 @@ const I18N={
   not_summoned:"未召喚",
   to_next_boss:"次のボスへ ▶", to_first_boss:"最初のボスへ ▶", to_prev_boss:"◀ 前のボスへ",
   remaining:n=>`残り：${n} 体`,
+  bonus_get:"ボーナスコイン獲得！",
+  bonus_hint:n=>`このボスを${n}回倒すと特別ボーナス！`,
+  bonus_meter:r=>`あと${r}回で★ボーナス`,
+  bonus_meter_next:"次の撃破で★ボーナス！",
   prestige_count:(n,g)=>`転生${n}回 G×${g}`,
   ef_autogold:"ゴールドを自動収集",
   ef_dps_init:v=>`DPS ${v} (初期)`,
@@ -481,6 +497,10 @@ const I18N={
   not_summoned:"Not Summoned",
   to_next_boss:"Next Boss ▶", to_first_boss:"First Boss ▶", to_prev_boss:"◀ Prev Boss",
   remaining:n=>`${n} left`,
+  bonus_get:"BONUS COINS!",
+  bonus_hint:n=>`Slay this boss ${n}× for a BONUS!`,
+  bonus_meter:r=>`${r} more to ★BONUS`,
+  bonus_meter_next:"Next kill = ★BONUS!",
   prestige_count:(n,g)=>`Rebirth ×${n}  G×${g}`,
   ef_autogold:"Auto-collects gold",
   ef_dps_init:v=>`DPS ${v} (base)`,
@@ -516,6 +536,10 @@ const I18N={
   not_summoned:"未召唤",
   to_next_boss:"下一个Boss ▶", to_first_boss:"第一个Boss ▶", to_prev_boss:"◀ 上一个Boss",
   remaining:n=>`剩余 ${n}`,
+  bonus_get:"获得奖励金币！",
+  bonus_hint:n=>`击杀这个Boss ${n}次获得特别奖励！`,
+  bonus_meter:r=>`再击杀${r}次得★奖励`,
+  bonus_meter_next:"下次击杀得★奖励！",
   prestige_count:(n,g)=>`转生${n}次 G×${g}`,
   ef_autogold:"自动收集金币",
   ef_dps_init:v=>`DPS ${v} (初始)`,
@@ -612,6 +636,7 @@ function sndUnitHit(){ snd(120,'square',0.04,0.08); }
 function sndKill(){ [200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.18,0.2),i*60)); }
 function sndLevelUp(){ [300,400,500,650].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.15,0.25),i*80)); }
 function sndGold(){ snd(440,'sine',0.08,0.12); }
+function sndBonus(){ [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>snd(f,'triangle',0.2,0.24),i*80)); }
 
 // name = {ja,en,zh} 各言語 [二つ名(epithet), 名前]。setBossNameが上段/下段に振り分ける。
 const BOSS=[
@@ -733,6 +758,7 @@ function freshState(){
   owned:zeroUnits(),
   ulvl:zeroUnits(),
   hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0},
+  bossKills:{},
   bossHpMax:0, bossHp:0 };
 }
 function load(){
@@ -741,6 +767,7 @@ function load(){
      S.owned=Object.assign(zeroUnits(),r.owned||{});
      S.ulvl=Object.assign(zeroUnits(),r.ulvl||{});
      S.hero=Object.assign({click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0},r.hero||{});
+     S.bossKills=Object.assign({},r.bossKills||{});
      if(!S.bossWave) S.bossWave=((S.globalWave-1)%BOSS.length)+1;
      if(!S.clearedBossWave) S.clearedBossWave=0;
      // migrate old saves: prestige used to give a flat 2^prestige multiplier
@@ -771,6 +798,12 @@ function goldMul(){ return (1+0.1*S.hero.gold)*(S.goldBonus||1); }
 // 転生報酬: 今回到達したボスが深いほど倍率が大きくなる（永続・複利で積み上がる）
 // 係数0.4 → BOSS10解放直後の初回転生で約5倍。転生を使い始めるハードルを下げる狙い。
 function prestigeFactor(){ return 1+0.4*Math.max(1,S.clearedBossWave); }
+
+// ===== 連続撃破ボーナス =====
+// 同じボスを EVERY 回倒すごとに、その回の撃破ゴールド×MULT を「ボーナスコイン」として追加付与。
+// 序盤ボスを繰り返し倒して成長を実感させる循環を作る狙い。既存の指数スケールには一切触れない。
+const REPEAT_BONUS_EVERY=5;
+const REPEAT_BONUS_MULT=10;
 
 let bossIndex=0, bossDead=false;
 function bossMaxHp(){ return Math.floor(300*Math.pow(2.42,S.bossWave-1)); }
@@ -840,6 +873,15 @@ function updateStageTag(){
  const remain=Math.max(0,BOSS.length-S.bossWave);
  $("#bossRem").textContent=t('remaining',remain);
  $("#stPres").textContent=S.prestige>0?t('prestige_count',S.prestige,fmt(S.goldBonus)):"";
+ // 連続撃破ボーナスのメーター（このボスを1回以上倒したら＝初回撃破後に表示）
+ const bm=$("#bonusMeter"), k=S.bossKills[S.bossWave]||0;
+ if(k>0){
+   const into=k%REPEAT_BONUS_EVERY, remain=REPEAT_BONUS_EVERY-into;
+   bm.style.display="block";
+   bm.innerHTML='<span class="pips"><span class="pf">'+"●".repeat(into)+'</span>'
+     +'<span class="pe">'+"○".repeat(remain)+'</span></span> '
+     +(remain===1?t('bonus_meter_next'):t('bonus_meter',remain));
+ } else { bm.style.display="none"; }
  const nb=$("#nextBossBtn");
  if(S.clearedBossWave>=S.bossWave){
    nb.style.display="block";
@@ -859,9 +901,15 @@ function dealDamage(amt,x,y,kind,gold){
 function killBoss(){
  bossDead=true; S.bossHp=0; updateBossBar();
  const g=goldReward(); S.gold+=g;
+ // 同じボスの連続撃破カウント。EVERY回ごとに撃破ゴールド×MULTのボーナスを追加付与。
+ const kills=(S.bossKills[S.bossWave]=(S.bossKills[S.bossWave]||0)+1);
+ const isBonus=(kills%REPEAT_BONUS_EVERY===0);
+ let bonus=0;
+ if(isBonus){ bonus=g*REPEAT_BONUS_MULT; S.gold+=bonus; }
  S.globalWave++;
+ let firstClear=false;
  if(S.clearedBossWave<S.bossWave){
-   S.clearedBossWave=S.bossWave;
+   S.clearedBossWave=S.bossWave; firstClear=true;
    // first kill of this boss — progress milestone for analytics
    try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name.ja.join(" ")}); }catch(e){}
    // first full clear: roll credits (once per player, survives prestige)
@@ -871,16 +919,30 @@ function killBoss(){
      setTimeout(()=>$("#creditsModal").classList.add("on"),1600);
    }
  }
+ if(isBonus){ try{ gtag('event','boss_repeat_bonus',{boss_wave:S.bossWave,kills}); }catch(e){} }
  bossEl.classList.add("dying");
  sndKill();
  const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
- for(let i=0;i<14;i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
+ for(let i=0;i<(isBonus?28:14);i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
  floatDmg(g,72,16,"click",true);
  sndGold();
- // brief banner
- const kb=$("#killBanner"); $("#kbGold").textContent="+"+fmt(g)+" G";
+ // 撃破バナー：通常は「撃破！＋G」。ボーナス回は金色に強調＋ボーナスG、初回撃破は特典ヒントを併記。
+ const kb=$("#killBanner"), kbB=$("#kbBonus");
+ $("#kbGold").textContent="+"+fmt(g)+" G";
+ kb.classList.toggle("bonus",isBonus);
+ if(isBonus){
+   kbB.style.display="block";
+   kbB.textContent="🎉 "+t('bonus_get')+" +"+fmt(bonus)+" G";
+   sndBonus();
+   floatDmg(bonus,50,30,"crit",true);
+ } else if(firstClear){
+   kbB.style.display="block";
+   kbB.textContent="⭐ "+t('bonus_hint',REPEAT_BONUS_EVERY);
+ } else {
+   kbB.style.display="none";
+ }
  kb.classList.add("on");
- setTimeout(()=>kb.classList.remove("on"),1400);
+ setTimeout(()=>{ kb.classList.remove("on","bonus"); }, isBonus?2100:1400);
  // auto-respawn same boss
  setTimeout(()=>{ spawnBoss(true); renderCards(); updateHud(); save(); }, 1500);
  updateStageTag(); save();
