@@ -286,6 +286,14 @@
   @media(max-width:680px){
     #field{height:50vh;} .pane{grid-template-columns:1fr;}
     #hud{font-size:11px; min-width:120px;}
+    /* スマホは横幅が狭く、右上パネルが中央のボスHPオーブに被るため一段コンパクトに */
+    #stageTag{font-size:10px; padding:5px 8px;}
+    #stageTag b{font-size:13px;}
+    #bonusMeter{margin-top:5px;}
+    #bonusMeter .btxt{display:none;}          /* 狭い画面では文言を省きピップだけでパネル幅を抑える */
+    #bonusMeter .pips{margin-right:0;}
+    #bonusMeter .pip{width:8px; height:8px; margin:0 1px;}
+    #nextBossBtn,#prevBossBtn{font-size:11px; padding:4px 7px;}
   }
 
   /* ===== TITLE / LANGUAGE SELECT (Diablo風) ===== */
