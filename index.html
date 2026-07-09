@@ -285,7 +285,10 @@
 
   @media(max-width:680px){
     #field{height:50vh;} .pane{grid-template-columns:1fr;}
-    #hud{font-size:11px; min-width:120px;}
+    /* 左上ステータスも同様に：狭い画面でゲーム画面を隠しすぎないよう最小限のサイズに */
+    #hud{top:6px; left:6px; font-size:10px; min-width:0; padding:4px 8px; border-radius:8px;}
+    #hud .row{gap:8px; padding:0;}
+    #goldBig{font-size:12px;}
     /* スマホは横幅が狭く、右上パネルが中央のボスHPオーブに被るため一段コンパクトに */
     #stageTag{font-size:10px; padding:5px 8px;}
     #stageTag b{font-size:13px;}
