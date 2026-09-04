@@ -838,21 +838,12 @@ const audioSettings=(()=>{try{return Object.assign({bgmOn:true,seOn:true,bgmVol:
 function saveAudioSettings(){try{localStorage.setItem("sbr_audio_v1",JSON.stringify(audioSettings));}catch(e){}}
 
 const bgmTracks={
- calm:new Audio("assets/bgm-calm.mp3"),
- battle:new Audio("assets/bgm-battle.mp3"),
- boss:new Audio("assets/bgm-boss.mp3"),
  climax:new Audio("assets/bgm-climax.mp3")
 };
 Object.values(bgmTracks).forEach(a=>{a.loop=true;a.preload="auto";a.volume=0;});
 let _bgmCurrent=null,_bgmUnlocked=false,_bgmFadeRaf=0;
-function desiredBgm(){
- if(S&&(S.bossCycle||1)>1)return "climax";
- if(!S||S.bossWave<=7)return "calm";
- if(S.bossWave<=19)return "battle";
- if(S.bossWave<=34)return "boss";
- return "climax";
-}
-function bgmTarget(key){return audioSettings.bgmVol*({calm:.78,battle:.9,boss:1,climax:1}[key]||1);}
+function desiredBgm(){return "climax";}
+function bgmTarget(){return audioSettings.bgmVol;}
 function crossfadeBgm(fromKey,toKey,ms=1600){
  cancelAnimationFrame(_bgmFadeRaf);
  const from=fromKey?bgmTracks[fromKey]:null,to=bgmTracks[toKey],fromVol=from?from.volume:0,target=bgmTarget(toKey);
@@ -876,7 +867,7 @@ function setBgm(on){audioSettings.bgmOn=on;saveAudioSettings();
 function setSe(on){audioSettings.seOn=on;saveAudioSettings();updateAudioButtons();if(on)snd(640,"sine",.08,.09);}
 function updateAudioButtons(){
  const b=$("#bgmBtn"),s=$("#seBtn");if(b){const key=desiredBgm();b.classList.toggle("on",audioSettings.bgmOn);b.textContent="♫ BGM "+(audioSettings.bgmOn?"ON":"OFF");
-  b.dataset.track=key;b.title={calm:"序盤：穏やか",battle:"中盤：通常戦",boss:"後半：ボス戦",climax:"最終盤：激戦"}[key];}
+  b.dataset.track=key;b.title="激戦BGM";}
  if(s){s.classList.toggle("on",audioSettings.seOn);s.textContent="🔊 SE "+(audioSettings.seOn?"ON":"OFF");}
 }
 
