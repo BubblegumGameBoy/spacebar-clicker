@@ -1,0 +1,735 @@
+<p> </p>
+<!--
+  はてなブログ貼り付け用（SPACEBAR BOSS RUSH）
+  PC：ページ内iframeでそのままプレイ
+  スマホ：iframeを出さず、play.bubblegumgameboy.com へボタンで送る
+         （クロスオリジンiframeはiOS/Chromeのストレージ分離でセーブが壊れるため）
+-->
+<style><!--
+/* ▼ サイドバー消す */
+  #box2, .sidebar {
+    display: none !important;
+  }
+  /* ▼ メインを全幅に */
+  #main, #container, .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .entry-content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  /* ▼ iframe（PCのみ表示）
+     旧版は height:105vh + transform:scale(0.85) で見た目を縮めていたが、
+     transformは配置ボックスの高さを変えないため下に約16vhの空白が残り、
+     広告側に margin-top:-16vh を入れて打ち消していた。
+     結果、広告がゲームのタップ領域に重なる状態だったので、
+     最初から実寸（85vw × 90vh）で置いてtransformと負マージンを廃止する。 */
+  .full-iframe {
+    display: block;
+    width: 85vw;
+    height: 90vh;
+    min-height: 600px;
+    margin-left: calc(50% - 42.5vw);
+    border: none;
+  }
+  .ranking-iframe {
+    display: block;
+    width: min(100%, 760px);
+    height: 420px;
+    margin: 0 auto 18px auto;
+    border: none;
+    border-radius: 10px;
+    background: #10151b;
+  }
+  .sp-ranking-card {
+    display: none;
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 18px 14px;
+    margin: 0 0 20px 0;
+  }
+  h2.section-head {
+    font-size: 118% !important;
+    font-weight: bold !important;
+    background-color: #555555 !important;
+    color: #ffffff !important;
+    padding: 10px 14px !important;
+    border-top: 4px solid #aaaaaa !important;
+    border-bottom: 4px solid #aaaaaa !important;
+    box-shadow: inset 0px 1px 0px #ffffff, inset 0px -1px 0px #ffffff;
+    margin-top: 48px !important;
+    margin-bottom: 20px !important;
+    border-left: none !important;
+  }
+  h3.sub-head {
+    font-size: 108% !important;
+    font-weight: bold !important;
+    border-left: 5px solid #555555 !important;
+    padding: 10px 0 10px 15px !important;
+    margin-top: 36px !important;
+    margin-bottom: 16px !important;
+    background-color: #f9f9f9 !important;
+  }
+  .note-box {
+    background: #fffde6;
+    border: 1px solid #e8d44d;
+    border-radius: 5px;
+    padding: 13px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: #444;
+    line-height: 1.8;
+  }
+  .note-box .note-label { font-weight: bold; color: #555; margin-right: 4px; }
+  .warn-box {
+    background: #fff5f5;
+    border: 1px solid #e0a0a0;
+    border-radius: 5px;
+    padding: 13px 16px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: #333;
+    line-height: 1.8;
+  }
+  .warn-box .warn-label { font-weight: bold; color: #c0392b; margin-right: 6px; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .data-table th {
+    background: #555555;
+    color: #ffffff;
+    padding: 9px 12px;
+    text-align: left;
+    font-weight: bold;
+  }
+  .data-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    line-height: 1.7;
+    background: #fff;
+    vertical-align: top;
+  }
+  .data-table tr:nth-child(even) td { background: #f9f9f9; }
+  .data-table th[scope="row"] {
+    background: #f5f5f5;
+    color: #333333;
+    font-weight: bold;
+    white-space: nowrap;
+    vertical-align: top;
+    padding: 9px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+  }
+  .lang-notice {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin: 0 0 14px 0;
+  }
+  /* ▼ スマホ用プレイカード（PCでは非表示） */
+  .sp-play-card {
+    display: none;
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 22px 16px 20px 16px;
+    margin: 0 0 20px 0;
+  }
+  .sp-play-lead {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 4px 0;
+  }
+  .sp-play-note {
+    font-size: 12.5px;
+    color: #777;
+    line-height: 1.75;
+    margin: 0 0 16px 0;
+  }
+  .play-btn-wrap { text-align: center; margin: 26px 0; }
+  .play-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #7a4ab0;
+    color: #ffffff !important;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none !important;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.18);
+    transition: all 0.18s;
+  }
+  .play-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .play-btn-sub { display: block; font-size: 12px; color: #888; margin-top: 8px; }
+  .faq-list dt {
+    font-weight: bold; background: #f5f5f5; padding: 10px 14px; margin-top: 12px;
+    border-left: 4px solid #555555; font-size: 14.5px;
+  }
+  .faq-list dd {
+    padding: 10px 14px 14px 18px; margin: 0; font-size: 14px;
+    line-height: 1.85; border-bottom: 1px solid #eee;
+  }
+  ul, ol { padding-left: 1.5em; }
+  li { margin-bottom: 6px; line-height: 1.8; }
+  p { margin-bottom: 1.4em; }
+  @media (max-width: 520px) {
+    .data-table thead { display: none; }
+    .data-table, .data-table tbody, .data-table tr, .data-table td {
+      display: block; width: 100%; box-sizing: border-box;
+    }
+    .data-table th[scope="row"] {
+      display: block; width: 100%; box-sizing: border-box;
+      padding: 6px 10px; font-size: 11px; color: #666;
+      background: #f5f5f5; border-bottom: 1px solid #f0f0f0;
+    }
+    .data-table tr {
+      border: 1px solid #e0e0e0; border-radius: 6px;
+      margin-bottom: 10px; overflow: hidden;
+    }
+    .data-table td {
+      padding: 7px 10px; border-bottom: 1px solid #f0f0f0; font-size: 13px;
+      display: flex; align-items: flex-start;
+    }
+    .data-table td::before {
+      content: attr(data-label); font-weight: bold; font-size: 11px; color: #666;
+      background: #f5f5f5; min-width: 70px; max-width: 70px; flex-shrink: 0;
+      padding: 2px 8px 2px 0; margin-right: 10px; border-right: 2px solid #dddddd;
+      line-height: 1.6;
+    }
+    .data-table td:last-child { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: #ffffff; }
+    .play-btn { font-size: 16px; padding: 13px 24px; }
+  }
+  /* ▼ スマホはiframeを出さず、独自ドメインのプレイページへ送る。
+     クロスオリジンiframe内のlocalStorageはiOS Safariで遮断、
+     Chromeでもトップレベルサイト単位に分離されるため、
+     記事内で遊んだセーブが直接アクセス時に引き継がれない。 */
+  @media (max-width: 768px) {
+    .full-iframe { display: none !important; }
+    .sp-play-card { display: block !important; }
+    .ranking-iframe { display: none !important; }
+    .sp-ranking-card { display: block !important; }
+  }
+--></style>
+<p>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "SPACEBAR BOSS RUSH",
+  "alternateName": "スペースバー・ボスラッシュ",
+  "url": "https://play.bubblegumgameboy.com/spacebar-clicker/",
+  "genre": ["クリッカーゲーム", "放置ゲーム", "ボスラッシュ"],
+  "gamePlatform": ["Web Browser", "PC", "Smartphone"],
+  "applicationCategory": "Game",
+  "operatingSystem": "Any",
+  "playMode": "SinglePlayer",
+  "inLanguage": "ja",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+</p>
+<div class="lang-notice">🌐 English is available! / 支持中文！</div>
+<p> </p>
+<p>スペースキー連打でボスを倒す無料のブラウザゲーム「SPACEBAR BOSS RUSH / Mythos Slayers」を公開しました。インストール不要・登録不要、スマホはタップ連打で遊べます。</p>
+<p>ボス素材／デザイン 提供者様：<br>@Kome_to_Matsuri 様<br>あんきも【インスマス計劃】様</p>
+<div class="note-box"><span class="note-label">最新アップデート：</span>全ユニットの攻撃アニメーション、石弓兵・火薬投擲兵などの遠距離攻撃、竜の旋回、巨人砲兵、段階式BGM、ボスの待機モーション、周回システム、プレイヤー名とダメージランキングを追加しました。</div>
+<div class="sp-play-card">
+<p class="sp-play-lead">スマホはタップ連打でそのまま遊べます</p>
+<p class="sp-play-note">キーボードは不要です。別ページで開くので、<br>セーブデータもそのまま残ります。</p>
+<a class="play-btn" id="sp-play-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ ゲームを開く</a> <span class="play-btn-sub">無料・登録不要・インストール不要</span></div>
+<p style="margin-bottom: 0;"><iframe class="full-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/" title="SPACEBAR BOSS RUSH（スペースキー連打ゲーム）" loading="lazy" allow="fullscreen"></iframe></p>
+<div class="note-box"><span class="note-label">操作のコツ：</span>スペースキーで攻撃するには、先にゲーム画面の中を一度クリックしてください。スマホは<a href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">全画面版</a>のほうが快適です。</div>
+<h3 class="sub-head">ダメージランキング</h3>
+<p>プレイヤー名ごとの累積ダメージTOP10です。記録はこのブラウザに保存されます。</p>
+<iframe class="ranking-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" title="SPACEBAR BOSS RUSH ダメージランキング" loading="lazy"></iframe>
+<div class="sp-ranking-card"><p class="sp-play-lead">ダメージランキングを見る</p><p class="sp-play-note">スマホでは全画面版と同じ保存領域でランキングを確認できます。</p><a class="play-btn" id="sp-ranking-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" target="_blank" rel="noopener">🏆 ランキングを開く</a></div>
+<div class="post-iframe-ad" style="text-align: center; margin: 24px 0;"><ins class="adsbygoogle" style="display: block;" data-ad-client="ca-pub-2203567155161909" data-ad-slot="1400091008" data-ad-format="horizontal" data-full-width-responsive="true"> </ins>
+<script>// <![CDATA[
+(adsbygoogle = window.adsbygoogle || []).push({});
+// ]]></script>
+</div>
+<p>[:contents]</p>
+<h2 class="section-head">基本情報</h2>
+<table class="data-table">
+<tbody>
+<tr>
+<th style="width: 30%;" scope="row">タイトル</th>
+<td>SPACEBAR BOSS RUSH（スペースバー・ボスラッシュ）</td>
+</tr>
+<tr>
+<th scope="row">ジャンル</th>
+<td>放置系クリッカー / ボスラッシュ</td>
+</tr>
+<tr>
+<th scope="row">料金</th>
+<td>無料</td>
+</tr>
+<tr>
+<th scope="row">対応環境</th>
+<td>PC（Chrome / Edge / Firefox / Safari）・スマホ</td>
+</tr>
+<tr>
+<th scope="row">対応言語</th>
+<td>日本語 / English / 中文</td>
+</tr>
+<tr>
+<th scope="row">セーブ</th>
+<td>自動保存（ブラウザに保存）</td>
+</tr>
+<tr>
+<th scope="row">ボリューム</th>
+<td>ボス40体・ユニット24種・武器10段階・強化7種・転生・周回システム</td>
+</tr>
+</tbody>
+</table>
+<p>最初はクリック1回でダメージ2から。ゴールドを貯めて仲間を雇うと攻撃が自動化され、放置している間も軍団がボスを狩り続けるようになります。</p>
+<h2 class="section-head">遊び方</h2>
+<ol>
+<li><span style="font-weight: bold;">連打する</span>：スペースキー or 画面クリック（スマホはタップ）でボスを攻撃</li>
+<li><span style="font-weight: bold;">ゴールドを貯める</span>：攻撃するたびにゴールドが手に入る</li>
+<li><span style="font-weight: bold;">仲間を雇う</span>：味方が増えると自動化ができる</li>
+<li><span style="font-weight: bold;">強化する</span>：仲間もクリックも「強化」タブでパワーアップできる</li>
+<li><span style="font-weight: bold;">次のボスへ</span>：倒したボスは自動で復活して周回できる。準備ができたら右上の「次のボスへ ▶」で先へ（戻ることも可能）</li>
+<li><span style="font-weight: bold;">転生する</span>：BOSS 10で解放。進行をリセットする代わりに永続倍率がつく。倍率は<span style="font-weight: bold;">どこまで進んだかで変わります</span>（下で詳しく）</li>
+</ol>
+<h2 class="section-head">攻略のヒント</h2>
+<h3 class="sub-head">序盤はクリック、そしてクリティカルで化ける</h3>
+<p>序盤はクリックが最強です。ユニットは休んでいる間の稼ぎ役と考えてください。</p>
+<p>そのうえで効くのがクリティカルです。発生率と倍率は別々の強化になっていて、両方伸ばすとクリック1回の期待値が跳ね上がります。発生率は75%が上限、強化は35回まで。ここまで振ると4回に3回はクリティカルになるので、まずここを目指すのが分かりやすいです。</p>
+<h3 class="sub-head">詰まったら前のボスに戻る</h3>
+<p>ボスのHPは1体進むごとに2.42倍ずつ増えていきます。等比で伸びるので、途中から急に固くなったように感じるはずです。</p>
+<table class="data-table">
+<thead>
+<tr>
+<th>ボス</th>
+<th>HPの目安</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="ボス">1体目</td>
+<td data-label="HP">300</td>
+</tr>
+<tr>
+<td data-label="ボス">5体目</td>
+<td data-label="HP">約1万</td>
+</tr>
+<tr>
+<td data-label="ボス">10体目</td>
+<td data-label="HP">約85万</td>
+</tr>
+<tr>
+<td data-label="ボス">20体目</td>
+<td data-label="HP">約59億</td>
+</tr>
+<tr>
+<td data-label="ボス">30体目</td>
+<td data-label="HP">約40兆</td>
+</tr>
+<tr>
+<td data-label="ボス">40体目</td>
+<td data-label="HP">約28京</td>
+</tr>
+</tbody>
+</table>
+<p>倒せなくなったら、前のボスに戻って周回するのが鉄則です。倒したボスは自動で復活するので、稼ぎ場として使えます。</p>
+<h3 class="sub-head">転生のタイミング</h3>
+<div class="warn-box"><span class="warn-label">注意</span>以前この記事には「転生は解放されたら早めに」と書いていましたが、6月のアップデートで仕様が変わっています。<span style="font-weight: bold;">いまは早く転生するほど損です。</span></div>
+<p>転生でつく永続倍率は、どこまで到達したかで決まります。計算式はこうです。</p>
+<p style="text-align: center; font-weight: bold;">倍率 = 1 + 0.4 × 到達したボスの数</p>
+<table class="data-table">
+<thead>
+<tr>
+<th>転生した時点</th>
+<th>永続倍率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="時点">BOSS 10（解放直後）</td>
+<td data-label="倍率">5倍</td>
+</tr>
+<tr>
+<td data-label="時点">BOSS 20</td>
+<td data-label="倍率">9倍</td>
+</tr>
+<tr>
+<td data-label="時点">BOSS 30</td>
+<td data-label="倍率">13倍</td>
+</tr>
+<tr>
+<td data-label="時点">BOSS 40</td>
+<td data-label="倍率">17倍</td>
+</tr>
+</tbody>
+</table>
+<p>解放された瞬間に転生すると5倍ですが、あと10体粘れば9倍です。<span style="font-weight: bold;">進めるところまで進んでから転生する</span>のが基本方針になります。前のボスに戻って稼いでも進行が止まったな、と感じたところが切り上げどきです。</p>
+<h2 class="section-head">強化は7種類</h2>
+<p>「強化」タブで買える項目です。買うほど値段が上がっていきます。</p>
+<table class="data-table">
+<thead>
+<tr>
+<th>名称</th>
+<th>効果</th>
+<th>初期コスト</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="名称">クリック強化</td>
+<td data-label="効果">タップとスペースキーのダメージを上げる</td>
+<td data-label="コスト">60</td>
+</tr>
+<tr>
+<td data-label="名称">コイン袋</td>
+<td data-label="効果">ボス撃破時のゴールドが増える</td>
+<td data-label="コスト">120</td>
+</tr>
+<tr>
+<td data-label="名称">クリティカル率</td>
+<td data-label="効果">クリティカル発生率アップ（上限75%、35回まで）</td>
+<td data-label="コスト">250</td>
+</tr>
+<tr>
+<td data-label="名称">クリティカル倍率</td>
+<td data-label="効果">クリティカル時のダメージ倍率アップ</td>
+<td data-label="コスト">900</td>
+</tr>
+<tr>
+<td data-label="名称">ゴールド獲得量</td>
+<td data-label="効果">すべてのゴールド獲得量アップ</td>
+<td data-label="コスト">500</td>
+</tr>
+<tr>
+<td data-label="名称">ゴールドラッシュ</td>
+<td data-label="効果">タップごとに得られるゴールドが増える</td>
+<td data-label="コスト">1,200</td>
+</tr>
+<tr>
+<td data-label="名称">疾風の加護</td>
+<td data-label="効果">味方の動きを加速させる（40回まで）</td>
+<td data-label="コスト">800</td>
+</tr>
+</tbody>
+</table>
+<h2 class="section-head">ユニットは全24種</h2>
+<p>「召喚」タブで雇える仲間です。ファーマーと村人だけは攻撃せず、ゴールドを稼いでくれる役割になっています。</p>
+<table class="data-table">
+<thead>
+<tr>
+<th>ユニット</th>
+<th>価格</th>
+<th>攻撃力</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="名前">ファーマー</td>
+<td data-label="価格">25</td>
+<td data-label="攻撃">ゴールド生産</td>
+</tr>
+<tr>
+<td data-label="名前">剣士</td>
+<td data-label="価格">80</td>
+<td data-label="攻撃">2</td>
+</tr>
+<tr>
+<td data-label="名前">ドワーフ戦士</td>
+<td data-label="価格">280</td>
+<td data-label="攻撃">4</td>
+</tr>
+<tr>
+<td data-label="名前">弓兵</td>
+<td data-label="価格">600</td>
+<td data-label="攻撃">6</td>
+</tr>
+<tr>
+<td data-label="名前">村人</td>
+<td data-label="価格">1,500</td>
+<td data-label="攻撃">ゴールド生産</td>
+</tr>
+<tr>
+<td data-label="名前">重装兵</td>
+<td data-label="価格">3,500</td>
+<td data-label="攻撃">18</td>
+</tr>
+<tr>
+<td data-label="名前">鋼のドワーフ</td>
+<td data-label="価格">8,800</td>
+<td data-label="攻撃">20</td>
+</tr>
+<tr>
+<td data-label="名前">魔導士</td>
+<td data-label="価格">2万</td>
+<td data-label="攻撃">60</td>
+</tr>
+<tr>
+<td data-label="名前">石弓兵</td>
+<td data-label="価格">5万5,000</td>
+<td data-label="攻撃">110</td>
+</tr>
+<tr>
+<td data-label="名前">騎士</td>
+<td data-label="価格">10万</td>
+<td data-label="攻撃">90</td>
+</tr>
+<tr>
+<td data-label="名前">聖騎士</td>
+<td data-label="価格">50万</td>
+<td data-label="攻撃">180</td>
+</tr>
+<tr>
+<td data-label="名前">火薬投擲兵</td>
+<td data-label="価格">120万</td>
+<td data-label="攻撃">500</td>
+</tr>
+<tr>
+<td data-label="名前">エルフの射手</td>
+<td data-label="価格">250万</td>
+<td data-label="攻撃">600</td>
+</tr>
+<tr>
+<td data-label="名前">黒魔術師</td>
+<td data-label="価格">1,200万</td>
+<td data-label="攻撃">2,600</td>
+</tr>
+<tr>
+<td data-label="名前">暗黒騎士</td>
+<td data-label="価格">6,000万</td>
+<td data-label="攻撃">3,200</td>
+</tr>
+<tr>
+<td data-label="名前">巨人砲兵</td>
+<td data-label="価格">1億5,000万</td>
+<td data-label="攻撃">5万（砲撃速度は遅め）</td>
+</tr>
+<tr>
+<td data-label="名前">翠竜</td>
+<td data-label="価格">3億</td>
+<td data-label="攻撃">1万4,000</td>
+</tr>
+<tr>
+<td data-label="名前">紫竜</td>
+<td data-label="価格">15億</td>
+<td data-label="攻撃">3万6,000</td>
+</tr>
+<tr>
+<td data-label="名前">紅竜</td>
+<td data-label="価格">80億</td>
+<td data-label="攻撃">9万</td>
+</tr>
+<tr>
+<td data-label="名前">大天使</td>
+<td data-label="価格">400億</td>
+<td data-label="攻撃">25万</td>
+</tr>
+<tr>
+<td data-label="名前">古代翠竜</td>
+<td data-label="価格">2,000億</td>
+<td data-label="攻撃">80万</td>
+</tr>
+<tr>
+<td data-label="名前">覚醒紅竜</td>
+<td data-label="価格">1兆</td>
+<td data-label="攻撃">300万</td>
+</tr>
+<tr>
+<td data-label="名前">熾天使</td>
+<td data-label="価格">5兆</td>
+<td data-label="攻撃">1,200万</td>
+</tr>
+<tr>
+<td data-label="名前">魔神</td>
+<td data-label="価格">25兆</td>
+<td data-label="攻撃">5,000万</td>
+</tr>
+</tbody>
+</table>
+<p>近接兵はボスへ肉薄し、弓兵や魔法使いも安全な一列には整列せず、複数の奥行きから前線へ射撃します。巨大で半透明の巨人砲兵は兵士たちの間に踏み込み、肩の攻城砲から遅く重い砲弾を撃ち込みます。ユニットはLv50・100・150でオーラと外観演出も強化されます。</p>
+<h2 class="section-head">武器は10段階で進化</h2>
+<p>進めていくと武器が進化していきます。順番はこうなっています。</p>
+<p>キッチンナイフ → ダガー → ショートソード → ロングソード → バトルアックス → ウォーハンマー → グレートソード → 妖刀ムラマサ → 竜殺しの剣 → 神剣エクスカリバー</p>
+<p>最初が包丁なのは、まあ、そういうゲームだからです。武器ごとに攻撃音も変えてあるので、進化したときは音でも分かります。</p>
+<h2 class="section-head">ボスは全40体、元ネタはクトゥルフ神話</h2>
+<p>登場するボスはクトゥルフ神話がベースです。序盤はネズミやグールといった手近な魔物ですが、進むほど神話の大物が出てきます。</p>
+<h3 class="sub-head">1体目から11体目：魔物と怪物</h3>
+<p>ラトキン、グール、ガスト、ザルファク、ノクターン、ナイトゴーント、サーペントマン、ミ＝ゴ、ノフ＝ケー、グロブス、グラーキ</p>
+<h3 class="sub-head">12体目から25体目：より強大な怪異</h3>
+<p>ヴォルグ、ムーンビースト、ガグ、イグニス、イ夫人、ディープ・ワン、ゴグ＝フール、モルディギアン、アエロス、ツァトゥグァ、チャウグナル・ファウグン、物体Ｘ、アイホート、ヘル・プラント</p>
+<h3 class="sub-head">26体目から39体目：古き神々</h3>
+<p>フォルムレス・スポーン、クロノファング、ティンダロスの猟犬、ザ・ハンター、シュブ＝ニグラス、シャンタク、ボレアス、エルダーマインド、グレーター・シャンタク、ストラトス、イゴーロナク、クトゥグァ、ハスター、ニャルラトテップ</p>
+<h3 class="sub-head">40体目：終焉の古神</h3>
+<p>クトゥルフ。ラスボスです。HPは約28京。ここまで来られたら大したものです。</p>
+<p>ラスボス撃破後はLOOP 2へ進めます。次の周回では全ボスのHPが50倍、獲得ゴールドが6倍になり、さらに先を目指せます。</p>
+<div class="play-btn-wrap"><a class="play-btn" id="sp-play-link-2" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ 全画面で最初から遊ぶ</a> <span class="play-btn-sub">無料・登録不要・スマホ対応</span></div>
+<h2 class="section-head">よくある質問</h2>
+<dl class="faq-list">
+<dt>スマホでも遊べますか？</dt>
+<dd>遊べます。スペースキーの代わりに画面タップで攻撃します。スマホの場合は上のボタンからプレイページが開きます。</dd>
+<dt>セーブデータが消えることはありますか？</dt>
+<dd>自動でブラウザに保存されますが、ブラウザのキャッシュやサイトデータを削除すると消えます。別の端末への引き継ぎもできません。</dd>
+<dt>記事内のゲーム画面と全画面版で、データは共通ですか？</dt>
+<dd>別扱いになることがあります。ブラウザが、記事に埋め込まれた画面の保存領域と、プレイページを直接開いたときの保存領域を分けて管理するためです。iPhoneのSafariはとくにこの扱いが厳しめです。やり込むなら最初から全画面版で始めてください。</dd>
+<dt>BGMや効果音は消せますか？</dt>
+<dd>消せます。ゲーム画面のBGM・SEボタンから個別にオン／オフできます。BGMは序盤の穏やかな曲から始まり、進行に合わせて段階的に激しくなります。</dd>
+<dt>ランキングはオンライン全体の順位ですか？</dt>
+<dd>現在はこのブラウザ内でプレイヤー名ごとに記録するローカルランキングです。キャッシュやサイトデータを削除すると記録も消えます。</dd>
+</dl>
+<h2 class="section-head">他自作ゲームの紹介</h2>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F07%2F24%2F193327" title="【Web無料】魚釣りゲーム：クリーチャーフィッシング  - バブルガムのゲームブログ" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://babblegum.hatenablog.com/entry/2026/07/24/193327">babblegum.hatenablog.com</a></cite></p>
+<p>感想や要望はコメント欄で受け付けています。今後のアップデートの参考にします。</p>
+<div class="note-box"><span class="note-label">更新履歴：</span>6/19 アーティスト様から素材を購入しボスを30体追加。進行するほど転生倍率が上がる調整。スマホ版の味方ボット位置を最適化。<br>6/30 英語・中国語に対応。<br>9/4 全24ユニットの戦闘アニメーションと乱戦配置を刷新。巨人砲兵、石弓兵、火薬投擲兵、遠距離攻撃、竜の旋回、覚醒外観、段階式BGM、効果音、ボス待機モーション、LOOP 2、名前・ダメージランキングを追加。</div>
+<div>
+<p><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/B/Babblegum/20260629/20260629164335.png" alt="スペースキー連打ゲーム　バブルガム" width="210" height="108" loading="lazy" title="" class="hatena-fotolife"></p>
+</div>
+<!--
+  ▼▼▼ GA4計測 ▼▼▼
+  PC：ゲームはクロスオリジンiframeで動くため標準計測では滞在が記録されない。
+      「iframeにフォーカスがある＝プレイ中」と判定し15秒ごとにイベントを送る。
+  スマホ：iframeを出さないので、プレイページへの遷移を game_open_click で計測する。
+
+  送信イベント：
+    game_ready      … スクリプトが動きiframeを検出した（PCのみ・1回）
+    game_start      … その閲覧で初めてプレイが始まった（1回）
+    game_view_15s   … iframeが画面に映っている15秒ごと
+    game_play_15s   … 操作中とみなせる15秒ごと。play_seconds に累計秒数
+    game_play_total … 離脱・タブ切り替え時の最終累計
+    game_open_click … プレイページを開くボタンが押された
+
+  旧版にあった game_tick_a*h* の診断イベントは、恒久的に毎15秒送られ
+  GA4のレポートを汚すため削除した。
+-->
+<p>
+<script>// <![CDATA[
+(function () {
+  var MID  = 'G-QT45FMXEWG';        // このブログのGA4測定ID
+  var SRC  = 'spacebar-clicker';
+  var GAME = 'spacebar_boss_rush';
+  var TICK = 15000;
+
+  // このブログのGA4はGTM経由でのみ読み込まれているため、dataLayerに積んだだけでは
+  // GTMにトリガーを作らない限りGA4に届かない。
+  // そこで gtag.js を専用のdataLayer名(bgDL)で独立して読み込み、GA4へ直接送る。
+  // 既存のGTMには一切干渉せず、send_page_view:false なのでPVも二重計上されない。
+  window.bgDL = window.bgDL || [];
+  function gtagBG() { window.bgDL.push(arguments); }
+
+  if (!window.__bgGtagLoaded) {
+    window.__bgGtagLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + MID + '&l=bgDL';
+    (document.head || document.documentElement).appendChild(s);
+    gtagBG('js', new Date());
+    gtagBG('config', MID, { send_page_view: false });
+  }
+
+  function send(name, params) {
+    try { gtagBG('event', name, params); } catch (e) { }
+  }
+
+  function trackOpenClicks() {
+    var ids = ['sp-play-link', 'sp-play-link-2'];
+    for (var i = 0; i < ids.length; i++) {
+      (function (el, id) {
+        if (!el) { return; }
+        el.addEventListener('click', function () {
+          send('game_open_click', { game_name: GAME, link_id: id });
+        });
+      })(document.getElementById(ids[i]), ids[i]);
+    }
+    var rankingLink = document.getElementById('sp-ranking-link');
+    if (rankingLink) {
+      rankingLink.addEventListener('click', function () {
+        send('ranking_open_click', { game_name: GAME });
+      });
+    }
+  }
+
+  function start() {
+    trackOpenClicks();
+
+    var frames = document.getElementsByTagName('iframe');
+    var game = null;
+    for (var i = 0; i < frames.length; i++) {
+      if ((frames[i].src || '').indexOf(SRC) !== -1) { game = frames[i]; break; }
+    }
+    // スマホではiframeをCSSで非表示にしているため、ここで終了する（エラーではない）
+    if (!game || game.offsetParent === null) { return; }
+
+    send('game_ready', { game_name: GAME });
+
+    var inView = true;
+    if (window.IntersectionObserver) {
+      inView = false;
+      new IntersectionObserver(function (entries) {
+        inView = entries[0].isIntersecting;
+      }, { threshold: 0.3 }).observe(game);
+    }
+
+    var view = 0, play = 0, begun = false, flushed = 0;
+
+    setInterval(function () {
+      if (document.visibilityState !== 'visible') { return; }
+      if (!inView) { return; }
+
+      var af = (document.activeElement === game) ? 1 : 0;
+      var hf = document.hasFocus() ? 1 : 0;
+
+      // ゲームが画面に映っている時間（確実に取れる下限値）
+      view += TICK / 1000;
+      send('game_view_15s', {
+        game_name: GAME,
+        view_seconds: view,
+        engagement_time_msec: TICK
+      });
+
+      // 操作している根拠：iframeが操作対象、または親がフォーカスを失っている
+      if (af === 1 || hf === 0) {
+        play += TICK / 1000;
+        if (!begun) { begun = true; send('game_start', { game_name: GAME }); }
+        send('game_play_15s', { game_name: GAME, play_seconds: play });
+      }
+    }, TICK);
+
+    function flush() {
+      if (view > flushed) {
+        flushed = view;
+        send('game_play_total', {
+          game_name: GAME, play_seconds: play, view_seconds: view
+        });
+      }
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') { flush(); }
+    });
+    window.addEventListener('pagehide', flush);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+// ]]></script>
+</p>
+<p> </p>

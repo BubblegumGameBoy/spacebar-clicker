@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>ダメージランキング | SPACEBAR BOSS RUSH</title>
+<style>
+*{box-sizing:border-box}
+:root{color-scheme:dark;--gold:#f3c34a;--ink:#e8edf2;--sub:#99a7b5;--line:#43505d}
+html,body{margin:0;min-height:100%;font-family:"Yu Gothic UI","Hiragino Kaku Gothic ProN",system-ui,sans-serif;background:#10151b;color:var(--ink)}
+body{padding:18px;background:
+ linear-gradient(rgba(10,14,19,.82),rgba(10,14,19,.94)),url("assets/bg.png") center/cover fixed}
+.board{width:min(720px,100%);margin:auto;border:1px solid #596775;border-radius:14px;overflow:hidden;
+ background:linear-gradient(145deg,rgba(31,39,48,.97),rgba(15,20,26,.98));box-shadow:0 12px 36px rgba(0,0,0,.45)}
+header{padding:17px 20px 13px;text-align:center;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
+h1{margin:0;font-family:Georgia,"Yu Mincho",serif;font-size:clamp(21px,4vw,29px);letter-spacing:.08em;color:#ffe08a;text-shadow:0 2px 8px #000}
+.lead{margin:6px 0 0;color:var(--sub);font-size:12px}
+#rows{list-style:none;margin:0;padding:9px 14px 12px}
+.row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:9px;min-height:43px;padding:5px 10px;border-bottom:1px solid rgba(100,116,131,.24)}
+.row:last-child{border-bottom:0}.row.me{border:1px solid rgba(243,195,74,.66);border-radius:8px;background:rgba(243,195,74,.09)}
+.rank{font-weight:900;color:#93a2b0}.row:nth-child(1) .rank{color:#ffd24a}.row:nth-child(2) .rank{color:#dce6ef}.row:nth-child(3) .rank{color:#d9995a}
+.name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}.score{text-align:right;color:#ffd86a;font-weight:900;font-variant-numeric:tabular-nums}
+#empty{padding:46px 20px;text-align:center;color:var(--sub)}
+footer{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 17px;border-top:1px solid var(--line);font-size:11px;color:var(--sub)}
+#player{color:#dbe6ef;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a{flex:0 0 auto;color:#ffe08a;text-decoration:none;border:1px solid #806d35;border-radius:7px;padding:6px 9px;background:rgba(113,82,24,.25)}
+@media(max-width:480px){body{padding:8px}.row{grid-template-columns:36px minmax(0,1fr) auto;padding-inline:6px}.score{font-size:13px}footer{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<main class="board">
+ <header><h1>🏆 ダメージランキング</h1><p class="lead">このブラウザで記録された累積ダメージ TOP 10</p></header>
+ <ol id="rows"></ol><div id="empty">まだ記録がありません。ゲームでボスに攻撃すると記録されます。</div>
+ <footer><span id="player">プレイヤー：名無し</span><a href="./" target="_blank" rel="noopener">ゲームを開く</a></footer>
+</main>
+<script>
+"use strict";
+const PLAYER_KEY="sbr_player_name_v1",RANK_KEY="sbr_damage_rank_v1";
+function cleanName(value){return(value||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し"}
+function fmt(value){
+ const units=["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
+ let n=Math.max(0,Number(value)||0),i=0;
+ while(n>=1000&&i<units.length-1){n/=1000;i++}
+ if(n>=1000)return n.toExponential(2);
+ return(i===0?Math.floor(n):n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n))+units[i];
+}
+function readRows(){
+ try{const parsed=JSON.parse(localStorage.getItem(RANK_KEY)||"[]");return Array.isArray(parsed)?parsed.filter(row=>row&&typeof row.name==="string"&&Number.isFinite(row.damage)):[]}
+ catch(error){return[]}
+}
+function render(){
+ const current=cleanName(localStorage.getItem(PLAYER_KEY)||"名無し");
+ const rows=readRows().sort((a,b)=>b.damage-a.damage).slice(0,10);
+ const list=document.getElementById("rows");list.replaceChildren();
+ document.getElementById("empty").style.display=rows.length?"none":"block";
+ rows.forEach((row,index)=>{
+  const item=document.createElement("li");item.className="row"+(cleanName(row.name)===current?" me":"");
+  const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
+  rank.className="rank";name.className="name";score.className="score";
+  rank.textContent=(index+1)+".";name.textContent=cleanName(row.name);score.textContent=fmt(row.damage);
+  item.append(rank,name,score);list.appendChild(item);
+ });
+ document.getElementById("player").textContent="プレイヤー："+current;
+}
+render();window.addEventListener("storage",render);setInterval(render,2000);
+</script>
+</body>
+</html>

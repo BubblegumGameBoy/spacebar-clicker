@@ -1,4 +1,6 @@
 node_modules/
+__pycache__/
+*.pyc
 # original source images (converted versions live in assets/)
 *.png
 !assets/*.png
