@@ -212,15 +212,13 @@
     .data-table tr:nth-child(even) td { background: #ffffff; }
     .play-btn { font-size: 16px; padding: 13px 24px; }
   }
-  /* ▼ スマホはiframeを出さず、独自ドメインのプレイページへ送る。
-     クロスオリジンiframe内のlocalStorageはiOS Safariで遮断、
-     Chromeでもトップレベルサイト単位に分離されるため、
-     記事内で遊んだセーブが直接アクセス時に引き継がれない。 */
+  /* ▼ ゲーム本体はセーブ領域を統一するためスマホでは独自ドメインへ送る。
+     ランキングはオンライン共通データなので、記事内iframeでもそのまま表示する。 */
   @media (max-width: 768px) {
     .full-iframe { display: none !important; }
     .sp-play-card { display: block !important; }
-    .ranking-iframe { display: none !important; }
-    .sp-ranking-card { display: block !important; }
+    .ranking-iframe { display: block !important; height: 520px; }
+    .sp-ranking-card { display: none !important; }
   }
 --></style>
 <p>
@@ -258,9 +256,9 @@
 <p style="margin-bottom: 0;"><iframe class="full-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/" title="SPACEBAR BOSS RUSH（スペースキー連打ゲーム）" loading="lazy" allow="fullscreen"></iframe></p>
 <div class="note-box"><span class="note-label">操作のコツ：</span>スペースキーで攻撃するには、先にゲーム画面の中を一度クリックしてください。スマホは<a href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">全画面版</a>のほうが快適です。</div>
 <h3 class="sub-head">ダメージランキング</h3>
-<p>プレイヤー名ごとの累積ダメージTOP10です。記録はこのブラウザに保存されます。</p>
+<p>全プレイヤー共通の累積ダメージTOP10です。ゲームで与えたダメージがオンラインで集計されます。</p>
 <iframe class="ranking-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" title="SPACEBAR BOSS RUSH ダメージランキング" loading="lazy"></iframe>
-<div class="sp-ranking-card"><p class="sp-play-lead">ダメージランキングを見る</p><p class="sp-play-note">スマホでは全画面版と同じ保存領域でランキングを確認できます。</p><a class="play-btn" id="sp-ranking-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" target="_blank" rel="noopener">🏆 ランキングを開く</a></div>
+<div class="sp-ranking-card"><p class="sp-play-lead">オンライン・ダメージランキングを見る</p><p class="sp-play-note">全プレイヤー共通のランキングを確認できます。</p><a class="play-btn" id="sp-ranking-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" target="_blank" rel="noopener">🏆 ランキングを開く</a></div>
 <div class="post-iframe-ad" style="text-align: center; margin: 24px 0;"><ins class="adsbygoogle" style="display: block;" data-ad-client="ca-pub-2203567155161909" data-ad-slot="1400091008" data-ad-format="horizontal" data-full-width-responsive="true"> </ins>
 <script>// <![CDATA[
 (adsbygoogle = window.adsbygoogle || []).push({});
@@ -596,7 +594,7 @@
 <h2 class="section-head">他自作ゲームの紹介</h2>
 <p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F07%2F24%2F193327" title="【Web無料】魚釣りゲーム：クリーチャーフィッシング  - バブルガムのゲームブログ" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://babblegum.hatenablog.com/entry/2026/07/24/193327">babblegum.hatenablog.com</a></cite></p>
 <p>感想や要望はコメント欄で受け付けています。今後のアップデートの参考にします。</p>
-<div class="note-box"><span class="note-label">更新履歴：</span>6/19 アーティスト様から素材を購入しボスを30体追加。進行するほど転生倍率が上がる調整。スマホ版の味方ボット位置を最適化。<br>6/30 英語・中国語に対応。<br>9/4 全24ユニットの戦闘アニメーションと乱戦配置を刷新。巨人砲兵、石弓兵、火薬投擲兵、遠距離攻撃、竜の旋回、覚醒外観、激しい戦闘BGM、効果音、ボス待機モーション、LOOP 2、名前・ダメージランキングを追加。</div>
+<div class="note-box"><span class="note-label">更新履歴：</span>6/19 アーティスト様から素材を購入しボスを30体追加。進行するほど転生倍率が上がる調整。スマホ版の味方ボット位置を最適化。<br>6/30 英語・中国語に対応。<br>9/4 全24ユニットの戦闘アニメーションと乱戦配置を刷新。巨人砲兵、石弓兵、火薬投擲兵、遠距離攻撃、竜の旋回、覚醒外観、激しい戦闘BGM、効果音、ボス待機モーション、LOOP 2、名前・ダメージランキングを追加。<br>9/7 ダメージランキングを全プレイヤー共通のオンライン集計へ更新し、スマホでの名前入力を改善。</div>
 <div>
 <p><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/B/Babblegum/20260629/20260629164335.png" alt="スペースキー連打ゲーム　バブルガム" width="210" height="108" loading="lazy" title="" class="hatena-fotolife"></p>
 </div>

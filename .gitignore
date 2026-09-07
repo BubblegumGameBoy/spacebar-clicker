@@ -1,6 +1,9 @@
 node_modules/
+.wrangler/
+worker-configuration.d.ts
 __pycache__/
 *.pyc
+promo-output/
 # original source images (converted versions live in assets/)
 *.png
 !assets/*.png

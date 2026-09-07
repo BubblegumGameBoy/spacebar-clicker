@@ -445,12 +445,15 @@
   .mbox p{font-size:13px; color:var(--sub); margin-bottom:16px; line-height:1.5;}
   .mbox button{padding:9px 18px; margin:0 5px; border-radius:8px; border:none; font-weight:700; cursor:pointer;}
   .mbox .yes{background:#7a4ab0; color:#fff;} .mbox .no{background:var(--panel2); color:var(--txt); border:1px solid var(--line);}
-  #rankModal .mbox{width:min(92vw,390px);max-width:390px;text-align:left;}
+  #rankModal .mbox{width:min(92vw,390px);max-width:390px;text-align:left;touch-action:auto;}
   #rankModal h3{text-align:center;}
   .profile-edit{display:flex;gap:7px;margin:10px 0 14px;}
   .profile-edit input{flex:1;min-width:0;padding:9px 10px;border-radius:7px;border:1px solid #46515d;
-    background:#0e1216;color:#fff;font-size:14px;user-select:text;-webkit-user-select:text;}
+    background:#0e1216;color:#fff;font-size:16px;user-select:text;-webkit-user-select:text;
+    -webkit-touch-callout:default;touch-action:auto;pointer-events:auto;position:relative;z-index:2;}
   .profile-edit button{margin:0;padding:8px 13px;}
+  #rankStatus{min-height:18px;margin:-7px 0 7px;text-align:center;color:var(--sub);font-size:11px;}
+  #rankStatus.ok{color:#9fd891;} #rankStatus.err{color:#ffb08a;}
   #rankList{list-style:none;margin:0 0 14px;padding:0;max-height:250px;overflow:auto;}
   #rankList li{display:grid;grid-template-columns:28px 1fr auto;gap:8px;padding:7px 5px;border-bottom:1px solid #2c3742;font-size:13px;}
   #rankList li.me{color:#ffe279;background:rgba(243,195,74,.08);}
@@ -654,9 +657,10 @@
 </div></div>
 
 <div id="rankModal" class="cmodal"><div class="mbox">
-  <h3>🏆 この端末のダメージランキング</h3>
-  <div class="profile-edit"><input id="playerNameInput" maxlength="12" autocomplete="nickname" placeholder="プレイヤー名">
+  <h3>🏆 オンライン・ダメージランキング</h3>
+  <div class="profile-edit"><input id="playerNameInput" maxlength="12" autocomplete="nickname" inputmode="text" enterkeyhint="done" aria-label="プレイヤー名" placeholder="ここをタップして名前入力">
     <button class="yes" id="playerSave" type="button">保存</button></div>
+  <div id="rankStatus">ランキングを読み込んでいます…</div>
   <ol id="rankList"></ol><div id="rankEmpty">まだ記録がありません</div>
   <button class="no" id="rankClose" type="button">閉じる</button>
 </div></div>
@@ -673,32 +677,75 @@ function fmt(n){ n=Math.floor(n);
 }
 function rnd(a,b){return a+Math.random()*(b-a);}
 
-/* ===== PLAYER / LOCAL DAMAGE RANKING ===== */
+/* ===== PLAYER / ONLINE DAMAGE RANKING ===== */
 const PLAYER_KEY="sbr_player_name_v1",RANK_KEY="sbr_damage_rank_v1";
+const PLAYER_ID_KEY="sbr_player_id_v1",TOTAL_DAMAGE_KEY="sbr_total_damage_v2";
+const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard";
 function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
+function createPlayerId(){
+ if(globalThis.crypto?.randomUUID)return crypto.randomUUID();
+ const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;
+ const h=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+ return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+}
 let playerName=cleanPlayerName(localStorage.getItem(PLAYER_KEY)||"名無し");
+let playerId=localStorage.getItem(PLAYER_ID_KEY)||createPlayerId();
+try{localStorage.setItem(PLAYER_ID_KEY,playerId);}catch(e){}
 let damageRanks=[];
 try{const raw=JSON.parse(localStorage.getItem(RANK_KEY)||"[]");if(Array.isArray(raw))damageRanks=raw.filter(x=>x&&typeof x.name==="string"&&Number.isFinite(x.damage));}catch(e){}
-let _rankSaveTimer=null;
+const legacyDamage=damageRanks.find(x=>x.name===playerName)?.damage||0;
+let playerDamage=Math.max(0,Number(localStorage.getItem(TOTAL_DAMAGE_KEY))||0,legacyDamage);
+let onlineRanks=[],onlineRankLoaded=false,rankDirty=playerDamage>0,rankSyncing=false;
+let _rankSaveTimer=null,_rankSyncTimer=null;
 function rankEntry(name=playerName){return damageRanks.find(x=>x.name===name);}
-function rankDamage(){return rankEntry()?.damage||0;}
+function rankDamage(){return playerDamage;}
 function saveRanksSoon(){clearTimeout(_rankSaveTimer);_rankSaveTimer=setTimeout(()=>{
- try{localStorage.setItem(RANK_KEY,JSON.stringify(damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,50)));}catch(e){}
+ try{localStorage.setItem(TOTAL_DAMAGE_KEY,String(playerDamage));}catch(e){}
 },900);}
+function setRankStatus(text,state=""){
+ const el=$("#rankStatus");if(!el)return;el.textContent=text;el.className=state;
+}
+function scheduleRankSync(delay=12000){
+ if(SHOWCASE||_rankSyncTimer)return;
+ _rankSyncTimer=setTimeout(()=>{_rankSyncTimer=null;void syncOnlineScore();},delay);
+}
+async function loadOnlineRanking(){
+ try{
+  const res=await fetch(`${RANK_API}?limit=10&playerId=${encodeURIComponent(playerId)}`,{headers:{Accept:"application/json"},cache:"no-store"});
+  if(!res.ok)throw new Error(`HTTP ${res.status}`);
+  const data=await res.json();onlineRanks=Array.isArray(data.rows)?data.rows:[];onlineRankLoaded=true;
+  setRankStatus("全プレイヤー共通・オンライン集計","ok");renderRanking();return true;
+ }catch(e){
+  setRankStatus("通信できないため、この端末の記録を表示中","err");renderRanking();return false;
+ }
+}
+async function syncOnlineScore(){
+ if(SHOWCASE||rankSyncing||!rankDirty)return;
+ rankSyncing=true;const sendingDamage=playerDamage;
+ try{
+  const res=await fetch(RANK_API,{method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({playerId,name:playerName,damage:sendingDamage}),keepalive:true});
+  if(!res.ok)throw new Error(`HTTP ${res.status}`);
+  if(playerDamage===sendingDamage)rankDirty=false;
+  await loadOnlineRanking();
+ }catch(e){setRankStatus("オンライン保存を再試行します…","err");}
+ finally{rankSyncing=false;if(rankDirty)scheduleRankSync(15000);}
+}
 function recordDamage(amount){
  if(location.search.includes("showcase"))return;
  if(!Number.isFinite(amount)||amount<=0)return;
- let row=rankEntry();if(!row){row={name:playerName,damage:0,updatedAt:0};damageRanks.push(row);}
- row.damage+=amount;row.updatedAt=Date.now();saveRanksSoon();
+ playerDamage=Math.min(1e300,playerDamage+amount);rankDirty=true;saveRanksSoon();scheduleRankSync();
 }
 function renderRanking(){
  const list=$("#rankList"),empty=$("#rankEmpty");if(!list)return;list.innerHTML="";
- const rows=damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,10);empty.style.display=rows.length?"none":"block";
- rows.forEach((row,i)=>{const li=document.createElement("li");if(row.name===playerName)li.className="me";
+ let rows=onlineRankLoaded?onlineRanks.slice(0,10):damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,10);
+ if(!onlineRankLoaded&&playerDamage>0&&!rows.some(row=>row.name===playerName))rows.push({name:playerName,damage:playerDamage,isMe:true});
+ rows=rows.sort((a,b)=>b.damage-a.damage).slice(0,10);empty.style.display=rows.length?"none":"block";
+ rows.forEach((row,i)=>{const li=document.createElement("li");if(row.isMe||(!onlineRankLoaded&&row.name===playerName))li.className="me";
   const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
   rank.textContent=(i+1)+".";name.textContent=row.name;score.className="score";score.textContent=fmt(row.damage);
   li.append(rank,name,score);list.appendChild(li);});
- const input=$("#playerNameInput");if(input)input.value=playerName;
+ const input=$("#playerNameInput");if(input&&document.activeElement!==input)input.value=playerName;
 }
 function updatePlayerUi(){const b=$("#playerBtn");if(b)b.textContent="👤 "+playerName;}
 
@@ -1771,7 +1818,12 @@ $$(".tab").forEach(t=>t.addEventListener("click",()=>{
  $("#pane-"+t.dataset.t).classList.add("active");
 }));
 
-function openRanking(){renderRanking();$("#rankModal").classList.add("on");setTimeout(()=>$("#playerNameInput").focus(),0);}
+function openRanking(){
+ renderRanking();$("#rankModal").classList.add("on");
+ // iOSのiframe内でもキーボードを開けるよう、ユーザー操作中に同期的にfocusする。
+ try{$("#playerNameInput").focus({preventScroll:true});}catch(e){$("#playerNameInput").focus();}
+ void loadOnlineRanking();
+}
 $("#bgmBtn").addEventListener("click",e=>{e.stopPropagation();_bgmUnlocked=true;setBgm(!audioSettings.bgmOn);});
 $("#seBtn").addEventListener("click",e=>{e.stopPropagation();setSe(!audioSettings.seOn);});
 $("#playerBtn").addEventListener("click",e=>{e.stopPropagation();openRanking();});
@@ -1780,8 +1832,10 @@ $("#rankClose").addEventListener("click",()=>$("#rankModal").classList.remove("o
 $("#rankModal").addEventListener("pointerdown",e=>{if(e.target===$("#rankModal"))$("#rankModal").classList.remove("on");});
 $("#playerSave").addEventListener("click",()=>{
  playerName=cleanPlayerName($("#playerNameInput").value);try{localStorage.setItem(PLAYER_KEY,playerName);}catch(e){}
- updatePlayerUi();renderRanking();updateHud();
+ rankDirty=true;updatePlayerUi();renderRanking();updateHud();void syncOnlineScore();
 });
+$("#playerNameInput").addEventListener("pointerdown",e=>e.stopPropagation());
+$("#playerNameInput").addEventListener("click",e=>{e.stopPropagation();e.currentTarget.focus();});
 $("#playerNameInput").addEventListener("keydown",e=>{if(e.key==="Enter"){$("#playerSave").click();e.preventDefault();}});
 document.addEventListener("pointerdown",()=>{_bgmUnlocked=true;try{ac().resume();}catch(e){}syncBgm();},{once:true,capture:true});
 
@@ -1860,6 +1914,8 @@ spawnBoss(); renderUnits(); renderCards(); updateHud();
 initLayoutEditor();
 applyLang(LANG);
 updatePlayerUi();updateAudioButtons();
+void loadOnlineRanking();
+if(rankDirty)scheduleRankSync(1500);
 // 初回（言語未選択）はタイトル画面を表示、選択済みなら隠す
 $("#titleScreen").classList.toggle("hidden", LANG_CHOSEN||LAYOUT_MODE);
 lastGold=S.gold;
@@ -1876,8 +1932,9 @@ window.addEventListener("resize",()=>{
 });
 
 setInterval(save,10000);
-document.addEventListener("visibilitychange",()=>{ if(document.hidden) save(); });
-window.addEventListener("beforeunload",save);
+setInterval(()=>void loadOnlineRanking(),30000);
+document.addEventListener("visibilitychange",()=>{if(document.hidden){save();void syncOnlineScore();}});
+window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 </script>
 </body>
 </html>
