@@ -103,6 +103,16 @@ async function topPlayers(env, currentPlayerId, limit = 10) {
   }));
 }
 
+async function powerStanding(env, power) {
+  const [faster, total] = await env.DB.batch([
+    env.DB.prepare(`SELECT COUNT(*) AS n FROM leaderboard WHERE power > ?1`).bind(power),
+    env.DB.prepare(`SELECT COUNT(*) AS n FROM leaderboard WHERE power > 0`),
+  ]);
+  const ahead = Number(faster.results?.[0]?.n) || 0;
+  const counted = Number(total.results?.[0]?.n) || 0;
+  return { powerRank: ahead + 1, powerTotal: Math.max(counted, ahead + 1) };
+}
+
 async function handleGet(request, env, url) {
   const requestedLimit = Number.parseInt(url.searchParams.get("limit") || "10", 10);
   const limit = Math.min(50, Math.max(1, Number.isFinite(requestedLimit) ? requestedLimit : 10));
@@ -110,7 +120,11 @@ async function handleGet(request, env, url) {
     ? url.searchParams.get("playerId")
     : "";
   const rows = await topPlayers(env, playerId, limit);
-  return json(request, { rows, generatedAt: Date.now() });
+  const askedPower = Number(url.searchParams.get("power"));
+  const standing = Number.isFinite(askedPower) && askedPower >= 0 && askedPower <= MAX_DAMAGE
+    ? await powerStanding(env, askedPower)
+    : null;
+  return json(request, { rows, generatedAt: Date.now(), ...(standing || {}) });
 }
 
 async function handlePost(request, env) {
@@ -121,20 +135,23 @@ async function handlePost(request, env) {
   if (!validPlayerId(playerId) || !Number.isFinite(damage) || damage < 0 || damage > MAX_DAMAGE) {
     return json(request, { error: "invalid_submission" }, 400);
   }
+  const rawPower = Number(body?.power);
+  const power = Number.isFinite(rawPower) && rawPower >= 0 && rawPower <= MAX_DAMAGE ? rawPower : 0;
 
   const updatedAt = Date.now();
   await env.DB.prepare(
-    `INSERT INTO leaderboard (player_id, name, damage, updated_at)
-     VALUES (?1, ?2, ?3, ?4)
+    `INSERT INTO leaderboard (player_id, name, damage, power, updated_at)
+     VALUES (?1, ?2, ?3, ?4, ?5)
      ON CONFLICT(player_id) DO UPDATE SET
        name = excluded.name,
        damage = MAX(leaderboard.damage, excluded.damage),
+       power = MAX(leaderboard.power, excluded.power),
        updated_at = CASE
          WHEN excluded.damage >= leaderboard.damage OR excluded.name <> leaderboard.name
          THEN excluded.updated_at
          ELSE leaderboard.updated_at
        END`,
-  ).bind(playerId, name, damage, updatedAt).run();
+  ).bind(playerId, name, damage, power, updatedAt).run();
 
   return json(request, { ok: true, savedAt: updatedAt });
 }

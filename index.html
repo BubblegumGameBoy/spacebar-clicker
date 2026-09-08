@@ -1992,6 +1992,484 @@ setInterval(save,10000);
 setInterval(()=>void loadOnlineRanking(),30000);
 document.addEventListener("visibilitychange",()=>{if(document.hidden){save();void syncOnlineScore();}});
 window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
+
+
+/* ==========================================================================
+   入口のパワースキャン（初回のみ）
+   名前を決める → 10秒の連打で力を測る → 戦闘力・歴代順位・初期ボーナス
+
+   出す条件はここだけで完結させている：
+     ・localStorage の sbr_intro_done_v1 が無い
+     ・かつ、自分で言語を選んだ形跡（sbr_lang）が無い＝本当の初回
+     ・かつ、showcase / layout モードではない
+   localStorage が使えない環境では introDone=true 側に倒す。
+   毎回出るより、出ないほうが害が小さいため。
+   フラグは「開いた瞬間」に立てる。途中で閉じた人にも二度目は出さない。
+   ========================================================================== */
+(function(){
+ const INTRO_KEY="sbr_intro_done_v1";
+ const CFG={
+  seconds:10,        // 測定時間
+  goldPerHit:5,      // 1ヒットあたりのボーナス（上限なし）
+  goldFloor:100,     // 下限。遅くても手ぶらにしない
+  powerMul:100,      // 戦闘力＝ヒット数×これ
+  chargeFull:100     // オーブが満タンになるヒット数（見た目の節目）
+ };
+ // 歴代順位を出しはじめる最低人数。これ未満のあいだは順位の行を出さない
+ const MIN_RANK_POP=30;
+
+ /* --- 出すかどうかを、起動時に一度だけ決める --------------------------
+    言語を選ぶと sbr_lang が書かれるので、選択後に判定すると
+    初回の人まで「既存プレイヤー」に見えてしまう。必ずここで固定する。 */
+ let introDone=true;
+ try{
+  // 判定は sbr_lang（＝自分で言語を選んだ人）と専用フラグだけで行う。
+  // sbr_save2 は beforeunload でも書かれるので、表紙を開いて閉じただけの
+  // 新規プレイヤーまで「既存」と誤判定してしまい、入口が二度と出なくなる。
+  introDone = !!( localStorage.getItem(INTRO_KEY)
+               || localStorage.getItem("sbr_lang") );
+ }catch(e){ introDone=true; }
+ if(SHOWCASE||LAYOUT_MODE) introDone=true;
+ // ?reset は進行を消す開発用パラメータ。入口も一緒に出し直せるようにしておく
+ if(PARAMS.has("reset")){ try{ localStorage.removeItem(INTRO_KEY); }catch(e){} introDone=false; }
+
+ function markDone(){
+  introDone=true;                                        // 同一セッションでの再表示を確実に止める
+  try{ localStorage.setItem(INTRO_KEY,"1"); }catch(e){}  // 保存できなくても上の行が効く
+ }
+
+ /* --- 文言 --- */
+ const T={
+  ja:{ reg:"SLAYER REGISTRATION", nameTitle:"名を、刻め",
+       nameSub:"歴代スレイヤーの記録に残る名前です。<br>あとから変えられます。",
+       namePh:"名無し", next:"次へ", skipName:"名前は決めずに進む",
+       scan:"POWER SCAN", scanTitle:"その手の速さを測る",
+       scanSub:"10秒間、できるだけ速く。<br>スペースキー、または上の球をタップ。",
+       ready:"構えて。", go:"止まるな。", cut:"斬れ",
+       start:"TAP OR SPACE", charge:"CHARGE", over:"限界突破", release:"RELEASE",
+       done:"POWER SCAN COMPLETE",
+       fmtCps:(h,c)=>"10秒で "+h+" 回　秒間 "+c+" 回",
+       overTag:"　チャージ限界突破", prevTag:(n)=>"（前回 "+n+" 回）",
+       power:"戦闘力", rankLab:"歴代スレイヤー",
+       fmtRank:(r,t)=>t.toLocaleString()+"人中　<em>第</em>"+r.toLocaleString()+"<em>位</em>",
+       bonusLab:"初期ボーナス", accept:"この記録で始める", retry:"もう一回挑戦する",
+       close:"閉じる", rescan:"パワーを測り直す" },
+  en:{ reg:"SLAYER REGISTRATION", nameTitle:"Carve your name",
+       nameSub:"This name goes on the all-time slayer records.<br>You can change it later.",
+       namePh:"Nameless", next:"Next", skipName:"Continue without a name",
+       scan:"POWER SCAN", scanTitle:"Measure your speed",
+       scanSub:"Ten seconds. As fast as you can.<br>Spacebar, or tap the orb above.",
+       ready:"Get ready.", go:"Don't stop.", cut:"GO",
+       start:"TAP OR SPACE", charge:"CHARGE", over:"OVERFLOW", release:"RELEASE",
+       done:"POWER SCAN COMPLETE",
+       fmtCps:(h,c)=>h+" hits in 10s　"+c+" per second",
+       overTag:"　charge overflow", prevTag:(n)=>"(last: "+n+")",
+       power:"POWER", rankLab:"ALL-TIME SLAYERS",
+       fmtRank:(r,t)=>"<em>#</em>"+r.toLocaleString()+"<em> of </em>"+t.toLocaleString(),
+       bonusLab:"STARTING BONUS", accept:"Begin with this record", retry:"Try again",
+       close:"Close", rescan:"Re-scan power" },
+  zh:{ reg:"SLAYER REGISTRATION", nameTitle:"刻下你的名字",
+       nameSub:"这个名字会留在历代猎手记录中。<br>之后可以修改。",
+       namePh:"无名", next:"下一步", skipName:"不取名字继续",
+       scan:"POWER SCAN", scanTitle:"测量你的手速",
+       scanSub:"10秒内，尽可能快。<br>空格键，或点击上方的球。",
+       ready:"准备。", go:"别停。", cut:"斩",
+       start:"TAP OR SPACE", charge:"CHARGE", over:"突破极限", release:"RELEASE",
+       done:"POWER SCAN COMPLETE",
+       fmtCps:(h,c)=>"10秒内 "+h+" 次　每秒 "+c+" 次",
+       overTag:"　充能突破极限", prevTag:(n)=>"（上次 "+n+" 次）",
+       power:"战斗力", rankLab:"历代猎手",
+       fmtRank:(r,t)=>t.toLocaleString()+"人中　<em>第</em>"+r.toLocaleString()+"<em>位</em>",
+       bonusLab:"初始奖励", accept:"以此记录开始", retry:"再挑战一次",
+       close:"关闭", rescan:"重新测量" }
+ };
+ const it=k=>(T[LANG]||T.ja)[k];
+
+ /* --- CSS --- */
+ const css=document.createElement("style");
+ css.textContent=[
+ '#introSeq{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;',
+ '  background:radial-gradient(ellipse at 50% 40%,#1a1420,#080a0d 70%);',
+ '  font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;}',
+ '#introSeq.on{display:flex;}',
+ '#introSeq .is-stage{width:min(92vw,430px);max-height:96vh;overflow-y:auto;text-align:center;padding:8px;}',
+ '#introSeq .is-step{display:none;}',
+ '#introSeq .is-step.on{display:block;animation:isFade .45s ease both;}',
+ '@keyframes isFade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}',
+ '#introSeq .is-mark{font-size:26px;color:#ffd24a;opacity:.9;}',
+ '#introSeq .is-lead{font:700 12px/1 system-ui;color:#ffd24a;letter-spacing:.3em;margin-top:14px;}',
+ '#introSeq .is-title{font:900 25px/1.4 system-ui;color:#f3ead6;margin-top:12px;letter-spacing:.04em;}',
+ '#introSeq .is-sub{font:400 12.5px/1.8 system-ui;color:#9d947f;margin-top:10px;}',
+ '#introSeq input{width:100%;box-sizing:border-box;margin-top:20px;padding:13px 14px;text-align:center;',
+ '  background:#0e1319;border:1px solid #6d5a2e;border-radius:9px;color:#f3ead6;',
+ '  font:700 19px system-ui;letter-spacing:.06em;outline:none;}',
+ '#introSeq input:focus{border-color:#ffd24a;box-shadow:0 0 0 3px #ffd24a22;}',
+ '#introSeq .is-btn{display:block;width:100%;margin-top:16px;padding:14px;cursor:pointer;',
+ '  background:linear-gradient(180deg,#8a6a2c,#5f4519);border:1px solid #ffd24a;border-radius:10px;',
+ '  color:#fff5d8;font:900 16px system-ui;letter-spacing:.12em;}',
+ '#introSeq .is-btn:hover{filter:brightness(1.15);}',
+ '#introSeq .is-skip{display:inline-block;margin-top:14px;cursor:pointer;background:none;border:none;',
+ '  color:#79725f;font:400 12px system-ui;text-decoration:underline;}',
+ '#introSeq .is-skip:hover{color:#c3b180;}',
+ /* ボスのHPオーブと同じ作りのチャージオーブ */
+ '#introSeq .is-orb{position:relative;width:152px;height:152px;border-radius:50%;margin:24px auto 0;',
+ '  background:radial-gradient(circle at 36% 28%,#3a2c10 0%,#1d1608 55%,#0a0703 100%);',
+ '  box-shadow:inset 0 -8px 16px rgba(0,0,0,.7),inset 0 4px 10px rgba(255,220,140,.15),',
+ '    0 0 0 2px #1c130c,0 0 0 4px #8a6c30,0 0 0 5px #cfab54,0 0 0 6px #4a3718,',
+ '    0 6px 16px rgba(0,0,0,.7),0 0 14px rgba(255,200,80,.25);',
+ '  overflow:hidden;cursor:pointer;touch-action:manipulation;user-select:none;',
+ '  -webkit-tap-highlight-color:transparent;}',
+ '#introSeq .is-liquid{position:absolute;left:0;right:0;bottom:0;height:0%;',
+ '  background:linear-gradient(#ffe9ad 0%,#f0a81e 42%,#8a5a10 100%);',
+ '  box-shadow:inset 0 8px 16px rgba(255,240,180,.5),inset 0 -6px 14px rgba(0,0,0,.4);',
+ '  transition:height .13s linear;}',
+ '#introSeq .is-wave{position:absolute;top:-9px;left:0;width:200%;height:14px;display:block;',
+ '  fill:#fff3c4;animation:orbwave 3.5s linear infinite;}',
+ '#introSeq .is-gloss{position:absolute;top:14px;left:28px;width:52px;height:34px;border-radius:50%;z-index:4;',
+ '  background:radial-gradient(circle at 40% 40%,rgba(255,255,255,.75),rgba(255,255,255,.1) 60%,transparent 72%);}',
+ '#introSeq .is-rim{position:absolute;inset:0;border-radius:50%;z-index:5;pointer-events:none;',
+ '  box-shadow:inset 0 2px 6px rgba(255,255,255,.25),inset 0 -3px 8px rgba(0,0,0,.55);}',
+ '#introSeq .is-orbtext{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;',
+ '  align-items:center;justify-content:center;color:#fff;text-shadow:0 1px 3px #000,0 0 6px #000;}',
+ '#introSeq .is-orb.max{animation:isOrbMax .75s ease-in-out infinite alternate;}',
+ '@keyframes isOrbMax{from{box-shadow:inset 0 -8px 16px rgba(0,0,0,.7),0 0 0 2px #1c130c,',
+ '    0 0 0 4px #8a6c30,0 0 0 5px #cfab54,0 0 0 6px #4a3718,0 0 18px rgba(255,200,80,.4);}',
+ '  to{box-shadow:inset 0 -8px 16px rgba(0,0,0,.7),0 0 0 2px #1c130c,',
+ '    0 0 0 4px #d8b25c,0 0 0 5px #ffe9ad,0 0 0 6px #8a6c30,0 0 46px rgba(255,215,110,.95);}}',
+ '#introSeq .is-count{font:900 44px/1 system-ui;color:#fff;}',
+ '#introSeq .is-cdown{font:900 56px/1 system-ui;color:#ffe9ad;text-shadow:0 0 26px #ffd24a;',
+ '  animation:isPop .55s ease both;}',
+ '@keyframes isPop{from{transform:scale(1.7);opacity:0;}to{transform:scale(1);opacity:1;}}',
+ '#introSeq .is-hits{font:700 9.5px/1 system-ui;color:#ffe0a8;letter-spacing:.2em;margin-top:6px;}',
+ '#introSeq .is-bar{width:100%;height:5px;background:#0b0f14;border-radius:3px;margin-top:16px;overflow:hidden;}',
+ '#introSeq .is-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#916b2d,#ffe092);}',
+ '#introSeq .is-flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;}',
+ '#introSeq .is-flash.on{animation:isFlash .38s ease-out both;}',
+ '@keyframes isFlash{0%{opacity:.85;}100%{opacity:0;}}',
+ '#introSeq .is-card{border:2px solid #ffd24a;border-radius:14px;padding:24px 26px 22px;',
+ '  background:linear-gradient(180deg,#161d26,#0d1218);box-shadow:0 0 44px #ffd24a44,0 14px 44px #000c;}',
+ '#introSeq .is-cps{font:400 12.5px/1.6 system-ui;color:#c3b180;margin-top:8px;}',
+ '#introSeq .is-pow{font:900 54px/1.05 system-ui;color:#fff;margin-top:2px;text-shadow:0 0 20px #ffd24a99;}',
+ '#introSeq .is-powlab{font:700 10px/1 system-ui;color:#ffd24a;letter-spacing:.24em;margin-top:8px;}',
+ '#introSeq .is-row{margin-top:16px;padding-top:15px;border-top:1px solid #3a352a;opacity:0;}',
+ '#introSeq .is-row.on{animation:isFade .45s ease both;}',
+ '#introSeq .is-row.hide{display:none;}',
+ '#introSeq .is-rowlab{font:400 11px/1 system-ui;color:#9d947f;letter-spacing:.14em;}',
+ '#introSeq .is-rank{font:900 27px/1.3 system-ui;color:#ffe092;margin-top:6px;}',
+ '#introSeq .is-rank em{font-style:normal;font-size:15px;color:#c3b180;font-weight:400;}',
+ '#introSeq .is-bonus{font:900 22px/1 system-ui;color:#ffe092;margin-top:6px;}'
+ ].join("\n");
+ document.head.appendChild(css);
+
+ /* --- DOM --- */
+ const seq=document.createElement("div");
+ seq.id="introSeq";
+ seq.innerHTML=
+ '<div class="is-flash" id="isFlash"></div>'+
+ '<div class="is-stage">'+
+  '<div class="is-step" id="isStepName">'+
+   '<div class="is-mark">&#9876;</div>'+
+   '<div class="is-lead" id="isRegLead"></div>'+
+   '<div class="is-title" id="isNameTitle"></div>'+
+   '<div class="is-sub" id="isNameSub"></div>'+
+   '<input id="isName" maxlength="12" autocomplete="nickname" inputmode="text" enterkeyhint="done">'+
+   '<button class="is-btn" id="isNameGo" type="button"></button>'+
+   '<button class="is-skip" id="isNameSkip" type="button"></button>'+
+  '</div>'+
+  '<div class="is-step" id="isStepScan">'+
+   '<div class="is-lead" id="isScanLead"></div>'+
+   '<div class="is-title" id="isScanTitle"></div>'+
+   '<div class="is-sub" id="isScanSub"></div>'+
+   '<div class="is-orb" id="isOrb">'+
+     '<div class="is-liquid" id="isLiquid">'+
+       '<svg class="is-wave" viewBox="0 0 200 14" preserveAspectRatio="none">'+
+       '<path d="M0,7 Q12.5,4 25,7 T50,7 T75,7 T100,7 T125,7 T150,7 T175,7 T200,7 V14 H0 Z"/></svg>'+
+     '</div>'+
+     '<div class="is-gloss"></div><div class="is-rim"></div>'+
+     '<div class="is-orbtext">'+
+       '<div class="is-count" id="isCount">&mdash;</div>'+
+       '<div class="is-hits" id="isHits"></div>'+
+     '</div>'+
+   '</div>'+
+   '<div class="is-bar"><i id="isBar"></i></div>'+
+  '</div>'+
+  '<div class="is-step" id="isStepResult">'+
+   '<div class="is-card">'+
+    '<div class="is-lead" id="isDoneLead"></div>'+
+    '<div class="is-cps" id="isRCps"></div>'+
+    '<div class="is-pow" id="isRPow">0</div>'+
+    '<div class="is-powlab" id="isPowLab"></div>'+
+    '<div class="is-row hide" id="isRowRank">'+
+      '<div class="is-rowlab" id="isRankLab"></div>'+
+      '<div class="is-rank" id="isRRank"></div>'+
+    '</div>'+
+    '<div class="is-row" id="isRowBonus">'+
+      '<div class="is-rowlab" id="isBonusLab"></div>'+
+      '<div class="is-bonus" id="isRBonus"></div>'+
+    '</div>'+
+   '</div>'+
+   '<button class="is-btn" id="isAccept" type="button"></button>'+
+   '<button class="is-skip" id="isRetry" type="button"></button>'+
+  '</div>'+
+ '</div>';
+ document.body.appendChild(seq);
+
+ const g=id=>document.getElementById(id);
+ const orbEl=g("isOrb"), liquidEl=g("isLiquid"), countEl=g("isCount"),
+       hitsEl=g("isHits"), barEl=g("isBar");
+
+ let phase="idle", hits=0, endAt=0, tmr=null, maxed=false;
+ let pending=null, prevHits=null, withBonus=true;
+
+ function showStep(id){
+  ["isStepName","isStepScan","isStepResult"].forEach(s=>g(s).classList.toggle("on",s===id));
+ }
+ function bonusFor(n){
+  return Math.floor(Math.max(CFG.goldFloor,n*CFG.goldPerHit)*(S.goldBonus||1));
+ }
+
+ function applyText(){
+  g("isRegLead").textContent=it("reg");
+  g("isNameTitle").textContent=it("nameTitle");
+  g("isNameSub").innerHTML=it("nameSub");
+  g("isName").placeholder=it("namePh");
+  g("isNameGo").textContent=it("next");
+  g("isNameSkip").textContent=it("skipName");
+  g("isScanLead").textContent=it("scan");
+  g("isScanTitle").textContent=it("scanTitle");
+  g("isScanSub").innerHTML=it("scanSub");
+  g("isHits").textContent=it("start");
+  g("isDoneLead").textContent=it("done");
+  g("isPowLab").textContent=it("power");
+  g("isRankLab").textContent=it("rankLab");
+  g("isBonusLab").textContent=it("bonusLab");
+  g("isAccept").textContent=it("accept");
+  g("isRetry").textContent=it("retry");
+ }
+
+ /* --- 3・2・1 --- */
+ function beginCountdown(){
+  if(phase!=="idle") return;
+  phase="count";
+  g("isScanSub").innerHTML=it("ready");
+  hitsEl.textContent="READY";
+  let n=3;
+  (function beat(){
+   countEl.className="is-cdown";
+   countEl.textContent=n>0?String(n):it("cut");
+   try{ sndClick(); }catch(e){}
+   if(n>0){ n--; setTimeout(beat,700); return; }
+   setTimeout(startScan,420);
+  })();
+ }
+ function startScan(){
+  phase="live";
+  countEl.className="is-count"; countEl.textContent="0";
+  hitsEl.textContent=it("charge");
+  g("isScanSub").innerHTML=it("go");
+  maxed=false; orbEl.classList.remove("max");
+  liquidEl.style.transition="height .13s linear";
+  liquidEl.style.height="0%";
+  hits=0; endAt=performance.now()+CFG.seconds*1000;
+  tmr=setInterval(tick,40);
+ }
+ function tick(){
+  const left=Math.max(0,endAt-performance.now());
+  barEl.style.width=(left/(CFG.seconds*1000)*100)+"%";
+  if(left<=0) endScan();
+ }
+ function hit(){
+  if(phase!=="live") return;
+  hits++; countEl.textContent=hits;
+  liquidEl.style.height=Math.min(100,hits/CFG.chargeFull*100)+"%";
+  if(!maxed && hits>=CFG.chargeFull){
+   maxed=true; orbEl.classList.add("max"); hitsEl.textContent=it("over");
+   try{ sndCrit(); }catch(e){}
+  }
+  try{ sndClick(); }catch(e){}
+ }
+ function endScan(){
+  phase="done";
+  clearInterval(tmr); tmr=null;
+  hitsEl.textContent=it("release");
+  liquidEl.style.transition="height .34s cubic-bezier(.6,0,.9,.4)";
+  liquidEl.style.height="0%";
+  try{ sndCrit(); }catch(e){}
+  setTimeout(function(){
+   orbEl.classList.remove("max");
+   const fl=g("isFlash");
+   fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+   try{ sndCrit(); }catch(e){}
+   setTimeout(showResult,300);
+  },360);
+ }
+
+ /* --- 歴代順位：書き込まずに順位だけ問い合わせる。
+        まだAPIが無い／通信できない場合は行ごと隠す（作り物の順位は出さない） --- */
+ async function fetchPowerRank(power){
+  try{
+   const res=await fetch(RANK_API+"?power="+encodeURIComponent(power),
+     {headers:{Accept:"application/json"},cache:"no-store"});
+   if(!res.ok) return null;
+   const d=await res.json();
+   // 母数が少ないうちは順位を出さない。登録者が2人の状態で
+   // 「2人中 第1位」と出すと、壊れているように見えるため。
+   if(d&&Number.isFinite(d.powerRank)&&Number.isFinite(d.powerTotal)&&d.powerTotal>=MIN_RANK_POP)
+    return {rank:d.powerRank,total:d.powerTotal};
+  }catch(e){}
+  return null;
+ }
+ async function submitPower(power){
+  try{
+   await fetch(RANK_API,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({playerId,name:playerName,damage:playerDamage,power:power}),keepalive:true});
+  }catch(e){}
+ }
+
+ function showResult(){
+  const power=hits*CFG.powerMul, gold=bonusFor(hits), cps=hits/CFG.seconds;
+  pending={hits:hits,power:power,gold:gold};
+  showStep("isStepResult");
+  g("isRCps").textContent=it("fmtCps")(hits,cps.toFixed(1))
+   +(hits>=CFG.chargeFull?it("overTag"):"")
+   +(prevHits!==null?it("prevTag")(prevHits):"");
+  g("isRowRank").classList.add("hide");
+  g("isRowRank").classList.remove("on");
+  g("isRowBonus").classList.toggle("hide",!withBonus);
+  g("isRowBonus").classList.remove("on");
+  g("isRBonus").textContent="+ "+fmt(gold)+" G";
+
+  const el=g("isRPow"), t0=performance.now(), dur=780;
+  let settled=false;
+  (function up(){
+   if(settled) return;
+   const p=Math.min(1,(performance.now()-t0)/dur);
+   el.textContent=Math.floor(power*(1-Math.pow(1-p,3))).toLocaleString();
+   if(p<1) requestAnimationFrame(up);
+  })();
+  // 裏タブなどで rAF が止まっても最終値と続きが必ず出るようにする
+  setTimeout(function settle(){
+   if(settled) return;
+   settled=true;
+   el.textContent=power.toLocaleString();
+   fetchPowerRank(power).then(function(r){
+    // 待っている間にやり直されていたら描かない
+    if(!pending||pending.power!==power||!r) return;
+    g("isRRank").innerHTML=it("fmtRank")(r.rank,r.total);
+    g("isRowRank").classList.remove("hide");
+    g("isRowRank").classList.add("on");
+    try{ sndCrit(); }catch(e){}
+   });
+   if(withBonus) setTimeout(function(){
+    g("isRowBonus").classList.add("on"); try{ sndCrit(); }catch(e){}
+   },420);
+  },dur+60);
+ }
+
+ /* --- 確定とやり直し --------------------------------------------------
+    ボーナスは「この記録で始める」を押して初めて入る。
+    結果表示の時点で入れると、やり直すたびに二重取りになる。 */
+ function acceptResult(){
+  if(pending){
+   if(withBonus){ S.gold+=pending.gold; updateHud(); renderCards(); save(); }
+   submitPower(pending.power);
+   pending=null;
+  }
+  seq.classList.remove("on");
+  markDone();
+ }
+ function retryScan(){
+  prevHits=pending?pending.hits:hits;
+  pending=null;
+  clearInterval(tmr); tmr=null;
+  phase="idle"; hits=0; maxed=false;
+  countEl.className="is-count"; countEl.textContent="—";
+  hitsEl.textContent=it("start");
+  barEl.style.width="100%";
+  orbEl.classList.remove("max");
+  liquidEl.style.transition="none"; liquidEl.style.height="0%";
+  g("isScanSub").innerHTML=it("scanSub");
+  showStep("isStepScan");
+ }
+ function commitName(v){
+  playerName=cleanPlayerName(v||"");
+  try{ localStorage.setItem(PLAYER_KEY,playerName); }catch(e){}
+  updatePlayerUi();
+  showStep("isStepScan");
+ }
+
+ g("isNameGo").addEventListener("click",()=>commitName(g("isName").value));
+ g("isNameSkip").addEventListener("click",()=>commitName(""));
+ g("isName").addEventListener("keydown",e=>{
+  e.stopPropagation();
+  if(e.key==="Enter"){ e.preventDefault(); commitName(g("isName").value); }
+ });
+ g("isAccept").addEventListener("click",acceptResult);
+ g("isRetry").addEventListener("click",retryScan);
+ orbEl.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  if(phase==="idle") beginCountdown(); else hit();
+ });
+ // 入口が開いている間はスペースをゲーム側へ通さない
+ window.addEventListener("keydown",e=>{
+  if(!seq.classList.contains("on")) return;
+  if(e.target&&e.target.tagName==="INPUT") return;
+  if(e.code==="Space"||e.key===" "){
+   e.preventDefault(); e.stopImmediatePropagation();
+   if(phase==="idle") beginCountdown(); else hit();
+  }
+ },true);
+
+ /* --- 開く --- */
+ function openIntro(opt){
+  opt=opt||{};
+  withBonus=(opt.withBonus!==false);
+  applyText();
+  phase="idle"; hits=0; maxed=false; pending=null; prevHits=null;
+  clearInterval(tmr); tmr=null;
+  countEl.className="is-count"; countEl.textContent="—";
+  hitsEl.textContent=it("start");
+  barEl.style.width="100%";
+  orbEl.classList.remove("max");
+  liquidEl.style.transition="none"; liquidEl.style.height="0%";
+  g("isRowRank").classList.add("hide"); g("isRowRank").classList.remove("on");
+  g("isRowBonus").classList.remove("on");
+  g("isName").value=(playerName&&playerName!=="名無し")?playerName:"";
+  seq.classList.add("on");
+  if(opt.skipName){ showStep("isStepScan"); }
+  else{
+   showStep("isStepName");
+   setTimeout(()=>{ try{ g("isName").focus({preventScroll:true}); }catch(e){} },350);
+  }
+ }
+
+ // 言語を選んで表紙が消えた直後に、初回だけ開く
+ const _origChooseLang=chooseLang;
+ chooseLang=function(lang){
+  _origChooseLang(lang);
+  if(!introDone){ markDone(); openIntro({withBonus:true}); }
+ };
+
+ /* --- あとから測り直す導線（ランキングのモーダル内）。
+        こちらはボーナスなし。何度も押してゴールドを稼げてしまうため。 --- */
+ (function addRescanButton(){
+  const closeBtn=$("#rankClose");
+  if(!closeBtn||!closeBtn.parentNode) return;
+  const b=document.createElement("button");
+  b.type="button"; b.className="yes"; b.id="powerRescan";
+  b.style.marginRight="6px";
+  b.textContent="⚡ "+it("rescan");
+  closeBtn.parentNode.insertBefore(b,closeBtn);
+  b.addEventListener("click",()=>{
+   $("#rankModal").classList.remove("on");
+   openIntro({withBonus:false,skipName:true});
+  });
+  // 言語切替に追随させる
+  const _origApplyLang=applyLang;
+  applyLang=function(l){ _origApplyLang(l); try{ b.textContent="⚡ "+it("rescan"); }catch(e){} };
+ })();
+})();
+
 </script>
 </body>
 </html>
