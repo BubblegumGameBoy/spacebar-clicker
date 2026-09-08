@@ -323,6 +323,20 @@
   .clickfx.crit{width:130px;height:130px;}
   .clickfx.crit::before{border-width:6px;border-top-color:#fff;border-right-color:var(--wcol,#ffd24a);}
 
+  /* Animated weapon pointer. Never intercept game or HUD input. */
+  #field.weapon-pointer-active{cursor:none!important;}
+  #weaponPointer{position:fixed;left:0;top:0;width:0;height:0;z-index:90;pointer-events:none;display:none;}
+  #weaponPointer.visible{display:block;}
+  #weaponPointer img{position:absolute;left:-44px;top:-8px;width:64px;height:64px;max-width:none;
+    transform-origin:34% 72%;filter:drop-shadow(1px 3px 2px #0009);pointer-events:none;}
+  #weaponPointer .weapon-trail{position:absolute;left:-43px;top:-38px;width:78px;height:78px;
+    border:5px solid transparent;border-top-color:#fff5dc;border-right-color:var(--weapon-color,#ffd779);
+    border-radius:50%;opacity:0;filter:drop-shadow(0 0 5px var(--weapon-color,#ffd779));}
+  #weaponPointer .weapon-impact{position:absolute;left:-22px;top:-22px;width:44px;height:44px;opacity:0;
+    background:conic-gradient(from 15deg,transparent 0 12%,#fff5dc 13% 15%,transparent 16% 37%,var(--weapon-color) 38% 40%,transparent 41% 62%,#fff 63% 65%,transparent 66% 87%,var(--weapon-color) 88% 90%,transparent 91%);
+    clip-path:polygon(50% 0,57% 39%,100% 50%,61% 59%,50% 100%,41% 61%,0 50%,39% 41%);}
+  #weaponPointer[data-kind="heavy"] .weapon-impact{border:3px solid var(--weapon-color);border-radius:50%;clip-path:none;background:none;}
+
   /* weapon evolution toast */
   #weaponToast{position:absolute; top:30%; left:50%; transform:translate(-50%,-50%) scale(.6);
     z-index:21; background:rgba(10,8,4,.85); border:1px solid #ffd24a; border-radius:10px;
@@ -1507,6 +1521,68 @@ function spawnClickFx(xPct,yPct,crit){
  setTimeout(()=>f.remove(),240);
 }
 
+// The native cursor remains a fallback; a DOM sprite allows real hilt-pivot swings.
+const weaponPointer=document.createElement('div');
+weaponPointer.id='weaponPointer';weaponPointer.setAttribute('aria-hidden','true');
+weaponPointer.innerHTML='<i class="weapon-trail"></i><i class="weapon-impact"></i><img alt="" draggable="false">';
+document.body.appendChild(weaponPointer);
+const weaponPointerImg=weaponPointer.querySelector('img');
+let weaponPointerOver=false,weaponPointerTimer=0,weaponSwingCount=0;
+function setWeaponPointerPosition(x,y){weaponPointer.style.transform=`translate(${x}px,${y}px)`;}
+function syncWeaponPointer(){
+ const w=curWeapon();
+ if(weaponPointer.dataset.weapon!==w.id){weaponPointer.dataset.weapon=w.id;weaponPointerImg.src=weaponIcon(w);}
+ weaponPointer.style.setProperty('--weapon-color',w.col);
+}
+function hideWeaponPointer(){
+ weaponPointerOver=false;clearTimeout(weaponPointerTimer);
+ weaponPointer.classList.remove('visible');field.classList.remove('weapon-pointer-active');
+}
+function trackWeaponPointer(e){
+ if(e.pointerType!=='mouse'||LAYOUT_MODE||!$('#titleScreen').classList.contains('hidden')||
+    e.target.closest('button,input,select,a,[role="button"]')){hideWeaponPointer();return;}
+ weaponPointerOver=true;syncWeaponPointer();setWeaponPointerPosition(e.clientX,e.clientY);
+ weaponPointer.classList.add('visible');field.classList.add('weapon-pointer-active');
+}
+field.addEventListener('pointermove',trackWeaponPointer);
+field.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hideWeaponPointer();});
+window.addEventListener('blur',hideWeaponPointer);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hideWeaponPointer();});
+function animateWeaponAttack(pt,crit=false){
+ if(LAYOUT_MODE)return;
+ syncWeaponPointer();
+ if(!weaponPointerOver){const r=field.getBoundingClientRect();setWeaponPointerPosition(r.left+r.width*pt.x/100,r.top+r.height*pt.y/100);}
+ weaponPointer.classList.add('visible');
+ const w=curWeapon(),heavy=['axe','hammer','greatsword'].includes(w.id),thrust=w.id==='dagger';
+ weaponPointer.dataset.kind=heavy?'heavy':thrust?'thrust':'slash';
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const duration=reduced?120:heavy?330:thrust?180:250;
+ const direction=heavy?1:(weaponSwingCount++%2?-1:1);
+ // Cancel the previous swing on rapid input instead of stacking animations/nodes.
+ weaponPointer.querySelectorAll('*').forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
+ const frames=reduced?[{transform:'rotate(-8deg)'},{transform:'rotate(12deg)'},{transform:'none'}]:thrust?
+  [{transform:'translate(-9px,12px) rotate(-12deg)',offset:0},{transform:'translate(12px,-18px) rotate(-12deg) scale(1.12)',offset:.3},{transform:'translate(10px,-15px) rotate(-12deg)',offset:.43},{transform:'none',offset:1}]:
+  [{transform:`rotate(${-48*direction}deg) scale(1.04)`,offset:0},
+   {transform:`rotate(${65*direction}deg) scale(${crit?1.22:1.12})`,offset:.28},
+   {transform:`rotate(${70*direction}deg) scale(1.08)`,offset:.43},
+   {transform:`rotate(${-7*direction}deg)`,offset:.82},{transform:'none',offset:1}];
+ weaponPointerImg.animate(frames,{duration,easing:'linear'});
+ if(!reduced){
+  weaponPointer.querySelector('.weapon-trail').animate([
+   {opacity:0,transform:`rotate(${-90*direction}deg) scale(.55)`,offset:0},
+   {opacity:crit?1:.85,transform:`rotate(${-20*direction}deg) scale(${heavy?1.2:1})`,offset:.2},
+   {opacity:0,transform:`rotate(${95*direction}deg) scale(1.25)`,offset:.7},{opacity:0,offset:1}
+  ],{duration});
+  weaponPointer.querySelector('.weapon-impact').animate([
+   {opacity:0,transform:'scale(.3)',offset:0},{opacity:0,offset:.22},
+   {opacity:1,transform:`scale(${crit?1.45:.9})`,offset:.3},
+   {opacity:0,transform:`scale(${heavy?2:1.5})`,offset:.85},{opacity:0,offset:1}
+  ],{duration});
+ }
+ clearTimeout(weaponPointerTimer);
+ weaponPointerTimer=setTimeout(()=>{if(!weaponPointerOver)weaponPointer.classList.remove('visible');},duration+20);
+}
+
 function weaponEvolveFx(w){
  const toast=$("#weaponToast"); if(!toast) return;
  toast.innerHTML=`${weaponIconHtml(w)}<div class="wt-lead">${t('weapon_evolve')}</div><div class="wt-name">${L(w.name)}</div>`;
@@ -1521,11 +1597,12 @@ function heroAttack(){
  if(crit) dmg*=critMul();
  if(crit) sndCrit(); else sndClick();
  const pt=bossHitPt();
+ animateWeaponAttack(pt,crit);
  spawnClickFx(pt.x,pt.y,crit);
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  S.gold+=hitGold();
 }
-field.addEventListener("pointerdown",e=>{ if(LAYOUT_MODE||e.target.closest("button,input,select"))return; heroAttack(); });
+field.addEventListener("pointerdown",e=>{ if(LAYOUT_MODE||e.target.closest("button,input,select"))return; trackWeaponPointer(e);heroAttack(); });
 const _heldKeys=new Set();
 let _cheatTimer=null;
 window.addEventListener("keydown",e=>{

@@ -19,7 +19,7 @@ async function fire(crit=false){
  const ctx=run('ac()');await ctx.resume();
  const start=performance.now();
  while(!run('Object.keys(_sampleBuf).length===Object.keys(_sampleFiles).length')&&performance.now()-start<4000)await new Promise(r=>setTimeout(r,40));
- run(`sndWeapon(${crit});const previewPt=bossHitPt();spawnClickFx(previewPt.x,previewPt.y,${crit});`);
+ run(`sndWeapon(${crit});const previewPt=bossHitPt();animateWeaponAttack(previewPt,${crit});spawnClickFx(previewPt.x,previewPt.y,${crit});`);
  document.getElementById('status').textContent=run('curWeapon().name.ja')+' ／ '+(crit?'クリティカル':'通常攻撃');
 }
 document.getElementById('hit').onclick=()=>void fire();document.getElementById('critical').onclick=()=>void fire(true);
