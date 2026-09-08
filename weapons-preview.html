@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>武器と攻撃音の試し撃ち | Mythos Slayers</title>
+<style>body{margin:0;background:#10171e;color:#e1e9ef;font:15px system-ui}main{max-width:1100px;margin:auto;padding:20px}h1{font-size:24px;color:#ffe399;margin:0 0 8px}p{line-height:1.7;color:#aab8c6}#weapons{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:18px 0}button{cursor:pointer;background:#202d39;color:#edf3fa;border:1px solid #485768;border-radius:9px;padding:10px;font:inherit}button[aria-pressed=true]{border-color:#ffd779;background:#3c3424}button img{width:64px;height:64px;display:block;margin:auto}button span{display:block;font-size:12px}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}#hit{background:#8a6023}iframe{width:100%;height:520px;border:1px solid #52606c;border-radius:12px;background:#0e141b}#status{min-height:24px;color:#ffd779}@media(max-width:600px){main{padding:12px}#weapons{grid-template-columns:repeat(2,1fr)}iframe{height:560px}}</style></head>
+<body><main><h1>武器と攻撃音の試し撃ち</h1><p>武器を選んで「通常攻撃」「クリティカル」を押してください。各武器の見た目・命中音・重さを比べられます。ここでの操作は進行セーブやランキングに記録されません。</p><div id="status" role="status">ゲームを読み込んでいます…</div><div id="weapons"></div><div class="controls"><button id="hit" disabled>通常攻撃</button><button id="critical" disabled>クリティカル</button><button id="burst" disabled>5連撃</button></div><iframe id="game" src="./index.html?showcase" title="試し撃ち用ゲーム"></iframe></main>
+<script>
+const game=document.getElementById('game');let selected=0,busy=false;
+function run(code){return game.contentWindow.eval(code);}
+function selectWeapon(i){selected=i;run(`S.hero.click=${i*10};renderCards();`);document.querySelectorAll('#weapons button').forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));}
+game.addEventListener('load',()=>{
+ try{
+  run('setBgm(false);S.owned=zeroUnits();renderUnits();chooseLang("ja");document.querySelector("[data-t=hero]").click();');
+  const weapons=run('WEAPONS.map(w=>({name:w.name.ja,icon:weaponIcon(w)}))');
+  weapons.forEach((w,i)=>{const b=document.createElement('button');const img=document.createElement('img');img.src=w.icon;img.alt='';const label=document.createElement('span');label.textContent=w.name;b.append(img,label);b.addEventListener('click',()=>selectWeapon(i));document.getElementById('weapons').append(b)});
+  selectWeapon(0);document.querySelectorAll('.controls button').forEach(b=>b.disabled=false);document.getElementById('status').textContent='武器を選んで試し撃ちできます';
+ }catch(e){document.getElementById('status').textContent='読み込めませんでした。ページを再読み込みしてください。';}
+});
+async function fire(crit=false){
+ run('if(!audioSettings.seOn)setSe(true);ac();');
+ const ctx=run('ac()');await ctx.resume();
+ const start=performance.now();
+ while(!run('Object.keys(_sampleBuf).length===Object.keys(_sampleFiles).length')&&performance.now()-start<4000)await new Promise(r=>setTimeout(r,40));
+ run(`sndWeapon(${crit});const previewPt=bossHitPt();spawnClickFx(previewPt.x,previewPt.y,${crit});`);
+ document.getElementById('status').textContent=run('curWeapon().name.ja')+' ／ '+(crit?'クリティカル':'通常攻撃');
+}
+document.getElementById('hit').onclick=()=>void fire();document.getElementById('critical').onclick=()=>void fire(true);
+document.getElementById('burst').onclick=async()=>{if(busy)return;busy=true;try{for(let i=0;i<5;i++){await fire(i===4);await new Promise(r=>setTimeout(r,130))}}finally{busy=false}};
+</script></body></html>

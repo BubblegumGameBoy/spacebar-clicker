@@ -424,6 +424,18 @@
   .card.dis{opacity:.5; cursor:not-allowed;}
   .card .top{display:flex; justify-content:space-between; align-items:baseline;}
   .card .nm{font-weight:700; font-size:14px;}
+  .card.weapon-card{position:relative;padding-left:85px;min-height:116px;border-color:#5d5034;}
+  .weapon-icon{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 3px 2px #0008);}
+  .weapon-card>.weapon-icon{position:absolute;left:10px;top:16px;border:1px solid #77613c;border-radius:10px;
+    background:radial-gradient(ellipse at 50% 30%,#39444e,#111921 75%);padding:3px;}
+  .weapon-next{display:flex;align-items:center;gap:7px;margin-top:5px;color:#c3b180;font-size:11px;}
+  .weapon-next img{width:26px;height:26px;}
+  .weapon-progress{height:3px;background:#10151a;margin-top:5px;border-radius:3px;overflow:hidden;}
+  .weapon-progress i{display:block;height:100%;background:linear-gradient(90deg,#916b2d,#ffe092);}
+  #weaponToast .weapon-icon{display:block;margin:0 auto 5px;width:64px;height:64px;}
+  .clickfx.crush::before{border:4px solid var(--wcol);border-radius:35%;box-shadow:0 0 18px var(--wcol);animation:weaponCrush .24s ease-out forwards;}
+  .clickfx.crush::after{width:8px;height:8px;left:50%;top:50%;background:#fff5dd;box-shadow:0 -27px var(--wcol),22px 17px var(--wcol),-22px 17px var(--wcol);}
+  @keyframes weaponCrush{from{transform:scale(.25);opacity:1}to{transform:scale(1.25);opacity:0}}
   .card .lv{font-size:11px; color:var(--accent); font-weight:700;}
   .card .desc{font-size:10px; color:var(--sub); opacity:.85; line-height:1.3;}
   .card .ef{font-size:11px; color:var(--sub);}
@@ -911,20 +923,33 @@ function syncBgm(restart=false){
 function setBgm(on){audioSettings.bgmOn=on;saveAudioSettings();
  if(!on){cancelAnimationFrame(_bgmFadeRaf);Object.values(bgmTracks).forEach(a=>{a.pause();a.volume=0;});}
  else{_bgmUnlocked=true;_bgmCurrent=null;syncBgm();} updateAudioButtons();}
-function setSe(on){audioSettings.seOn=on;saveAudioSettings();updateAudioButtons();if(on)snd(640,"sine",.08,.09);}
+function setSe(on){audioSettings.seOn=on;if(_sfxMaster)_sfxMaster.gain.setTargetAtTime(on?audioSettings.seVol:0,_ac.currentTime,.01);saveAudioSettings();updateAudioButtons();if(on)snd(640,"sine",.08,.09);}
 function updateAudioButtons(){
  const b=$("#bgmBtn"),s=$("#seBtn");if(b){const key=desiredBgm();b.classList.toggle("on",audioSettings.bgmOn);b.textContent="♫ BGM "+(audioSettings.bgmOn?"ON":"OFF");
   b.dataset.track=key;b.title="激戦BGM";}
  if(s){s.classList.toggle("on",audioSettings.seOn);s.textContent="🔊 SE "+(audioSettings.seOn?"ON":"OFF");}
 }
 
-let _ac=null;
-function ac(){ if(!_ac){ _ac=new (window.AudioContext||window.webkitAudioContext)(); decodeSamples(); } return _ac; }
+let _ac=null,_sfxMaster=null,_sfxBus=null;
+const _sampleVoices=[];
+function ac(){
+ if(!_ac){
+  _ac=new (window.AudioContext||window.webkitAudioContext)();
+  _sfxBus=_ac.createDynamicsCompressor();
+  _sfxBus.threshold.value=-12;_sfxBus.knee.value=12;_sfxBus.ratio.value=6;
+  _sfxBus.attack.value=.003;_sfxBus.release.value=.12;
+  _sfxMaster=_ac.createGain();_sfxMaster.gain.value=audioSettings.seOn?audioSettings.seVol:0;
+  _sfxBus.connect(_sfxMaster);_sfxMaster.connect(_ac.destination);decodeSamples();
+ }
+ return _ac;
+}
 
 // Sample-backed hits replace the old single square-wave beep. Playback rate and filters give each role its own weight.
-const _sampleFiles={slash:"assets/slash.mp3",shatter:"assets/boss-shatter.mp3"};
+const _sampleFiles={slash:"assets/slash.mp3",shatter:"assets/boss-shatter.mp3",
+ blade:"assets/sfx/blade-impact.mp3",swing:"assets/sfx/heavy-swing.mp3",
+ needle:"assets/sfx/needle-strike.mp3",critical:"assets/sfx/critical-impact.mp3",magic:"assets/sfx/magic-bubble.mp3"};
 const _sampleBytes={},_sampleBuf={},_sampleDecoding={};
-Object.entries(_sampleFiles).forEach(([key,url])=>fetch(url).then(r=>r.arrayBuffer()).then(b=>{_sampleBytes[key]=b;decodeSamples();}).catch(()=>{}));
+Object.entries(_sampleFiles).forEach(([key,url])=>fetch(url).then(r=>{if(!r.ok)throw new Error("sample unavailable");return r.arrayBuffer();}).then(b=>{_sampleBytes[key]=b;decodeSamples();}).catch(()=>{}));
 function decodeSamples(){
  if(!_ac)return;
  Object.keys(_sampleFiles).forEach(key=>{
@@ -933,15 +958,21 @@ function decodeSamples(){
   _ac.decodeAudioData(_sampleBytes[key].slice(0)).then(buf=>{_sampleBuf[key]=buf;}).catch(()=>{_sampleDecoding[key]=false;});
  });
 }
-function playSample(key,vol=.5,rate=1,filter=0){
+function playSample(key,vol=.5,rate=1,filter=0,group="ambient"){
   if(!audioSettings.seOn)return true;
   if(!_sampleBuf[key]) return false;
   try{
     const ctx=ac();if(ctx.state==="suspended")ctx.resume();
+    // Short sample tails and bounded voices keep a full army from drowning out manual hits.
+    if(group==="unit"&&_sampleVoices.filter(v=>v.group==="unit").length>=4)return true;
+    if(_sampleVoices.length>=14){const old=_sampleVoices.find(v=>v.group!=="hero")||_sampleVoices[0];
+      old.g.gain.setTargetAtTime(0,ctx.currentTime,.008);old.src.stop(ctx.currentTime+.025);
+      _sampleVoices.splice(_sampleVoices.indexOf(old),1);}
     const src=ctx.createBufferSource();src.buffer=_sampleBuf[key];src.playbackRate.value=rate;
-    const g=ctx.createGain();g.gain.value=vol*audioSettings.seVol;
-    if(filter){const f=ctx.createBiquadFilter();f.type="lowpass";f.frequency.value=filter;src.connect(f);f.connect(g);}else src.connect(g);
-    g.connect(ctx.destination);src.start();
+    const g=ctx.createGain();g.gain.value=vol;
+    let f=null;if(filter){f=ctx.createBiquadFilter();f.type="lowpass";f.frequency.value=filter;src.connect(f);f.connect(g);}else src.connect(g);
+    g.connect(_sfxBus);const voice={src,g,group};_sampleVoices.push(voice);
+    src.onended=()=>{const i=_sampleVoices.indexOf(voice);if(i>=0)_sampleVoices.splice(i,1);src.disconnect();if(f)f.disconnect();g.disconnect();};src.start();
     return true;
   }catch(e){ return false; }
 }
@@ -952,9 +983,9 @@ function snd(freq,type,dur,vol=0.3,decay=0.8){
     const ctx=ac();
     if(ctx.state==="suspended") ctx.resume();
     const o=ctx.createOscillator(), g=ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
+    o.connect(g); g.connect(_sfxBus);
     o.type=type; o.frequency.value=freq;
-    g.gain.setValueAtTime(vol*audioSettings.seVol,ctx.currentTime);
+    g.gain.setValueAtTime(vol,ctx.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
     o.start(); o.stop(ctx.currentTime+dur);
   }catch(e){}
@@ -971,13 +1002,24 @@ function sndSwish(vol=0.22,dur=0.09,freq=2600){
     const f=ctx.createBiquadFilter(); f.type="bandpass"; f.Q.value=1.2;
     f.frequency.setValueAtTime(freq,ctx.currentTime);
     f.frequency.exponentialRampToValueAtTime(freq*0.35,ctx.currentTime+dur);
-    const g=ctx.createGain(); g.gain.value=vol*audioSettings.seVol;
-    src.connect(f); f.connect(g); g.connect(ctx.destination);
+    const g=ctx.createGain(); g.gain.value=vol;
+    src.connect(f); f.connect(g); g.connect(_sfxBus);
     src.start();
   }catch(e){}
 }
-function sndClick(){ if(playSlash(0.5,1)) return; const s=curWeapon().snd; sndSwish(0.2,0.08,s.sw); snd(s.f,s.w,0.07,0.22); }
-function sndCrit(){ if(playSlash(0.75,0.9)) return; const s=curWeapon().snd; sndSwish(0.3,0.12,s.sw+800); snd(s.f*0.7,s.w,0.12,0.3); snd(s.f*3,'sawtooth',0.1,0.18); }
+let _lastHeroSound=-Infinity;
+function sndWeapon(crit=false){
+ if(!audioSettings.seOn)return;
+ const now=performance.now();if(now-_lastHeroSound<45)return;_lastHeroSound=now;
+ const w=curWeapon(),s=w.snd,rate=s.rate*rnd(.96,1.04)*(crit?.92:1),boost=crit?1.15:1;
+ const ready=playSample(s.sample,s.vol*boost,rate,s.filter||0,"hero");
+ if(s.layer)playSample(s.layer,s.layerVol*boost,rate,0,"hero");
+ if(s.bass)snd(s.bass,"sine",crit?.16:.1,crit?.23:.15);
+ if(crit)playSample("critical",.34,1.18,0,"hero");
+ if(!ready){sndSwish(.22,.09,s.sw);snd(s.f,"triangle",.07,.12);}
+}
+function sndClick(){sndWeapon(false);}
+function sndCrit(){sndWeapon(true);}
 function sndEvolve(){ [330,440,550,740].forEach((f,i)=>setTimeout(()=>snd(f,'triangle',0.16,0.22),i*70)); }
 let _lastUnitSound=0;
 function sndUnitHit(u){
@@ -985,12 +1027,12 @@ function sndUnitHit(u){
  const fx=u?.fx||"slash";
  if(fx==="cannon-impact"){sndSwish(.2,.16,360);snd(48,"sawtooth",.3,.2);setTimeout(()=>snd(82,"sine",.2,.18),28);return;}
  if(fx==="bomb-impact"){sndSwish(.13,.11,620);snd(82,"sawtooth",.2,.14);return;}
- if(fx==="slash"||fx==="darkslash"){playSlash(.11,rnd(.82,1.18),fx==="darkslash"?1200:2600);return;}
- if(fx==="shock"){playSlash(.12,rnd(.55,.72),850);snd(72,"sine",.13,.13);return;}
- if(fx==="pierce"){sndSwish(.09,.07,3900);snd(980,"triangle",.045,.055);return;}
+ if(fx==="slash"||fx==="darkslash"){playSample("blade",.13,rnd(.9,1.12),fx==="darkslash"?1700:4200,"unit");return;}
+ if(fx==="shock"){playSample("blade",.16,.68,1700,"unit");return;}
+ if(fx==="pierce"){if(!playSample("needle",.25,rnd(1.15,1.35),0,"unit"))sndSwish(.09,.07,3900);return;}
  if(fx.includes("fire")){sndSwish(.12,.15,720);snd(86,"sawtooth",.12,.07);return;}
  if(fx==="holy"){snd(740,"sine",.13,.07);setTimeout(()=>snd(1110,"sine",.1,.045),30);return;}
- if(fx.includes("magic")){snd(fx.includes("cyan")?520:390,"sine",.14,.075);sndSwish(.055,.1,1700);return;}
+ if(fx.includes("magic")){if(!playSample("magic",.18,fx.includes("cyan")?1.4:1.1,0,"unit"))sndSwish(.055,.1,1700);return;}
 }
 function sndCannonFire(){if(!audioSettings.seOn)return;sndSwish(.24,.2,520);snd(66,"sawtooth",.3,.22);setTimeout(()=>snd(38,"sine",.22,.2),22);}
 function sndKill(){ if(!playSample("shatter",.42,rnd(.9,1.04),3200))[200,300,400].forEach((f,i)=>setTimeout(()=>snd(f,'sine',0.18,0.2),i*60)); }
@@ -1101,21 +1143,31 @@ const HERO=[
  {id:"aspd", base:800, scale:1.3, max:40},
 ];
 
-// クリック武器ランク：10レベルごとに進化。col=斬撃エフェクト色, snd=効果音(f:基本周波数,w:波形,sw:スウィッシュ高域)
+// 10回強化ごとに進化。id=専用アイコン、col=攻撃色、snd=サンプル・重ね音・低音。
 const WEAPONS=[
- {name:{ja:"キッチンナイフ",en:"Kitchen Knife",zh:"菜刀"}, ic:"🔪", col:"#e8edf2", snd:{f:320,w:"square",  sw:2400}},
- {name:{ja:"ダガー",en:"Dagger",zh:"匕首"},         ic:"🗡️", col:"#cdd6df", snd:{f:360,w:"square",  sw:2700}},
- {name:{ja:"ショートソード",en:"Short Sword",zh:"短剑"}, ic:"⚔️", col:"#bfeaff", snd:{f:300,w:"triangle",sw:2500}},
- {name:{ja:"ロングソード",en:"Long Sword",zh:"长剑"},   ic:"🗡️", col:"#9fd8ff", snd:{f:260,w:"triangle",sw:2300}},
- {name:{ja:"バトルアックス",en:"Battle Axe",zh:"战斧"}, ic:"🪓", col:"#ffcaa0", snd:{f:160,w:"sawtooth",sw:1500}},
- {name:{ja:"ウォーハンマー",en:"War Hammer",zh:"战锤"}, ic:"🔨", col:"#ffb27a", snd:{f:110,w:"square",  sw:1100}},
- {name:{ja:"グレートソード",en:"Greatsword",zh:"巨剑"}, ic:"⚔️", col:"#d7b6ff", snd:{f:220,w:"sawtooth",sw:2000}},
- {name:{ja:"妖刀ムラマサ",en:"Muramasa Blade",zh:"妖刀村正"},   ic:"🌸", col:"#ff9bd0", snd:{f:380,w:"triangle",sw:3200}},
- {name:{ja:"竜殺しの剣",en:"Dragonslayer",zh:"屠龙剑"},     ic:"🐉", col:"#8affc0", snd:{f:240,w:"sawtooth",sw:2600}},
- {name:{ja:"神剣エクスカリバー",en:"Excalibur",zh:"神剑 王者之剑"}, ic:"✨", col:"#ffe066", snd:{f:520,w:"triangle",sw:3600}},
+ {"id":"kitchen","name":{"ja":"キッチンナイフ","en":"Kitchen Knife","zh":"菜刀"},"col":"#e8edf2","snd":{"sample":"blade","rate":1.45,"vol":0.52,"f":320,"sw":2400}},
+ {"id":"dagger","name":{"ja":"アサシンダガー","en":"Assassin Dagger","zh":"刺客匕首"},"col":"#cdd6df","snd":{"sample":"needle","rate":1.5,"vol":0.8,"layer":"blade","layerVol":0.26,"f":360,"sw":2700}},
+ {"id":"shortsword","name":{"ja":"鋼鉄のショートソード","en":"Steel Shortsword","zh":"精钢短剑"},"col":"#bfeaff","snd":{"sample":"blade","rate":1.22,"vol":0.62,"f":300,"sw":2500}},
+ {"id":"longsword","name":{"ja":"騎士のロングソード","en":"Knight's Longsword","zh":"骑士长剑"},"col":"#9fd8ff","snd":{"sample":"blade","rate":1.02,"vol":0.66,"layer":"swing","layerVol":0.14,"f":260,"sw":2300}},
+ {"id":"axe","name":{"ja":"戦斧ブレイクファング","en":"Breakfang Axe","zh":"碎牙战斧"},"col":"#ffcaa0","snd":{"sample":"blade","rate":0.8,"vol":0.72,"layer":"swing","layerVol":0.22,"bass":78,"f":160,"sw":1500}},
+ {"id":"hammer","name":{"ja":"ウォーハンマー","en":"War Hammer","zh":"战锤"},"col":"#ffb27a","fx":"crush","snd":{"sample":"blade","rate":0.63,"vol":0.76,"filter":1800,"layer":"swing","layerVol":0.24,"bass":52,"f":110,"sw":1100}},
+ {"id":"greatsword","name":{"ja":"巨剣グレートスレイヤー","en":"Greatslayer","zh":"巨剑斩灭者"},"col":"#d7b6ff","snd":{"sample":"swing","rate":0.9,"vol":0.3,"layer":"blade","layerVol":0.76,"bass":64,"f":220,"sw":2000}},
+ {"id":"muramasa","name":{"ja":"妖刀ムラマサ","en":"Muramasa Blade","zh":"妖刀村正"},"col":"#ff9bd0","snd":{"sample":"needle","rate":1.28,"vol":0.8,"layer":"blade","layerVol":0.62,"f":380,"sw":3200}},
+ {"id":"dragonslayer","name":{"ja":"竜殺しの剣","en":"Dragonslayer","zh":"屠龙剑"},"col":"#8affc0","snd":{"sample":"blade","rate":0.86,"vol":0.72,"layer":"magic","layerVol":0.25,"bass":68,"f":240,"sw":2600}},
+ {"id":"excalibur","name":{"ja":"神剣エクスカリバー","en":"Excalibur","zh":"神剑 王者之剑"},"col":"#ffe066","snd":{"sample":"blade","rate":1.08,"vol":0.72,"layer":"magic","layerVol":0.4,"f":520,"sw":3600}},
 ];
+const WEAPON_CURSOR_BODIES={"axe":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#eaa46f\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M32 8H38V63H32Z\" fill=\"#785039\"/><path d=\"M31 11Q16 15 14 7Q6 21 15 36Q17 25 31 28Z\" fill=\"url(#metal)\"/><path d=\"M39 11Q53 15 56 7Q64 21 55 36Q53 25 39 28Z\" fill=\"url(#metal)\"/><path d=\"M15 10Q10 22 15 32M55 10Q60 22 55 32\" stroke=\"#fff\"/><path d=\"M29 14H41V25H29Z\" fill=\"url(#gold)\"/><path d=\"M31 48H39M31 54H39M31 60H39\" stroke=\"#d6b077\" stroke-width=\"2\"/></g></svg>\n","dagger":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#91b8cc\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 15L42 33L35 44L28 33Z\" fill=\"url(#metal)\"/><path d=\"M35 16V43\" stroke=\"#fff\"/><path d=\"M24 43Q35 38 46 43L44 47H26Z\" fill=\"url(#gold)\"/><path d=\"M32 47H38V60H32Z\" fill=\"#613e2d\"/><circle cx=\"35\" cy=\"61\" r=\"3\" fill=\"url(#gold)\"/></g></svg>\n","dragonslayer":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#4ee0a2\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L45 14L41 20L45 26L41 32L43 39L35 46L27 39L29 32L25 26L29 20L25 14Z\" fill=\"url(#metal)\"/><path d=\"M35 8V41\" stroke=\"#63ffbf\" stroke-width=\"2\"/><path d=\"M17 43L23 37L28 44H42L47 37L53 43L48 51L40 48H30L22 51Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V62H32Z\" fill=\"#184d3d\"/><path d=\"M29 63L35 58L41 63L35 69Z\" fill=\"#43da98\"/><path d=\"M33 21L36 18L38 22L34 25L37 28\" fill=\"none\" stroke=\"#d3ffee\"/></g></svg>\n","excalibur":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ffe484\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 2L42 13L39 19V42L35 46L31 42V19L28 13Z\" fill=\"url(#metal)\"/><path d=\"M35 5V40\" stroke=\"#fff4b0\" stroke-width=\"2\"/><path d=\"M18 38L27 43H43L52 38L48 48H22Z\" fill=\"url(#gold)\"/><path d=\"M32 48H38V62H32Z\" fill=\"#e0ad4a\"/><path d=\"M35 41L39 46L35 51L31 46Z\" fill=\"#72dffc\"/><circle cx=\"35\" cy=\"64\" r=\"4\" fill=\"url(#gold)\"/><path d=\"M12 18H22M17 13V23M49 28H57M53 24V32\" stroke=\"#fff2b3\" stroke-width=\"1.5\"/></g></svg>\n","greatsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#b49afa\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L45 15L43 40L39 44H31L27 40L25 15Z\" fill=\"url(#metal)\"/><path d=\"M35 7V40\" stroke=\"#ddceff\" stroke-width=\"2\"/><path d=\"M20 45L23 39L35 43L47 39L50 45L44 49H26Z\" fill=\"#9682b2\"/><path d=\"M32 49H38V64H32Z\" fill=\"#382c53\"/><path d=\"M32 52H38M32 57H38M32 62H38\" stroke=\"#b6a0dd\"/><path d=\"M30 65L35 61L40 65L35 69Z\" fill=\"#c6a1ff\"/></g></svg>\n","hammer":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ea9b52\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M32 25H38V64H32Z\" fill=\"#734734\"/><path d=\"M13 9H56V29H13Z\" fill=\"url(#metal)\"/><path d=\"M12 8H20V31H12ZM49 8H57V31H49Z\" fill=\"url(#gold)\"/><path d=\"M25 12H44V25H25Z\" fill=\"#314453\"/><path d=\"M35 11L29 19L35 26L41 19Z\" fill=\"#f6bc61\"/><path d=\"M31 49H39M31 55H39M31 61H39\" stroke=\"#cf9d60\" stroke-width=\"2\"/></g></svg>\n","kitchen":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ccd6df\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M28 12H43V44H28Z\" fill=\"url(#metal)\"/><path d=\"M28 12H43L39 7H28Z\" fill=\"#f0f6ff\"/><path d=\"M28 14V44\" stroke=\"#fff\"/><path d=\"M31 44H39V61H31Z\" fill=\"#70492c\"/><circle cx=\"35\" cy=\"48\" r=\"1\" fill=\"#dbb879\"/><circle cx=\"35\" cy=\"57\" r=\"1\" fill=\"#dbb879\"/></g></svg>\n","longsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#6ac1ff\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L40 14V43L35 47L30 43V14Z\" fill=\"url(#metal)\"/><path d=\"M35 6V42\" stroke=\"#fff\"/><path d=\"M21 45L26 42L35 45L44 42L49 45L45 49H25Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V63H32Z\" fill=\"#253c74\"/><path d=\"M32 52H38M32 57H38M32 61H38\" stroke=\"#95bbdf\"/><circle cx=\"35\" cy=\"65\" r=\"3\" fill=\"#81dbff\"/></g></svg>\n","muramasa":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ff689c\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M43 3Q44 26 33 48L27 45Q38 23 43 3Z\" fill=\"url(#metal)\"/><path d=\"M42 8Q42 29 31 46\" stroke=\"#ffd6e3\"/><ellipse cx=\"30\" cy=\"48\" rx=\"10\" ry=\"3\" fill=\"#ce6080\" transform=\"rotate(20 30 48)\"/><path d=\"M27 50L33 52L28 65L22 63Z\" fill=\"#401c30\"/><path d=\"M26 53L31 57M24 58L29 62\" stroke=\"#ee8baa\" stroke-width=\"2\"/><path d=\"M22 64Q9 61 16 53\" fill=\"none\" stroke=\"#ae284d\" stroke-width=\"2\"/></g></svg>\n","shortsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#a7deff\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 7L41 17V42L35 47L29 42V17Z\" fill=\"url(#metal)\"/><path d=\"M35 9V43\" stroke=\"#f1fcff\"/><path d=\"M23 44H47V49H23Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V61H32Z\" fill=\"#364a60\"/><path d=\"M32 52H38M32 56H38\" stroke=\"#9eacbc\"/><circle cx=\"35\" cy=\"63\" r=\"3\" fill=\"url(#gold)\"/></g></svg>\n"};
 function weaponTier(lv){ return Math.min(WEAPONS.length-1, Math.floor((lv!=null?lv:S.hero.click)/10)); }
 function curWeapon(){ return WEAPONS[weaponTier()]; }
+function weaponIcon(w){return `assets/weapons/${w.id}.svg`;}
+function weaponIconHtml(w,cls="weapon-icon"){return `<img class="${cls}" src="${weaponIcon(w)}" alt="${L(w.name)}" width="62" height="62">`;}
+let _cursorWeapon="";
+function updateWeaponCursor(){
+ const w=curWeapon();if(_cursorWeapon===w.id)return;_cursorWeapon=w.id;
+ // A 32px cursor is accepted by browsers that reject larger SVG cursors.
+ const icon=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 72 72">${WEAPON_CURSOR_BODIES[w.id]}</svg>`);
+ field.style.cursor=`url("data:image/svg+xml,${icon}") 22 4, crosshair`;
+}
 // 表示レベル：最終武器に到達後はそのまま伸び続ける。それ以外は1〜10で循環
 function weaponSubLevel(){
  const lv=S.hero.click, last=WEAPONS.length-1;
@@ -1452,7 +1504,7 @@ function hitGold(){ return Math.max(1,Math.floor(goldReward()*0.01*(1+0.05*(S.he
 function spawnClickFx(xPct,yPct,crit){
  if(field.querySelectorAll(".clickfx").length>10) return;
  const f=document.createElement("div");
- f.className="clickfx"+(crit?" crit":"");
+ f.className="clickfx"+(crit?" crit":"")+(curWeapon().fx?" "+curWeapon().fx:"");
  f.style.left=xPct+"%"; f.style.top=yPct+"%";
  f.style.setProperty("--ang",Math.floor(rnd(0,360))+"deg");
  f.style.setProperty("--wcol",curWeapon().col);
@@ -1463,7 +1515,7 @@ function spawnClickFx(xPct,yPct,crit){
 
 function weaponEvolveFx(w){
  const toast=$("#weaponToast"); if(!toast) return;
- toast.innerHTML=`<div class="wt-lead">${t('weapon_evolve')}</div><div class="wt-name">${L(w.name)}</div>`;
+ toast.innerHTML=`${weaponIconHtml(w)}<div class="wt-lead">${t('weapon_evolve')}</div><div class="wt-name">${L(w.name)}</div>`;
  toast.classList.remove("on"); void toast.offsetWidth; toast.classList.add("on");
  sndEvolve();
 }
@@ -1738,7 +1790,8 @@ function doUnitVolley(u){
 /* ===== CARDS ===== */
 function card(o){
  const dis=o.maxed||S.gold<o.cost;
- return `<div class="card ${dis?'dis':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.maxed?'Infinity':o.cost}">
+ return `<div class="card ${dis?'dis':''} ${o.weapon?'weapon-card':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.maxed?'Infinity':o.cost}">
+   ${o.weapon?weaponIconHtml(o.weapon):''}
    <div class="top"><span class="nm">${o.nm}</span><span class="lv">${o.lv}</span></div>
    ${o.desc?`<div class="desc">${o.desc}</div>`:''}
    <div class="ef">${o.ef}</div>
@@ -1748,17 +1801,21 @@ function card(o){
 function clickCard(o){
  const lv=S.hero.click, w=curWeapon(), cost=heroCost(o);
  const cur=clickBaseDmg(lv), next=clickBaseDmg(lv+1);
- const tierNow=Math.floor(lv/10), tierNext=Math.floor((lv+1)/10);
- const evolving = tierNext>tierNow && tierNext<WEAPONS.length;
+ const tierNow=Math.floor(lv/10);
  let ef=t('ef_click_dmg',fmt(cur),fmt(next));
- if(evolving) ef+=`<br><span style="color:#ffd24a">${t('evolve_next',L(WEAPONS[tierNext].name))}</span>`;
- return card({act:"hero",id:"click",nm:L(w.name),desc:heroT('click').desc,lv:"Lv."+weaponSubLevel(),ef,cost});
+ if(tierNow<WEAPONS.length-1){
+  const nextWeapon=WEAPONS[tierNow+1],remaining=10-lv%10;
+  const hint=LANG==='en'?`${remaining} upgrades to evolve`:LANG==='zh'?`再强化${remaining}次进化`:`あと${remaining}回で進化`;
+  ef+=`<div class="weapon-next">${weaponIconHtml(nextWeapon)}<span>${L(nextWeapon.name)}<br>${hint}</span></div><div class="weapon-progress"><i style="width:${(lv%10)*10}%"></i></div>`;
+ }
+ return card({act:"hero",id:"click",weapon:w,nm:L(w.name),desc:heroT('click').desc,lv:"Lv."+weaponSubLevel(),ef,cost});
 }
 // re-evaluate affordability live so cards unlock the moment gold is enough
 function refreshAffordable(){
  $$(".card").forEach(c=>c.classList.toggle("dis",S.gold<+c.dataset.cost));
 }
 function renderCards(){
+ updateWeaponCursor();
  let h="";
  let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
