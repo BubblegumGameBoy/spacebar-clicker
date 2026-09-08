@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ad</title>
+<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}</style>
+</head>
+<body>
+<!--
+  忍者AdMax（681px以上・PCサイド枠）を、この小さなページの中だけで読み込む。
+
+  ポイントは script を「静的に置く」こと。
+  document.write で script を差し込むと、Chrome が
+  「document.write 経由の、別ドメインの、パーサを止めるスクリプト」とみなして
+  回線が遅いときブロックする（chromestatus 5718547946799104）。
+  初回だけ広告が出ず、リロードすると出るのはこれが原因だった。
+
+  静的な script タグなら document.write 経由ではないので介入の対象にならない。
+  タグ自身が内部で document.write を呼ぶのは、このページのパース中なので問題ない。
+
+  さらに、ゲーム本体から隔離されるので、広告側が何をしても
+  index.html が白くなることがなくなる。
+-->
+<script src="https://adm.shinobi.jp/s/dce5f7f5ae36fcbf75f25a36c4409c63"></script>
+</body>
+</html>

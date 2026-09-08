@@ -626,29 +626,10 @@
       <div class="pane active" id="pane-summon"></div>
       <div class="pane" id="pane-hero"></div>
       <button id="prestigeBtn" disabled>転生 (BOSS 10で解放)</button>
-      <div id="adBox">
-        <!-- admax : 1024px未満のみ、ここ（スクロール最下部）に表示。680px以下はスマホタグ -->
-        <script>
-          if(window.innerWidth<1024){
-            document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/'+
-              (window.innerWidth<=680?'372db9c680f72d97237d54267563e357'
-                                     :'dce5f7f5ae36fcbf75f25a36c4409c63')+
-              '"><\/scr'+'ipt>');
-          }
-        </script>
-        <!-- admax -->
-      </div>
+      <div id="adBox"></div>
     </div>
   </div>
-  <div id="adSide">
-    <!-- admax : PC(1024px以上)は右サイドに常時表示 -->
-    <script>
-      if(window.innerWidth>=1024){
-        document.write('<scr'+'ipt src="https://adm.shinobi.jp/s/dce5f7f5ae36fcbf75f25a36c4409c63"><\/scr'+'ipt>');
-      }
-    </script>
-    <!-- admax -->
-  </div>
+  <div id="adSide"></div>
 </div>
 
 <div id="creditsModal" class="cmodal"><div class="mbox">
@@ -2502,6 +2483,29 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 
  const _origApplyLang=applyLang;
  applyLang=function(l){ _origApplyLang(l); a.textContent=LABEL[LANG]||LABEL.ja; };
+})();
+
+
+/* ==========================================================================
+   広告の差し込み
+   忍者AdMaxのタグは document.write 形式で、Chrome が回線状況によって
+   ブロックする（初回だけ広告が出ず、リロードで出るのはこれが原因）。
+   ad.html に隔離して iframe で読み込むことで、メインのパーサを止めない。
+   ========================================================================== */
+(function(){
+ if(window.self!==window.top) return;   // 記事に埋め込まれているときは出さない
+ function mount(el,slot){
+  if(!el) return;
+  var f=document.createElement("iframe");
+  f.src="ad-"+slot+".html";
+  f.title="広告";
+  f.setAttribute("scrolling","no");
+  f.setAttribute("frameborder","0");
+  f.style.cssText="display:block;border:0;width:100%;max-width:360px;height:300px;margin:0 auto;";
+  el.appendChild(f);
+ }
+ if(window.innerWidth>=1024) mount(document.getElementById("adSide"),"tb");
+ else mount(document.getElementById("adBox"), window.innerWidth<=680 ? "sp" : "tb");
 })();
 
 </script>
