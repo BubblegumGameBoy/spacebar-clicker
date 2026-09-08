@@ -11,6 +11,8 @@ const {pathToFileURL}=require('node:url');
   await page.route('**/api/**',r=>r.abort());
   await page.goto(url.href,{waitUntil:'domcontentloaded'});
   await page.evaluate(()=>{chooseLang('ja');setBgm(false);setSe(false);S.owned=zeroUnits();renderUnits();});
+  // Load images before timing short swings; production asset downloads can exceed a swing.
+  await page.evaluate(()=>Promise.all(WEAPONS.map(w=>{const img=new Image();img.src=weaponIcon(w);return img.decode();})));
   const field=await page.locator('#field').boundingBox();const x=field.width*.58,y=field.height*.55;
   await page.mouse.move(x,y);
   assert.equal(await page.locator('#field').evaluate(e=>getComputedStyle(e).cursor),'none');
@@ -19,7 +21,7 @@ const {pathToFileURL}=require('node:url');
    await page.evaluate(i=>{S.hero.click=i*10;renderCards();},i);
    await page.mouse.click(x,y);
    const state=await page.evaluate(async()=>{
-    const img=document.querySelector('#weaponPointer img');await img.decode();
+    const img=document.querySelector('#weaponPointer img');
     const a=img.getAnimations()[0];if(!a)throw new Error('No weapon animation');
     a.pause();a.currentTime=70;
     return {kind:weaponPointer.dataset.kind,id:weaponPointer.dataset.weapon,transform:getComputedStyle(img).transform,frames:a.effect.getKeyframes().length};

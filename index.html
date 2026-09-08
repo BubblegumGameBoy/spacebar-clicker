@@ -1887,6 +1887,7 @@ function refreshAffordable(){
 }
 function renderCards(){
  updateWeaponCursor();
+ syncWeaponPointer();
  let h="";
  let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
  UNITS.forEach(u=>{
