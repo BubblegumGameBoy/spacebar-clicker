@@ -1157,7 +1157,9 @@ let _cursorWeapon="";
 function updateWeaponCursor(){
  const w=curWeapon();if(_cursorWeapon===w.id)return;_cursorWeapon=w.id;
  // A 32px cursor is accepted by browsers that reject larger SVG cursors.
- const icon=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 72 72">${WEAPON_CURSOR_BODIES[w.id]}</svg>`);
+ // Embedded assets already end with </svg>; keep exactly one root closing tag.
+ const body=WEAPON_CURSOR_BODIES[w.id].replace(/<\/svg>\s*$/, '');
+ const icon=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 72 72">${body}</svg>`);
  field.style.cursor=`url("data:image/svg+xml,${icon}") 22 4, crosshair`;
 }
 // 表示レベル：最終武器に到達後はそのまま伸び続ける。それ以外は1〜10で循環
