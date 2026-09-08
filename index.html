@@ -702,9 +702,10 @@ function scheduleRankSync(delay=12000){
  if(SHOWCASE||_rankSyncTimer)return;
  _rankSyncTimer=setTimeout(()=>{_rankSyncTimer=null;void syncOnlineScore();},delay);
 }
+let rankBoard="damage";   // "damage" = 累積ダメージ / "power" = 入口の戦闘力
 async function loadOnlineRanking(){
  try{
-  const res=await fetch(`${RANK_API}?limit=10&playerId=${encodeURIComponent(playerId)}`,{headers:{Accept:"application/json"},cache:"no-store"});
+  const res=await fetch(`${RANK_API}?limit=100&board=${rankBoard}&playerId=${encodeURIComponent(playerId)}`,{headers:{Accept:"application/json"},cache:"no-store"});
   if(!res.ok)throw new Error(`HTTP ${res.status}`);
   const data=await res.json();onlineRanks=Array.isArray(data.rows)?data.rows:[];onlineRankLoaded=true;
   setRankStatus("全プレイヤー共通・オンライン集計","ok");renderRanking();return true;
@@ -731,12 +732,22 @@ function recordDamage(amount){
 }
 function renderRanking(){
  const list=$("#rankList"),empty=$("#rankEmpty");if(!list)return;list.innerHTML="";
- let rows=onlineRankLoaded?onlineRanks.slice(0,10):damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,10);
- if(!onlineRankLoaded&&playerDamage>0&&!rows.some(row=>row.name===playerName))rows.push({name:playerName,damage:playerDamage,isMe:true});
- rows=rows.sort((a,b)=>b.damage-a.damage).slice(0,10);empty.style.display=rows.length?"none":"block";
+ const power=(rankBoard==="power");
+ const key=power?"power":"damage";
+ // 戦闘力ボードはサーバー側にしか無いので、オフライン時の端末内フォールバックは持たない
+ let rows;
+ if(onlineRankLoaded){ rows=onlineRanks.slice(0,100); }
+ else if(power){ rows=[]; }
+ else{
+  rows=damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,100);
+  if(playerDamage>0&&!rows.some(row=>row.name===playerName)) rows.push({name:playerName,damage:playerDamage,isMe:true});
+ }
+ rows=rows.slice().sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,100);
+ empty.style.display=rows.length?"none":"block";
  rows.forEach((row,i)=>{const li=document.createElement("li");if(row.isMe||(!onlineRankLoaded&&row.name===playerName))li.className="me";
   const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
-  rank.textContent=(i+1)+".";name.textContent=row.name;score.className="score";score.textContent=fmt(row.damage);
+  rank.textContent=(i+1)+".";name.textContent=row.name;score.className="score";
+  score.textContent=power?Math.round(row.power||0).toLocaleString():fmt(row.damage);
   li.append(rank,name,score);list.appendChild(li);});
  const input=$("#playerNameInput");if(input&&document.activeElement!==input)input.value=playerName;
 }
@@ -1970,7 +1981,7 @@ window.addEventListener("resize",()=>{
 });
 
 setInterval(save,10000);
-setInterval(()=>void loadOnlineRanking(),30000);
+setInterval(()=>{ if($("#rankModal").classList.contains("on")) void loadOnlineRanking(); },30000);
 document.addEventListener("visibilitychange",()=>{if(document.hidden){save();void syncOnlineScore();}});
 window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 
@@ -2506,6 +2517,57 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
  }
  if(window.innerWidth>=1024) mount(document.getElementById("adSide"),"tb");
  else mount(document.getElementById("adBox"), window.innerWidth<=680 ? "sp" : "tb");
+})();
+
+
+/* ==========================================================================
+   ランキングのボード切替（累積ダメージ / 入口の戦闘力）
+   ========================================================================== */
+(function(){
+ const modal=$("#rankModal"); if(!modal) return;
+ const status=$("#rankStatus"); if(!status||!status.parentNode) return;
+
+ const LAB={
+  ja:{dmg:"累積ダメージ",pow:"戦闘力",title:{dmg:"🏆 累積ダメージ ランキング",pow:"⚡ 戦闘力 ランキング"}},
+  en:{dmg:"Total damage",pow:"Power",title:{dmg:"🏆 Total damage ranking",pow:"⚡ Power ranking"}},
+  zh:{dmg:"累计伤害",pow:"战斗力",title:{dmg:"🏆 累计伤害排行",pow:"⚡ 战斗力排行"}}
+ };
+ const L=()=>LAB[LANG]||LAB.ja;
+
+ const css=document.createElement("style");
+ css.textContent=
+ "#rankTabs{display:flex;gap:6px;margin:0 0 9px;}"+
+ "#rankTabs button{flex:1;padding:7px 4px;cursor:pointer;border:1px solid #4a4335;border-radius:7px;"+
+ " background:#222a34;color:#9d947f;font:700 12px system-ui;}"+
+ "#rankTabs button.on{background:#8a6a2c;border-color:#ffd24a;color:#fff5d8;}";
+ document.head.appendChild(css);
+
+ const tabs=document.createElement("div");
+ tabs.id="rankTabs";
+ const bDmg=document.createElement("button"), bPow=document.createElement("button");
+ bDmg.type="button"; bPow.type="button";
+ tabs.append(bDmg,bPow);
+ status.parentNode.insertBefore(tabs,status);
+
+ const h3=modal.querySelector("h3");
+ function paint(){
+  const l=L();
+  bDmg.textContent=l.dmg; bPow.textContent=l.pow;
+  bDmg.classList.toggle("on",rankBoard!=="power");
+  bPow.classList.toggle("on",rankBoard==="power");
+  if(h3) h3.textContent=l.title[rankBoard==="power"?"pow":"dmg"];
+ }
+ function pick(board){
+  if(rankBoard===board) return;
+  rankBoard=board; onlineRankLoaded=false;
+  paint(); renderRanking(); void loadOnlineRanking();
+ }
+ bDmg.addEventListener("click",()=>pick("damage"));
+ bPow.addEventListener("click",()=>pick("power"));
+ paint();
+
+ const _origApplyLang=applyLang;
+ applyLang=function(l){ _origApplyLang(l); paint(); };
 })();
 
 </script>

@@ -87,17 +87,24 @@ async function readLimitedJson(request) {
   }
 }
 
-async function topPlayers(env, currentPlayerId, limit = 10) {
-  const result = await env.DB.prepare(
-    `SELECT player_id, name, damage, updated_at
-       FROM leaderboard
-      ORDER BY damage DESC, updated_at ASC
-      LIMIT ?1`,
-  ).bind(limit).all();
+async function topPlayers(env, currentPlayerId, limit = 10, board = "damage") {
+  // board=power は入口の連打テストの戦闘力ランキング。まだ測っていない人(power=0)は載せない。
+  const sql = board === "power"
+    ? `SELECT player_id, name, damage, power, updated_at
+         FROM leaderboard
+        WHERE power > 0
+        ORDER BY power DESC, updated_at ASC
+        LIMIT ?1`
+    : `SELECT player_id, name, damage, power, updated_at
+         FROM leaderboard
+        ORDER BY damage DESC, updated_at ASC
+        LIMIT ?1`;
+  const result = await env.DB.prepare(sql).bind(limit).all();
 
   return result.results.map((row) => ({
     name: cleanName(row.name),
     damage: Number(row.damage) || 0,
+    power: Number(row.power) || 0,
     updatedAt: Number(row.updated_at) || 0,
     isMe: Boolean(currentPlayerId && row.player_id === currentPlayerId),
   }));
@@ -115,16 +122,17 @@ async function powerStanding(env, power) {
 
 async function handleGet(request, env, url) {
   const requestedLimit = Number.parseInt(url.searchParams.get("limit") || "10", 10);
-  const limit = Math.min(50, Math.max(1, Number.isFinite(requestedLimit) ? requestedLimit : 10));
+  const limit = Math.min(100, Math.max(1, Number.isFinite(requestedLimit) ? requestedLimit : 10));
   const playerId = validPlayerId(url.searchParams.get("playerId"))
     ? url.searchParams.get("playerId")
     : "";
-  const rows = await topPlayers(env, playerId, limit);
+  const board = url.searchParams.get("board") === "power" ? "power" : "damage";
+  const rows = await topPlayers(env, playerId, limit, board);
   const askedPower = Number(url.searchParams.get("power"));
   const standing = Number.isFinite(askedPower) && askedPower >= 0 && askedPower <= MAX_DAMAGE
     ? await powerStanding(env, askedPower)
     : null;
-  return json(request, { rows, generatedAt: Date.now(), ...(standing || {}) });
+  return json(request, { rows, board, generatedAt: Date.now(), ...(standing || {}) });
 }
 
 async function handlePost(request, env) {
