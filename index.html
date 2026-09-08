@@ -2470,6 +2470,40 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
  })();
 })();
 
+
+/* ==========================================================================
+   スマホ限定：記事へ戻る導線
+   ・iframe内（記事に埋め込まれた状態）では出さない。押すと入れ子になるため
+   ・1024px以上でも出さない。PCは記事内のiframeで遊ぶ想定
+   ========================================================================== */
+(function(){
+ if(window.self!==window.top) return;      // 記事に埋め込まれているときは不要
+ if(window.innerWidth>=1024) return;       // スマホ・タブレットのみ
+ if(SHOWCASE||LAYOUT_MODE) return;
+
+ const BLOG="https://babblegum.hatenablog.com/entry/2026/06/12/144156";
+ const LABEL={ja:"← ブログに戻る",en:"← Back to the blog",zh:"← 返回博客"};
+
+ const css=document.createElement("style");
+ css.textContent=
+ "#backToBlog{display:block;margin:10px auto 14px;padding:9px 14px;max-width:320px;"+
+ " text-align:center;border:1px solid #4a4335;border-radius:8px;background:#1a212a;"+
+ " color:#c3b180;font:500 12.5px/1 system-ui;text-decoration:none;}"+
+ "#backToBlog:active{background:#232c37;}";
+ document.head.appendChild(css);
+
+ const a=document.createElement("a");
+ a.id="backToBlog"; a.href=BLOG; a.rel="noopener";
+ a.textContent=LABEL[LANG]||LABEL.ja;
+ // 広告のさらに下に置く。広告より上に入れて広告を押し下げないため
+ const box=document.getElementById("adBox");
+ if(box&&box.parentNode) box.parentNode.appendChild(a);
+ else document.getElementById("panels").appendChild(a);
+
+ const _origApplyLang=applyLang;
+ applyLang=function(l){ _origApplyLang(l); a.textContent=LABEL[LANG]||LABEL.ja; };
+})();
+
 </script>
 </body>
 </html>
