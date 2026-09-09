@@ -112,7 +112,9 @@ const I18N={
 };
 function readStore(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
 const paramLang=new URLSearchParams(location.search).get("lang");
-let LANG=(I18N[paramLang]?paramLang:null)||(I18N[readStore(LANG_KEY)]?readStore(LANG_KEY):null)||"ja";
+const storedLang=readStore(LANG_KEY);
+const validLang=value=>["ja","en","zh"].includes(value);
+let LANG=(validLang(paramLang)?paramLang:null)||(validLang(storedLang)?storedLang:null)||"ja";
 const t=key=>I18N[LANG][key];
 
 let board="damage";
@@ -123,7 +125,7 @@ function fmt(value){
  const units=["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
  let n=Math.max(0,Number(value)||0),i=0;
  while(n>=1000&&i<units.length-1){n/=1000;i++}
- if(n>=1000)return n.toExponential(2);
+ if(n>=1000)return Math.max(0,Number(value)||0).toExponential(2);
  return(i===0?Math.floor(n):n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n))+units[i];
 }
 
@@ -156,7 +158,9 @@ function render(rows){
  $("player").textContent=t("player")(current);
 }
 
+let requestVersion=0;
 async function loadRanking(){
+ const version=++requestVersion, requestedBoard=board;
  const playerId=readStore(PLAYER_ID_KEY)||"";
  $("tabDamage").setAttribute("aria-selected",String(board==="damage"));
  $("tabPower").setAttribute("aria-selected",String(board==="power"));
@@ -164,18 +168,21 @@ async function loadRanking(){
   const response=await fetch(`${RANK_API}?limit=${LIMIT}&board=${board}&playerId=${encodeURIComponent(playerId)}`,
                              {headers:{Accept:"application/json"},cache:"no-store"});
   if(!response.ok)throw new Error(`HTTP ${response.status}`);
-  const data=await response.json();const rows=Array.isArray(data.rows)?data.rows:[];
+  const data=await response.json();
+  if(version!==requestVersion||requestedBoard!==board)return;
+  const rows=Array.isArray(data.rows)?data.rows:[];
   $("status").textContent=(board==="power"?t("leadPower"):t("leadDamage"))(LIMIT);
   $("empty").textContent=board==="power"?t("emptyPower"):t("emptyDamage");
   render(rows);
  }catch(error){
+  if(version!==requestVersion||requestedBoard!==board)return;
   $("status").textContent=t("errStatus");
   $("empty").textContent=t("errEmpty");
   render([]);
  }
 }
 
-function setBoard(next){ if(board===next)return; board=next; $("empty").textContent=t("loading"); void loadRanking(); }
+function setBoard(next){ if(board===next)return; board=next; render([]); $("status").textContent=t("loading"); $("empty").textContent=t("loading"); void loadRanking(); }
 $("tabDamage").addEventListener("click",()=>setBoard("damage"));
 $("tabPower").addEventListener("click",()=>setBoard("power"));
 document.querySelectorAll("#langs button").forEach(b=>b.addEventListener("click",()=>{
