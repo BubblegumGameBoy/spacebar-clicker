@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>オンライン・ダメージランキング | SPACEBAR MYTHOS SLAYERS</title>
+<title>Online Ranking | SPACEBAR MYTHOS SLAYERS</title>
 <style>
 *{box-sizing:border-box}
 :root{color-scheme:dark;--gold:#f3c34a;--ink:#e8edf2;--sub:#99a7b5;--line:#43505d}
@@ -16,7 +16,14 @@ body{padding:18px;background:
 header{padding:17px 20px 13px;text-align:center;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
 h1{margin:0;font-family:Georgia,"Yu Mincho",serif;font-size:clamp(21px,4vw,29px);letter-spacing:.08em;color:#ffe08a;text-shadow:0 2px 8px #000}
 .lead{margin:6px 0 0;color:var(--sub);font-size:12px}
-#rows{list-style:none;margin:0;padding:9px 14px 12px}
+.tabs{display:flex;gap:8px;justify-content:center;padding:11px 14px 0}
+.tab{flex:0 1 auto;min-width:126px;padding:8px 12px;border:1px solid #5c6875;border-radius:8px;background:rgba(0,0,0,.28);
+ color:var(--sub);font:inherit;font-size:12px;font-weight:800;cursor:pointer;line-height:1.35}
+.tab:hover{color:#dbe6ef;border-color:#8b98a6}
+.tab[aria-selected="true"]{color:#1a1206;background:linear-gradient(180deg,#ffd86a,#e0ac35);border-color:#ffe08a}
+.tab small{display:block;font-weight:600;font-size:10px;opacity:.8}
+.tab[aria-selected="true"] small{opacity:.72}
+#rows{list-style:none;margin:0;padding:9px 14px 12px;max-height:min(70vh,620px);overflow:auto}
 .row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:9px;min-height:43px;padding:5px 10px;border-bottom:1px solid rgba(100,116,131,.24)}
 .row:last-child{border-bottom:0}.row.me{border:1px solid rgba(243,195,74,.66);border-radius:8px;background:rgba(243,195,74,.09)}
 .rank{font-weight:900;color:#93a2b0}.row:nth-child(1) .rank{color:#ffd24a}.row:nth-child(2) .rank{color:#dce6ef}.row:nth-child(3) .rank{color:#d9995a}
@@ -24,21 +31,94 @@ h1{margin:0;font-family:Georgia,"Yu Mincho",serif;font-size:clamp(21px,4vw,29px)
 #empty{padding:46px 20px;text-align:center;color:var(--sub)}
 footer{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 17px;border-top:1px solid var(--line);font-size:11px;color:var(--sub)}
 #player{color:#dbe6ef;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-a{flex:0 0 auto;color:#ffe08a;text-decoration:none;border:1px solid #806d35;border-radius:7px;padding:6px 9px;background:rgba(113,82,24,.25)}
+.foot-right{display:flex;gap:8px;align-items:center;flex:0 0 auto}
+a.btn{flex:0 0 auto;color:#ffe08a;text-decoration:none;border:1px solid #806d35;border-radius:7px;padding:6px 9px;background:rgba(113,82,24,.25)}
+#langs{display:flex;gap:4px}
+#langs button{border:1px solid #5c6875;background:rgba(0,0,0,.28);color:var(--sub);border-radius:6px;padding:5px 7px;font:inherit;font-size:10px;font-weight:800;cursor:pointer}
+#langs button[aria-pressed="true"]{color:#1a1206;background:#ffd86a;border-color:#ffe08a}
 @media(max-width:480px){body{padding:8px}.row{grid-template-columns:36px minmax(0,1fr) auto;padding-inline:6px}.score{font-size:13px}footer{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body>
 <main class="board">
- <header><h1>🏆 オンライン・ダメージランキング</h1><p class="lead" id="status">全プレイヤー共通の累積ダメージ TOP 10</p></header>
- <ol id="rows"></ol><div id="empty">ランキングを読み込んでいます…</div>
- <footer><span id="player">プレイヤー：名無し</span><a href="./" target="_blank" rel="noopener">ゲームを開く</a></footer>
+ <header><h1 id="title">🏆 Online Ranking</h1><p class="lead" id="status"></p></header>
+ <div class="tabs" role="tablist">
+  <button class="tab" id="tabDamage" role="tab" type="button" aria-selected="true"></button>
+  <button class="tab" id="tabPower"  role="tab" type="button" aria-selected="false"></button>
+ </div>
+ <ol id="rows"></ol><div id="empty"></div>
+ <footer>
+  <span id="player"></span>
+  <span class="foot-right">
+   <span id="langs">
+    <button type="button" data-lang="ja">JA</button>
+    <button type="button" data-lang="en">EN</button>
+    <button type="button" data-lang="zh">ZH</button>
+   </span>
+   <a class="btn" id="openGame" href="./" target="_blank" rel="noopener"></a>
+  </span>
+ </footer>
 </main>
 <script>
 "use strict";
-const PLAYER_KEY="sbr_player_name_v1",PLAYER_ID_KEY="sbr_player_id_v1";
+const PLAYER_KEY="sbr_player_name_v1",PLAYER_ID_KEY="sbr_player_id_v1",LANG_KEY="sbr_lang";
 const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard";
-function cleanName(value){return(value||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し"}
+const LIMIT=100;
+
+/* The game stores its language in the same origin's localStorage, so a player
+   who picked English in-game gets English here too. ?lang= wins over that, so
+   the English game page can embed this board without touching the player's
+   own choice. */
+const I18N={
+ ja:{
+  title:"🏆 オンラインランキング",
+  tabDamage:"累積ダメージ",   tabDamageSub:"遊んだぶんだけ伸びる",
+  tabPower:"戦闘力",         tabPowerSub:"入口の10秒計測",
+  leadDamage:n=>`全プレイヤー共通の累積ダメージ TOP ${n}`,
+  leadPower:n=>`パワースキャンで出した戦闘力 TOP ${n}`,
+  loading:"ランキングを読み込んでいます…",
+  emptyDamage:"まだ記録がありません。ゲームでボスに攻撃すると記録されます。",
+  emptyPower:"まだ記録がありません。ゲームの入口でパワースキャンを受けると記録されます。",
+  errStatus:"ランキングへ接続できません。自動で再試行します。",
+  errEmpty:"オンラインランキングを読み込めませんでした。",
+  player:n=>"プレイヤー："+n, nameless:"名無し", open:"ゲームを開く"
+ },
+ en:{
+  title:"🏆 Online Ranking",
+  tabDamage:"Total damage",  tabDamageSub:"grows the more you play",
+  tabPower:"Power",          tabPowerSub:"the ten-second test",
+  leadDamage:n=>`Cumulative damage across all players, top ${n}`,
+  leadPower:n=>`Power scored on the entry speed test, top ${n}`,
+  loading:"Loading the ranking…",
+  emptyDamage:"No records yet. Attack a boss in the game and your score lands here.",
+  emptyPower:"No records yet. Take the power scan at the door and your score lands here.",
+  errStatus:"Cannot reach the ranking. Retrying automatically.",
+  errEmpty:"The online ranking could not be loaded.",
+  player:n=>"Player: "+n, nameless:"Nameless", open:"Open the game"
+ },
+ zh:{
+  title:"🏆 在线排行榜",
+  tabDamage:"累计伤害",      tabDamageSub:"玩得越久越高",
+  tabPower:"战斗力",        tabPowerSub:"入口10秒测试",
+  leadDamage:n=>`全体玩家累计伤害 TOP ${n}`,
+  leadPower:n=>`力量扫描得出的战斗力 TOP ${n}`,
+  loading:"正在加载排行榜…",
+  emptyDamage:"暂无记录。在游戏中攻击Boss即可上榜。",
+  emptyPower:"暂无记录。在游戏入口完成力量扫描即可上榜。",
+  errStatus:"无法连接排行榜，正在自动重试。",
+  errEmpty:"无法加载在线排行榜。",
+  player:n=>"玩家："+n, nameless:"无名", open:"打开游戏"
+ }
+};
+function readStore(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+const paramLang=new URLSearchParams(location.search).get("lang");
+let LANG=(I18N[paramLang]?paramLang:null)||(I18N[readStore(LANG_KEY)]?readStore(LANG_KEY):null)||"ja";
+const t=key=>I18N[LANG][key];
+
+let board="damage";
+const $=id=>document.getElementById(id);
+
+function cleanName(value){return String(value||"").split("").filter(c=>c>=" "&&c!=="<"&&c!==">").join("").trim().slice(0,12)||t("nameless")}
 function fmt(value){
  const units=["","K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
  let n=Math.max(0,Number(value)||0),i=0;
@@ -46,35 +126,69 @@ function fmt(value){
  if(n>=1000)return n.toExponential(2);
  return(i===0?Math.floor(n):n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n))+units[i];
 }
-function render(rows=[]){
- const current=cleanName(localStorage.getItem(PLAYER_KEY)||"名無し");
- const list=document.getElementById("rows");list.replaceChildren();
- document.getElementById("empty").style.display=rows.length?"none":"block";
- rows.forEach((row,index)=>{
+
+function applyLang(){
+ document.documentElement.lang=LANG;
+ $("title").textContent=t("title");
+ $("tabDamage").innerHTML="";
+ $("tabDamage").append(t("tabDamage"),Object.assign(document.createElement("small"),{textContent:t("tabDamageSub")}));
+ $("tabPower").innerHTML="";
+ $("tabPower").append(t("tabPower"),Object.assign(document.createElement("small"),{textContent:t("tabPowerSub")}));
+ $("openGame").textContent=t("open");
+ document.querySelectorAll("#langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===LANG)));
+}
+
+// The power board only exists server-side, so an unreachable API means an empty
+// power list rather than a stale local one.
+function render(rows){
+ const key=board==="power"?"power":"damage";
+ const current=cleanName(readStore(PLAYER_KEY));
+ const list=$("rows");list.replaceChildren();
+ $("empty").style.display=rows.length?"none":"block";
+ rows.slice(0,LIMIT).forEach((row,index)=>{
   const item=document.createElement("li");item.className="row"+(row.isMe?" me":"");
   const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
   rank.className="rank";name.className="name";score.className="score";
-  rank.textContent=(index+1)+".";name.textContent=cleanName(row.name);score.textContent=fmt(row.damage);
+  rank.textContent=(index+1)+".";name.textContent=cleanName(row.name);
+  score.textContent=key==="power"?Math.round(row.power||0).toLocaleString():fmt(row.damage);
   item.append(rank,name,score);list.appendChild(item);
  });
- document.getElementById("player").textContent="プレイヤー："+current;
+ $("player").textContent=t("player")(current);
 }
+
 async function loadRanking(){
- const playerId=localStorage.getItem(PLAYER_ID_KEY)||"";
+ const playerId=readStore(PLAYER_ID_KEY)||"";
+ $("tabDamage").setAttribute("aria-selected",String(board==="damage"));
+ $("tabPower").setAttribute("aria-selected",String(board==="power"));
  try{
-  const response=await fetch(`${RANK_API}?limit=10&playerId=${encodeURIComponent(playerId)}`,{headers:{Accept:"application/json"},cache:"no-store"});
+  const response=await fetch(`${RANK_API}?limit=${LIMIT}&board=${board}&playerId=${encodeURIComponent(playerId)}`,
+                             {headers:{Accept:"application/json"},cache:"no-store"});
   if(!response.ok)throw new Error(`HTTP ${response.status}`);
   const data=await response.json();const rows=Array.isArray(data.rows)?data.rows:[];
-  document.getElementById("status").textContent="全プレイヤー共通の累積ダメージ TOP 10";
-  document.getElementById("empty").textContent="まだ記録がありません。ゲームでボスに攻撃すると記録されます。";
+  $("status").textContent=(board==="power"?t("leadPower"):t("leadDamage"))(LIMIT);
+  $("empty").textContent=board==="power"?t("emptyPower"):t("emptyDamage");
   render(rows);
  }catch(error){
-  document.getElementById("status").textContent="ランキングへ接続できません。自動で再試行します。";
-  document.getElementById("empty").textContent="オンラインランキングを読み込めませんでした。";
+  $("status").textContent=t("errStatus");
+  $("empty").textContent=t("errEmpty");
   render([]);
  }
 }
-void loadRanking();window.addEventListener("storage",()=>void loadRanking());setInterval(()=>void loadRanking(),30000);
+
+function setBoard(next){ if(board===next)return; board=next; $("empty").textContent=t("loading"); void loadRanking(); }
+$("tabDamage").addEventListener("click",()=>setBoard("damage"));
+$("tabPower").addEventListener("click",()=>setBoard("power"));
+document.querySelectorAll("#langs button").forEach(b=>b.addEventListener("click",()=>{
+ LANG=b.dataset.lang;
+ try{ localStorage.setItem(LANG_KEY,LANG); }catch(e){}
+ applyLang(); void loadRanking();
+}));
+
+applyLang();
+$("empty").textContent=t("loading");
+void loadRanking();
+window.addEventListener("storage",()=>void loadRanking());
+setInterval(()=>void loadRanking(),30000);
 </script>
 </body>
 </html>
