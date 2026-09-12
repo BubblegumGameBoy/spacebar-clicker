@@ -11,6 +11,9 @@ const ALLOWED_ORIGINS = new Set([
 
 const MAX_BODY_BYTES = 2048;
 const MAX_DAMAGE = 1e300;
+// 上位表示は20件あれば足りる。ここを大きくすると D1 が毎回その行数を読むので、
+// 古いキャッシュのクライアントが limit=100 で来ても20で頭打ちにする。
+const MAX_LIMIT = 20;
 
 function cleanName(value) {
   const normalized = String(value ?? "")
@@ -122,13 +125,19 @@ async function powerStanding(env, power) {
 
 async function handleGet(request, env, url) {
   const requestedLimit = Number.parseInt(url.searchParams.get("limit") || "10", 10);
-  const limit = Math.min(100, Math.max(1, Number.isFinite(requestedLimit) ? requestedLimit : 10));
+  const limit = Math.min(MAX_LIMIT, Math.max(1, Number.isFinite(requestedLimit) ? requestedLimit : 10));
   const playerId = validPlayerId(url.searchParams.get("playerId"))
     ? url.searchParams.get("playerId")
     : "";
   const board = url.searchParams.get("board") === "power" ? "power" : "damage";
   const rows = await topPlayers(env, playerId, limit, board);
-  const askedPower = Number(url.searchParams.get("power"));
+  // power= が付いていないリクエストで順位集計を走らせない。
+  // Number(null) は 0 になるため、素の Number() だと全リクエストで COUNT を2本叩き、
+  // D1 の1日あたり読み取り枠（500万行）をこれだけで食い潰していた。
+  const rawAskedPower = url.searchParams.get("power");
+  const askedPower = rawAskedPower === null || rawAskedPower.trim() === ""
+    ? Number.NaN
+    : Number(rawAskedPower);
   const standing = Number.isFinite(askedPower) && askedPower >= 0 && askedPower <= MAX_DAMAGE
     ? await powerStanding(env, askedPower)
     : null;

@@ -689,6 +689,7 @@ function readStored(key){try{return localStorage.getItem(key);}catch{return null
 const PLAYER_KEY="sbr_player_name_v1",RANK_KEY="sbr_damage_rank_v1";
 const PLAYER_ID_KEY="sbr_player_id_v1",TOTAL_DAMAGE_KEY="sbr_total_damage_v2";
 const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard";
+const RANK_VIEW_LIMIT=20; /* 表示件数。サーバー側も同じ値で頭打ちにしてある */
 function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
 function createPlayerId(){
  if(globalThis.crypto?.randomUUID)return crypto.randomUUID();
@@ -730,7 +731,7 @@ async function loadOnlineRanking(){
  const version=++rankRequestVersion,board=rankBoard;
  setRankStatus(rankMessage("loading"));
  try{
-  const res=await fetch(RANK_API+'?limit=100&board='+board+'&playerId='+encodeURIComponent(playerId),{headers:{Accept:"application/json"},cache:"no-store"});
+  const res=await fetch(RANK_API+'?limit='+RANK_VIEW_LIMIT+'&board='+board+'&playerId='+encodeURIComponent(playerId),{headers:{Accept:"application/json"},cache:"no-store"});
   if(!res.ok)throw new Error('HTTP '+res.status);
   const data=await res.json();
   if(version!==rankRequestVersion||board!==rankBoard)return false;
@@ -765,13 +766,13 @@ function renderRanking(){
  const key=power?"power":"damage";
  // 戦闘力ボードはサーバー側にしか無いので、オフライン時の端末内フォールバックは持たない
  let rows;
- if(onlineRankLoaded){ rows=onlineRanks.slice(0,100); }
+ if(onlineRankLoaded){ rows=onlineRanks.slice(0,RANK_VIEW_LIMIT); }
  else if(power){ rows=[]; }
  else{
-  rows=damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,100);
+  rows=damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,RANK_VIEW_LIMIT);
   if(playerDamage>0&&!rows.some(row=>row.name===playerName)) rows.push({name:playerName,damage:playerDamage,isMe:true});
  }
- rows=rows.slice().sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,100);
+ rows=rows.slice().sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,RANK_VIEW_LIMIT);
  empty.style.display=rows.length?"none":"block";
  rows.forEach((row,i)=>{const li=document.createElement("li");if(row.isMe||(!onlineRankLoaded&&row.name===playerName))li.className="me";
   const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
@@ -2079,7 +2080,7 @@ window.addEventListener("resize",()=>{
 });
 
 setInterval(save,10000);
-setInterval(()=>{ if($("#rankModal").classList.contains("on")) void loadOnlineRanking(); },30000);
+setInterval(()=>{ if(document.hidden)return; if($("#rankModal").classList.contains("on")) void loadOnlineRanking(); },60000);
 document.addEventListener("visibilitychange",()=>{if(document.hidden){save();void syncOnlineScore();}});
 window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 

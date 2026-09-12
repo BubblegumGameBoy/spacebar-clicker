@@ -7,7 +7,7 @@ function page(search='?lang=en') {
   const nodes = new Map(), requests=[];
   const element=()=>({textContent:'',innerHTML:'',style:{},children:[],attrs:{},append(...a){this.children.push(...a)},appendChild(a){this.children.push(a)},replaceChildren(...a){this.children=a},setAttribute(k,v){this.attrs[k]=v},addEventListener(){}});
   const ctx=vm.createContext({ URLSearchParams, location:{search}, localStorage:{getItem(){throw Error('blocked')},setItem(){throw Error('blocked')}},
-    document:{documentElement:{},getElementById(id){if(!nodes.has(id))nodes.set(id,element());return nodes.get(id)},createElement:element,querySelectorAll(){return []}},
+    document:{documentElement:{},hidden:false,addEventListener(){},getElementById(id){if(!nodes.has(id))nodes.set(id,element());return nodes.get(id)},createElement:element,querySelectorAll(){return []}},
     window:{addEventListener(){}},setInterval(){},fetch(url){return new Promise((resolve,reject)=>requests.push({url,resolve,reject}))} });
   vm.runInContext(source,ctx);
   return {nodes,requests,run:code=>vm.runInContext(code,ctx)};
@@ -24,7 +24,7 @@ test('late damage response cannot overwrite power; loading removes old rows',asy
   p.run('loadRanking()');
   p.run('setBoard("power")');
   assert.equal(p.nodes.get('rows').children.length,0);
-  assert.match(p.requests[2].url,/limit=100&board=power/);
+  assert.match(p.requests[2].url,/limit=20&board=power/);
   p.requests[2].resolve({ok:true,json:async()=>({rows:[{name:'Power player',power:6000}]})}); await settle();
   p.requests[1].resolve({ok:true,json:async()=>({rows:[{name:'Old damage',damage:999}]})}); await settle();
   assert.equal(p.nodes.get('rows').children[0].children[1].textContent,'Power player');

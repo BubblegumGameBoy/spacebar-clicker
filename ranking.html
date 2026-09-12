@@ -63,7 +63,7 @@ a.btn{flex:0 0 auto;color:#ffe08a;text-decoration:none;border:1px solid #806d35;
 "use strict";
 const PLAYER_KEY="sbr_player_name_v1",PLAYER_ID_KEY="sbr_player_id_v1",LANG_KEY="sbr_lang";
 const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard";
-const LIMIT=100;
+const LIMIT=20;
 
 /* The game stores its language in the same origin's localStorage, so a player
    who picked English in-game gets English here too. ?lang= wins over that, so
@@ -195,7 +195,10 @@ applyLang();
 $("empty").textContent=t("loading");
 void loadRanking();
 window.addEventListener("storage",()=>void loadRanking());
-setInterval(()=>void loadRanking(),30000);
+// 裏に回ったタブで回し続けるとランキングAPIを無駄に叩く。
+// 表示中だけ60秒ごとに引き、再表示された瞬間に1回だけ引き直す。
+setInterval(()=>{ if(!document.hidden) void loadRanking(); },60000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) void loadRanking(); });
 </script>
 </body>
 </html>
