@@ -489,7 +489,15 @@
   @media(max-width:680px){
     #field{height:50vh;} .pane{grid-template-columns:1fr;}
     .unit-sprite.animated-unit{height:var(--unit-height-mobile,12.5%);}
-    #hud{font-size:11px; min-width:120px;}
+    /* 狭い画面（記事内iframe等）では左上パネルが中央のボス名・HPオーブに被るため、
+       パネルを詰め、ボス表示は fitBossPlate() で左右パネルの隙間へ寄せて収める */
+    #hud{font-size:10.5px; min-width:0; padding:6px 8px;}
+    #hud .row{gap:8px;}
+    #goldBig{font-size:14px;}
+    #hudTools{gap:3px; margin-top:4px; padding-top:4px;}
+    #hudTools button{font-size:9.5px; padding:3px 4px;}
+    #bossPlate{transform-origin:top center;}
+    #bossNameFrame{max-width:none; padding:3px 13px;}
     /* スマホは横幅が狭く、右上パネルが中央のボスHPオーブに被るため一段コンパクトに */
     #stageTag{font-size:10px; padding:5px 8px;}
     #stageTag b{font-size:13px;}
@@ -497,7 +505,7 @@
     #bonusMeter .btxt{display:none;}          /* 狭い画面では文言を省きピップだけでパネル幅を抑える */
     #bonusMeter .pips{margin-right:0;}
     #bonusMeter .pip{width:8px; height:8px; margin:0 1px;}
-    #nextBossBtn,#prevBossBtn{font-size:11px; padding:4px 7px;}
+    #nextBossBtn,#prevBossBtn{font-size:10px; padding:3px 5px;}
   }
 
   /* ===== TITLE / LANGUAGE SELECT (Diablo風) ===== */
@@ -1340,6 +1348,24 @@ function setBossName(nameObj){
    frame.firstChild.textContent=epi?(epi+" "+main):main;
  }
 }
+// スマホ幅では、ボス名とHPオーブを左上パネルと右上パネルの隙間の中央へ置き、
+// 隙間に入らない分だけ縮小する（パネル幅は所持金の桁数や次ボスボタンで変わる）。
+function fitBossPlate(){
+ const plate=$("#bossPlate"), frame=$("#bossNameFrame");
+ plate.style.left=""; plate.style.transform="";
+ if(!window.matchMedia("(max-width:680px)").matches) return;
+ const f=$("#field").getBoundingClientRect(), h=$("#hud").getBoundingClientRect(), t=$("#stageTag").getBoundingClientRect();
+ if(!f.width) return;
+ const L=h.right-f.left+6, R=t.left-f.left-6;
+ const need=Math.max(frame.offsetWidth, $("#bossOrb").offsetWidth);
+ const scale=Math.max(.5, Math.min(1, (R-L)/need));
+ plate.style.left=((L+R)/2)+"px";
+ plate.style.transform="translateX(-50%) scale("+scale.toFixed(3)+")";
+}
+if(window.ResizeObserver){
+ const ro=new ResizeObserver(()=>fitBossPlate());
+ ["#field","#hud","#stageTag","#bossNameFrame"].forEach(sel=>{ const el=$(sel); if(el) ro.observe(el); });
+} else window.addEventListener("resize",fitBossPlate);
 function updateStageTag(){
  $("#stStage").textContent=S.globalWave-1;
  $("#stWave").textContent="BOSS "+S.bossWave+((S.bossCycle||1)>1?" · LOOP "+S.bossCycle:"");
