@@ -1,10 +1,4 @@
-<p> </p>
-<!--
-  はてなブログ貼り付け用（SPACEBAR BOSS RUSH）
-  PC：ページ内iframeでそのままプレイ
-  スマホ：iframeを出さず、play.bubblegumgameboy.com へボタンで送る
-         （クロスオリジンiframeはiOS/Chromeのストレージ分離でセーブが壊れるため）
--->
+<p> </p>
 <style><!--
 /* ▼ サイドバー消す */
   #box2, .sidebar {
@@ -19,12 +13,7 @@
     width: 100% !important;
     max-width: 100% !important;
   }
-  /* ▼ iframe（PCのみ表示）
-     旧版は height:105vh + transform:scale(0.85) で見た目を縮めていたが、
-     transformは配置ボックスの高さを変えないため下に約16vhの空白が残り、
-     広告側に margin-top:-16vh を入れて打ち消していた。
-     結果、広告がゲームのタップ領域に重なる状態だったので、
-     最初から実寸（85vw × 90vh）で置いてtransformと負マージンを廃止する。 */
+  /* ▼ ゲーム本体（PC。スマホ用の指定は最下部のメディアクエリ） */
   .full-iframe {
     display: block;
     width: 85vw;
@@ -51,6 +40,9 @@
     padding: 18px 14px;
     margin: 0 0 20px 0;
   }
+  /* ▼ 全画面版への導線。記事内で遊べるので主導線ではなく、
+     保存が効かない環境のための逃げ道としてスマホにだけ出す。 */
+  .sp-only { display: none !important; }
   h2.section-head {
     font-size: 118% !important;
     font-weight: bold !important;
@@ -103,7 +95,7 @@
   }
   .data-table th {
     background: #555555;
-    color: #ffffff;
+    color: #333333;
     padding: 9px 12px;
     text-align: left;
     font-weight: bold;
@@ -173,6 +165,21 @@
   }
   .play-btn:hover { opacity: 0.88; transform: translateY(-1px); }
   .play-btn-sub { display: block; font-size: 12px; color: #888; margin-top: 8px; }
+  /* ▼ ゲーム直前の小さな全画面リンク（スマホのみ） */
+  .sp-fullscreen-link {
+    text-align: center;
+    margin: 0 0 10px 0 !important;
+    font-size: 13px;
+  }
+  .sp-fullscreen-link a {
+    display: inline-block;
+    padding: 7px 16px;
+    border: 1px solid #7a4ab0;
+    border-radius: 999px;
+    color: #7a4ab0 !important;
+    font-weight: bold;
+    text-decoration: none !important;
+  }
   .faq-list dt {
     font-weight: bold; background: #f5f5f5; padding: 10px 14px; margin-top: 12px;
     border-left: 4px solid #555555; font-size: 14.5px;
@@ -212,13 +219,27 @@
     .data-table tr:nth-child(even) td { background: #ffffff; }
     .play-btn { font-size: 16px; padding: 13px 24px; }
   }
-  /* ▼ ゲーム本体はセーブ領域を統一するためスマホでは独自ドメインへ送る。
-     ランキングはオンライン共通データなので、記事内iframeでもそのまま表示する。 */
+  /* ▼ スマホもこのページの中で遊ぶ。
+     ・横幅：記事本文の左右余白ぶん狭くなり、ゲーム上部のパネルが重なっていたので、
+       画面の端から端まで（100vw）広げる。
+     ・高さ：86vhだと下部のブログメニューに隠れ、ゲーム内の一覧をスクロールしたいのに
+       ページが動く・ページを動かしたいのにゲームが動く、が起きていた。
+       ブラウザのバーとメニューを除いた高さ（100svh − 64px）に収め、1画面で全部見えるようにする。 */
   @media (max-width: 768px) {
-    .full-iframe { display: none !important; }
-    .sp-play-card { display: block !important; }
-    .ranking-iframe { display: block !important; height: 520px; }
+    .full-iframe {
+      display: block !important;
+      width: 100vw;
+      max-width: 100vw;
+      margin-left: calc(50% - 50vw);
+      height: 86vh;
+      height: calc(100svh - 64px);
+      min-height: 520px;
+      scroll-margin-top: 0;
+    }
+    .sp-play-card { display: none !important; }
+    .ranking-iframe { display: block !important; height: 380px; }
     .sp-ranking-card { display: none !important; }
+    .sp-only { display: block !important; }
   }
 --></style>
 <p>
@@ -228,13 +249,15 @@
   "@type": "VideoGame",
   "name": "SPACEBAR BOSS RUSH",
   "alternateName": "スペースバー・ボスラッシュ",
+  "description": "スペースキーを連打してボスを倒す無料のブラウザゲーム。開始時に10秒の連打テストで戦闘力を測り、世界ランキングに載ります。仲間を雇えば攻撃が自動化され、クトゥルフ神話のボス40体まで。進行は自動保存、登録不要。スマホはタップ連打。",
   "url": "https://play.bubblegumgameboy.com/spacebar-clicker/",
-  "genre": ["クリッカーゲーム", "放置ゲーム", "ボスラッシュ"],
+  "genre": ["クリッカーゲーム", "放置ゲーム", "ボスラッシュ", "クトゥルフ神話"],
   "gamePlatform": ["Web Browser", "PC", "Smartphone"],
   "applicationCategory": "Game",
   "operatingSystem": "Any",
   "playMode": "SinglePlayer",
-  "inLanguage": "ja",
+  "inLanguage": ["ja", "en", "zh"],
+  "dateModified": "2026-10-06",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -245,377 +268,74 @@
 </script>
 </p>
 <div class="lang-notice">🌐 English is available! / 支持中文！</div>
-<p> </p>
-<p>スペースキー連打でボスを倒す無料のブラウザゲーム「SPACEBAR BOSS RUSH / Mythos Slayers」を公開しました。インストール不要・登録不要、スマホはタップ連打で遊べます。</p>
-<p>ボス素材／デザイン 提供者様：<br>@Kome_to_Matsuri 様<br>あんきも【インスマス計劃】様</p>
-<div class="note-box"><span class="note-label">最新アップデート：</span>全ユニットの攻撃アニメーション、石弓兵・火薬投擲兵などの遠距離攻撃、竜の旋回、巨人砲兵、激しい戦闘BGM、ボスの待機モーション、周回システム、プレイヤー名とダメージランキングを追加しました。</div>
-<div class="sp-play-card">
-<p class="sp-play-lead">スマホはタップ連打でそのまま遊べます</p>
-<p class="sp-play-note">キーボードは不要です。別ページで開くので、<br>セーブデータもそのまま残ります。</p>
-<a class="play-btn" id="sp-play-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ ゲームを開く</a> <span class="play-btn-sub">無料・登録不要・インストール不要</span></div>
+<p>スペースキーを連打してボスを倒す無料ゲームです。始めに10秒の連打で、何回押せるかを測ります。スマホはタップで遊べます。</p>
+<p class="sp-only sp-fullscreen-link"><a id="sp-play-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ スマホは全画面版のほうが遊びやすい</a></p>
 <p style="margin-bottom: 0;"><iframe class="full-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/" title="SPACEBAR BOSS RUSH（スペースキー連打ゲーム）" loading="lazy" allow="fullscreen"></iframe></p>
-<div class="note-box"><span class="note-label">操作のコツ：</span>スペースキーで攻撃するには、先にゲーム画面の中を一度クリックしてください。スマホは<a href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">全画面版</a>のほうが快適です。</div>
-<h3 class="sub-head">ダメージランキング</h3>
-<p>全プレイヤー共通の累積ダメージTOP10です。ゲームで与えたダメージがオンラインで集計されます。</p>
-<iframe class="ranking-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" title="SPACEBAR BOSS RUSH ダメージランキング" loading="lazy"></iframe>
-<div class="sp-ranking-card"><p class="sp-play-lead">オンライン・ダメージランキングを見る</p><p class="sp-play-note">全プレイヤー共通のランキングを確認できます。</p><a class="play-btn" id="sp-ranking-link" href="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" target="_blank" rel="noopener">🏆 ランキングを開く</a></div>
 <div class="post-iframe-ad" style="text-align: center; margin: 24px 0;"><ins class="adsbygoogle" style="display: block;" data-ad-client="ca-pub-2203567155161909" data-ad-slot="1400091008" data-ad-format="horizontal" data-full-width-responsive="true"> </ins>
 <script>// <![CDATA[
 (adsbygoogle = window.adsbygoogle || []).push({});
 // ]]></script>
 </div>
-<p>[:contents]</p>
-<h2 class="section-head">基本情報</h2>
+<div class="note-box"><span class="note-label">操作のコツ：</span>スペースキーで攻撃するには、先にゲーム画面の中を一度クリックしてください。クリックする前はキー入力が記事のほうに向いているので、押してもページが下にスクロールするだけになります。スマホはそのまま画面をタップするだけで始まります。</div>
+<div class="warn-box"><span class="warn-label">続きから遊ぶとき</span>このページをブックマークして、ここに戻ってきてください。進行は自動で保存されますが、<span style="font-weight: bold;">ここで遊んだ記録は、このページにだけ残ります。</span>別のページから開くと、軍団が最初からになります。</div>
+<h3 class="sub-head">ダメージランキング</h3>
+<p><iframe class="ranking-iframe" src="https://play.bubblegumgameboy.com/spacebar-clicker/ranking.html" title="SPACEBAR BOSS RUSH ダメージランキング" loading="lazy"></iframe></p>
+<h2 class="section-head">10秒の連打で、速さが分かる</h2>
+<p>入口の10秒で押した回数を10で割れば、それが秒間の回数。50回押せたなら秒間5回で、戦闘力は5,000です。</p>
 <table class="data-table">
+<thead>
+<tr>
+<th>秒間の回数</th>
+<th>10秒の合計</th>
+<th>どんな速さか</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<th style="width: 30%;" scope="row">タイトル</th>
-<td>SPACEBAR BOSS RUSH（スペースバー・ボスラッシュ）</td>
+<td data-label="秒間の回数">3回</td>
+<td data-label="10秒の合計">30回</td>
+<td data-label="どんな速さか">いちばん人数が多いあたり</td>
 </tr>
 <tr>
-<th scope="row">ジャンル</th>
-<td>放置系クリッカー / ボスラッシュ</td>
+<td data-label="秒間の回数">5回</td>
+<td data-label="10秒の合計">50回</td>
+<td data-label="どんな速さか">指を2本使いはじめた人の速さ</td>
 </tr>
 <tr>
-<th scope="row">料金</th>
-<td>無料</td>
+<td data-label="秒間の回数">7回</td>
+<td data-label="10秒の合計">70回</td>
+<td data-label="どんな速さか">速い。連打だけで押し切れる</td>
 </tr>
 <tr>
-<th scope="row">対応環境</th>
-<td>PC（Chrome / Edge / Firefox / Safari）・スマホ</td>
+<td data-label="秒間の回数">10回</td>
+<td data-label="10秒の合計">100回</td>
+<td data-label="どんな速さか">チャージの球が満タンになる</td>
 </tr>
 <tr>
-<th scope="row">対応言語</th>
-<td>日本語 / English / 中文</td>
-</tr>
-<tr>
-<th scope="row">セーブ</th>
-<td>自動保存（ブラウザに保存）</td>
-</tr>
-<tr>
-<th scope="row">ボリューム</th>
-<td>ボス40体・ユニット24種・武器10段階・強化7種・転生・周回システム</td>
+<td data-label="秒間の回数">15回以上</td>
+<td data-label="10秒の合計">150回以上</td>
+<td data-label="どんな速さか">指がもう別の生き物</td>
 </tr>
 </tbody>
 </table>
-<p>最初はクリック1回でダメージ2から。ゴールドを貯めて仲間を雇うと攻撃が自動化され、放置している間も軍団がボスを狩り続けるようになります。</p>
-<h2 class="section-head">遊び方</h2>
-<ol>
-<li><span style="font-weight: bold;">連打する</span>：スペースキー or 画面クリック（スマホはタップ）でボスを攻撃</li>
-<li><span style="font-weight: bold;">ゴールドを貯める</span>：攻撃するたびにゴールドが手に入る</li>
-<li><span style="font-weight: bold;">仲間を雇う</span>：味方が増えると自動化ができる</li>
-<li><span style="font-weight: bold;">強化する</span>：仲間もクリックも「強化」タブでパワーアップできる</li>
-<li><span style="font-weight: bold;">次のボスへ</span>：倒したボスは自動で復活して周回できる。準備ができたら右上の「次のボスへ ▶」で先へ（戻ることも可能）</li>
-<li><span style="font-weight: bold;">転生する</span>：BOSS 10で解放。進行をリセットする代わりに永続倍率がつく。倍率は<span style="font-weight: bold;">どこまで進んだかで変わります</span>（下で詳しく）</li>
-</ol>
+<p>速くしたいなら、指を2本に増やすのが近道です。親指1本だと秒間4回あたりで止まるので、人差し指と中指をスペースキーに置いて、左右交互に落とします。押す場所は真ん中より端寄りのほうが戻りが速く、手首は机につけたまま、指先だけを動かします。</p>
 <h2 class="section-head">攻略のヒント</h2>
-<h3 class="sub-head">序盤はクリック、そしてクリティカルで化ける</h3>
-<p>序盤はクリックが最強です。ユニットは休んでいる間の稼ぎ役と考えてください。</p>
-<p>そのうえで効くのがクリティカルです。発生率と倍率は別々の強化になっていて、両方伸ばすとクリック1回の期待値が跳ね上がります。発生率は75%が上限、強化は35回まで。ここまで振ると4回に3回はクリティカルになるので、まずここを目指すのが分かりやすいです。</p>
-<h3 class="sub-head">詰まったら前のボスに戻る</h3>
-<p>ボスのHPは1体進むごとに2.42倍ずつ増えていきます。等比で伸びるので、途中から急に固くなったように感じるはずです。</p>
-<table class="data-table">
-<thead>
-<tr>
-<th>ボス</th>
-<th>HPの目安</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="ボス">1体目</td>
-<td data-label="HP">300</td>
-</tr>
-<tr>
-<td data-label="ボス">5体目</td>
-<td data-label="HP">約1万</td>
-</tr>
-<tr>
-<td data-label="ボス">10体目</td>
-<td data-label="HP">約85万</td>
-</tr>
-<tr>
-<td data-label="ボス">20体目</td>
-<td data-label="HP">約59億</td>
-</tr>
-<tr>
-<td data-label="ボス">30体目</td>
-<td data-label="HP">約40兆</td>
-</tr>
-<tr>
-<td data-label="ボス">40体目</td>
-<td data-label="HP">約28京</td>
-</tr>
-</tbody>
-</table>
-<p>倒せなくなったら、前のボスに戻って周回するのが鉄則です。倒したボスは自動で復活するので、稼ぎ場として使えます。</p>
-<h3 class="sub-head">転生のタイミング</h3>
-<div class="warn-box"><span class="warn-label">注意</span>以前この記事には「転生は解放されたら早めに」と書いていましたが、6月のアップデートで仕様が変わっています。<span style="font-weight: bold;">いまは早く転生するほど損です。</span></div>
-<p>転生でつく永続倍率は、どこまで到達したかで決まります。計算式はこうです。</p>
-<p style="text-align: center; font-weight: bold;">倍率 = 1 + 0.4 × 到達したボスの数</p>
-<table class="data-table">
-<thead>
-<tr>
-<th>転生した時点</th>
-<th>永続倍率</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="時点">BOSS 10（解放直後）</td>
-<td data-label="倍率">5倍</td>
-</tr>
-<tr>
-<td data-label="時点">BOSS 20</td>
-<td data-label="倍率">9倍</td>
-</tr>
-<tr>
-<td data-label="時点">BOSS 30</td>
-<td data-label="倍率">13倍</td>
-</tr>
-<tr>
-<td data-label="時点">BOSS 40</td>
-<td data-label="倍率">17倍</td>
-</tr>
-</tbody>
-</table>
-<p>解放された瞬間に転生すると5倍ですが、あと10体粘れば9倍です。<span style="font-weight: bold;">進めるところまで進んでから転生する</span>のが基本方針になります。前のボスに戻って稼いでも進行が止まったな、と感じたところが切り上げどきです。</p>
-<h2 class="section-head">強化は7種類</h2>
-<p>「強化」タブで買える項目です。買うほど値段が上がっていきます。</p>
-<table class="data-table">
-<thead>
-<tr>
-<th>名称</th>
-<th>効果</th>
-<th>初期コスト</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="名称">クリック強化</td>
-<td data-label="効果">タップとスペースキーのダメージを上げる</td>
-<td data-label="コスト">60</td>
-</tr>
-<tr>
-<td data-label="名称">コイン袋</td>
-<td data-label="効果">ボス撃破時のゴールドが増える</td>
-<td data-label="コスト">120</td>
-</tr>
-<tr>
-<td data-label="名称">クリティカル率</td>
-<td data-label="効果">クリティカル発生率アップ（上限75%、35回まで）</td>
-<td data-label="コスト">250</td>
-</tr>
-<tr>
-<td data-label="名称">クリティカル倍率</td>
-<td data-label="効果">クリティカル時のダメージ倍率アップ</td>
-<td data-label="コスト">900</td>
-</tr>
-<tr>
-<td data-label="名称">ゴールド獲得量</td>
-<td data-label="効果">すべてのゴールド獲得量アップ</td>
-<td data-label="コスト">500</td>
-</tr>
-<tr>
-<td data-label="名称">ゴールドラッシュ</td>
-<td data-label="効果">タップごとに得られるゴールドが増える</td>
-<td data-label="コスト">1,200</td>
-</tr>
-<tr>
-<td data-label="名称">疾風の加護</td>
-<td data-label="効果">味方の動きを加速させる（40回まで）</td>
-<td data-label="コスト">800</td>
-</tr>
-</tbody>
-</table>
-<h2 class="section-head">ユニットは全24種</h2>
-<p>「召喚」タブで雇える仲間です。ファーマーと村人だけは攻撃せず、ゴールドを稼いでくれる役割になっています。</p>
-<table class="data-table">
-<thead>
-<tr>
-<th>ユニット</th>
-<th>価格</th>
-<th>攻撃力</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td data-label="名前">ファーマー</td>
-<td data-label="価格">25</td>
-<td data-label="攻撃">ゴールド生産</td>
-</tr>
-<tr>
-<td data-label="名前">剣士</td>
-<td data-label="価格">80</td>
-<td data-label="攻撃">2</td>
-</tr>
-<tr>
-<td data-label="名前">ドワーフ戦士</td>
-<td data-label="価格">280</td>
-<td data-label="攻撃">4</td>
-</tr>
-<tr>
-<td data-label="名前">弓兵</td>
-<td data-label="価格">600</td>
-<td data-label="攻撃">6</td>
-</tr>
-<tr>
-<td data-label="名前">村人</td>
-<td data-label="価格">1,500</td>
-<td data-label="攻撃">ゴールド生産</td>
-</tr>
-<tr>
-<td data-label="名前">重装兵</td>
-<td data-label="価格">3,500</td>
-<td data-label="攻撃">18</td>
-</tr>
-<tr>
-<td data-label="名前">鋼のドワーフ</td>
-<td data-label="価格">8,800</td>
-<td data-label="攻撃">20</td>
-</tr>
-<tr>
-<td data-label="名前">魔導士</td>
-<td data-label="価格">2万</td>
-<td data-label="攻撃">60</td>
-</tr>
-<tr>
-<td data-label="名前">石弓兵</td>
-<td data-label="価格">5万5,000</td>
-<td data-label="攻撃">110</td>
-</tr>
-<tr>
-<td data-label="名前">騎士</td>
-<td data-label="価格">10万</td>
-<td data-label="攻撃">90</td>
-</tr>
-<tr>
-<td data-label="名前">聖騎士</td>
-<td data-label="価格">50万</td>
-<td data-label="攻撃">180</td>
-</tr>
-<tr>
-<td data-label="名前">火薬投擲兵</td>
-<td data-label="価格">120万</td>
-<td data-label="攻撃">500</td>
-</tr>
-<tr>
-<td data-label="名前">エルフの射手</td>
-<td data-label="価格">250万</td>
-<td data-label="攻撃">600</td>
-</tr>
-<tr>
-<td data-label="名前">黒魔術師</td>
-<td data-label="価格">1,200万</td>
-<td data-label="攻撃">2,600</td>
-</tr>
-<tr>
-<td data-label="名前">暗黒騎士</td>
-<td data-label="価格">6,000万</td>
-<td data-label="攻撃">3,200</td>
-</tr>
-<tr>
-<td data-label="名前">巨人砲兵</td>
-<td data-label="価格">1億5,000万</td>
-<td data-label="攻撃">5万（砲撃速度は遅め）</td>
-</tr>
-<tr>
-<td data-label="名前">翠竜</td>
-<td data-label="価格">3億</td>
-<td data-label="攻撃">1万4,000</td>
-</tr>
-<tr>
-<td data-label="名前">紫竜</td>
-<td data-label="価格">15億</td>
-<td data-label="攻撃">3万6,000</td>
-</tr>
-<tr>
-<td data-label="名前">紅竜</td>
-<td data-label="価格">80億</td>
-<td data-label="攻撃">9万</td>
-</tr>
-<tr>
-<td data-label="名前">大天使</td>
-<td data-label="価格">400億</td>
-<td data-label="攻撃">25万</td>
-</tr>
-<tr>
-<td data-label="名前">古代翠竜</td>
-<td data-label="価格">2,000億</td>
-<td data-label="攻撃">80万</td>
-</tr>
-<tr>
-<td data-label="名前">覚醒紅竜</td>
-<td data-label="価格">1兆</td>
-<td data-label="攻撃">300万</td>
-</tr>
-<tr>
-<td data-label="名前">熾天使</td>
-<td data-label="価格">5兆</td>
-<td data-label="攻撃">1,200万</td>
-</tr>
-<tr>
-<td data-label="名前">魔神</td>
-<td data-label="価格">25兆</td>
-<td data-label="攻撃">5,000万</td>
-</tr>
-</tbody>
-</table>
-<p>近接兵はボスへ肉薄し、弓兵や魔法使いも安全な一列には整列せず、複数の奥行きから前線へ射撃します。巨大で半透明の巨人砲兵は兵士たちの間に踏み込み、肩の攻城砲から遅く重い砲弾を撃ち込みます。ユニットはLv50・100・150でオーラと外観演出も強化されます。</p>
-<h2 class="section-head">武器は10段階で進化</h2>
-<p>進めていくと武器が進化していきます。順番はこうなっています。</p>
-<p>キッチンナイフ → アサシンダガー → 鋼鉄のショートソード → 騎士のロングソード → 戦斧ブレイクファング → ウォーハンマー → 巨剣グレートスレイヤー → 妖刀ムラマサ → 竜殺しの剣 → 神剣エクスカリバー</p>
-<p>クリック強化10回ごとに武器が進化し、専用アイコンと攻撃音も切り替わります。強化カードには次の武器と進化までの残り回数を表示。短剣の鋭い一撃、大剣や槌の重い打撃、神剣の追加音など、成長に合わせて手応えも変わります。</p>
-<p>最初が包丁なのは、まあ、そういうゲームだからです。武器ごとに攻撃音も変えてあるので、進化したときは音でも分かります。</p>
-<h2 class="section-head">ボスは全40体、元ネタはクトゥルフ神話</h2>
-<p>登場するボスはクトゥルフ神話がベースです。序盤はネズミやグールといった手近な魔物ですが、進むほど神話の大物が出てきます。</p>
-<h3 class="sub-head">1体目から11体目：魔物と怪物</h3>
-<p>ラトキン、グール、ガスト、ザルファク、ノクターン、ナイトゴーント、サーペントマン、ミ＝ゴ、ノフ＝ケー、グロブス、グラーキ</p>
-<h3 class="sub-head">12体目から25体目：より強大な怪異</h3>
-<p>ヴォルグ、ムーンビースト、ガグ、イグニス、イ夫人、ディープ・ワン、ゴグ＝フール、モルディギアン、アエロス、ツァトゥグァ、チャウグナル・ファウグン、物体Ｘ、アイホート、ヘル・プラント</p>
-<h3 class="sub-head">26体目から39体目：古き神々</h3>
-<p>フォルムレス・スポーン、クロノファング、ティンダロスの猟犬、ザ・ハンター、シュブ＝ニグラス、シャンタク、ボレアス、エルダーマインド、グレーター・シャンタク、ストラトス、イゴーロナク、クトゥグァ、ハスター、ニャルラトテップ</p>
-<h3 class="sub-head">40体目：終焉の古神</h3>
-<p>クトゥルフ。ラスボスです。HPは約28京。ここまで来られたら大したものです。</p>
-<p>ラスボス撃破後はLOOP 2へ進めます。次の周回では全ボスのHPが50倍、獲得ゴールドが6倍になり、さらに先を目指せます。</p>
-<div class="play-btn-wrap"><a class="play-btn" id="sp-play-link-2" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ 全画面で最初から遊ぶ</a> <span class="play-btn-sub">無料・登録不要・スマホ対応</span></div>
-<h2 class="section-head">よくある質問</h2>
-<dl class="faq-list">
-<dt>スマホでも遊べますか？</dt>
-<dd>遊べます。スペースキーの代わりに画面タップで攻撃します。スマホの場合は上のボタンからプレイページが開きます。</dd>
-<dt>セーブデータが消えることはありますか？</dt>
-<dd>自動でブラウザに保存されますが、ブラウザのキャッシュやサイトデータを削除すると消えます。別の端末への引き継ぎもできません。</dd>
-<dt>記事内のゲーム画面と全画面版で、データは共通ですか？</dt>
-<dd>別扱いになることがあります。ブラウザが、記事に埋め込まれた画面の保存領域と、プレイページを直接開いたときの保存領域を分けて管理するためです。iPhoneのSafariはとくにこの扱いが厳しめです。やり込むなら最初から全画面版で始めてください。</dd>
-<dt>BGMや効果音は消せますか？</dt>
-<dd>消せます。ゲーム画面のBGM・SEボタンから個別にオン／オフできます。BGMは全編を通して激しい戦闘曲が流れます。</dd>
-<dt>ランキングはオンライン全体の順位ですか？</dt>
-<dd>現在はこのブラウザ内でプレイヤー名ごとに記録するローカルランキングです。キャッシュやサイトデータを削除すると記録も消えます。</dd>
-</dl>
-<h2 class="section-head">他自作ゲームの紹介</h2>
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F07%2F24%2F193327" title="【Web無料】魚釣りゲーム：クリーチャーフィッシング  - バブルガムのゲームブログ" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://babblegum.hatenablog.com/entry/2026/07/24/193327">babblegum.hatenablog.com</a></cite></p>
+<p>序盤はクリックが最強です。仲間（ユニット）は、画面を開いたまま手を休めている間の稼ぎ役で、タブを閉じると止まります。クリックの次に伸ばしたいのはクリティカルで、発生率（上限75%）と倍率を両方上げると、クリック1回で出るダメージが大きく伸びます。</p>
+<p>ボスのHPは、1体進むごとに2.42倍。倒せなくなったら前のボスに戻って周回してください。倒したボスは自動で復活します。</p>
+<p>転生はBOSS 10で解放されますが、早く転生するほど損です。転生でつく倍率は「1＋0.4×その回に倒したボスの数」で、BOSS 10なら5倍、BOSS 20まで粘れば9倍。2回目からはこの倍率が前回の倍率に掛け算で重なるので、進めるところまで進んでから転生します。40体目のクトゥルフを倒すと、ボスのHPが50倍になる2周目（LOOP 2）に進めます。</p>
+<h2 class="section-head">うまく動かないときは</h2>
+<p>スペースキーを押しても何も起きない、ページが下にスクロールしてしまう。どちらも、ゲーム画面を一度クリックすれば直ります。クリックするまでは、キーがゲームに届いていません。</p>
+<p>音が鳴らないときも、画面を一度クリックかタップしてください。それでも鳴らなければ、ゲーム画面のBGM・SEボタンがオフになっていないかを確かめます。ユニットが増えて動きが重くなってきたら、効果音を切るだけでも軽くなります。</p>
+<div class="sp-only play-btn-wrap"><a class="play-btn" id="sp-play-link-2" href="https://play.bubblegumgameboy.com/spacebar-clicker/" target="_blank" rel="noopener">▶ 全画面で遊ぶ</a> <span class="play-btn-sub">上の画面で保存が効かないときはこちら</span></div>
+<h2 class="section-head">ほかの自作ゲーム</h2>
+<p>ほかにも、ブラウザですぐ遊べるゲームを作っています。</p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fbabblegum.hatenablog.com%2Fentry%2F2026%2F08%2F04%2F171931" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
+<p>ボス素材とデザインの提供者様：<br>@Kome_to_Matsuri 様<br>あんきも【インスマス計劃】様</p>
 <p>感想や要望はコメント欄で受け付けています。今後のアップデートの参考にします。</p>
-<div class="note-box"><span class="note-label">更新履歴：</span>6/19 アーティスト様から素材を購入しボスを30体追加。進行するほど転生倍率が上がる調整。スマホ版の味方ボット位置を最適化。<br>6/30 英語・中国語に対応。<br>9/4 全24ユニットの戦闘アニメーションと乱戦配置を刷新。巨人砲兵、石弓兵、火薬投擲兵、遠距離攻撃、竜の旋回、覚醒外観、激しい戦闘BGM、効果音、ボス待機モーション、LOOP 2、名前・ダメージランキングを追加。<br>9/7 ダメージランキングを全プレイヤー共通のオンライン集計へ更新し、スマホでの名前入力を改善。</div>
+<div class="note-box"><span class="note-label">更新履歴：</span>6/19 ボスを30体追加。<br>6/30 英語・中国語に対応。<br>9/4 ユニットの戦闘アニメーションを刷新し、LOOP 2とダメージランキングを追加。<br>9/8 武器ごとのアイコンと効果音を追加。開始時に戦闘力を測る入口を新設。<br>10/6 スマホの記事内プレイで、上部パネルとボス表示が重なる問題を修正。</div>
 <div>
 <p><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/B/Babblegum/20260629/20260629164335.png" alt="スペースキー連打ゲーム　バブルガム" width="210" height="108" loading="lazy" title="" class="hatena-fotolife"></p>
 </div>
-<!--
-  ▼▼▼ GA4計測 ▼▼▼
-  PC：ゲームはクロスオリジンiframeで動くため標準計測では滞在が記録されない。
-      「iframeにフォーカスがある＝プレイ中」と判定し15秒ごとにイベントを送る。
-  スマホ：iframeを出さないので、プレイページへの遷移を game_open_click で計測する。
-
-  送信イベント：
-    game_ready      … スクリプトが動きiframeを検出した（PCのみ・1回）
-    game_start      … その閲覧で初めてプレイが始まった（1回）
-    game_view_15s   … iframeが画面に映っている15秒ごと
-    game_play_15s   … 操作中とみなせる15秒ごと。play_seconds に累計秒数
-    game_play_total … 離脱・タブ切り替え時の最終累計
-    game_open_click … プレイページを開くボタンが押された
-
-  旧版にあった game_tick_a*h* の診断イベントは、恒久的に毎15秒送られ
-  GA4のレポートを汚すため削除した。
--->
 <p>
 <script>// <![CDATA[
 (function () {
@@ -671,7 +391,7 @@
     for (var i = 0; i < frames.length; i++) {
       if ((frames[i].src || '').indexOf(SRC) !== -1) { game = frames[i]; break; }
     }
-    // スマホではiframeをCSSで非表示にしているため、ここで終了する（エラーではない）
+    // iframeが見つからない・非表示のときは何もしない（エラーではない）
     if (!game || game.offsetParent === null) { return; }
 
     send('game_ready', { game_name: GAME });
@@ -731,4 +451,4 @@
 })();
 // ]]></script>
 </p>
-<p> </p>
+<p> </p>
