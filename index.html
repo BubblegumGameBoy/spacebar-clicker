@@ -722,7 +722,9 @@ function saveRanksSoon(){clearTimeout(_rankSaveTimer);_rankSaveTimer=setTimeout(
 function setRankStatus(text,state=""){
  const el=$("#rankStatus");if(!el)return;el.textContent=text;el.className=state;
 }
-function scheduleRankSync(delay=12000){
+// スコア送信は3分ごと（タブを閉じる・裏に回すときは即送信）。12秒ごとだと1人1時間で約900回Workerを呼び、
+// Cloudflare無料枠（全ゲーム共有で1日10万回）を圧迫していた（2026-10-09）。
+function scheduleRankSync(delay=180000){
  if(SHOWCASE||_rankSyncTimer)return;
  _rankSyncTimer=setTimeout(()=>{_rankSyncTimer=null;void syncOnlineScore();},delay);
 }
@@ -759,9 +761,10 @@ async function syncOnlineScore(){
    body:JSON.stringify({playerId,name:playerName,damage:sendingDamage}),keepalive:true});
   if(!res.ok)throw new Error(`HTTP ${res.status}`);
   if(playerDamage===sendingDamage)rankDirty=false;
-  await loadOnlineRanking();
+  // 送信後の再読み込みはランキング画面を開いているときだけ
+  if($("#rankModal").classList.contains("on"))await loadOnlineRanking();
  }catch(e){setRankStatus(rankMessage("retry"),"err");}
- finally{rankSyncing=false;if(rankDirty)scheduleRankSync(15000);}
+ finally{rankSyncing=false;if(rankDirty)scheduleRankSync();}
 }
 function recordDamage(amount){
  if(location.search.includes("showcase"))return;
