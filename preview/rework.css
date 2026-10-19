@@ -48,8 +48,9 @@
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}.rx-toast{transition:none}}
 /* Mythos II: the captain and orders remain fixed while the battlefield camera moves. */
 #bossMotion{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom;image-rendering:pixelated;pointer-events:none}
-#bossMotion[hidden]{display:none}#boss:not(.dying) #bossMotion{animation:bossBreathe 3s ease-in-out infinite;transform-origin:bottom center}
-@keyframes bossBreathe{50%{transform:scale(1.012,1.008)}}
+#bossMotion[hidden]{display:none}
+/* Keep the boss steady between authored attack poses, including fallback art. */
+#boss:not(.dying) img,#boss:not(.dying) #bossMotion{animation:none;transform:none}
 #battleCommands{display:flex;gap:6px;align-items:center;padding:7px 12px;background:#1d2c2c;border-bottom:1px solid #49563f}
 #battleCommands button{border:1px solid #6e7e64;border-radius:5px;background:#293d34;color:#e9e6cb;font:700 11px system-ui;padding:7px 12px;cursor:pointer}
 #battleCommands #commandMode{background:#d3c18b;color:#1c2b22}#battleCommands #commandMode[aria-pressed=true]{background:#a5dfc4}#battleCommands #autoArmy{margin-left:auto}
