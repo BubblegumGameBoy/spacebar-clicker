@@ -8,7 +8,7 @@
  const num=(v,f=0,max=1e150)=>Number.isFinite(Number(v))?Math.max(0,Math.min(max,Number(v))):f;
  const integer=(v,f=0,max=MAX_LEVEL)=>Math.floor(num(v,f,max));
  const skill=(s,id)=>integer(s.skills?.[id],0,SKILLS[id]||0);
- function fresh(ids=[]){return {version:VERSION,gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,battle:null,captainHp:100,bossHp:0,bossHpMax:0};}
+ function fresh(ids=[]){return {version:VERSION,gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,battle:null,pending:{},activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
   s.gold=num(r.gold,150);s.globalWave=integer(r.globalWave,1,1e12)||1;s.bossWave=Math.max(1,integer(r.bossWave,1,40));s.bossCycle=Math.max(1,integer(r.bossCycle,1,100));
@@ -17,7 +17,8 @@
   s.renown=legacy?Math.max(s.prestige*10,num(r.goldBonus,1)>1?Math.round(Math.log1p(num(r.goldBonus,1))*8):0):num(r.renown,0,1e9);
   s.souls=integer(r.souls,legacy?Math.min(8,s.prestige*2):0,1e6);s.soulsEarned=integer(r.soulsEarned,s.souls,1e6);
   for(const id of Object.keys(SKILLS))s.skills[id]=legacy?0:integer(r.skills?.[id],0,SKILLS[id]);
-  for(const id of ids){s.owned[id]=integer(r.owned?.[id],0,100000);s.ulvl[id]=integer(r.ulvl?.[id]);}
+  s.pending={};s.activity=r.activity==='battle'?'battle':'gather';
+  for(const id of ids){s.owned[id]=integer(r.owned?.[id],0,100000);s.ulvl[id]=integer(r.ulvl?.[id]);s.pending[id]=integer(r.pending?.[id],0,s.owned[id]);}
   // Early sequel prototypes used the old coin collectors. Retain their people as supply workers.
   for(const [old,id] of [['farmer','woodcutter'],['villager','porter']])if(ids.includes(id)&&!ids.includes(old)){
    s.owned[id]=Math.min(100000,s.owned[id]+integer(r.owned?.[old],0,100000));s.ulvl[id]=Math.max(s.ulvl[id],integer(r.ulvl?.[old]));
@@ -54,8 +55,8 @@
  const awaken=lv=>Math.pow(1.8,tier(lv))*Math.pow(1.03,Math.max(0,lv-50));
  const damage=(s,u,lv=s.ulvl[u.id]||0)=>u.worker||u.healer?0:Math.max(u.dmg||0,.035*Math.pow(u.powerBase||u.base,.85)*u.iv)*(1+.3*lv)*Math.pow(1.06,lv)*awaken(lv);
  const interval=(s,u)=>u.iv/Math.min(3.5,(1+.05*s.hero.aspd)*(1+.05*skill(s,'haste')));
- const unitDps=(s,u,lv=s.ulvl[u.id]||0)=>u.healer||u.worker||!s.owned[u.id]?0:damage(s,u,lv)*(s.owned[u.id]||0)/interval(s,u);
- const formation=(s,units)=>1+.13*Math.max(0,Math.min(3,new Set(units.filter(u=>s.owned[u.id]).map(role)).size-1));
+ const unitDps=(s,u,lv=s.ulvl[u.id]||0)=>u.healer||u.worker||!s.owned[u.id]?0:damage(s,u,lv)*Math.max(0,(s.owned[u.id]||0)-(s.pending?.[u.id]||0))/interval(s,u);
+ const formation=(s,units)=>1+.13*Math.max(0,Math.min(3,new Set(units.filter(u=>(s.owned[u.id]||0)>(s.pending?.[u.id]||0)).map(role)).size-1));
  const armyDps=(s,units)=>units.reduce((n,u)=>n+unitDps(s,u),0)*formation(s,units);
  const clickBase=lv=>Math.max(1,Math.round(3*Math.pow(1.18,lv)*Math.pow(1.25,Math.floor(lv/10))));
  const clickDamage=(s,armyDps=0)=>(clickBase(s.hero.click)+armyDps*Math.min(.25,.04+s.hero.click*.0015))*(1+.08*skill(s,'strike'));

@@ -15,11 +15,11 @@ window.ArmyView=(()=>{
   return images.get(name);
  }
  function layout(){
-  const n=count(),cols=Math.max(4,Math.ceil(Math.sqrt(Math.max(1,n))*1.65)),rows=Math.ceil(n/cols);
-  const giant=Math.max(240*Math.pow(1.045,S.bossWave-1)*(1+.07*Math.log2(n+1)),rows*32*.85);
-  camera.w=Math.max(viewport.clientWidth<680?640:1100,cols*34+giant*.72+230);
+  const n=count();
+  const giant=Math.min(340,240*Math.pow(1.025,S.bossWave-1));
+  camera.w=viewport.clientWidth<680?640:1100;
   // Reserve the distant horizon; every row stands on the continuous ground plane.
-  camera.h=Math.max(500,(rows*32+130)/.68,giant+150);
+  camera.h=500;
   sim.bounds(camera.w,camera.h,{x:camera.w-55-giant*.40,y:camera.h-70-giant*.22,r:giant*.28});window.BattleControl?.resize(camera.w,camera.h);window.SupplyFactory?.resize(camera.w,camera.h);
   world.style.width=camera.w+'px';world.style.height=camera.h+'px';
   bossEl.style.height=giant+'px';bossEl.style.maxWidth=(giant*1.25)+'px';bossEl.style.bottom='48px';bossEl.style.right='55px';
@@ -48,20 +48,16 @@ window.ArmyView=(()=>{
  }
  function focus(id,evolution=false){
   const group=slots.filter(p=>p.id===id);if(!group.length)return;
-  clearTimeout(returnTimer);manual=true;camera.target=Math.max(camera.fit,Math.min(1.4,camera.fit*2.5));
   flash={id,until:performance.now()+2100,evolution};
-  const p=evolution?group[Math.floor(group.length/2)]:group[group.length-1];
-  setTimeout(()=>{viewport.scrollTo({left:Math.max(0,p.x*camera.scale-viewport.clientWidth*.42),top:Math.max(0,p.y*camera.scale-viewport.clientHeight*.68),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});},200);
-  returnTimer=setTimeout(fit,2000);
  }
- function fit(){manual=false;camera.target=camera.fit;viewport.scrollTo({left:0,top:0,behavior:'smooth'});}
+ function fit(){manual=false;camera.target=camera.fit;viewport.scrollTo({left:0,top:0,behavior:'instant'});}
  function render(reason){
   if(!viewport)return;
   const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];}
-  layout();
-  const companies=UNITS.map(u=>({...u,count:S.owned[u.id]||0,interval:unitIv(u),damage:unitDmg(u),speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:Core.healPower(S,u)}));
-  sim.sync(companies,reason?.evolution?null:reason?.id);slots=sim.soldiers;sortAt=0;
-  if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);if(row[4]>=0&&row[5]>=0){p.order={x:row[4]*sx,y:row[5]*sy};p.commanded=true;}}}
+  sim.stationary=true;layout();
+  const companies=UNITS.map(u=>({...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:unitIv(u),damage:unitDmg(u),speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:Core.healPower(S,u)}));
+  sim.sync(companies);slots=sim.soldiers;sortAt=0;
+  if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
   if(restore)window.BattleControl?.restore();
   document.getElementById('armyCount').textContent=count().toLocaleString();
   document.getElementById('armyRoster').innerHTML=UNITS.filter(unitOwned).sort(orderUnits).map(u=>'<button type="button" data-focus="'+u.id+'"><span>'+L(u.name)+'</span><b>×'+S.owned[u.id].toLocaleString()+'</b><small>'+('◆'.repeat(Math.min(3,Core.tier(S.ulvl[u.id])))||'Lv.'+S.ulvl[u.id])+'</small></button>').join('');
@@ -90,7 +86,7 @@ window.ArmyView=(()=>{
    const tier=Math.min(3,Core.tier(S.ulvl[p.id]));
    const crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight};
    const h=(u.id==='giant'?100:u.fly?62:47)*(1+tier*.13),w=h*crop.w/crop.h;
-   const x=ox+p.x*z,y=oy+(p.y-(p.moving?Math.abs(Math.sin(sim.time*13+p.key))*3:0)-(u.fly?25+Math.sin(now*.0014+p.key)*6:0))*z;
+   const x=ox+p.x*z,y=oy+(p.y-(u.fly?25:0))*z;
    if(x+w*z<0||x-w*z>width||y<0||y-h*z>height)continue;
    const elapsed=(sim.time-p.attackAt)*1000,duration=u.anim?.frameMs||120;
    const sequence=u.anim?.sequence||[0,1,2,3,0];
@@ -111,11 +107,11 @@ window.ArmyView=(()=>{
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;
-  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=!bossDead;
+  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=!bossDead&&window.BattleControl?.activity==='battle'&&!window.BattleControl?.placement;
   powerClock+=dt;if(powerClock>.25){powerClock=0;engagedDps=slots.reduce((n,p)=>n+(sim.canHit(p)&&p.enterAt<=sim.time&&!p.stun?p.u.damage/p.interval:0),0);}
   accumulator=Math.min(.4,accumulator+dt);const period=slots.length>2000?.1:slots.length>500?.06:1/30;
   for(let updates=0;accumulator+1e-8>=period&&updates<3;updates++){
-   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;sim.boss.alive=!bossDead;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
+   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;sim.boss.alive=!bossDead&&window.BattleControl?.activity==='battle'&&!window.BattleControl?.placement;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
    for(const e of events){const p=e.p,u=p.u;
     if(e.kind==='heal'){window.BattleControl?.heal(e.amount);continue;}
     if(e.kind==='damage'){damage.set(p.id,(damage.get(p.id)||0)+e.amount);continue;}
@@ -130,8 +126,10 @@ window.ArmyView=(()=>{
  function zoom(factor){manual=true;camera.target=Math.max(camera.fit*.7,Math.min(2.2,camera.target*factor));}
  function boot(){
   viewport=document.getElementById('battleViewport');world=document.getElementById('battleWorld');stage=document.getElementById('worldStage');ground=document.getElementById('battleGround');canvas=document.getElementById('armyCanvas');ctx=canvas.getContext('2d',{alpha:true});
+  // The inline legacy renderer runs before this module on reload; never leave its copies behind.
+  world.querySelectorAll('.unit-sprite').forEach(el=>el.remove());
   document.getElementById('zoomIn').onclick=()=>zoom(1.3);document.getElementById('zoomOut').onclick=()=>zoom(1/1.3);document.getElementById('zoomFit').onclick=fit;
-  document.getElementById('armyRoster').onclick=e=>{const b=e.target.closest('[data-focus]');if(b){if(window.BattleControl?.placement)BattleControl.selectType(b.dataset.focus);focus(b.dataset.focus,true);}};
+  document.getElementById('armyRoster').onclick=e=>{const b=e.target.closest('[data-focus]');if(b){BattleControl.selectType(b.dataset.focus);focus(b.dataset.focus,true);}};
   viewport.addEventListener('wheel',e=>{if(e.ctrlKey){e.preventDefault();zoom(e.deltaY<0?1.12:1/1.12);}},{passive:false});
   new ResizeObserver(()=>layout()).observe(viewport);
   render();window.BattleControl?.boot();window.SupplyFactory?.boot();camera.scale=camera.target;applyCamera();frame=requestAnimationFrame(draw);

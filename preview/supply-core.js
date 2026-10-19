@@ -6,8 +6,8 @@
  const key=p=>Math.round(p.x/TILE)+','+Math.round(p.y/TILE),snap=p=>({x:Math.round(p.x/TILE)*TILE,y:Math.round(p.y/TILE)*TILE});
  const noise=n=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
  function fresh(width=1100,height=500,seed=Math.floor(Math.random()*1e8)){
-  const s={version:1,seed,width,height,next:1,time:0,inventory:{wood:24,stone:16},depot:snap({x:width*.12,y:height*.79}),nodes:[],drops:[],rails:[],delivered:0};
-  for(let i=0;i<70&&s.nodes.length<16;i++){const type=i%3?'wood':'stone',x=width*(.25+noise(seed+i)*.43),y=height*(.42+noise(seed+i+80)*.48);if(Math.hypot(x-s.depot.x,y-s.depot.y)<75||s.nodes.some(n=>Math.hypot(x-n.x,y-n.y)<78))continue;s.nodes.push({key:s.next++,type,x,y,stock:180+Math.floor(noise(seed+i+7)*180),radius:type==='wood'?16:19,regrow:0});}
+  const s={version:1,seed,width,height,next:1,time:0,inventory:{wood:0,stone:0},depot:snap({x:width*.12,y:height*.79}),nodes:[],drops:[],rails:[],delivered:0};
+  for(let i=0;i<70&&s.nodes.length<8;i++){const type=i%3?'wood':'stone',x=width*(.25+noise(seed+i)*.43),y=height*(.42+noise(seed+i+80)*.48);if(Math.hypot(x-s.depot.x,y-s.depot.y)<75||s.nodes.some(n=>Math.hypot(x-n.x,y-n.y)<78))continue;s.nodes.push({key:s.next++,type,x,y,stock:180+Math.floor(noise(seed+i+7)*180),radius:type==='wood'?16:19,regrow:0});}
   return s;
  }
  function migrate(raw){

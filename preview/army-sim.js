@@ -57,14 +57,14 @@
     }
     if(u.worker&&goal){const key=Math.floor(goal.x/24)+','+Math.floor(goal.y/24);if(p.nav?.key!==key)p.nav={key,points:this.path(p,goal)};while(p.nav.points.length&&Math.hypot(p.x-p.nav.points[0].x,p.y-p.nav.points[0].y)<12)p.nav.points.shift();if(p.nav.points.length)goal=p.nav.points[0];}
     p.moving=false;
-    if(goal){const gx=clamp(goal.x,p.r+5,this.width-p.r-5),gy=clamp(goal.y,this.ground+p.r+5,this.height-p.r-20),dx=gx-p.x,dy=gy-p.y,d=Math.hypot(dx,dy);if(d>4){const distance=Math.min(d,p.speed*dt),ux=dx/d,uy=dy/d,side=noise(p.key)>.5?1:-1;for(const angle of [0,.75*side,1.3*side,1.58*side,-1.3*side,-1.58*side]){const x=p.x+(ux*Math.cos(angle)-uy*Math.sin(angle))*distance,y=p.y+(uy*Math.cos(angle)+ux*Math.sin(angle))*distance;if(this.free(p,x,y)){p.x=x;p.y=y;p.moving=true;break;}}}}
+    if(goal&&!this.stationary){const gx=clamp(goal.x,p.r+5,this.width-p.r-5),gy=clamp(goal.y,this.ground+p.r+5,this.height-p.r-20),dx=gx-p.x,dy=gy-p.y,d=Math.hypot(dx,dy);if(d>4){const distance=Math.min(d,p.speed*dt),ux=dx/d,uy=dy/d,side=noise(p.key)>.5?1:-1;for(const angle of [0,.75*side,1.3*side,1.58*side,-1.3*side,-1.58*side]){const x=p.x+(ux*Math.cos(angle)-uy*Math.sin(angle))*distance,y=p.y+(uy*Math.cos(angle)+ux*Math.sin(angle))*distance;if(this.free(p,x,y)){p.x=x;p.y=y;p.moving=true;break;}}}}
     // Each soldier owns a separate cooldown, anticipation and actual range test.
     const ready=u.worker?false:u.healer?hero.hp<hero.max&&Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p):this.canHit(p);
     if(p.cooldown<=0&&ready){p.cooldown=p.interval;p.attackAt=this.time;this.stats.attacks++;
      {events.push({kind:'release',p,heal:!!u.healer});this.pending.push({p,heal:!!u.healer,amount:u.healer?u.heal:u.damage,token:boss.token,due:this.time+(u.healer?.25:(u.anim?.impact??(u.ranged?450:200))/1000)});}
     }
    }
-   this.hero=hero;this.separate();
+   this.hero=hero;if(!this.stationary)this.separate();
    return events;
   }
   separate(){

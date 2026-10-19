@@ -81,3 +81,33 @@
 #battleCommands,.rx-toolbar{flex-shrink:0}
 .card.army-card{gap:1px}.army-card .unit-rank{margin:4px 0}.army-card .company-size{margin:3px 0}.army-card .evolution-track{margin:4px 0 6px}.army-card .recruit-more{margin-top:6px}
 #field{height:55vh}@media(max-width:680px){#field{height:49vh}}
+
+/* The forest loop stays still: gather, place, then choose when to fight. */
+#field.gathering #boss,#field.gathering #bossPlate,#field.gathering #stageTag,#field.gathering #comboTag,#field.gathering #bossTrait{visibility:hidden}
+#field.gathering.placing #boss{visibility:visible;opacity:.32}
+#chapterTrail{display:none}
+#playGuide{position:absolute;z-index:14;bottom:13px;left:50%;transform:translateX(-50%);width:min(670px,calc(100% - 32px));padding:10px 16px;border:1px solid #8fa48a66;border-radius:8px;background:#12261fec;color:#e2e6c9;font:600 12px/1.6 system-ui;text-align:center;pointer-events:none}
+#hud{width:192px;max-width:45%;font-size:12px;padding:11px}
+#hud .row:has(#hGpm),#hud .row:has(#hTotalDmg),#field.gathering #hud .row:has(#hDps){display:none}
+#hudTools #playerBtn,#hudTools #rankBtn{display:none}
+#supplyInventory{position:static;display:block;max-width:none;margin:8px 0 0;padding:8px 0 0;border:0;border-top:1px solid #71836b55;border-radius:0;background:none;color:#dbe2c7}
+.resource-buttons{display:flex;gap:5px}.resource-buttons button{flex:1;padding:8px 3px;border:1px solid #66836b;border-radius:5px;background:#253a2e;color:#e6e6c8;font:700 11px system-ui;cursor:pointer}.resource-buttons button[aria-pressed=true]{background:#d2c18a;color:#1d2c24;border-color:#f4e1a0}
+#supplyInventory #gatherFeedback{display:block;min-height:43px;margin-top:6px;line-height:1.6;font-size:10px;color:#c2d2b7}
+#battleCommands button[aria-pressed=true]{background:#dbc68d;color:#1b2e25}#battleCommands button:disabled{opacity:.4;cursor:default}#battleCommands #commandMode{margin-left:auto;background:#2d4134;color:#dfdfc3}
+#battleCommands #placeRecruits{background:#d8c78f;color:#172a20}#battleCommands button[hidden]{display:none}
+.first-camp .tab[data-t=hero],.first-camp .rx-toolbar .quantity,body:not(.has-army) #armyRoster{display:none}
+.rx-toolbar button[hidden]{display:none}#prestigeBtn[hidden]{display:none}
+#bossOrb #orbWave{animation:none}#bossMotion,#bossImg{will-change:auto}
+@media(max-width:680px){#hud{width:148px;max-width:45%;padding:8px;font-size:11px}#hud .row{gap:4px}.resource-buttons button{font-size:10px;padding:8px 2px}#supplyInventory{padding-top:6px;margin-top:6px}#supplyInventory #gatherFeedback{font-size:9px;min-height:43px}#playGuide{bottom:10px;font-size:10px;padding:8px 11px;width:calc(100% - 20px)}#cameraTools{bottom:74px}#battleCommands{flex-wrap:wrap}#battleCommands button{font-size:10px;padding:8px 9px}}
+/* Each purchase is a button; explanatory card text never spends currency. */
+.card.army-card{min-height:187px;padding:14px;gap:5px;display:flex;flex-direction:column}.army-card .unit-portrait{width:63px;height:70px;right:12px;top:10px}.army-card .nm{font-size:15px;padding-right:61px}.army-card .role{font-size:10px}.army-card .company-size{font:600 12px/1.5 system-ui;color:#d1ddc1;margin:4px 0}.ally-description{font:11px/1.7 system-ui;color:#a5bba7;min-height:38px;margin:5px 0 8px;max-width:90%}.army-card .recruit-more{margin-top:auto;padding:9px 8px;white-space:normal;min-height:53px}.hire-label{display:block;font:700 13px/1.4 system-ui}.hire-price{display:block;font:10px/1.6 system-ui;opacity:.85}.army-card button.upgrade-line{display:block;border:1px solid #59715c;border-radius:5px;padding:7px;background:#20352a;color:#ddd9b9;font:11px system-ui;cursor:pointer}.army-card button.upgrade-line:disabled{opacity:.45;cursor:default}
+@media(max-width:680px){.card.army-card{min-height:182px;padding:13px}.army-card .unit-portrait{width:62px;height:65px}.army-card .ally-description{min-height:20px;font-size:11px}.army-card .recruit-more{min-height:53px}.army-card .company-size{font-size:12px}}
+#field.gathering,#field.gathering #battleWorld{cursor:default!important}#field.gathering~#weaponPointer{display:none!important}
+#supplyInventory{pointer-events:auto}
+/* One quiet background, no moving or repeated foreground texture. */
+#field>#bgImg{object-position:center top;opacity:1}#battleGround{display:none}
+#titleScreen{background:linear-gradient(#12291fcf,#101d1ee8),url('../assets/forest-clearing.webp') center/cover}
+#boss.dying img,#boss.dying #bossMotion{animation:bossFade .35s ease forwards}@keyframes bossFade{to{opacity:0}}
+#weaponPointer{display:none!important}
+/* Recruitment remains the primary action after the first placement. */
+.army-card .recruit-more{order:2}.army-card .upgrade-line,.army-card .evolution-next{order:3}

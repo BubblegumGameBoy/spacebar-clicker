@@ -564,7 +564,7 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261019-still">
+<link rel="stylesheet" href="rework.css?v=20261019-forest">
 </head>
 <body>
 <div id="titleScreen">
@@ -687,8 +687,8 @@
   <button class="no" id="rankClose" type="button">閉じる</button>
 </div></div>
 
-<script src="supply-core.js"></script>
-<script src="game-core.js"></script>
+<script src="supply-core.js?v=20261019-forest"></script>
+<script src="game-core.js?v=20261019-forest"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -704,8 +704,8 @@ function rnd(a,b){return a+Math.random()*(b-a);}
 
 /* ===== PLAYER / ONLINE DAMAGE RANKING ===== */
 function readStored(key){try{return localStorage.getItem(key);}catch{return null;}}
-const PLAYER_KEY="sbr2_preview_player_name_v1",RANK_KEY="sbr2_preview_damage_rank_v1";
-const PLAYER_ID_KEY="sbr2_preview_player_id_v1",TOTAL_DAMAGE_KEY="sbr2_preview_total_damage_v2";
+const PLAYER_KEY="sbr2_preview_forest_player_name_v1",RANK_KEY="sbr2_preview_forest_damage_rank_v1";
+const PLAYER_ID_KEY="sbr2_preview_forest_player_id_v1",TOTAL_DAMAGE_KEY="sbr2_preview_forest_total_damage_v2";
 const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard2";
 const RANK_VIEW_LIMIT=20; /* 表示件数。サーバー側も同じ値で頭打ちにしてある */
 function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
@@ -805,7 +805,7 @@ function renderRanking(){
 function updatePlayerUi(){const b=$("#playerBtn");if(b)b.textContent="👤 "+playerName;}
 
 /* ===== I18N ===== */
-// 言語は固有のlocalStorageキーで保持し、セーブ(sbr2_preview_save2)とは分離。
+// 言語は固有のlocalStorageキーで保持し、セーブ(sbr2_preview_forest_save2)とは分離。
 // 訳が無いキーは ja に自動フォールバックするので、未訳があっても画面は壊れない。
 const I18N={
  ja:{
@@ -928,7 +928,7 @@ const I18N={
 };
 const validLanguage=v=>["ja","en","zh"].includes(v);
 const requestedLanguage=new URLSearchParams(location.search).get("lang");
-const storedLanguage=readStored("sbr2_preview_lang");
+const storedLanguage=readStored("sbr2_preview_forest_lang");
 let LANG=validLanguage(requestedLanguage)?requestedLanguage:validLanguage(storedLanguage)?storedLanguage:"ja";
 const LANG_CHOSEN=validLanguage(requestedLanguage)||validLanguage(storedLanguage);
 function t(k,...a){ const d=I18N[LANG]||I18N.ja; let v=d[k]; if(v==null) v=I18N.ja[k]; if(v==null) return k;
@@ -938,9 +938,9 @@ function L(o){ if(o==null) return ""; const v=o[LANG]; return v!=null?v:(o.ja!=n
 function heroT(id){ if(id==='vitality'||id==='armor'){const hp=id==='vitality',names={ja:[['生命の鍛錬','最大HP＋15。購入時に15回復する。'],['守りの鍛錬','被ダメージを2%軽減（最大40%）。']],en:[['Vitality','Maximum HP +15. Restore 15 HP when purchased.'],['Armour','Damage taken −2% per rank, up to 40%.']],zh:[['生命训练','最大生命＋15，购买时恢复15生命。'],['防御训练','每级减伤2%，最高40%。']]},v=names[LANG][hp?0:1];return {nm:v[0],desc:v[1],ef:lv=>hp?'HP '+(100+15*lv+3*S.hero.click):'−'+(2*lv)+'%'};} return (I18N[LANG]&&I18N[LANG].hero&&I18N[LANG].hero[id])||I18N.ja.hero[id]; }
 
 /* ===== SOUND ===== */
-const audioSettings=(()=>{try{return Object.assign({bgmOn:true,seOn:true,bgmVol:.28,seVol:.78},JSON.parse(localStorage.getItem("sbr2_preview_audio_v1")||"{}"));}
+const audioSettings=(()=>{try{return Object.assign({bgmOn:true,seOn:true,bgmVol:.28,seVol:.78},JSON.parse(localStorage.getItem("sbr2_preview_forest_audio_v1")||"{}"));}
  catch(e){return {bgmOn:true,seOn:true,bgmVol:.28,seVol:.78};}})();
-function saveAudioSettings(){try{localStorage.setItem("sbr2_preview_audio_v1",JSON.stringify(audioSettings));}catch(e){}}
+function saveAudioSettings(){try{localStorage.setItem("sbr2_preview_forest_audio_v1",JSON.stringify(audioSettings));}catch(e){}}
 
 const bgmTracks={
  climax:new Audio("../assets/bgm-climax.mp3")
@@ -1182,8 +1182,6 @@ function unitPos(u){
 
 // 表示名・説明・効果文(ef)は I18N.<lang>.hero[id] に分離。ここは数値パラメータのみ。
 const HERO=[
- {id:"vitality",base:180,scale:1.35,max:100},
- {id:"armor",base:240,scale:1.4,max:20},
  {id:"click",base:60,  scale:1.5},
  {id:"gpk",  base:120, scale:1.5},
  {id:"crate",base:250, scale:1.6, max:35},
@@ -1232,10 +1230,10 @@ function freshState(){return Core.fresh(UNITS.map(u=>u.id));}
 let pendingOffline=null,saveAvailable=true;
 function load(){
  try{
-  const current=localStorage.getItem("sbr2_preview_save3"),legacy=localStorage.getItem("sbr2_preview_save2");
+  const current=localStorage.getItem("sbr2_preview_forest_save3"),legacy=localStorage.getItem("sbr2_preview_forest_save2");
   const raw=current||legacy;
   S=raw?Core.migrate(JSON.parse(raw),UNITS.map(u=>u.id)):freshState();
-  if(!current&&legacy&&!localStorage.getItem("sbr2_preview_backup_v2"))localStorage.setItem("sbr2_preview_backup_v2",legacy);
+  if(!current&&legacy&&!localStorage.getItem("sbr2_preview_forest_backup_v2"))localStorage.setItem("sbr2_preview_forest_backup_v2",legacy);
   pendingOffline=Core.offline(S,UNITS);S.gold+=pendingOffline.gold;S.lastSeen=Date.now();
  }catch(e){S=freshState();saveAvailable=false;}
 }
@@ -1244,7 +1242,7 @@ const CHEAT=PARAMS.has("cheat");
 const LAYOUT_MODE=PARAMS.has("layout");
 const LAYOUT_MOBILE=LAYOUT_MODE&&PARAMS.has("mobile");
 const SHOWCASE=PARAMS.has("showcase")||LAYOUT_MODE;
-const LAYOUT_KEY="sbr2_preview_unit_layout_v1";
+const LAYOUT_KEY="sbr2_preview_forest_unit_layout_v1";
 let layoutDraft={desktop:{},mobile:{}},layoutUndo=[],layoutSelectedId="giant";
 if(LAYOUT_MODE){
  try{
@@ -1259,7 +1257,7 @@ if(LAYOUT_MODE){
   history.replaceState(null,"",location.pathname+"?"+PARAMS.toString());
  }
 }
-function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
+function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_forest_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
 function earnGold(amount){if(!Number.isFinite(amount)||amount<=0)return;S.gold=Math.min(1e150,S.gold+amount);S.earned=Math.min(1e150,S.earned+amount);}
 function unitOwned(u){return S.owned[u.id]>=1;}
 function unitBuyCost(u){return Core.unitCost(S,u);}
@@ -1584,7 +1582,7 @@ function hideWeaponPointer(){
  weaponPointer.classList.remove('visible');field.classList.remove('weapon-pointer-active');
 }
 function trackWeaponPointer(e){
- if(e.pointerType!=='mouse'||LAYOUT_MODE||!$('#titleScreen').classList.contains('hidden')||
+ if(e.pointerType!=='mouse'||LAYOUT_MODE||window.BattleControl?.activity!=='battle'||window.BattleControl?.placement||!$('#titleScreen').classList.contains('hidden')||
     e.target.closest('button,input,select,a,[role="button"]')){hideWeaponPointer();return;}
  weaponPointerOver=true;syncWeaponPointer();setWeaponPointerPosition(e.clientX,e.clientY);
  weaponPointer.classList.add('visible');field.classList.add('weapon-pointer-active');
@@ -1636,6 +1634,8 @@ function weaponEvolveFx(w){
 }
 function heroAttack(){
  if(!$("#titleScreen").classList.contains("hidden")||window.Rework?.paused||window.BattleControl?.defeated||document.hidden)return;
+ if(window.BattleControl?.placement)return;
+ if(window.BattleControl?.activity==='gather'){window.SupplyFactory?.harvestSelected();return;}
  if(bossDead) return;
  addCombo();
  let dmg=clickDmg(), crit=Math.random()<critRate();
@@ -1648,7 +1648,7 @@ function heroAttack(){
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  window.Rework?.heroHit();
 }
-$("#field").addEventListener("pointerdown",e=>{ if(LAYOUT_MODE||window.BattleControl?.placement||window.SupplyFactory?.building||e.target.closest("button,input,select"))return; trackWeaponPointer(e);heroAttack(); });
+$("#field").addEventListener("pointerdown",e=>{ if(LAYOUT_MODE||window.BattleControl?.placement||window.SupplyFactory?.building||e.target.closest("button,input,select"))return;if(window.BattleControl?.activity==='gather'){SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY));return;}const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;trackWeaponPointer(e);heroAttack(); });
 const _heldKeys=new Set();
 let _cheatTimer=null;
 window.addEventListener("keydown",e=>{
@@ -1954,6 +1954,7 @@ $("#panels").addEventListener("click",e=>{
  const buy=e.target.closest('.card[data-act="buy"]');if(buy&&window.Rework){Rework.recruit(buy.dataset.id);return;}
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
  const act=c.dataset.act, id=c.dataset.id;
+ if(act==="buy"||(act==="upg"&&!e.target.closest("[data-train]")))return;
  if(act==="buy"){ const u=UNITS.find(x=>x.id===id), cst=unitBuyCost(u);
    if(S.gold>=cst && !unitOwned(u)){ S.gold-=cst; S.owned[id]=1; renderUnits(); sndLevelUp();
      try{ gtag('event','unit_buy',{unit_id:id,unit_name:u.name.ja}); }catch(e){} } }
@@ -2046,20 +2047,20 @@ function applyLang(lang){
  renderCards(); updateStageTag(); updateHud();window.Rework?.translate();
 }
 function chooseLang(lang){
- try{ localStorage.setItem("sbr2_preview_lang",lang); }catch(e){}
+ try{ localStorage.setItem("sbr2_preview_forest_lang",lang); }catch(e){}
  applyLang(lang);
  $("#titleScreen").classList.add("hidden");
  _bgmUnlocked=true;try{ ac().resume(); }catch(e){}syncBgm(); // ユーザー操作のタイミングで音声を解禁
 }
 $$("#titleScreen .ts-lang").forEach(b=>{
- const pick=()=>{try{localStorage.setItem("sbr2_preview_lang",b.dataset.lang);}catch(e){}applyLang(b.dataset.lang);};
+ const pick=()=>{try{localStorage.setItem("sbr2_preview_forest_lang",b.dataset.lang);}catch(e){}applyLang(b.dataset.lang);};
  b.addEventListener("click",pick);
  b.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
 });
 $("#langBtn").addEventListener("click",()=>{ $("#titleScreen").classList.remove("hidden"); });
 
 if(PARAMS.has("reset")){
- try{ localStorage.removeItem("sbr2_preview_save3");localStorage.removeItem("sbr2_preview_save2"); }catch(e){}
+ try{ localStorage.removeItem("sbr2_preview_forest_save3");localStorage.removeItem("sbr2_preview_forest_save2"); }catch(e){}
  history.replaceState(null,"",location.pathname);
 }
 load();
@@ -2205,11 +2206,11 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js"></script>
-<script src="army-view.js"></script>
+<script src="army-sim.js?v=20261019-forest"></script>
+<script src="army-view.js?v=20261019-forest"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js"></script>
-<script src="supply-factory.js"></script>
-<script src="rework.js"></script>
+<script src="battle-control.js?v=20261019-forest"></script>
+<script src="supply-factory.js?v=20261019-forest"></script>
+<script src="rework.js?v=20261019-forest"></script>
 </body>
 </html>
