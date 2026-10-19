@@ -1,0 +1,16 @@
+{
+  "kind": "mythos-slayers-2-playtest",
+  "source_sha256": {
+    "index.html": "f3e12bc7a9d8e806fa47ed63d1eb8f2c36d504924f89bcbd44f3eafacb2ccd13",
+    "ranking.html": "80bcf321e69d9678f9fe3a3f80845a12870935cfd5cb4ed74ae7c3f7dd3dd66a",
+    "game-core.js": "948d34ab9758116bdc372b846cf51a5e968167cbf86e067acf87243763ef78d4",
+    "supply-core.js": "6969bf4493b54ad9503ad484acabc23a3b84de8aaa5361bf346542c87b724dae",
+    "army-sim.js": "84cafdaaf5a499806235590ec5181ac718bb0801ffeba5abf1aa57dfee8fb59e",
+    "army-view.js": "f6cd2082306c6567890f61e97eef3bd9bac8100e9fd1c2bfdb7d09dc9fdf3056",
+    "boss-art.js": "e079f24539fc96c11bdb34df3ae5c93c4c584b110d3c073622ab839e179ea6a6",
+    "battle-control.js": "779a698fbe36f034de761a983674b9bf61e8afe38deb87bca72500cfd048af07",
+    "supply-factory.js": "675ec5ea1795dc92f74219f8591f42ffd0b360a7d09c84ce91e8065d12e94834",
+    "rework.js": "50d5f57e10a0dfdc49116caf283eb1a01cec8fb5e073528f9f4142325cda8a31",
+    "rework.css": "316bd10d65dfe55f67bea06418c1a0c6010ea9902357699427b2e55aeba02948"
+  }
+}

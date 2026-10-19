@@ -1,0 +1,566 @@
+{
+  "generator": "OpenAI ImageGen",
+  "formatConversion": "FFmpeg WebP",
+  "monsters": [
+    {
+      "file": "beast.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.573,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "blackgoat.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.582,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "blob.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.588,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "carrion.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.598,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "chaugnar.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.54,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "cthugha.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.597,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "cthulhu.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.517,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "deepone.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.678,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "eihort.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.515,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "eldermind.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.591,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "flame.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.685,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "formless.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.526,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "ghast.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.616,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "ghoul.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.702,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "glaaki.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.56,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "gug.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.587,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "hastur.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.651,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "hellplant.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.572,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "hound.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.581,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "hunter.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.532,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "hunter2.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.532,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "migo.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.58,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "moonbeast.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.48,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "mordiggian.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.612,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "nightgaunt.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.685,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "nightwing.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.536,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "nyarlathotep.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.73,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "objectx.webp",
+      "width": 1478,
+      "height": 1064,
+      "transparentFraction": 0.631,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "rat.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.624,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "sanddweller.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.668,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "serpentman.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.652,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "shaggai.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.596,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "shantak.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.523,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "shantak2.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.532,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "skyfiend.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.67,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "stormgod.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.598,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "tindalos.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.697,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "tsathoggua.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.427,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "ygolonac.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.663,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    },
+    {
+      "file": "yith.webp",
+      "width": 1536,
+      "height": 1024,
+      "transparentFraction": 0.55,
+      "frames": 4,
+      "layout": "2x2",
+      "poses": [
+        "idle",
+        "anticipation",
+        "attack",
+        "recovery"
+      ]
+    }
+  ]
+}
