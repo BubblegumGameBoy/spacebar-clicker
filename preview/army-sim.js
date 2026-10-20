@@ -1,11 +1,11 @@
 /* Individual movement, range checks and local body collisions. No DOM or timers. */
-(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.ArmySim=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+(function(root,factory){const common=typeof module==='object'&&module.exports,api=factory(common?require('./outpost-core.js'):null);if(common)module.exports=api;else root.ArmySim=api;})(typeof globalThis!=='undefined'?globalThis:this,function(outpostCore){
  'use strict';
  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
  const noise=n=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
  class Battle{
   constructor(){this.soldiers=[];this.time=0;this.nextKey=1;this.width=1100;this.height=500;this.ground=170;this.boss={x:930,y:370,r:100,alive:true,token:0};this.pending=[];this.stats={pairs:0,attacks:0};}
-  bounds(width,height,boss){const oldW=this.width,oldH=this.height;this.width=width;this.height=height;this.ground=height*.34;for(const p of this.soldiers){p.x=p.x/oldW*width;p.y=clamp(p.y/oldH*height,this.ground+25,height-35);if(p.order){p.order.x=p.order.x/oldW*width;p.order.y=p.order.y/oldH*height;}}this.boss={...this.boss,...boss};}
+  bounds(width,height,boss){const oldW=this.width,oldH=this.height;this.width=width;this.height=height;this.ground=this.fixedWorld?90:height*.34;if(!this.fixedWorld)for(const p of this.soldiers){p.x=p.x/oldW*width;p.y=clamp(p.y/oldH*height,this.ground+25,height-35);if(p.order){p.order.x=p.order.x/oldW*width;p.order.y=p.order.y/oldH*height;}}this.boss={...this.boss,...boss};}
   encounter(token){this.boss.token=token;this.pending=[];this.navigation=null;for(const p of this.soldiers){if(p.u.worker)continue;p.cooldown=noise(p.key+token)*Math.max(.2,p.interval);p.windup=0;} }
   sync(companies,recruitId){
    const counts=new Map(companies.map(u=>[u.id,u.count]));
@@ -19,9 +19,11 @@
     }
    }
   }
-  range(p){return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
+  range(p){if(Array.isArray(this.enemies)){const core=outpostCore||globalThis.OutpostCore;return core?.stats(p.id)?.range||0;}return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
+  target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r+13)||null;}
+  round(){return this.outpostState?.round??this.roundToken??this.boss.token;}
   distance(p){return Math.max(0,Math.hypot(p.x-this.boss.x,p.y-this.boss.y)-this.boss.r);}
-  canHit(p){return this.boss.alive&&!p.u.healer&&!p.u.worker&&this.distance(p)<=this.range(p)+p.r;}
+  canHit(p){if(Array.isArray(this.enemies))return !!this.target(p);return this.boss.alive&&!p.u.healer&&!p.u.worker&&this.distance(p)<=this.range(p)+p.r;}
   command(keys,x,y){const chosen=this.soldiers.filter(p=>keys.has(p.key)),r=Math.max(22,Math.sqrt(chosen.length)*14);for(const p of chosen){p.commanded=true;const angle=noise(p.key+7)*Math.PI*2,d=Math.sqrt(noise(p.key+9))*r;p.order={x:clamp(x+Math.cos(angle)*d,p.r+5,this.width-p.r-5),y:clamp(y+Math.sin(angle)*d,this.ground+p.r+5,this.height-p.r-20)};}}
   free(p,x,y){
    if(this.boss.alive&&Math.hypot(x-this.boss.x,y-this.boss.y)<this.boss.r+p.r)return false;
@@ -44,27 +46,28 @@
   }
   releaseOrders(){for(const p of this.soldiers){p.order=null;p.commanded=false;}}
   step(dt,hero){
-   dt=Math.min(.1,dt);this.time+=dt;const events=[],boss=this.boss;
-   const remaining=[];for(const hit of this.pending){if(hit.token!==boss.token)continue;if(hit.due>this.time){remaining.push(hit);continue;}const p=hit.p;if(!p.stun&&(hit.heal?Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p)+20:this.canHit(p)))events.push({...hit,kind:hit.heal?'heal':'damage'});}this.pending=remaining;
+   if(!Number.isFinite(dt)||dt<0)return [];
+   dt=Math.min(.1,dt);this.time+=dt;const events=[],boss=this.boss,multi=Array.isArray(this.enemies);
+   const remaining=[];for(const hit of this.pending){if(hit.token!==boss.token||(hit.targetKey!==undefined&&(!multi||hit.roundToken!==this.round())))continue;if(hit.due>this.time){remaining.push(hit);continue;}const p=hit.p;if(hit.targetKey!==undefined){const target=this.enemies.find(e=>e.key===hit.targetKey);if(!p.stun&&target===hit.target&&target.alive)events.push({...hit,kind:'damage'});}else if(!p.stun&&(hit.heal?Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p)+20:this.canHit(p)))events.push({...hit,kind:hit.heal?'heal':'damage'});}this.pending=remaining;
    for(const p of this.soldiers){
     if(p.enterAt>this.time){p.moving=false;continue;}
     p.stun=Math.max(0,p.stun-dt);p.cooldown-=dt;if(p.stun){p.moving=false;continue;}
-    const u=p.u;let goal=p.order;
-    if(!goal){
+    const u=p.u;let goal=multi?null:p.order;
+    if(!goal&&!multi){
      if(u.worker)goal=p.order;
      else if(u.healer)goal={x:hero.x+60+noise(p.key)*100,y:hero.y-70+noise(p.key+8)*140};
      else if(boss.alive&&!this.canHit(p)){const angle=Math.PI*(.67+noise(p.key+3)*.66),reach=boss.r+(u.ranged?this.range(p)*.78:18);goal={x:boss.x+Math.cos(angle)*reach,y:boss.y+Math.sin(angle)*reach};}
     }
     if(u.worker&&goal){const key=Math.floor(goal.x/24)+','+Math.floor(goal.y/24);if(p.nav?.key!==key)p.nav={key,points:this.path(p,goal)};while(p.nav.points.length&&Math.hypot(p.x-p.nav.points[0].x,p.y-p.nav.points[0].y)<12)p.nav.points.shift();if(p.nav.points.length)goal=p.nav.points[0];}
     p.moving=false;
-    if(goal&&!this.stationary){const gx=clamp(goal.x,p.r+5,this.width-p.r-5),gy=clamp(goal.y,this.ground+p.r+5,this.height-p.r-20),dx=gx-p.x,dy=gy-p.y,d=Math.hypot(dx,dy);if(d>4){const distance=Math.min(d,p.speed*dt),ux=dx/d,uy=dy/d,side=noise(p.key)>.5?1:-1;for(const angle of [0,.75*side,1.3*side,1.58*side,-1.3*side,-1.58*side]){const x=p.x+(ux*Math.cos(angle)-uy*Math.sin(angle))*distance,y=p.y+(uy*Math.cos(angle)+ux*Math.sin(angle))*distance;if(this.free(p,x,y)){p.x=x;p.y=y;p.moving=true;break;}}}}
+    if(goal&&!this.stationary&&!multi){const gx=clamp(goal.x,p.r+5,this.width-p.r-5),gy=clamp(goal.y,this.ground+p.r+5,this.height-p.r-20),dx=gx-p.x,dy=gy-p.y,d=Math.hypot(dx,dy);if(d>4){const distance=Math.min(d,p.speed*dt),ux=dx/d,uy=dy/d,side=noise(p.key)>.5?1:-1;for(const angle of [0,.75*side,1.3*side,1.58*side,-1.3*side,-1.58*side]){const x=p.x+(ux*Math.cos(angle)-uy*Math.sin(angle))*distance,y=p.y+(uy*Math.cos(angle)+ux*Math.sin(angle))*distance;if(this.free(p,x,y)){p.x=x;p.y=y;p.moving=true;break;}}}}
     // Each soldier owns a separate cooldown, anticipation and actual range test.
-    const ready=u.worker?false:u.healer?hero.hp<hero.max&&Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p):this.canHit(p);
+    const target=multi?this.target(p):null,ready=u.worker?false:multi?!!target:u.healer?hero.hp<hero.max&&Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p):this.canHit(p);
     if(p.cooldown<=0&&ready){p.cooldown=p.interval;p.attackAt=this.time;this.stats.attacks++;
-     {events.push({kind:'release',p,heal:!!u.healer});this.pending.push({p,heal:!!u.healer,amount:u.healer?u.heal:u.damage,token:boss.token,due:this.time+(u.healer?.25:(u.anim?.impact??(u.ranged?450:200))/1000)});}
+     {const aim=multi?{target,targetKey:target.key,roundToken:this.round()}:{};events.push({kind:'release',p,heal:!!u.healer,...aim});this.pending.push({p,heal:!!u.healer,amount:u.healer?u.heal:u.damage,token:boss.token,due:this.time+(u.healer?.25:(u.anim?.impact??(u.ranged?450:200))/1000),...aim});}
     }
    }
-   this.hero=hero;if(!this.stationary)this.separate();
+   this.hero=hero;if(!this.stationary&&!multi)this.separate();
    return events;
   }
   separate(){

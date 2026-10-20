@@ -1,0 +1,108 @@
+/* The warehouse belongs to the house. The toolbar holds secondary controls. */
+body.outpost-game #hud{display:none!important}
+body.outpost-game #campWarehouse{position:absolute;left:0;top:0;z-index:16;width:176px;padding:7px 9px 6px;border:1px solid #8b7751;border-radius:5px;background:linear-gradient(100deg,#302d20f5,#3a3325f5 55%,#302a20f5);box-shadow:0 3px 8px #10251b38;color:#eadcb5;font:11px/1.3 system-ui;pointer-events:auto;box-sizing:border-box}
+body.outpost-game #campWarehouse::before,body.outpost-game #campWarehouse::after{content:'';position:absolute;top:8px;width:3px;height:3px;background:#a28d61;border-radius:50%;box-shadow:0 31px #7d6d49;pointer-events:none}
+body.outpost-game #campWarehouse::before{left:4px}body.outpost-game #campWarehouse::after{right:4px}
+body.outpost-game #campWarehouse .camp-house-label{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:30px;margin:0;padding:0 2px 4px;border:0;border-bottom:1px solid #9c88514d;background:none;color:#efe0ae;font:700 12px system-ui;cursor:pointer}
+body.outpost-game #campWarehouse .camp-house-label span{font-size:10px;color:#d6c18c}
+body.outpost-game #campWarehouse .camp-gold{display:flex;align-items:center;justify-content:space-between;padding:4px 3px 1px;font-size:10px;color:#cabd97}
+body.outpost-game #campWarehouse .camp-gold strong{font-size:12px;color:#f4d98d;font-variant-numeric:tabular-nums}
+body.outpost-game #campWarehouse #supplyInventory{position:static;display:block;max-width:none;border:0;padding:0;margin:0;background:none;pointer-events:auto}
+body.outpost-game #campWarehouse .resource-buttons{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:3px}
+body.outpost-game #campWarehouse .resource-buttons button{position:relative;min-width:0;min-height:42px;display:grid;grid-template-columns:auto 1fr;align-content:center;align-items:center;gap:0 5px;padding:4px 6px;border:1px solid #86754f;border-radius:3px;background:#4c4630;color:#f3e6bc;font:600 12px system-ui;box-shadow:none;text-align:left}
+body.outpost-game #campWarehouse .resource-buttons button::before{content:attr(data-camp-label);font-size:10px;font-weight:500;color:#d2c5a0;max-width:44px;overflow:hidden;text-overflow:ellipsis}
+body.outpost-game #campWarehouse .resource-buttons button[aria-pressed=true]{border-color:#b9aa71;background:#615736}
+body.outpost-game #campWarehouse .resource-buttons button>span{display:block;min-width:0;text-align:right}
+body.outpost-game #campWarehouse .resource-buttons button b{font:800 15px/1 system-ui;font-variant-numeric:tabular-nums}
+body.outpost-game #campWarehouse .resource-buttons button small{grid-column:1/-1;font:9px/1.3 system-ui;margin-top:3px;color:#b7bf99;text-align:right}
+body.outpost-game #campWarehouse .material-icon{display:none}
+body.outpost-game #campWarehouse #gatherFeedback{display:none}
+body.outpost-game #campWarehouse #pickupFeedback{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);min-height:0}
+body.outpost-game #campDeliveryNote{display:block;margin-top:5px;font:9px/1.35 system-ui;color:#c5c59f;min-height:24px}
+body.outpost-game #campWarehouse.camp-received{border-color:#efd48a;box-shadow:0 0 0 2px #f5d57a2b,0 3px 8px #10251b38}
+body.outpost-game #rxToolbar #hudTools{display:flex;align-items:center;gap:4px;padding:0;margin:0 0 0 auto;border:0;grid-column:auto;grid-row:auto}
+body.outpost-game #rxToolbar #hudTools button{min-height:30px;padding:4px 7px;font:9px system-ui;white-space:nowrap}
+body.outpost-game #rxToolbar #hudTools #playerBtn,body.outpost-game #rxToolbar #hudTools #rankBtn{display:none}
+body.outpost-game #rxToolbar{flex-wrap:wrap}
+body.outpost-game #rxToolbar .recruit-quantity{margin-left:0}
+body.outpost-game #campWorkshop .camp-workshop{max-width:780px}
+body.outpost-game #campWorkshop .camp-workshop-intro{color:#c4d3b9;font:13px/1.7 system-ui;margin:12px 0 8px;max-width:580px}
+body.outpost-game #campWorkshop .camp-workshop-wallet{display:flex;gap:12px;align-items:center;margin:14px 0 20px;font:12px system-ui;color:#c5c9a7}
+body.outpost-game #campWorkshop .camp-workshop-wallet strong{font:800 20px system-ui;color:#ead08b;font-variant-numeric:tabular-nums}
+body.outpost-game #campWorkshop .camp-rail-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+body.outpost-game #campWorkshop .camp-rail-option{padding:16px;border:1px solid #748064;border-radius:8px;background:#263d2d}
+body.outpost-game #campWorkshop .camp-rail-heading{display:flex;gap:7px;align-items:center;justify-content:space-between;min-height:32px}
+body.outpost-game #campWorkshop .camp-rail-heading h3{font:700 16px/1.4 system-ui;color:#ecdaa6;margin:0}
+body.outpost-game #campWorkshop .camp-rail-count{font:10px system-ui;color:#accb9c;white-space:nowrap}
+body.outpost-game #campWorkshop .camp-route{display:flex;align-items:center;gap:8px;min-height:70px}
+body.outpost-game #campWorkshop .camp-route b{max-width:95px;font:700 11px/1.4 system-ui;color:#dce5bf}
+body.outpost-game #campWorkshop .camp-route-home{padding:7px 8px;border:1px solid #9b8353;background:#5a4b30;border-radius:3px;white-space:nowrap}
+body.outpost-game #campWorkshop .camp-route-track{position:relative;flex:1;min-width:18px;height:11px;border-top:2px solid #c4a771;border-bottom:2px solid #c4a771;background:repeating-linear-gradient(90deg,transparent 0 9px,#8f7549 9px 12px,transparent 12px 16px)}
+body.outpost-game #campWorkshop .camp-route-track::after{content:'›';position:absolute;right:-2px;top:-12px;font:25px system-ui;color:#d5bc84}
+body.outpost-game #campWorkshop .camp-rail-rate{font:12px/1.6 system-ui;color:#e2e0bd;min-height:38px;margin:0 0 8px}
+body.outpost-game #campWorkshop .camp-rail-workers{font:11px/1.6 system-ui;color:#a8c1a1;min-height:36px;margin:0 0 12px}
+body.outpost-game #campWorkshop [data-camp-build]{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:48px;padding:10px 12px;border:1px solid #b9b779;border-radius:5px;background:#5d653c;color:#fff0be;font:700 12px/1.4 system-ui;text-align:left;cursor:pointer}
+body.outpost-game #campWorkshop [data-camp-build] strong{font:800 15px system-ui;white-space:nowrap}
+body.outpost-game #campWorkshop [data-camp-build]:disabled{cursor:default;background:#354532;border-color:#6e7d5c;color:#b2b99a;opacity:.75}
+body.outpost-game #campWorkshop .camp-rail-afford{display:block;font:11px/1.5 system-ui;color:#e4bc8a;min-height:17px;margin-top:6px}
+body.outpost-game #campWorkshop .camp-workshop-status{min-height:24px;margin:16px 0 0;color:#d8dfa7;font:12px/1.6 system-ui}
+body.outpost-game #campWorkshop .camp-workshop-note{border-top:1px solid #64745b;padding-top:13px;margin:9px 0 0;color:#aabfa4;font:12px/1.6 system-ui}
+body.outpost-game #campWorkshop .is-connected .camp-route-track{border-color:#9cba7a}
+body.outpost-game #campWorkshop .camp-next-route{border-color:#c3b67c;background:#30442e}
+body.outpost-game #campWorkshop button:focus-visible,body.outpost-game #campWarehouse button:focus-visible{outline:2px solid #ffe1a0;outline-offset:3px}
+body.outpost-game #raidBoard{position:absolute;z-index:14;right:12px;top:12px;width:205px;padding:10px 12px;border:1px solid #8b895e;border-radius:6px;background:#1c3028ee;color:#eae0b3;font:11px/1.45 system-ui;box-sizing:border-box}
+body.outpost-game #raidBoard h3{font-size:14px;margin:0 0 7px;color:#f0dca0}
+body.outpost-game #raidBoard p{margin:4px 0}
+body.outpost-game #raidBoard button{min-height:38px;width:100%;margin-top:7px;border:1px solid #b8b478;border-radius:4px;background:#647044;color:#fff0ba;font:700 12px system-ui;cursor:pointer}
+body.outpost-game #raidBoard button:disabled{opacity:.5;cursor:default}
+body.outpost-game .raid-boxes{display:flex;gap:5px;margin:6px 0}
+body.outpost-game .raid-boxes>*{width:16px;height:16px;border:1px solid #b5a271;background:#645637;border-radius:2px}
+body.outpost-game .raid-boxes>.lost{opacity:.3;background:#3c342e}
+body.outpost-game #raidBanner{color:#efe1ae;font:700 12px/1.5 system-ui}
+@media(max-width:680px){
+ body.outpost-game #campWarehouse{width:154px;padding:5px 7px}
+ body.outpost-game #campWarehouse .camp-house-label{min-height:32px;font-size:11px}
+ body.outpost-game #campWarehouse .camp-house-label span{font-size:9px}
+ body.outpost-game #campWarehouse .resource-buttons button{min-height:44px;padding:4px;gap:0 3px}
+ body.outpost-game #campWarehouse .resource-buttons button b{font-size:14px}
+ body.outpost-game #campWarehouse .resource-buttons button::before{font-size:9px;max-width:35px}
+ body.outpost-game #campDeliveryNote{font-size:9px;min-height:23px}
+ body.outpost-game #rxToolbar #hudTools{gap:3px}
+ body.outpost-game #rxToolbar #hudTools button{min-height:30px;font-size:8px;padding:4px 5px}
+ body.outpost-game #campWorkshop .camp-workshop{padding:27px 14px 18px}
+ body.outpost-game #campWorkshop h2{font-size:25px}
+ body.outpost-game #campWorkshop .camp-rail-options{grid-template-columns:1fr;gap:10px}
+ body.outpost-game #campWorkshop .camp-rail-option{padding:12px}
+ body.outpost-game #campWorkshop .camp-route{min-height:52px}
+ body.outpost-game #campWorkshop .camp-rail-workers{min-height:0;margin-bottom:10px}
+ body.outpost-game #campWorkshop .camp-rail-rate{min-height:0}
+ body.outpost-game #campWorkshop .camp-workshop-wallet{margin-bottom:13px}
+ body.outpost-game #campWorkshop .camp-workshop-intro{font-size:12px}
+ body.outpost-game #campWorkshop .camp-rail-heading h3{font-size:15px}
+ body.outpost-game #raidBoard{right:8px;top:8px;width:158px;padding:8px 9px;font-size:10px}
+ body.outpost-game #raidBoard h3{font-size:12px}
+ body.outpost-game #raidBanner{font-size:10px}
+}
+
+/* Only the current camp rules appear in this three-raid prototype. */
+body.outpost-game #boss,body.outpost-game #bossPlate,body.outpost-game #stageTag,body.outpost-game #chapterTrail,body.outpost-game #bossTrait,body.outpost-game #comboTag,body.outpost-game #weaponPointer,body.outpost-game #killBanner,body.outpost-game #rxTree,body.outpost-game #rxBook,body.outpost-game #tabs,body.outpost-game #prestigeBtn{display:none!important}
+body.outpost-game #raidBoard .raid-heading{display:inline-block;font-size:13px;letter-spacing:.04em}
+body.outpost-game #raidBoard .raid-clock{float:right;color:#e5c778;font-weight:800;font-variant-numeric:tabular-nums}
+body.outpost-game #raidBoard .raid-result{display:block;min-height:29px;color:#c7d2b2}
+body.outpost-game #raidBoard .raid-boxes{color:#f0d694;font-weight:700}
+body.outpost-game #raidWorkshop{background:#354b36!important;font-weight:500!important;min-height:30px!important}
+body.outpost-game #armyRoster:empty{display:none}
+body.outpost-game #cameraTools{opacity:.8}
+body.outpost-game #field,body.outpost-game #battleWorld{cursor:default}
+@media(max-width:680px){body.outpost-game #raidBoard .raid-heading{font-size:11px}body.outpost-game #raidBoard .raid-clock{float:none;display:block;font-size:10px}body.outpost-game #raidBoard{width:149px}body.outpost-game #raidBoard .raid-result{font-size:9px}}
+/* Forecast occupies the scenery margin, keeping both enemy entrances visible. */
+body.outpost-game #raidBoard{width:385px;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:'heading clock' 'forecast boxes' 'result result' 'start workshop';gap:3px 8px;padding:8px 10px}
+body.outpost-game #raidBoard .raid-heading{grid-area:heading;font-size:12px}
+body.outpost-game #raidBoard .raid-clock{grid-area:clock;float:none;text-align:right;font-size:10px}
+body.outpost-game #raidBoard .raid-forecast{grid-area:forecast;margin:0;font-size:10px}
+body.outpost-game #raidBoard .raid-boxes{grid-area:boxes;margin:0;justify-content:flex-end;font-size:10px}
+body.outpost-game #raidBoard .raid-result{grid-area:result;min-height:0;font-size:10px;line-height:1.4}
+body.outpost-game #raidBoard #raidStart{grid-area:start}
+body.outpost-game #raidBoard #raidWorkshop{grid-area:workshop}
+body.outpost-game #raidBoard button{min-height:30px!important;margin:0;font-size:10px}
+@media(max-width:680px){body.outpost-game #raidBoard{width:216px;top:auto;bottom:8px;right:8px;padding:7px 8px;gap:3px 5px}body.outpost-game #raidBoard .raid-heading{font-size:10px}body.outpost-game #raidBoard .raid-clock{font-size:9px}body.outpost-game #raidBoard .raid-forecast,body.outpost-game #raidBoard .raid-boxes{font-size:9px}body.outpost-game #raidBoard .raid-result{font-size:9px}body.outpost-game #raidBoard button{font-size:9px;min-height:31px!important}body.outpost-game #cameraTools{top:8px;bottom:auto;left:8px;right:auto}}

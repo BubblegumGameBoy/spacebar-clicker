@@ -127,7 +127,7 @@ body:not(.resources-open) #hud .row:has(#goldBig),#field:not(.has-combat) #hud .
 
 /* Review pass: short, local feedback and a legible resource -> ally loop. */
 #field.planning-combat #boss{visibility:visible;opacity:.72}
-#field.planning-combat #bossPlate{visibility:visible}
+#field.planning-combat:not(.has-combat) #bossPlate{visibility:visible}
 #hud{width:196px;padding:9px 10px;font-size:11px}
 body:not(.has-army) #hud .row:has(#hUnits){display:none}
 #supplyInventory{padding-top:4px;margin-top:4px}
@@ -220,3 +220,6 @@ body:not(.has-army) #hud .row:has(#hUnits){display:none}
 .camp-unit.tier-1{border-color:#79cbd0}.camp-unit.tier-2{border-color:#ba95df}.camp-unit.tier-3{border-color:#f1d487}
 .camp-tools{margin-top:20px;border-top:1px solid #647259;padding-top:15px}.camp-tools summary{cursor:pointer;color:#c9d9c0;font-size:13px}.camp-hero-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
 @media(max-width:680px){.recruit-quantity select{min-height:30px;font-size:11px}.camp-training-grid,.camp-hero-grid{grid-template-columns:1fr}.camp-unit{padding:12px}.camp-unit h3{font-size:16px}}
+
+#field:focus-visible{outline:2px solid #edcf88;outline-offset:-3px}
+#langBtn:focus-visible{outline:2px solid #edcf88;outline-offset:3px}

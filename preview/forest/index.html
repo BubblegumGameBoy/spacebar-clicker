@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script src="playtest-boot.js"></script>
+<meta name="robots" content="noindex, nofollow">
+<!-- Google tag (gtag.js) -->
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){}
+  gtag('js', new Date());
+  gtag('config', 'G-17WNKDX3ZB');
+</script>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>[PLAYTEST] SPACEBAR Mythos Slayers 2</title>
+<!-- Google tag (gtag.js) -->
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){}
+  gtag('js', new Date());
+  gtag('config', 'G-CH13VBXKD9');
+</script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent;
+      -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
+  html,body,#field{
+    touch-action:manipulation; /* シングルタップのみ、長押し挙動ブロック */
+    -webkit-user-select:none;
+  }
+  :root{
+    --panel:#161b21; --panel2:#1e252e; --line:#2c3742;
+    --gold:#f3c34a; --txt:#d7e0e8; --sub:#8a99a8;
+    --accent:#7fae6b;
+  }
+  html,body{ height:100%; }
+  body{
+    font-family:"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    background:#0c0f13; color:var(--txt); overflow:hidden; user-select:none;
+    display:flex; flex-direction:column;
+    height:100vh; height:100dvh; /* dvh = ブラウザUI除いた実際の表示高さ */
+  }
+  /* ===== BATTLEFIELD ===== */
+  #field{
+    position:relative; width:100%; height:62vh; overflow:hidden;
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><g transform='rotate(45 16 16)'><rect x='14.5' y='2' width='3' height='17' rx='1' fill='%23dfe7ee' stroke='%23222' stroke-width='1'/><polygon points='16,0 14.5,3 17.5,3' fill='%23f4f9ff' stroke='%23222' stroke-width='.6'/><rect x='10' y='18.5' width='12' height='3' rx='1.2' fill='%23b88a2e' stroke='%23222' stroke-width='1'/><rect x='14.6' y='21.5' width='2.8' height='7' rx='1.2' fill='%236b4a1d' stroke='%23222' stroke-width='1'/><circle cx='16' cy='30' r='1.8' fill='%23f3c34a' stroke='%23222' stroke-width='.8'/></g></svg>") 4 4, crosshair;
+    flex:0 0 auto;
+  }
+  #bgImg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    object-position:bottom; z-index:0; pointer-events:none;}
+
+  /* ===== BOSS ===== */
+  #boss{position:absolute; right:8%; bottom:14%; height:62%; max-width:48%; transform-origin:bottom center;
+    z-index:5; pointer-events:none;}
+  #boss img{height:100%; width:auto; max-width:100%; object-fit:contain; object-position:bottom; display:block;
+    transform-origin:bottom center;}
+  #boss:not(.fly):not(.hit):not(.dying) img{animation:bossIdle 3.4s ease-in-out infinite;}
+  @keyframes bossIdle{0%,100%{transform:translateY(0) scale(1)}35%{transform:translateY(-.7%) scale(1.008,.994)}
+    70%{transform:translateY(.25%) scale(.996,1.008)}}
+  /* wide bosses (e.g. ~2:1 aspect) need more horizontal room so they don't render tiny */
+  #boss.wide{height:46%; max-width:72%; right:2%; bottom:34%;}
+  #boss.flip{transform:scaleX(-1);} /* mirror right-facing boss art to face the player's units */
+  /* grounded bosses stay perfectly still; only winged / floating bosses (.fly) hover */
+  @keyframes bobFly{ 0%,100%{transform:translateY(0) rotate(0);} 50%{transform:translateY(-3%) rotate(-.6deg);} }
+  #boss.fly img{ animation:bobFly 2.9s ease-in-out infinite; }
+  #boss.hit img{ animation:shake .15s; filter:brightness(1.8) saturate(1.4)!important; }
+  @keyframes shake{ 0%{transform:translate(0,0);}25%{transform:translate(-6px,2px);}50%{transform:translate(5px,-1px);}75%{transform:translate(-3px,1px);}100%{transform:translate(0,0);} }
+  #boss.dying img{ animation:die .7s forwards; }
+  @keyframes die{ to{ transform:translateY(8%) rotate(12deg) scale(.85); opacity:0; filter:saturate(0) brightness(.4);} }
+
+  #bossPlate{position:absolute; top:4%; left:50%; transform:translateX(-50%); z-index:8;
+    text-align:center; pointer-events:none;
+    /* 渋い見た目：欧文はセリフ、和文は明朝（端末標準フォント。外部読込なし） */
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Noto Serif CJK JP",serif;}
+
+  /* ===== Diablo風 HP球体オーブ ===== */
+  #bossOrb{position:relative; width:96px; height:96px; border-radius:50%; margin:0 auto;
+    background:radial-gradient(circle at 36% 28%, #4a1414 0%, #220a0a 55%, #0a0303 100%);
+    box-shadow:inset 0 -8px 16px rgba(0,0,0,.7), inset 0 4px 10px rgba(255,150,120,.15),
+      0 0 0 2px #1c130c, 0 0 0 4px #8a6c30, 0 0 0 5px #cfab54, 0 0 0 6px #4a3718,
+      0 6px 16px rgba(0,0,0,.7), 0 0 14px rgba(255,80,60,.25);
+    overflow:hidden;}
+  #bossLiquid{position:absolute; left:0; right:0; bottom:0; height:100%;
+    background:linear-gradient(#ff6b54 0%, #e02a22 40%, #7c1212 100%);
+    box-shadow:inset 0 8px 16px rgba(255,150,110,.5), inset 0 -6px 14px rgba(0,0,0,.4);
+    transition:height .18s linear;}
+  /* 液面の波：横にゆっくり流して常時ゆらぎを出す（seamlessにループ） */
+  #orbWave{position:absolute; top:-9px; left:0; width:200%; height:14px; display:block; fill:#ff7a60;
+    animation:orbwave 3.5s linear infinite;}
+  @keyframes orbwave{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  #orbGloss{position:absolute; top:7px; left:16px; width:40px; height:26px; border-radius:50%; z-index:4;
+    background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.75), rgba(255,255,255,.1) 60%, transparent 72%);}
+  #orbRim{position:absolute; inset:0; border-radius:50%; z-index:5; pointer-events:none;
+    box-shadow:inset 0 2px 6px rgba(255,255,255,.25), inset 0 -3px 8px rgba(0,0,0,.55);}
+  #bossHpText{position:absolute; inset:0; z-index:6; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; line-height:1.12; padding-top:14px;
+    text-shadow:0 1px 3px #000,0 0 5px #000; color:#fff;}
+  #hptext{font-size:13px; font-weight:700; letter-spacing:.04em; white-space:nowrap;}
+  #bossRem{font-size:8.5px; font-weight:600; letter-spacing:.05em; color:#ffd9b0; margin-top:2px; white-space:nowrap;}
+  /* 名前バナー：半透過でオーブ上部に重ねる */
+  #bossNameFrame{position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:7;
+    display:inline-block; max-width:min(78vw,360px); white-space:nowrap; padding:3px 22px;
+    background:linear-gradient(rgba(24,16,9,.62),rgba(8,5,3,.66));
+    border-top:1.5px solid rgba(200,150,70,.85); border-bottom:1.5px solid rgba(110,83,32,.85);
+    box-shadow:0 2px 8px rgba(0,0,0,.55); backdrop-filter:blur(1.5px); -webkit-backdrop-filter:blur(1.5px);}
+  #bossNameFrame::before,#bossNameFrame::after{content:""; position:absolute; top:50%; width:8px; height:8px;
+    transform:translateY(-50%) rotate(45deg); background:linear-gradient(135deg,#d9b35a,#7a5c24);}
+  #bossNameFrame::before{left:-4px;} #bossNameFrame::after{right:-4px;}
+  .bn-line{font-size:clamp(13px,2.2vw,16px); font-weight:700; letter-spacing:.04em; color:#f0e6d2; text-shadow:0 1px 3px #000;}
+  #bossNameFrame.split .bn-epi{display:block; font-size:10px; font-weight:600; letter-spacing:.12em;
+    color:#e6c674; text-shadow:0 1px 2px #000; line-height:1.1;}
+  #bossNameFrame.split .bn-main{display:block; font-size:clamp(14px,2.4vw,17px); font-weight:800;
+    letter-spacing:.03em; color:#f0e6d2; text-shadow:0 1px 3px #000; line-height:1.15;}
+
+  /* ===== UNITS ===== */
+  .unit-sprite{position:absolute; height:10%; z-index:6; transform-origin:bottom center;
+    will-change:filter;}
+  .unit-sprite img{position:relative;z-index:1;height:100%; width:auto; display:block; image-rendering:pixelated;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  .unit-sprite.animated-unit{height:var(--unit-height,15%); aspect-ratio:var(--unit-frame-ratio,0.9375);}
+  .unit-sprite .unit-anim{position:relative;z-index:1;display:block; width:100%; height:100%; background-repeat:no-repeat;
+    background-position:0 0; image-rendering:pixelated;
+    filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  /* A soft contact patch follows every ground unit's feet and visually locks it to the terrain. */
+  .unit-sprite.grounded::before{content:"";position:absolute;z-index:0;left:50%;bottom:1.5%;
+    width:72%;height:10%;transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(ellipse,rgba(0,0,0,.72) 0 35%,rgba(25,16,8,.46) 52%,transparent 74%);
+    filter:blur(.4px);opacity:.9;}
+  /* The giant is a translucent rear-line siege silhouette; every soldier stays in front. */
+  .unit-sprite[data-type="giant"]{z-index:4;opacity:.82;pointer-events:none;
+    filter:saturate(.88) brightness(.88) contrast(1.08);}
+  .unit-sprite[data-type="giant"]::before{width:78%;height:4%;bottom:2%;opacity:.88;}
+  .unit-sprite[data-type="giant"] .unit-anim{filter:drop-shadow(0 8px 11px rgba(0,0,0,.82));}
+  /* Lv50/100/150 awakening stages are visible in battle, not only in the upgrade numbers. */
+  .unit-sprite.awakened1{--aura:#55d8ff}.unit-sprite.awakened2{--aura:#b35cff}.unit-sprite.awakened3{--aura:#ffd85a}
+  .unit-sprite.awakened1::after,.unit-sprite.awakened2::after,.unit-sprite.awakened3::after{
+    content:"";position:absolute;z-index:0;left:50%;bottom:3%;width:86%;height:70%;transform:translateX(-50%);
+    border-radius:50%;background:radial-gradient(ellipse at 50% 72%,color-mix(in srgb,var(--aura) 28%,transparent),transparent 68%);
+    filter:blur(2px);animation:auraPulse 1.8s ease-in-out infinite;pointer-events:none;}
+  .unit-sprite.awakened1 .unit-anim{filter:brightness(1.08) saturate(1.12) drop-shadow(0 0 3px #55d8ff) drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  .unit-sprite.awakened2 .unit-anim{filter:brightness(1.13) saturate(1.28) drop-shadow(0 0 4px #b35cff) drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  .unit-sprite.awakened3 .unit-anim{filter:brightness(1.2) saturate(1.38) drop-shadow(0 0 3px #fff2a6) drop-shadow(0 0 7px #ffd85a) drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+  .unit-sprite.awakened1 .badge,.unit-sprite.awakened2 .badge,.unit-sprite.awakened3 .badge{color:#fff6bf;border-color:var(--aura);box-shadow:0 0 5px var(--aura);}
+  @keyframes auraPulse{0%,100%{opacity:.42;transform:translateX(-50%) scale(.92)}50%{opacity:.85;transform:translateX(-50%) scale(1.08)}}
+  .unit-sprite .badge{position:absolute; top:-13px; left:50%; transform:translateX(-50%);
+    font-size:10px; font-weight:700; color:#fff;
+    background:rgba(0,0,0,.6); border:1px solid var(--line); border-radius:8px; padding:0 5px; white-space:nowrap;}
+  /* Ground units keep their assigned combat slot. Their art changes pose, not position. */
+  .unit-sprite:not(.animated-unit):not(.fly).attacking img{animation:unitAttackPulse .3s ease;}
+  @keyframes unitAttackPulse{0%,100%{filter:drop-shadow(0 3px 4px rgba(0,0,0,.55));}
+    45%{filter:brightness(1.28) drop-shadow(0 3px 5px rgba(255,214,120,.38));}}
+  /* gold collectors squash in place while keeping their feet anchored */
+  .unit-sprite.collecting{ animation:collect .55s ease; }
+  @keyframes collect{0%,100%{transform:scaleY(1);} 35%{transform:scaleY(.82);}
+    65%{transform:scaleY(1.08);} 82%{transform:scaleY(.96);}}
+  /* flying units drift on a slow loop; attack anim goes on the inner img so the float never stops */
+  .unit-sprite.fly:not(.orbiting){ animation:floatFly 3.6s ease-in-out infinite; }
+  .unit-sprite.orbiting{animation:none; transform:translate(-50%,-50%);}
+  @keyframes floatFly{ 0%{transform:translate(0,0);} 25%{transform:translate(5px,-9px);}
+    50%{transform:translate(0,-16px);} 75%{transform:translate(-5px,-8px);} 100%{transform:translate(0,0);} }
+  .unit-sprite.fly:not(.orbiting).attacking{ animation:floatFly 3.6s ease-in-out infinite; }
+  .unit-sprite.fly:not(.animated-unit).attacking img{ animation:unitAttackPulse .3s ease; }
+
+  /* ===== UNIT LAYOUT EDITOR (?layout) ===== */
+  body.layout-mode:not(.layout-mobile) #field{height:100dvh;cursor:default;}
+  body.layout-mode.layout-mobile #field{height:50vh;cursor:default;}
+  body.layout-mode #deck,body.layout-mode #langBtn{display:none;}
+  body.layout-mode .unit-sprite{pointer-events:auto;cursor:grab;touch-action:none;}
+  body.layout-mode .unit-sprite:active{cursor:grabbing;}
+  body.layout-mode .unit-sprite.layout-selected{outline:2px dashed #ffd85a;outline-offset:4px;}
+  #layoutGrid{display:none;position:absolute;inset:0;z-index:3;pointer-events:none;
+    background-image:linear-gradient(rgba(255,216,90,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(255,216,90,.16) 1px,transparent 1px);
+    background-size:5% 5%;}
+  body.layout-mode.grid-on #layoutGrid{display:block;}
+  #layoutEditor{display:none;position:fixed;left:50%;bottom:12px;z-index:30;transform:translateX(-50%);
+    width:min(760px,calc(100% - 24px));padding:10px 12px;border:1px solid #78602b;border-radius:12px;
+    background:rgba(14,18,22,.94);box-shadow:0 8px 28px rgba(0,0,0,.55);backdrop-filter:blur(6px);}
+  body.layout-mode #layoutEditor{display:block;}
+  #layoutEditor .layout-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  #layoutEditor .layout-title{color:#f3c34a;font-weight:800;margin-right:4px;}
+  #layoutEditor select,#layoutEditor button{height:32px;border:1px solid #43515e;border-radius:7px;
+    background:#202832;color:#e8edf2;padding:0 10px;font-weight:700;cursor:pointer;}
+  #layoutEditor button:hover{border-color:#cfab54;color:#fff;}
+  #layoutEditor button.primary{background:#6f3db0;border-color:#9c68df;}
+  #layoutCoords{min-width:112px;color:#d9e1e8;font-variant-numeric:tabular-nums;}
+  #layoutHint{margin-top:7px;font-size:11px;color:#9aa8b5;line-height:1.45;}
+  #layoutNotice{margin-left:auto;color:#8fd39a;font-size:12px;font-weight:700;}
+  #layoutReturn{display:none;position:fixed;left:12px;bottom:12px;z-index:31;border:1px solid #cfab54;
+    border-radius:8px;background:rgba(14,18,22,.9);color:#f3c34a;padding:8px 12px;font-weight:800;cursor:pointer;}
+  body.layout-mode.layout-preview #layoutEditor{display:none;}
+  body.layout-mode.layout-preview #layoutReturn{display:block;}
+  body.layout-mobile #layoutEditor{top:calc(50vh + 8px);bottom:auto;width:calc(100% - 12px);padding:8px;}
+  body.layout-mobile #layoutEditor .layout-row{gap:5px;}
+  body.layout-mobile #layoutEditor select{max-width:142px;}
+  body.layout-mobile #layoutHint{font-size:10px;margin-top:5px;}
+  body.layout-mobile #layoutNotice{margin-left:0;}
+  body.layout-mobile #layoutReturn{top:calc(50vh + 8px);bottom:auto;}
+
+  .proj{position:absolute; z-index:8; pointer-events:none; will-change:transform; transform-origin:center;}
+  .proj.arrow{width:27px;height:3px;border-radius:2px;background:linear-gradient(90deg,#7b4a22,#d7b06b 72%);
+    box-shadow:0 0 3px rgba(255,235,180,.5);}
+  .proj.arrow::before{content:"";position:absolute;right:-7px;top:-4px;border-left:8px solid #dfe8e8;
+    border-top:5px solid transparent;border-bottom:5px solid transparent;}
+  .proj.arrow::after{content:"";position:absolute;left:-5px;top:-3px;width:7px;height:9px;
+    background:linear-gradient(135deg,transparent 35%,#7ea34b 36% 62%,transparent 63%);}
+  .proj.bolt{width:25px;height:5px;border-radius:2px;background:linear-gradient(90deg,#302115,#b88a4b 64%,#e7eef3 65%);
+    box-shadow:0 0 4px rgba(210,230,245,.65);}
+  .proj.bolt::before{content:"";position:absolute;right:-7px;top:-4px;border-left:9px solid #dce6eb;
+    border-top:6px solid transparent;border-bottom:6px solid transparent;}
+  .proj.bomb{width:17px;height:17px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#9aa0a2,#383c40 38%,#0d0e0f 72%);
+    border:1px solid #8b6137;box-shadow:0 0 5px rgba(255,119,32,.55);}
+  .proj.bomb::after{content:"";position:absolute;left:2px;top:-7px;width:9px;height:8px;border-radius:50%;
+    background:radial-gradient(circle,#fff5a3 0 12%,#ff9c20 35%,#e13713 62%,transparent 72%);box-shadow:0 0 5px #ff7620;}
+  .proj.magic-violet,.proj.magic-cyan{width:14px;height:14px;border-radius:50%;}
+  .proj.magic-violet{background:radial-gradient(circle,#fff 0 18%,#d878ff 32%,#7020d8 66%,transparent 72%);
+    box-shadow:0 0 9px #9d45ff, -9px 0 8px rgba(126,45,255,.65);}
+  .proj.magic-cyan{background:radial-gradient(circle,#fff 0 18%,#79f7ff 32%,#079ec5 66%,transparent 72%);
+    box-shadow:0 0 9px #25dfff, -9px 0 8px rgba(20,195,240,.65);}
+  .proj.fire-green,.proj.fire-violet,.proj.fire-crimson{width:29px;height:11px;border-radius:60% 45% 45% 60%;}
+  .proj.fire-green{background:linear-gradient(90deg,transparent,#5bd525 32%,#f6e75c 78%,#fff6b4);box-shadow:0 0 8px #74d83a;}
+  .proj.fire-violet{background:linear-gradient(90deg,transparent,#6e2bd0 32%,#c96cff 78%,#f3d5ff);box-shadow:0 0 8px #9d45ff;}
+  .proj.fire-crimson{background:linear-gradient(90deg,transparent,#b31e2b 32%,#ff6b3d 78%,#ffe07a);box-shadow:0 0 8px #ef3b32;}
+  .proj.holy{width:32px;height:7px;border-radius:50%;background:linear-gradient(90deg,transparent,#ffd94f 38%,#fff 88%);
+    box-shadow:0 0 8px #ffe26a,0 0 14px rgba(255,231,120,.6);}
+  .proj.cannonball{width:18px;height:18px;border-radius:50%;
+    background:radial-gradient(circle at 35% 28%,#fff3a8 0 8%,#ff9b24 20%,#3a2518 48%,#080706 72%);
+    box-shadow:0 0 8px #ff9b24,0 0 16px rgba(255,83,18,.55);}
+  .proj.cannonball::after{content:"";position:absolute;right:11px;top:5px;width:45px;height:8px;border-radius:50%;
+    background:linear-gradient(90deg,transparent,rgba(100,86,75,.45),#ff7b24);filter:blur(2px);}
+
+  /* Per-role impacts: each weapon family gets a distinct silhouette and colour language. */
+  .atk-fx{position:absolute;z-index:9;pointer-events:none;transform:translate(-50%,-50%);}
+  .atk-fx::before,.atk-fx::after{content:"";position:absolute;inset:0;pointer-events:none;}
+  .atk-fx.slash,.atk-fx.darkslash{width:92px;height:92px;animation:impactFade .42s ease-out forwards;}
+  .atk-fx.slash::before,.atk-fx.darkslash::before{inset:8px;border-radius:50%;border:6px solid transparent;
+    border-top-color:#fff5cf;border-right-color:#ffb43c;filter:drop-shadow(0 0 5px #ff7138);
+    transform:rotate(-32deg);animation:slashArc .34s cubic-bezier(.1,.7,.2,1) forwards;}
+  .atk-fx.slash::after,.atk-fx.darkslash::after{left:22%;top:47%;width:64%;height:4px;border-radius:50%;
+    background:linear-gradient(90deg,transparent,#fff,#ff8e3b,transparent);transform:rotate(-18deg);
+    animation:streak .3s ease-out forwards;}
+  .atk-fx.darkslash::before{border-top-color:#f4c8ff;border-right-color:#8b34e8;
+    filter:drop-shadow(0 0 7px #8d2dff);}
+  .atk-fx.darkslash::after{background:linear-gradient(90deg,transparent,#fff,#bb45ff,#55117e,transparent);}
+  @keyframes slashArc{0%{opacity:0;transform:rotate(-92deg) scale(.35)}25%{opacity:1}100%{opacity:0;transform:rotate(22deg) scale(1.18)}}
+  @keyframes streak{0%{opacity:0;transform:rotate(-18deg) scaleX(.15)}35%{opacity:1}100%{opacity:0;transform:rotate(-18deg) scaleX(1.25)}}
+  @keyframes impactFade{0%,55%{opacity:1}100%{opacity:0}}
+
+  .atk-fx.shock{width:64px;height:64px;border-radius:50%;border:4px solid #ffe45c;
+    box-shadow:0 0 8px #ffb32e,inset 0 0 9px #fff;animation:shockRing .48s ease-out forwards;}
+  .atk-fx.shock::before{inset:22%;border-radius:50%;background:#fff7ba;box-shadow:0 0 16px #ff9d22;
+    animation:coreBurst .3s ease-out forwards;}
+  .atk-fx.shock::after{inset:-12%;border:2px dashed rgba(255,220,80,.9);border-radius:50%;
+    animation:spinBurst .48s ease-out forwards;}
+  @keyframes shockRing{0%{opacity:1;transform:translate(-50%,-50%) scale(.12)}65%{opacity:.9}100%{opacity:0;transform:translate(-50%,-50%) scale(1.85)}}
+  @keyframes coreBurst{0%{opacity:1;transform:scale(.2)}100%{opacity:0;transform:scale(2.4)}}
+  @keyframes spinBurst{0%{opacity:1;transform:rotate(0) scale(.3)}100%{opacity:0;transform:rotate(100deg) scale(1.4)}}
+
+  .atk-fx.cannon-impact{width:118px;height:118px;border-radius:50%;
+    background:radial-gradient(circle,#fff9c2 0 5%,#ffd04d 9%,#ff751f 25%,rgba(167,38,10,.82) 39%,transparent 68%);
+    filter:drop-shadow(0 0 10px #ff7a1f);animation:cannonBurst .68s ease-out forwards;}
+  .atk-fx.cannon-impact::before{inset:-8%;border-radius:50%;border:5px solid rgba(255,190,62,.88);
+    box-shadow:0 0 14px #ff6a1a;animation:cannonRing .62s ease-out forwards;}
+  .atk-fx.cannon-impact::after{inset:22%;border-radius:45%;
+    background:conic-gradient(from 10deg,#fff0a0,transparent 10%,#ff8d25 14%,transparent 28%,#ffd05a 33%,transparent 47%,#ff7020 55%,transparent 70%,#ffe17a 78%,transparent 92%);
+    animation:spinBurst .56s ease-out forwards;}
+  @keyframes cannonBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.14)}18%{opacity:1}58%{opacity:.95;transform:translate(-50%,-50%) scale(1.05)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.65)}}
+  @keyframes cannonRing{0%{opacity:1;transform:scale(.16)}100%{opacity:0;transform:scale(1.55)}}
+
+  .atk-fx.bomb-impact{width:78px;height:78px;border-radius:50%;
+    background:radial-gradient(circle,#fff5aa 0 7%,#ffc13b 12%,#f05b1e 31%,rgba(88,28,18,.82) 49%,transparent 70%);
+    filter:drop-shadow(0 0 8px #ff6c20);animation:cannonBurst .58s ease-out forwards;}
+  .atk-fx.bomb-impact::before{inset:5%;border:3px solid rgba(255,194,70,.85);border-radius:50%;animation:cannonRing .52s ease-out forwards;}
+  .atk-fx.bomb-impact::after{inset:18%;border-radius:45%;background:conic-gradient(#ffd65a,transparent 12%,#ff6b1e 18%,transparent 34%,#ffe78a 40%,transparent 55%,#f0521b 66%,transparent 80%,#ffd65a);animation:spinBurst .5s ease-out forwards;}
+
+  .atk-fx.pierce{width:92px;height:26px;border-radius:50%;
+    background:linear-gradient(90deg,transparent 0 8%,rgba(255,255,255,.35),#fff 72%,#d5eeff 78%,transparent 100%);
+    filter:drop-shadow(0 0 4px #c9edff);animation:pierceHit .32s ease-out forwards;}
+  .atk-fx.pierce::after{left:56%;top:-22px;width:2px;height:66px;background:linear-gradient(transparent,#fff,transparent);
+    transform:rotate(26deg);}
+  @keyframes pierceHit{0%{opacity:0;transform:translate(-75%,-50%) scaleX(.2)}30%{opacity:1}100%{opacity:0;transform:translate(-28%,-50%) scaleX(1.35)}}
+
+  .atk-fx.magic-violet,.atk-fx.magic-cyan{width:58px;height:58px;border-radius:50%;
+    border:3px solid var(--spell,#c263ff);box-shadow:0 0 12px var(--spell,#c263ff),inset 0 0 10px var(--spell,#c263ff);
+    animation:spellBurst .55s ease-out forwards;}
+  .atk-fx.magic-violet{--spell:#c263ff}.atk-fx.magic-cyan{--spell:#42eaff}
+  .atk-fx.magic-violet::before,.atk-fx.magic-cyan::before{inset:16%;border:2px dashed #fff;border-radius:18%;
+    animation:spinBurst .5s ease-out forwards;}
+  .atk-fx.magic-violet::after,.atk-fx.magic-cyan::after{inset:34%;border-radius:50%;background:#fff;
+    box-shadow:0 0 15px var(--spell,#c263ff);animation:coreBurst .38s ease-out forwards;}
+  @keyframes spellBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.15) rotate(0)}25%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.8) rotate(95deg)}}
+
+  .atk-fx.fire-green,.atk-fx.fire-violet,.atk-fx.fire-crimson{--flame:#ff7b32;width:76px;height:62px;border-radius:50%;
+    background:radial-gradient(circle at 42% 50%,#fff 0 7%,#ffe26f 10%,var(--flame) 34%,transparent 68%);
+    filter:drop-shadow(0 0 8px var(--flame));animation:flameBurst .52s ease-out forwards;}
+  .atk-fx.fire-green{--flame:#74df3f}.atk-fx.fire-violet{--flame:#b75cff}.atk-fx.fire-crimson{--flame:#ff5438}
+  .atk-fx.fire-green::before,.atk-fx.fire-violet::before,.atk-fx.fire-crimson::before{
+    inset:5% 17% 34% 35%;border-radius:50% 50% 20% 50%;background:var(--flame);transform:rotate(-35deg);}
+  .atk-fx.fire-green::after,.atk-fx.fire-violet::after,.atk-fx.fire-crimson::after{
+    inset:34% 40% 4% 12%;border-radius:50%;background:#fff3a0;opacity:.75;}
+  @keyframes flameBurst{0%{opacity:0;transform:translate(-65%,-50%) scale(.3)}22%{opacity:1}100%{opacity:0;transform:translate(-40%,-50%) scale(1.65) rotate(12deg)}}
+
+  .atk-fx.holy{width:72px;height:88px;animation:holyFade .58s ease-out forwards;}
+  .atk-fx.holy::before{left:31px;top:-22px;width:10px;height:126px;border-radius:50%;
+    background:linear-gradient(transparent,#fff7b2 18%,#fff 48%,#ffd94d 70%,transparent);
+    box-shadow:0 0 10px #fff,0 0 22px #ffd94d;}
+  .atk-fx.holy::after{left:2px;top:32px;width:68px;height:8px;border-radius:50%;
+    background:linear-gradient(90deg,transparent,#ffe26b,#fff,#ffe26b,transparent);box-shadow:0 0 10px #ffe26b;}
+  @keyframes holyFade{0%{opacity:0;transform:translate(-50%,-65%) scaleY(.25)}22%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}}
+  .impact-spark{position:absolute;z-index:9;width:5px;height:5px;border-radius:50%;pointer-events:none;
+    background:var(--spark,#fff);box-shadow:0 0 6px var(--spark,#fff);}
+
+  /* player click slash: bright arc streak, random angle set via --ang */
+  .clickfx{position:absolute;z-index:8;pointer-events:none;width:90px;height:90px;}
+  .clickfx::before{content:"";position:absolute;inset:0;border-radius:50%;
+    border:4px solid transparent;
+    border-top-color:#fff;border-right-color:var(--wcol,#ffe96b);
+    filter:drop-shadow(0 0 6px var(--wcol,rgba(255,235,120,.9)));
+    animation:clkarc .22s ease-out forwards;}
+  @keyframes clkarc{
+    0%{opacity:0;transform:rotate(calc(var(--ang) - 120deg)) scale(.5);}
+    25%{opacity:1;}
+    100%{opacity:0;transform:rotate(calc(var(--ang) + 60deg)) scale(1.15);}}
+  .clickfx.crit{width:130px;height:130px;}
+  .clickfx.crit::before{border-width:6px;border-top-color:#fff;border-right-color:var(--wcol,#ffd24a);}
+
+  /* Animated weapon pointer. Never intercept game or HUD input. */
+  #field.weapon-pointer-active{cursor:none!important;}
+  #weaponPointer{position:fixed;left:0;top:0;width:0;height:0;z-index:90;pointer-events:none;display:none;}
+  #weaponPointer.visible{display:block;}
+  #weaponPointer img{position:absolute;left:-44px;top:-8px;width:64px;height:64px;max-width:none;
+    transform-origin:34% 72%;filter:drop-shadow(1px 3px 2px #0009);pointer-events:none;}
+  #weaponPointer .weapon-trail{position:absolute;left:-43px;top:-38px;width:78px;height:78px;
+    border:5px solid transparent;border-top-color:#fff5dc;border-right-color:var(--weapon-color,#ffd779);
+    border-radius:50%;opacity:0;filter:drop-shadow(0 0 5px var(--weapon-color,#ffd779));}
+  #weaponPointer .weapon-impact{position:absolute;left:-22px;top:-22px;width:44px;height:44px;opacity:0;
+    background:conic-gradient(from 15deg,transparent 0 12%,#fff5dc 13% 15%,transparent 16% 37%,var(--weapon-color) 38% 40%,transparent 41% 62%,#fff 63% 65%,transparent 66% 87%,var(--weapon-color) 88% 90%,transparent 91%);
+    clip-path:polygon(50% 0,57% 39%,100% 50%,61% 59%,50% 100%,41% 61%,0 50%,39% 41%);}
+  #weaponPointer[data-kind="heavy"] .weapon-impact{border:3px solid var(--weapon-color);border-radius:50%;clip-path:none;background:none;}
+
+  /* weapon evolution toast */
+  #weaponToast{position:absolute; top:30%; left:50%; transform:translate(-50%,-50%) scale(.6);
+    z-index:21; background:rgba(10,8,4,.85); border:1px solid #ffd24a; border-radius:10px;
+    padding:8px 18px; text-align:center; pointer-events:none; opacity:0; white-space:nowrap;}
+  #weaponToast.on{animation:wtoast 1.5s ease forwards;}
+  @keyframes wtoast{ 0%{opacity:0; transform:translate(-50%,-50%) scale(.6);}
+    14%{opacity:1; transform:translate(-50%,-50%) scale(1.12);}
+    28%{transform:translate(-50%,-50%) scale(1);} 80%{opacity:1;}
+    100%{opacity:0; transform:translate(-50%,-62%) scale(1);} }
+  #weaponToast .wt-lead{font-size:13px; color:#ffd24a; font-weight:700; letter-spacing:.05em;}
+  #weaponToast .wt-name{font-size:19px; font-weight:900; color:#fff; margin-top:2px;}
+  .dmg{position:absolute; z-index:9; font-weight:800; pointer-events:none;
+    text-shadow:0 1px 2px #000,0 0 4px rgba(0,0,0,.6); animation:flo .8s ease-out forwards; white-space:nowrap;}
+  @keyframes flo{ 0%{transform:translate(-50%,0) scale(.6); opacity:0;}
+    20%{transform:translate(-50%,-14px) scale(1.1); opacity:1;}
+    100%{transform:translate(-50%,-52px) scale(1); opacity:0;} }
+  .dmg.click{color:#ffe14a; font-size:22px;} .dmg.crit{color:#ff5a4a; font-size:26px;}
+  .dmg.unit{color:#e8eef2; font-size:13px;}
+  .particle{position:absolute; z-index:8; width:6px; height:6px; border-radius:50%;
+    background:var(--gold); pointer-events:none;}
+
+  /* ===== KILL BANNER ===== */
+  #killBanner{position:absolute; top:18%; left:50%; transform:translateX(-50%); z-index:20;
+    background:rgba(10,8,4,.82); border:1px solid #f3c34a; border-radius:10px;
+    padding:8px 20px; text-align:center; pointer-events:none;
+    opacity:0; transition:opacity .25s;}
+  #killBanner.on{opacity:1;}
+  #killBanner .kb-title{font-size:clamp(18px,4vw,28px); font-weight:900; color:#ffd24a; letter-spacing:.06em;}
+  #killBanner .kb-gold{font-size:14px; color:var(--gold); margin-top:2px;}
+  #killBanner .kb-bonus{position:relative; display:none; margin-top:6px; padding:2px 20px;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;
+    font-size:15px; font-weight:800; letter-spacing:.04em; color:#ffe6a8;
+    text-shadow:0 0 9px rgba(255,200,90,.5),0 1px 2px #000;}
+  #killBanner .kb-bonus::before,#killBanner .kb-bonus::after{content:""; position:absolute; top:50%;
+    width:7px; height:7px; transform:translateY(-50%) rotate(45deg);
+    background:linear-gradient(135deg,#e6c674,#7a5c24);}
+  #killBanner .kb-bonus::before{left:2px;} #killBanner .kb-bonus::after{right:2px;}
+  #killBanner.bonus{border-color:#cfab54;
+    background:linear-gradient(rgba(30,20,8,.93),rgba(14,9,4,.95));
+    box-shadow:0 0 22px rgba(207,171,84,.5), inset 0 0 20px rgba(243,195,74,.1);}
+  #killBanner.bonus .kb-title{color:#f5e6c0;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;}
+
+  /* ===== BOSS NAV BUTTONS ===== */
+  #nextBossBtn,#prevBossBtn{display:none; margin-top:5px; padding:5px 10px; color:#fff;
+    border-radius:7px; font-weight:700; font-size:12px; cursor:pointer; width:100%;}
+  #nextBossBtn{background:#7a4ab0; border:1px solid #9a6ad0;}
+  #nextBossBtn:hover{background:#8a5ac0;}
+  #prevBossBtn{background:var(--panel2); border:1px solid var(--line); color:var(--txt);}
+  #prevBossBtn:hover{border-color:var(--accent);}
+
+  /* ===== HUD ===== */
+  #hud{position:absolute; top:10px; left:10px; z-index:10;
+    background:rgba(14,18,22,.82); border:1px solid var(--line); border-radius:10px;
+    padding:8px 12px; font-size:12px; backdrop-filter:blur(3px); min-width:150px;}
+  #hud .row{display:flex; justify-content:space-between; gap:14px; padding:1px 0;}
+  #hud .k{color:var(--sub);} #hud .v{font-weight:700;}
+  #goldBig{color:var(--gold); font-size:16px;}
+  #hudTools{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(138,153,168,.24);}
+  #hudTools button{min-width:0;padding:4px 6px;border:1px solid #46515d;border-radius:6px;background:rgba(30,37,46,.92);
+    color:#cdd7df;font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #hudTools button.on{color:#fff0a8;border-color:#977530;background:rgba(79,57,20,.9);}
+  #hudTools #playerBtn{grid-column:1/2;} #hudTools #rankBtn{grid-column:2/3;}
+  #stageTag{position:absolute; top:10px; right:10px; z-index:10; text-align:right;
+    background:rgba(14,18,22,.82); border:1px solid var(--line); border-radius:10px; padding:6px 12px; font-size:12px;}
+  #stageTag b{font-size:16px; color:var(--accent);}
+  #bonusMeter{display:none; margin-top:6px; line-height:1.5;
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;}
+  #bonusMeter .pips{display:inline-block; vertical-align:middle; margin-right:6px; white-space:nowrap;}
+  #bonusMeter .pip{display:inline-block; width:7px; height:7px; margin:0 1.5px; transform:rotate(45deg);}
+  #bonusMeter .pip.pf{background:linear-gradient(135deg,#fbe9a8,#f3c34a 55%,#9c6e1f);
+    box-shadow:0 0 4px rgba(243,195,74,.55);}
+  #bonusMeter .pip.pe{background:rgba(0,0,0,.3); border:1px solid #5c4a24;}
+  #bonusMeter .btxt{vertical-align:middle; font-size:11.5px; font-weight:700; letter-spacing:.05em;
+    color:#e9c766; text-shadow:0 1px 2px #000;}
+  #comboTag{position:absolute; top:48%; left:14px; z-index:10; transform:translateY(-50%);
+    font-weight:800; font-size:clamp(18px,4vw,34px); color:#ffd24a; text-shadow:0 2px 6px #000;
+    opacity:0; transition:opacity .2s;}
+  #comboTag.on{opacity:1;}
+  #comboTag small{display:block; font-size:11px; color:var(--sub);}
+
+  /* ===== CONTROL DECK ===== */
+  #deck{flex:1 1 auto; display:flex; flex-direction:row; background:var(--panel); border-top:2px solid var(--line); min-height:0;}
+  #deckMain{flex:1 1 auto; display:flex; flex-direction:column; min-width:0;}
+  /* PC: ad lives in a fixed right column, fully visible without scrolling */
+  #adSide{flex:0 0 320px; display:none; align-items:center; justify-content:center;
+    border-left:1px solid var(--line); background:var(--panel2); padding:10px; overflow:hidden;}
+  @media(min-width:1024px){ #adSide{display:flex;} }
+  #tabs{display:flex; flex:0 0 auto;}
+  .tab{flex:1; padding:10px; text-align:center; font-weight:700; font-size:14px; cursor:pointer;
+    background:var(--panel2); color:var(--sub); border-right:1px solid var(--line); border-bottom:2px solid transparent;}
+  .tab.active{color:var(--txt); background:var(--panel); border-bottom-color:var(--accent);}
+  #panels{flex:1 1 auto; overflow-y:auto; padding:10px; min-height:0;}
+  .pane{display:none; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px;}
+  .pane.active{display:grid;}
+  .card{background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:9px 11px;
+    cursor:pointer; transition:.1s; display:flex; flex-direction:column; gap:3px;}
+  .card:not(.dis):hover{border-color:var(--accent); transform:translateY(-1px);}
+  .card.dis{opacity:.5; cursor:not-allowed;}
+  .card .top{display:flex; justify-content:space-between; align-items:baseline;}
+  .card .nm{font-weight:700; font-size:14px;}
+  .card.weapon-card{position:relative;padding-left:85px;min-height:116px;border-color:#5d5034;}
+  .weapon-icon{width:62px;height:62px;object-fit:contain;filter:drop-shadow(0 3px 2px #0008);}
+  .weapon-card>.weapon-icon{position:absolute;left:10px;top:16px;border:1px solid #77613c;border-radius:10px;
+    background:radial-gradient(ellipse at 50% 30%,#39444e,#111921 75%);padding:3px;}
+  .weapon-next{display:flex;align-items:center;gap:7px;margin-top:5px;color:#c3b180;font-size:11px;}
+  .weapon-next img{width:26px;height:26px;}
+  .weapon-progress{height:3px;background:#10151a;margin-top:5px;border-radius:3px;overflow:hidden;}
+  .weapon-progress i{display:block;height:100%;background:linear-gradient(90deg,#916b2d,#ffe092);}
+  #weaponToast .weapon-icon{display:block;margin:0 auto 5px;width:64px;height:64px;}
+  .clickfx.crush::before{border:4px solid var(--wcol);border-radius:35%;box-shadow:0 0 18px var(--wcol);animation:weaponCrush .24s ease-out forwards;}
+  .clickfx.crush::after{width:8px;height:8px;left:50%;top:50%;background:#fff5dd;box-shadow:0 -27px var(--wcol),22px 17px var(--wcol),-22px 17px var(--wcol);}
+  @keyframes weaponCrush{from{transform:scale(.25);opacity:1}to{transform:scale(1.25);opacity:0}}
+  .card .lv{font-size:11px; color:var(--accent); font-weight:700;}
+  .card .desc{font-size:10px; color:var(--sub); opacity:.85; line-height:1.3;}
+  .card .ef{font-size:11px; color:var(--sub);}
+  .card .cost{font-size:13px; font-weight:700; color:var(--gold); margin-top:2px;}
+  .card.dis .cost{color:#a06a4a;}
+  #adBox{margin:14px auto 6px; text-align:center; max-width:100%; overflow:hidden;
+    min-height:0;}
+  #adBox iframe,#adBox img{max-width:100% !important;}
+  #prestigeBtn{display:block; width:100%; margin-top:10px; padding:9px;
+    background:#3a2150; color:#e7d6ff; border:1px solid #6a4a90;
+    border-radius:8px; font-weight:700; cursor:pointer; font-size:13px;}
+  #prestigeBtn:disabled{opacity:.45; cursor:not-allowed;}
+
+  #modal,.cmodal{position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:50; display:none;
+    align-items:center; justify-content:center;}
+  #modal.on,.cmodal.on{display:flex;}
+  .mbox{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px; max-width:340px; text-align:center;}
+  .mbox h3{margin-bottom:8px; color:#e7d6ff;}
+  .mbox p{font-size:13px; color:var(--sub); margin-bottom:16px; line-height:1.5;}
+  .mbox button{padding:9px 18px; margin:0 5px; border-radius:8px; border:none; font-weight:700; cursor:pointer;}
+  .mbox .yes{background:#7a4ab0; color:#fff;} .mbox .no{background:var(--panel2); color:var(--txt); border:1px solid var(--line);}
+  #rankModal .mbox{width:min(92vw,390px);max-width:390px;text-align:left;touch-action:auto;}
+  #rankModal h3{text-align:center;}
+  .profile-edit{display:flex;gap:7px;margin:10px 0 14px;}
+  .profile-edit input{flex:1;min-width:0;padding:9px 10px;border-radius:7px;border:1px solid #46515d;
+    background:#0e1216;color:#fff;font-size:16px;user-select:text;-webkit-user-select:text;
+    -webkit-touch-callout:default;touch-action:auto;pointer-events:auto;position:relative;z-index:2;}
+  .profile-edit button{margin:0;padding:8px 13px;}
+  #rankStatus{min-height:18px;margin:-7px 0 7px;text-align:center;color:var(--sub);font-size:11px;}
+  #rankStatus.ok{color:#9fd891;} #rankStatus.err{color:#ffb08a;}
+  #rankList{list-style:none;margin:0 0 14px;padding:0;max-height:250px;overflow:auto;}
+  #rankList li{display:grid;grid-template-columns:28px 1fr auto;gap:8px;padding:7px 5px;border-bottom:1px solid #2c3742;font-size:13px;}
+  #rankList li.me{color:#ffe279;background:rgba(243,195,74,.08);}
+  #rankList .score{font-weight:800;color:#f2f5f7;}
+  #rankEmpty{text-align:center;color:var(--sub);padding:18px 0;font-size:13px;}
+
+  @media(max-width:680px){
+    #field{height:50vh;} .pane{grid-template-columns:1fr;}
+    .unit-sprite.animated-unit{height:var(--unit-height-mobile,12.5%);}
+    /* 狭い画面（記事内iframe等）では左上パネルが中央のボス名・HPオーブに被るため、
+       パネルを詰め、ボス表示は fitBossPlate() で左右パネルの隙間へ寄せて収める */
+    #hud{font-size:10.5px; min-width:0; padding:6px 8px;}
+    #hud .row{gap:8px;}
+    #goldBig{font-size:14px;}
+    #hudTools{gap:3px; margin-top:4px; padding-top:4px;}
+    #hudTools button{font-size:9.5px; padding:3px 4px;}
+    #bossPlate{transform-origin:top center;}
+    #bossNameFrame{max-width:none; padding:3px 13px;}
+    /* スマホは横幅が狭く、右上パネルが中央のボスHPオーブに被るため一段コンパクトに */
+    #stageTag{font-size:10px; padding:5px 8px;}
+    #stageTag b{font-size:13px;}
+    #bonusMeter{margin-top:5px;}
+    #bonusMeter .btxt{display:none;}          /* 狭い画面では文言を省きピップだけでパネル幅を抑える */
+    #bonusMeter .pips{margin-right:0;}
+    #bonusMeter .pip{width:8px; height:8px; margin:0 1px;}
+    #nextBossBtn,#prevBossBtn{font-size:10px; padding:3px 5px;}
+  }
+
+  /* ===== TITLE / LANGUAGE SELECT (Diablo風) ===== */
+  #titleScreen{
+    position:fixed; inset:0; z-index:100; padding:24px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(ellipse 72% 56% at 50% 40%, rgba(44,24,10,.34), rgba(3,2,1,.92) 78%),
+      linear-gradient(rgba(5,4,3,.62), rgba(2,1,1,.86));
+    backdrop-filter:blur(2.5px); -webkit-backdrop-filter:blur(2.5px);
+    font-family:Georgia,"Times New Roman","Hiragino Mincho ProN","Yu Mincho",YuMincho,"Noto Serif JP","Noto Serif CJK JP",serif;
+    animation:tsFade .5s ease;
+  }
+  @keyframes tsFade{ from{opacity:0;} to{opacity:1;} }
+  #titleScreen.hidden{ display:none; }
+  .ts-crest{ font-size:30px; line-height:1; margin-bottom:8px;
+    filter:drop-shadow(0 0 10px rgba(243,195,74,.5)); }
+  .ts-kicker{ font-size:clamp(12px,2.6vw,15px); letter-spacing:.5em; text-indent:.5em;
+    color:#c2923f; text-transform:uppercase; margin-bottom:2px; }
+  .ts-title{ font-size:clamp(30px,8vw,54px); font-weight:800; letter-spacing:.06em; text-align:center;
+    background:linear-gradient(#fbe9a8 0%,#f3c34a 44%,#a3741f 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    text-shadow:0 2px 12px rgba(0,0,0,.6); line-height:1.04; }
+  .ts-rule{ display:flex; align-items:center; justify-content:center; gap:10px;
+    width:min(80vw,360px); margin:18px 0 15px; }
+  .ts-rule::before,.ts-rule::after{ content:""; height:1px; flex:1;
+    background:linear-gradient(90deg,transparent,#8a6c30 45%,#cfab54); }
+  .ts-rule::after{ background:linear-gradient(270deg,transparent,#8a6c30 45%,#cfab54); }
+  .ts-rule i{ width:7px; height:7px; transform:rotate(45deg); display:block;
+    background:linear-gradient(135deg,#d9b35a,#7a5c24); box-shadow:0 0 6px rgba(207,171,84,.5); }
+  .ts-prompt{ font-size:clamp(12px,2.6vw,14px); color:#cdbb93; letter-spacing:.08em;
+    margin-bottom:18px; text-align:center; line-height:1.5; }
+  .ts-langs{ display:flex; flex-direction:column; gap:13px; width:min(80vw,320px); }
+  .ts-lang{ position:relative; padding:12px 18px 11px; text-align:center; cursor:pointer;
+    color:#f0e6d2; font-size:19px; font-weight:700; letter-spacing:.04em;
+    background:linear-gradient(rgba(28,19,10,.80),rgba(10,6,4,.84));
+    border-top:1.5px solid rgba(207,171,84,.85); border-bottom:1.5px solid rgba(122,92,36,.9);
+    box-shadow:0 2px 10px rgba(0,0,0,.55), inset 0 0 18px rgba(0,0,0,.4); transition:.13s; }
+  .ts-lang::before,.ts-lang::after{ content:""; position:absolute; top:50%; width:9px; height:9px;
+    transform:translateY(-50%) rotate(45deg); background:linear-gradient(135deg,#d9b35a,#7a5c24); }
+  .ts-lang::before{ left:-5px; } .ts-lang::after{ right:-5px; }
+  .ts-lang .sub{ display:block; font-size:10.5px; font-weight:600; letter-spacing:.2em;
+    color:#b9893b; margin-top:3px; text-transform:uppercase; }
+  .ts-lang:hover,.ts-lang:focus-visible{ color:#fff; outline:none; border-top-color:#f3c34a;
+    background:linear-gradient(rgba(48,33,15,.92),rgba(20,12,6,.92));
+    box-shadow:0 0 16px rgba(243,195,74,.35), inset 0 0 22px rgba(243,195,74,.12);
+    transform:translateY(-1px); }
+  .ts-foot{ margin-top:22px; font-size:11px; color:#6f5f48; letter-spacing:.18em; text-transform:uppercase; }
+
+  /* 隅の言語変更ボタン（ゲーム中・初回選択後に表示） */
+  #langBtn{ position:absolute; left:10px; bottom:10px; z-index:11; cursor:pointer;
+    display:flex; align-items:center; gap:5px; padding:5px 9px; font-size:12px; font-weight:700;
+    color:#e8dcc0; background:rgba(14,18,22,.82); border:1px solid #6a5424; border-radius:8px;
+    backdrop-filter:blur(3px); letter-spacing:.04em; }
+  #langBtn:hover{ border-color:#cfab54; color:#fff; }
+</style>
+<link rel="stylesheet" href="rework.css?v=20261020-review4">
+</head>
+<body>
+<div id="titleScreen">
+  <div class="ts-crest">⚔️</div>
+  <div class="ts-kicker">Spacebar</div>
+  <div class="ts-title">Mythos Slayers <em>II</em></div>
+  <div class="ts-rule"><i></i></div>
+  <div class="ts-prompt">言語を選択 ・ Select Language ・ 选择语言</div>
+  <div class="ts-langs">
+    <div class="ts-lang" data-lang="ja" tabindex="0">日本語<span class="sub">Japanese</span></div>
+    <div class="ts-lang" data-lang="en" tabindex="0">English<span class="sub">English</span></div>
+    <div class="ts-lang" data-lang="zh" tabindex="0">中文<span class="sub">Chinese</span></div>
+  </div>
+  <div class="ts-foot">PLAYTEST · Bubblegum · Online ranking off</div>
+</div>
+<div id="langBtn" title="言語 / Language"><span>🌐</span><span id="langBtnCode">JA</span></div>
+<div id="field">
+ <img id="bgImg" src="../../assets/stage-harbor.webp" alt="">
+ <div id="battleGround" aria-hidden="true"></div>
+ <div id="battleViewport"><div id="worldStage"><div id="battleWorld">
+  <div id="boss"><img id="bossImg" alt="boss" src="../../assets/boss01_rat.webp"></div>
+  <div id="layoutGrid"></div>
+ </div></div></div>
+ <canvas id="armyCanvas" aria-hidden="true"></canvas>
+  <div id="hud">
+    <div class="row"><span class="k" data-i18n="gold">ゴールド</span><span class="v" id="goldBig">0</span></div>
+    <div class="row"><span class="k" data-i18n="units">ユニット</span><span class="v" id="hUnits">0</span></div>
+    <div class="row"><span class="k" data-i18n="gpm">G/分</span><span class="v" id="hGpm">0</span></div>
+    <div class="row"><span class="k">DPS</span><span class="v" id="hDps">0</span></div>
+    <div class="row"><span class="k">TOTAL DMG</span><span class="v" id="hTotalDmg">0</span></div>
+    <div id="hudTools">
+      <button id="bgmBtn" type="button">♫ BGM</button><button id="seBtn" type="button">🔊 SE</button>
+      <button id="playerBtn" type="button">👤 名無し</button><button id="rankBtn" type="button">🏆 RANK</button>
+    </div>
+  </div>
+  <div id="stageTag"><span data-i18n="kills">討伐数</span> <b id="stStage">1</b><br><span id="stWave">BOSS 1</span>
+    <br><span style="color:var(--sub)" id="stPres"></span>
+    <div id="bonusMeter"></div>
+    <button id="nextBossBtn">次のボスへ ▶</button>
+    <button id="prevBossBtn" data-i18n="to_prev_boss">◀ 前のボスへ</button></div>
+  <div id="comboTag"><span id="comboNum">0</span> COMBO<small id="comboMul">×1.0</small></div>
+
+  <div id="bossPlate">
+    <div id="bossOrb">
+      <div id="bossLiquid"><svg id="orbWave" viewBox="0 0 200 14" preserveAspectRatio="none"><path d="M0,7 Q12.5,4 25,7 T50,7 T75,7 T100,7 T125,7 T150,7 T175,7 T200,7 V14 H0 Z"/></svg></div>
+      <div id="orbRim"></div>
+      <div id="orbGloss"></div>
+      <div id="bossHpText"><div id="hptext">0 / 0</div><div id="bossRem"></div></div>
+    </div>
+    <div id="bossNameFrame"></div>
+  </div>
+
+  <div id="killBanner">
+    <div class="kb-title" data-i18n="defeated">DEFEATED!</div>
+    <div class="kb-gold" id="kbGold"></div>
+    <div class="kb-bonus" id="kbBonus"></div>
+  </div>
+
+  <div id="weaponToast"></div>
+ <div id="chapterTrail"></div><div id="bossTrait" aria-live="polite"></div>
+ <div id="cameraTools"><span id="armyCount">0</span><button id="zoomOut" type="button">−</button><button id="zoomFit" type="button">⊙</button><button id="zoomIn" type="button">＋</button></div>
+</div>
+
+  <div id="layoutEditor" aria-label="ユニット配置エディター">
+    <div class="layout-row">
+      <span class="layout-title">配置エディター</span>
+      <select id="layoutUnitSelect" aria-label="編集するユニット"></select>
+      <span id="layoutCoords">X 0.0 / Y 0.0</span>
+      <button id="layoutUndo" type="button">↶ 戻す</button>
+      <button id="layoutReset" type="button">初期配置</button>
+      <button id="layoutGridBtn" type="button">グリッド</button>
+      <button id="layoutPreviewBtn" type="button">UIを隠す</button>
+      <button id="layoutCopy" type="button">配置をコピー</button>
+      <button id="layoutSave" class="primary" type="button">保存</button>
+      <span id="layoutNotice"></span>
+    </div>
+    <div id="layoutHint">キャラを直接ドラッグ。選択後は矢印キーで微調整、Shift＋矢印で大きく移動できます。保存内容はこのブラウザ内だけに保持され、通常プレイには影響しません。</div>
+  </div>
+  <button id="layoutReturn" type="button">配置編集へ戻る</button>
+
+<div id="deck">
+  <div id="deckMain">
+    <div id="tabs">
+      <div class="tab active" data-t="summon" data-i18n="tab_summon">召喚</div>
+      <div class="tab" data-t="hero" data-i18n="tab_upgrade">強化</div>
+    </div>
+    <div id="panels">
+      <div class="pane active" id="pane-summon"></div>
+      <div class="pane" id="pane-hero"></div>
+      <button id="prestigeBtn" disabled>転生 (BOSS 10で解放)</button>
+      <div id="adBox"></div>
+    </div>
+  </div>
+  <div id="adSide"></div>
+</div>
+
+<div id="creditsModal" class="cmodal"><div class="mbox">
+  <h3 data-i18n="credits_title">🎉 THANK YOU FOR PLAYING!</h3>
+  <p data-i18n-html="credits_body">全40体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br>
+  <b>SPACEBAR Mythos Slayers 2</b><br>
+  制作: Bubblegum<br>
+  前作モンスター: インスマス計画<br>続編モンスター: 生成画像<br><br>
+  転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！</p>
+  <button class="yes" id="creditsClose" data-i18n="credits_close">閉じる</button>
+</div></div>
+
+<div id="modal"><div class="mbox">
+  <h3 data-i18n="prestige_title">転生しますか？</h3>
+  <p data-i18n-html="prestige_body">全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。</p>
+  <button class="yes" id="mYes" data-i18n="prestige_yes">転生する</button>
+  <button class="no" id="mNo" data-i18n="prestige_no">やめる</button>
+</div></div>
+
+<div id="rankModal" class="cmodal"><div class="mbox">
+  <h3>🏆 オンライン・ダメージランキング</h3>
+  <div class="profile-edit"><input id="playerNameInput" maxlength="12" autocomplete="nickname" inputmode="text" enterkeyhint="done" aria-label="プレイヤー名" placeholder="ここをタップして名前入力">
+    <button class="yes" id="playerSave" type="button">保存</button></div>
+  <div id="rankStatus">ランキングを読み込んでいます…</div>
+  <ol id="rankList"></ol><div id="rankEmpty">まだ記録がありません</div>
+  <button class="no" id="rankClose" type="button">閉じる</button>
+</div></div>
+
+<script src="supply-core.js?v=20261020-review4"></script>
+<script src="game-core.js?v=20261020-review4"></script>
+<script src="forest-audio.js?v=20261020-review4"></script>
+<script>
+"use strict";
+const Core=MythosCore;
+if(window.self!==window.top){ document.getElementById("adSide").style.display="none"; document.getElementById("adBox").style.display="none"; }
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const field=$("#battleWorld"), bossEl=$("#boss"), bossImg=$("#bossImg");
+function fmt(n){if(!Number.isFinite(n))return n>0?'∞':'0';if(n>=1e21)return n.toExponential(2);n=Math.floor(n);
+  const u=["","K","M","B","T","Qa","Qi"]; let i=0;
+  while(n>=1000&&i<u.length-1){ n/=1000; i++; }
+  return (i===0?n:(n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n)))+u[i];
+}
+function rnd(a,b){return a+Math.random()*(b-a);}
+function statNumber(n){return Number.isFinite(n)&&Math.abs(n)<1000?Number(n.toFixed(1)).toString():fmt(n);}
+
+/* ===== PLAYER / ONLINE DAMAGE RANKING ===== */
+function readStored(key){try{return localStorage.getItem(key);}catch{return null;}}
+const PLAYER_KEY="sbr2_preview_forest_player_name_v1",RANK_KEY="sbr2_preview_forest_damage_rank_v1";
+const PLAYER_ID_KEY="sbr2_preview_forest_player_id_v1",TOTAL_DAMAGE_KEY="sbr2_preview_forest_total_damage_v2";
+const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard2";
+const RANK_VIEW_LIMIT=20; /* 表示件数。サーバー側も同じ値で頭打ちにしてある */
+function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
+function createPlayerId(){
+ if(globalThis.crypto?.randomUUID)return crypto.randomUUID();
+ const bytes=new Uint8Array(16);crypto.getRandomValues(bytes);bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;
+ const h=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+ return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+}
+let playerName=cleanPlayerName(readStored(PLAYER_KEY)||"名無し");
+let playerId=readStored(PLAYER_ID_KEY)||createPlayerId();
+try{localStorage.setItem(PLAYER_ID_KEY,playerId);}catch(e){}
+let damageRanks=[];
+try{const raw=JSON.parse(localStorage.getItem(RANK_KEY)||"[]");if(Array.isArray(raw))damageRanks=raw.filter(x=>x&&typeof x.name==="string"&&Number.isFinite(x.damage));}catch(e){}
+const legacyDamage=damageRanks.find(x=>x.name===playerName)?.damage||0;
+let playerDamage=Math.max(0,Number(readStored(TOTAL_DAMAGE_KEY))||0,legacyDamage);
+let onlineRanks=[],onlineRankLoaded=false,rankDirty=playerDamage>0,rankSyncing=false;
+let _rankSaveTimer=null,_rankSyncTimer=null;
+function rankEntry(name=playerName){return damageRanks.find(x=>x.name===name);}
+function rankDamage(){return playerDamage;}
+function saveRanksSoon(){clearTimeout(_rankSaveTimer);_rankSaveTimer=setTimeout(()=>{
+ try{localStorage.setItem(TOTAL_DAMAGE_KEY,String(playerDamage));}catch(e){}
+},900);}
+function setRankStatus(text,state=""){
+ const el=$("#rankStatus");if(!el)return;el.textContent=text;el.className=state;
+}
+// スコア送信は3分ごと（タブを閉じる・裏に回すときは即送信）。12秒ごとだと1人1時間で約900回Workerを呼び、
+// Cloudflare無料枠（全ゲーム共有で1日10万回）を圧迫していた（2026-10-09）。
+function scheduleRankSync(delay=180000){
+ if(SHOWCASE||_rankSyncTimer)return;
+ _rankSyncTimer=setTimeout(()=>{_rankSyncTimer=null;void syncOnlineScore();},delay);
+}
+let rankBoard="damage";   // "damage" = 累積ダメージ / "power" = 入口の戦闘力
+let rankRequestVersion=0;
+function rankMessage(kind){
+ const messages={
+  ja:{loading:"ランキングを読み込み中…",online:"全プレイヤー共通・オンライン集計",local:"通信できないため、この端末の記録を表示中",unavailable:"ランキングを読み込めませんでした",retry:"オンライン保存を再試行します…"},
+  en:{loading:"Loading leaderboard…",online:"Online leaderboard · all players",local:"Offline · showing this device's damage records",unavailable:"Leaderboard could not be loaded",retry:"Online save will retry…"},
+  zh:{loading:"正在加载排行榜…",online:"在线排行榜 · 所有玩家",local:"离线 · 显示此设备的伤害记录",unavailable:"无法加载排行榜",retry:"将重试在线保存…"}
+ };return (messages[LANG]||messages.ja)[kind];
+}
+async function loadOnlineRanking(){
+ const version=++rankRequestVersion,board=rankBoard;
+ setRankStatus(rankMessage("loading"));
+ try{
+  const res=await fetch(RANK_API+'?limit='+RANK_VIEW_LIMIT+'&board='+board+'&playerId='+encodeURIComponent(playerId),{headers:{Accept:"application/json"},cache:"no-store"});
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  const data=await res.json();
+  if(version!==rankRequestVersion||board!==rankBoard)return false;
+  onlineRanks=Array.isArray(data.rows)?data.rows:[];onlineRankLoaded=true;
+  setRankStatus(rankMessage("online"),"ok");renderRanking();return true;
+ }catch(e){
+  if(version!==rankRequestVersion||board!==rankBoard)return false;
+  onlineRanks=[];onlineRankLoaded=false;
+  setRankStatus(rankMessage(board==="power"?"unavailable":"local"),"err");renderRanking();return false;
+ }
+}
+async function syncOnlineScore(){
+ if(SHOWCASE||rankSyncing||!rankDirty)return;
+ rankSyncing=true;const sendingDamage=playerDamage;
+ try{
+  const res=await fetch(RANK_API,{method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({playerId,name:playerName,damage:sendingDamage}),keepalive:true});
+  if(!res.ok)throw new Error(`HTTP ${res.status}`);
+  if(playerDamage===sendingDamage)rankDirty=false;
+  // 送信後の再読み込みはランキング画面を開いているときだけ
+  if($("#rankModal").classList.contains("on"))await loadOnlineRanking();
+ }catch(e){setRankStatus(rankMessage("retry"),"err");}
+ finally{rankSyncing=false;if(rankDirty)scheduleRankSync();}
+}
+function recordDamage(amount){
+ if(location.search.includes("showcase"))return;
+ if(!Number.isFinite(amount)||amount<=0)return;
+ playerDamage=Math.min(1e300,playerDamage+amount);rankDirty=true;saveRanksSoon();scheduleRankSync();
+}
+function renderRanking(){
+ const list=$("#rankList"),empty=$("#rankEmpty");if(!list)return;list.innerHTML="";
+ const power=(rankBoard==="power");
+ const key=power?"power":"damage";
+ // 戦闘力ボードはサーバー側にしか無いので、オフライン時の端末内フォールバックは持たない
+ let rows;
+ if(onlineRankLoaded){ rows=onlineRanks.slice(0,RANK_VIEW_LIMIT); }
+ else if(power){ rows=[]; }
+ else{
+  rows=damageRanks.slice().sort((a,b)=>b.damage-a.damage).slice(0,RANK_VIEW_LIMIT);
+  if(playerDamage>0&&!rows.some(row=>row.name===playerName)) rows.push({name:playerName,damage:playerDamage,isMe:true});
+ }
+ rows=rows.slice().sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,RANK_VIEW_LIMIT);
+ empty.style.display=rows.length?"none":"block";
+ rows.forEach((row,i)=>{const li=document.createElement("li");if(row.isMe||(!onlineRankLoaded&&row.name===playerName))li.className="me";
+  const rank=document.createElement("span"),name=document.createElement("span"),score=document.createElement("span");
+  rank.textContent=(i+1)+".";name.textContent=row.name;score.className="score";
+  score.textContent=power?Math.round(row.power||0).toLocaleString():fmt(row.damage);
+  li.append(rank,name,score);list.appendChild(li);});
+ const input=$("#playerNameInput");if(input&&document.activeElement!==input)input.value=playerName;
+}
+function updatePlayerUi(){const b=$("#playerBtn");if(b)b.textContent="👤 "+playerName;}
+
+/* ===== I18N ===== */
+// 言語は固有のlocalStorageキーで保持し、セーブ(sbr2_preview_forest_save2)とは分離。
+// 訳が無いキーは ja に自動フォールバックするので、未訳があっても画面は壊れない。
+const I18N={
+ ja:{
+  gold:"ゴールド", units:"兵数", gpm:"G/分", kills:"討伐数",
+  tab_summon:"召喚", tab_upgrade:"強化",
+  defeated:"撃破！", weapon_evolve:"武器進化",
+  not_summoned:"未召喚",
+  to_next_boss:"次のボスへ ▶", to_first_boss:"最初のボスへ ▶", to_prev_boss:"◀ 前のボスへ",
+  remaining:n=>`残り：${n} 体`,
+  bonus_get:"ボーナスコイン獲得！",
+  bonus_hint:n=>`このボスを${n}回倒すと特別ボーナス！`,
+  bonus_meter:r=>`あと${r}回でボーナス`,
+  bonus_meter_next:"次の撃破でボーナス！",
+  prestige_count:(n,g)=>`転生${n}回 G×${g}`,
+  ef_autogold:"ゴールドを自動収集",
+  ef_dps_init:v=>`DPS ${v} (初期)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (次)`,
+  ef_collect:(a,b)=>`収集 ${a}G → ${b}G (次)`,
+  awaken_hint:(n,lv,m)=>`あと${n}で覚醒Lv${lv}（×${m}）`,
+  unit_upg_name:(n,aw)=>`${aw?"【覚醒】":""}${n} 強化`,
+  ef_click_dmg:(a,b)=>`ダメージ ${a} → ${b}`,
+  evolve_next:n=>`次で「${n}」に進化`,
+  prestige_do:(a,b)=>`転生する (永続ゴールド ×${a} → ×${b})`,
+  prestige_locked:w=>`転生 (BOSS 10到達で解放) 現在 BOSS ${w}`,
+  prestige_locked0:"転生 (BOSS 10で解放)",
+  credits_title:"🎉 遊んでくれてありがとう！",
+  credits_body:`全40体のボスを討伐し、終焉の古神 クトゥルフを討ち倒しました！<br><br><b>SPACEBAR Mythos Slayers 2</b><br>制作: Bubblegum<br>前作モンスター: インスマス計画<br>続編モンスター: 生成画像<br><br>転生してさらなる高みを目指すもよし、<br>ここで剣を置くもよし。<br>遊んでくれてありがとう！`,
+  credits_close:"閉じる",
+  prestige_title:"転生しますか？",
+  prestige_body:`全ての進行（ゴールド・ユニット・強化・討伐数）をリセットし、永続的なゴールド倍率を獲得します。<br>今回到達したボスが深いほど、得られる倍率は大きくなります。`,
+  prestige_yes:"転生する", prestige_no:"やめる",
+  hero:{
+   click:{nm:"クリック強化",desc:"タップ/スペースキーのダメージを上げる",ef:o=>`クリックダメージ ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"コイン袋",desc:"ボス撃破時のゴールドが増える",ef:o=>`撃破ボーナス +${20*(o+1)}%`},
+   crate:{nm:"クリティカル率",desc:"クリティカル発生率アップ（上限75%）",ef:o=>`クリ率 ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"クリティカル倍率",desc:"クリティカル時のダメージ倍率アップ",ef:o=>`クリ倍率 ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"ゴールド獲得量",desc:"全てのゴールド獲得量アップ",ef:o=>`ゴールド +${10*(o+1)}%`},
+   combo:{nm:"連撃訓練",desc:"連打を続けた時のダメージ上限を上げる",ef:o=>`コンボ上限 +${20+Math.min(30,o+1)}%`},
+   aspd:{nm:"疾風の加護",desc:"風神の加護が味方の動きを加速させる",ef:o=>`攻撃速度 +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+ en:{
+  gold:"Gold", units:"Army", gpm:"G/min", kills:"Kills",
+  tab_summon:"Summon", tab_upgrade:"Upgrade",
+  defeated:"DEFEATED!", weapon_evolve:"Weapon Evolved",
+  not_summoned:"Not Summoned",
+  to_next_boss:"Next Boss ▶", to_first_boss:"First Boss ▶", to_prev_boss:"◀ Prev Boss",
+  remaining:n=>`${n} left`,
+  bonus_get:"BONUS COINS!",
+  bonus_hint:n=>`Slay this boss ${n}× for a BONUS!`,
+  bonus_meter:r=>`${r} more to BONUS`,
+  bonus_meter_next:"Next kill = BONUS!",
+  prestige_count:(n,g)=>`Rebirth ×${n}  G×${g}`,
+  ef_autogold:"Auto-collects gold",
+  ef_dps_init:v=>`DPS ${v} (base)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (next)`,
+  ef_collect:(a,b)=>`Collect ${a}G → ${b}G (next)`,
+  awaken_hint:(n,lv,m)=>`${n} more to Awaken Lv${lv} (×${m})`,
+  unit_upg_name:(n,aw)=>`${aw?"★ ":""}${n} — Upgrade`,
+  ef_click_dmg:(a,b)=>`Damage ${a} → ${b}`,
+  evolve_next:n=>`Next: evolves to “${n}”`,
+  prestige_do:(a,b)=>`Rebirth (perm. Gold ×${a} → ×${b})`,
+  prestige_locked:w=>`Rebirth (unlocks at BOSS 10) — BOSS ${w}`,
+  prestige_locked0:"Rebirth (unlocks at BOSS 10)",
+  credits_title:"🎉 THANK YOU FOR PLAYING!",
+  credits_body:`You have slain all 40 bosses and cut down Cthulhu, the Final Old God!<br><br><b>SPACEBAR Mythos Slayers 2</b><br>Created by Bubblegum<br>Original monsters: Insmouth Project<br>Sequel monsters: generated artwork<br><br>Be reborn and climb higher, or lay down your sword here.<br>Thanks for playing!`,
+  credits_close:"Close",
+  prestige_title:"Be reborn?",
+  prestige_body:`Reset all progress (gold, units, upgrades, kills) to gain a permanent gold multiplier.<br>The deeper the boss you reached, the greater the multiplier.`,
+  prestige_yes:"Rebirth", prestige_no:"Cancel",
+  hero:{
+   click:{nm:"Click Power",desc:"Raises tap / spacebar damage",ef:o=>`Click damage ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"Coin Pouch",desc:"More gold from boss kills",ef:o=>`Kill bonus +${20*(o+1)}%`},
+   crate:{nm:"Crit Chance",desc:"Raises critical hit chance (max 75%)",ef:o=>`Crit rate ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"Crit Damage",desc:"Raises critical hit damage",ef:o=>`Crit mult ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"Gold Gain",desc:"Raises all gold gained",ef:o=>`Gold +${10*(o+1)}%`},
+   combo:{nm:"Combo Drills",desc:"Raises the damage cap for sustained tapping",ef:o=>`Combo cap +${20+Math.min(30,o+1)}%`},
+   aspd:{nm:"Gale Blessing",desc:"The wind god hastens your allies",ef:o=>`Atk speed +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+ zh:{
+  gold:"金币", units:"军团人数", gpm:"金币/分", kills:"击杀数",
+  tab_summon:"召唤", tab_upgrade:"强化",
+  defeated:"已击败！", weapon_evolve:"武器进化",
+  not_summoned:"未召唤",
+  to_next_boss:"下一个Boss ▶", to_first_boss:"第一个Boss ▶", to_prev_boss:"◀ 上一个Boss",
+  remaining:n=>`剩余 ${n}`,
+  bonus_get:"获得奖励金币！",
+  bonus_hint:n=>`击杀这个Boss ${n}次获得特别奖励！`,
+  bonus_meter:r=>`再击杀${r}次得奖励`,
+  bonus_meter_next:"下次击杀得奖励！",
+  prestige_count:(n,g)=>`转生${n}次 G×${g}`,
+  ef_autogold:"自动收集金币",
+  ef_dps_init:v=>`DPS ${v} (初始)`,
+  ef_dps:(a,b)=>`DPS ${a} → ${b} (下一级)`,
+  ef_collect:(a,b)=>`收集 ${a}G → ${b}G (下一级)`,
+  awaken_hint:(n,lv,m)=>`还差${n}级觉醒Lv${lv}（×${m}）`,
+  unit_upg_name:(n,aw)=>`${aw?"【觉醒】":""}${n} 强化`,
+  ef_click_dmg:(a,b)=>`伤害 ${a} → ${b}`,
+  evolve_next:n=>`下一级进化为「${n}」`,
+  prestige_do:(a,b)=>`转生（永久金币 ×${a} → ×${b}）`,
+  prestige_locked:w=>`转生（到达BOSS 10解锁）当前 BOSS ${w}`,
+  prestige_locked0:"转生（BOSS 10解锁）",
+  credits_title:"🎉 感谢游玩！",
+  credits_body:`你已讨伐全部40位Boss，击败终焉古神 克苏鲁！<br><br><b>SPACEBAR Mythos Slayers 2</b><br>制作：Bubblegum<br>前作怪物：印斯茅斯计划<br>续作怪物：生成图像<br><br>转生再攀高峰，或就此收剑。<br>感谢游玩！`,
+  credits_close:"关闭",
+  prestige_title:"要转生吗？",
+  prestige_body:`重置所有进度（金币・单位・强化・击杀数），获得永久金币倍率。<br>本次到达的Boss越深，获得的倍率越大。`,
+  prestige_yes:"转生", prestige_no:"取消",
+  hero:{
+   click:{nm:"点击强化",desc:"提升点击/空格键的伤害",ef:o=>`点击伤害 ${1+2*o} → ${1+2*(o+1)}`},
+   gpk:{nm:"钱袋",desc:"击败Boss获得更多金币",ef:o=>`击杀奖励 +${20*(o+1)}%`},
+   crate:{nm:"暴击率",desc:"提升暴击几率（上限75%）",ef:o=>`暴击率 ${Math.round(Math.min(75,5+2*o))}%`},
+   cmult:{nm:"暴击倍率",desc:"提升暴击时的伤害倍率",ef:o=>`暴击倍率 ×${(2+0.3*o).toFixed(1)}`},
+   gold:{nm:"金币获取",desc:"提升所有金币获取量",ef:o=>`金币 +${10*(o+1)}%`},
+   combo:{nm:"连击训练",desc:"提高持续连击的伤害上限",ef:o=>`连击上限 +${20+Math.min(30,o+1)}%`},
+   aspd:{nm:"疾风祝福",desc:"风神祝福加速我方行动",ef:o=>`攻速 +${5*o}% → +${5*(o+1)}%`},
+  },
+ },
+};
+const validLanguage=v=>["ja","en","zh"].includes(v);
+const requestedLanguage=new URLSearchParams(location.search).get("lang");
+const storedLanguage=readStored("sbr2_preview_forest_lang");
+let LANG=validLanguage(requestedLanguage)?requestedLanguage:validLanguage(storedLanguage)?storedLanguage:"ja";
+const LANG_CHOSEN=validLanguage(requestedLanguage)||validLanguage(storedLanguage);
+function t(k,...a){ const d=I18N[LANG]||I18N.ja; let v=d[k]; if(v==null) v=I18N.ja[k]; if(v==null) return k;
+  return typeof v==="function"?v(...a):v; }
+// 固有名オブジェクト {ja,en,zh} から現在言語の値を取り出す（無ければ ja）
+function L(o){ if(o==null) return ""; const v=o[LANG]; return v!=null?v:(o.ja!=null?o.ja:o); }
+function heroT(id){ if(id==='vitality'||id==='armor'){const hp=id==='vitality',names={ja:[['生命の鍛錬','最大HP＋15。購入時に15回復する。'],['守りの鍛錬','被ダメージを2%軽減（最大40%）。']],en:[['Vitality','Maximum HP +15. Restore 15 HP when purchased.'],['Armour','Damage taken −2% per rank, up to 40%.']],zh:[['生命训练','最大生命＋15，购买时恢复15生命。'],['防御训练','每级减伤2%，最高40%。']]},v=names[LANG][hp?0:1];return {nm:v[0],desc:v[1],ef:lv=>hp?'HP '+(100+15*lv+3*S.hero.click):'−'+(2*lv)+'%'};} return (I18N[LANG]&&I18N[LANG].hero&&I18N[LANG].hero[id])||I18N.ja.hero[id]; }
+
+/* ===== SOUND: calm forest theme, distinct bounded harvest/pickup effects ===== */
+const audioSettings=ForestAudio.settings;
+let _bgmUnlocked=false;
+function ac(){return ForestAudio.context();}
+function saveAudioSettings(){ForestAudio.save();}
+function syncBgm(){ForestAudio.sync(_bgmUnlocked);}
+function setBgm(on){ForestAudio.setBgm(on);}
+function setSe(on){ForestAudio.setSe(on);}
+function updateAudioButtons(){ForestAudio.updateButtons(LANG);}
+function sndClick(){ForestAudio.play('strike');}
+function sndCrit(){ForestAudio.play('critical');}
+function sndEvolve(){ForestAudio.play('evolve');}
+function sndUnitHit(){ForestAudio.play('strike',{group:'unit',level:.65});}
+function sndCannonFire(){ForestAudio.play('strike',{group:'unit',level:.7});}
+function sndKill(){ForestAudio.play('victory');}
+function sndLevelUp(){ForestAudio.play('hire');}
+function sndGold(){ForestAudio.play('pickup');}
+function sndBonus(){ForestAudio.play('victory');}
+
+// name = {ja,en,zh} 各言語 [二つ名(epithet), 名前]。setBossNameが上段/下段に振り分ける。
+const BOSS=[
+ // ---- wave 1-11 : 通常の魔物 / 怪物 ----
+ // flip = 素材が右向きなので左(味方側)へ反転。fly = 浮遊する上下アニメ。scale = 表示倍率。
+ {img:"boss01_rat.webp",name:{ja:["下水の魔鼠","ラトキン"],en:["Sewer Vermin","Ratkin"],zh:["下水道魔鼠","拉特金"]},right:2},
+ {img:"boss_ghoul.webp",name:{ja:["墓場の喰屍鬼","グール"],en:["Graveyard Eater","Ghoul"],zh:["墓地食尸鬼","古尔"]},scale:.88},
+ {img:"boss_ghast.webp",name:{ja:["地底の餓鬼","ガスト"],en:["Subterranean Famished","Ghast"],zh:["地底饿鬼","加斯特"]},scale:.9},
+ {img:"boss03_sanddweller.webp",name:{ja:["砂漠の徘徊者","ザルファク"],en:["Desert Wanderer","Zalfaq"],zh:["沙漠徘徊者","扎尔法克"]}},
+ {img:"boss02_nightwing.webp",name:{ja:["夜翼の影","ノクターン"],en:["Nightwing Shade","Nocturne"],zh:["夜翼之影","诺克顿"]},fly:true},
+ {img:"boss_nightgaunt.webp",name:{ja:["夜陰の妖鬼","ナイトゴーント"],en:["Gloom Wraith","Night-gaunt"],zh:["夜阴妖鬼","奈特冈特"]},fly:true},
+ {img:"boss_serpentman.webp",name:{ja:["古の蛇人","サーペントマン"],en:["Ancient Coils","Serpent Man"],zh:["古老蛇人","瑟彭特曼"]},scale:.85},
+ {img:"boss_migo.webp",name:{ja:["冥王星の菌類","ミ＝ゴ"],en:["Fungi from Pluto","Mi-go"],zh:["冥王星真菌","米戈"]},fly:true,scale:1.28},
+ {img:"boss_shaggai.webp",name:{ja:["シャッガイの蟲","ノフ＝ケー"],en:["Insect of Shaggai","Shan"],zh:["沙盖之虫","诺夫-凯"]},fly:true},
+ {img:"boss04_blob.webp",name:{ja:["蠢く粘塊","グロブス"],en:["Writhing Ooze","Globus"],zh:["蠕动粘块","格罗布斯"]}},
+ {img:"boss_glaaki.webp",name:{ja:["湖底の死霊","グラーキ"],en:["Lakebed Revenant","Glaaki"],zh:["湖底亡灵","格拉基"]},scale:1.15},
+ // ---- wave 12-25 : より強大な怪異 ----
+ {img:"boss05_hunter.webp",name:{ja:["深淵の狩人","ヴォルグ"],en:["Hunter of the Abyss","Vorg"],zh:["深渊猎手","沃尔格"]},flip:true,fly:true,scale:1.2},
+ {img:"boss_moonbeast.webp",name:{ja:["月の獣","ムーンビースト"],en:["Beast of the Moon","Moon-beast"],zh:["月之兽","蒙比斯特"]},scale:.9,filter:"brightness(.7) saturate(1.2) contrast(1.12)"},
+ {img:"boss_gug.webp",name:{ja:["洞窟の巨鬼","ガグ"],en:["Cavern Giant","Gug"],zh:["洞窟巨鬼","古革"]},scale:1.3},
+ {img:"boss06_flame.webp",name:{ja:["焔霊","イグニス"],en:["Flame Spirit","Ignis"],zh:["焰灵","伊格尼斯"]},fly:true},
+ {img:"boss_iwife.webp",name:{ja:["イスの偉大なる種族","イ夫人"],en:["Great Race of Yith","Madame Yith"],zh:["伊斯伟大种族","伊夫人"]},scale:.82},
+ {img:"boss_deepone.webp",name:{ja:["深海の眷属","ディープ・ワン"],en:["Kin of the Deep","Deep One"],zh:["深海眷族","深潜者"]},scale:.85},
+ {img:"boss_gogfhoul.webp",name:{ja:["屍肉の主","ゴグ＝フール"],en:["Lord of Carrion","Gogh-Hoor"],zh:["腐肉之主","戈格-胡尔"]}},
+ {img:"boss_mordiggian.webp",name:{ja:["屍食の神","モルディギアン"],en:["God of the Charnel","Mordiggian"],zh:["食尸之神","莫尔迪基安"]},scale:1.2},
+ {img:"boss07_skyfiend.webp",name:{ja:["天空の鬼神","アエロス"],en:["Sky Fiend","Aeros"],zh:["天空鬼神","埃罗斯"]},scale:.95},
+ {img:"boss_tsathoggua.webp",name:{ja:["旧支配者","ツァトゥグァ"],en:["The Great Old One","Tsathoggua"],zh:["旧日支配者","撒托古亚"]},scale:1.2},
+ {img:"boss_chaugnar.webp",name:{ja:["象牙の神","チャウグナル・ファウグン"],en:["The Ivory God","Chaugnar Faugn"],zh:["象牙之神","乔古纳·法格恩"]}},
+ {img:"boss_objectx.webp",name:{ja:["擬態する恐怖","物体Ｘ"],en:["Mimicking Terror","Object X"],zh:["拟态恐惧","怪物X"]}},
+ {img:"boss_aihot.webp",name:{ja:["千の仔","アイホート"],en:["The Thousand Spawn","Eihort"],zh:["千子之母","艾霍特"]},scale:1.15},
+ {img:"boss_hellplant.webp",name:{ja:["地獄の食人花","ヘル・プラント"],en:["Devouring Bloom","Hell-Plant"],zh:["地狱食人花","海尔普兰特"]}},
+ // ---- wave 26-40 : 古き神々 ----
+ {img:"boss_formless.webp",name:{ja:["無形の落とし子","フォルムレス・スポーン"],en:["The Formless","Formless Spawn"],zh:["无形之子","无形孳生物"]},flip:true,fly:true,scale:1.2},
+ {img:"boss08_hound.webp",name:{ja:["時喰いの猟犬","クロノファング"],en:["Time-Eating Hound","Chronophang"],zh:["噬时猎犬","克罗诺方格"]}},
+ {img:"boss_tindalos.webp",name:{ja:["角より来たる","ティンダロスの猟犬"],en:["From the Angles","Hound of Tindalos"],zh:["自棱角而来","廷达罗斯猎犬"]},scale:1.3},
+ {img:"boss_hunter2.webp",name:{ja:["忌まわしき狩人","ザ・ハンター"],en:["The Abhorrent","The Hunter"],zh:["可憎猎手","猎人"]}},
+ {img:"boss_blackgoat.webp",name:{ja:["黒山羊の落とし子","シュブ＝ニグラス"],en:["The Black Goat's Spawn","Shub-Niggurath"],zh:["黑山羊之子","莎布·尼古拉斯"]},scale:1.35},
+ {img:"boss_shantak2.webp",name:{ja:["虚空の魔鳥","シャンタク"],en:["Bird of the Void","Shantak"],zh:["虚空魔鸟","单塔克"]},fly:true,scale:1.4},
+ {img:"boss09_beast.webp",name:{ja:["極北の獣神","ボレアス"],en:["Beast-God of the North","Boreas"],zh:["极北兽神","玻瑞阿斯"]},scale:1.22},
+ {img:"boss11_eldermind.webp",name:{ja:["刻の支配者","エルダーマインド"],en:["Master of Aeons","Elder Mind"],zh:["时之主宰","远古心智"]},fly:true},
+ {img:"boss11_shantak.webp",name:{ja:["終焉の魔鳥","グレーター・シャンタク"],en:["Bird of the End","Greater Shantak"],zh:["终焉魔鸟","至大单塔克"]},wide:true,fly:true,scale:1.55,bottom:20},
+ {img:"boss10_stormgod.webp",name:{ja:["嵐の古神","ストラトス"],en:["Old God of Storms","Stratos"],zh:["风暴古神","斯特拉托斯"]},fly:true,scale:1.32},
+ {img:"boss_igoronak.webp",name:{ja:["汚辱の旧神","イゴーロナク"],en:["The Defiler","Y'golonac"],zh:["污秽旧神","伊戈隆纳克"]},flip:true},
+ {img:"boss_cthugha.webp",name:{ja:["生ける炎","クトゥグァ"],en:["The Living Flame","Cthugha"],zh:["活体火焰","克图格亚"]},fly:true,scale:1.25},
+ {img:"boss_hastur.webp",name:{ja:["名状しがたきもの","ハスター"],en:["The Unspeakable","Hastur"],zh:["不可名状者","哈斯塔"]},fly:true,scale:1.32},
+ {img:"boss_nyarlathotep.webp",name:{ja:["這い寄る混沌","ニャルラトテップ"],en:["The Crawling Chaos","Nyarlathotep"],zh:["蔓行混沌","奈亚拉托提普"]},scale:1.32},
+ // ---- wave 41 : 終焉の古神 ----
+ {img:"boss_cthulhu.webp",name:{ja:["終焉の古神","クトゥルフ"],en:["The Final Old God","Cthulhu"],zh:["终焉古神","克苏鲁"]},scale:1.62,bottom:2,right:2},
+];
+
+// dmg = per-hit damage at level 0.  DPS = dmg/iv.  Upgrades: dmg*(1+0.9*ulvl)
+// pos = fixed battlefield position (left/bottom %) to avoid overlap
+const unitAnim=(sheet,frameMs,impact,height=16,heightMobile=12.5,release=0)=>({
+ sheet,frames:4,sequence:[0,1,2,3,0],frameMs,impact,height,heightMobile,release
+});
+const UNITS=[
+ {id:"woodcutter",name:{ja:"木こり",en:"Lumberjack",zh:"伐木工"},sprite:"unit_farmer.png",base:35,dmg:0,iv:2.4,worker:"woodcutter",pos:{l:18,b:20},anim:unitAnim("unit_woodcutter_chop.webp",150,300,16,13)},
+ {id:"miner",name:{ja:"石ほり",en:"Miner",zh:"矿工"},sprite:"unit_dwarfb.png",base:45,dmg:0,iv:3.1,worker:"miner",pos:{l:22,b:22},anim:unitAnim("unit_dwarfb_attack.png",120,270,17,14)},
+ {id:"porter",name:{ja:"運搬係",en:"Porter",zh:"搬运工"},sprite:"unit_villager.png",base:30,dmg:0,iv:1.2,worker:"porter",pos:{l:15,b:18},anim:unitAnim("unit_villager_collect.png",120,250,16,13)},
+ {id:"healer",name:{ja:"治癒師",en:"Healer",zh:"治疗师"},sprite:"unit_paladin.png",base:180,dmg:0,iv:2.5,ranged:true,healer:true,proj:"holy",fx:"holy",pos:{l:20,b:18},anim:unitAnim("unit_paladin_attack.png",115,270,19,16)},
+ // Original art is reused; sequel movement and range are simulated per soldier.
+ // pos = desktop, posM = narrow portrait screens.
+ {id:"sword",   name:{ja:"剣士",en:"Swordsman",zh:"剑士"}, sprite:"unit_sword.png", base:35, dmg:2, iv:1.0, ranged:false, fx:"slash", pos:{l:73.6,b:19.2}, posM:{l:54,b:11}, anim:unitAnim("unit_sword_attack.png",105,240,18,15)},
+ {id:"dwarfb",  name:{ja:"ドワーフ戦士",en:"Dwarf Warrior",zh:"矮人战士"}, sprite:"unit_dwarfb.png", base:280, dmg:4, iv:1.0, ranged:false, fx:"slash", pos:{l:70.3,b:22.6}, posM:{l:46,b:19}, anim:unitAnim("unit_dwarfb_attack.png",120,270,17,14)},
+ {id:"arch",    name:{ja:"弓兵",en:"Archer",zh:"弓兵"}, sprite:"unit_arch.png", base:150, powerBase:600, dmg:6, iv:1.2, ranged:true, proj:"arrow", fx:"pierce", pos:{l:21,b:9.7}, posM:{l:30,b:9}, anim:unitAnim("unit_arch_attack.png",100,680,17,14.5,300)},
+ {id:"heavy",   name:{ja:"重装兵",en:"Heavy Infantry",zh:"重装兵"}, sprite:"unit_heavy.png", base:3500, dmg:18, iv:1.5, ranged:false, fx:"shock", pos:{l:67,b:21}, posM:{l:57,b:16}, anim:unitAnim("unit_heavy_attack.png",140,320,19,16)},
+ {id:"dwarfw",  name:{ja:"鋼のドワーフ",en:"Steel Dwarf",zh:"钢铁矮人"}, sprite:"unit_dwarfw.png", base:8800, dmg:20, iv:1.0, ranged:false, fx:"shock", pos:{l:70.7,b:18.1}, posM:{l:50,b:7}, anim:unitAnim("unit_dwarfw_attack.png",130,300,17,14)},
+ {id:"mage",    name:{ja:"魔導士",en:"Wizard",zh:"魔导士"}, sprite:"unit_mage.png", base:20000, dmg:60, iv:2.0, ranged:true, proj:"magic-violet", fx:"magic-violet", pos:{l:39.5,b:14}, posM:{l:22,b:19}, anim:unitAnim("unit_mage_attack.png",120,740,17,14.5,360)},
+ {id:"crossbow",name:{ja:"石弓兵",en:"Crossbowman",zh:"弩兵"}, sprite:"unit_crossbow.png", base:55000, dmg:110, iv:1.4, ranged:true, proj:"bolt", fx:"pierce", pos:{l:60.2,b:9.3}, posM:{l:36,b:15}, anim:unitAnim("unit_crossbow_attack.png",110,620,18,15,220)},
+ {id:"knight",  name:{ja:"騎士",en:"Knight",zh:"骑士"}, sprite:"unit_knight.png", base:100000, dmg:90, iv:1.0, ranged:false, fx:"slash", pos:{l:67.6,b:15.4}, posM:{l:59,b:5}, anim:unitAnim("unit_knight_attack.png",100,230,18,15)},
+ {id:"paladin", name:{ja:"聖騎士",en:"Paladin",zh:"圣骑士"}, sprite:"unit_paladin.png", base:500000, dmg:180, iv:0.9, ranged:false, fx:"holy", pos:{l:77,b:19}, posM:{l:43,b:12}, anim:unitAnim("unit_paladin_attack.png",115,270,19,16)},
+ {id:"bombardier",name:{ja:"火薬投擲兵",en:"Bombardier",zh:"火药投掷兵"}, sprite:"unit_bombardier.png", base:1.2e6, dmg:500, iv:2.2, ranged:true, proj:"bomb", fx:"bomb-impact", projOrigin:{x:.72,y:.28}, pos:{l:56.2,b:6.4}, posM:{l:26,b:5}, anim:unitAnim("unit_bombardier_attack.png",180,880,18.5,15.5,360)},
+ {id:"elf",     name:{ja:"エルフの射手",en:"Elf Archer",zh:"精灵射手"}, sprite:"unit_elf.png", base:2.5e6, dmg:600, iv:1.2, ranged:true, proj:"arrow", fx:"pierce", pos:{l:53,b:19.9}, posM:{l:33,b:22}, anim:unitAnim("unit_elf_attack.png",90,620,17,14.5,270)},
+ {id:"warlock", name:{ja:"黒魔術師",en:"Warlock",zh:"黑魔法师"}, sprite:"unit_warlock.png", base:12e6, dmg:2600, iv:2.0, ranged:true, proj:"magic-cyan", fx:"magic-cyan", pos:{l:18,b:20.6}, posM:{l:14,b:13}, anim:unitAnim("unit_warlock_attack.png",120,740,18,15,360)},
+ {id:"dark",    name:{ja:"暗黒騎士",en:"Dark Knight",zh:"暗黑骑士"}, sprite:"unit_dark.png", base:60e6, dmg:3200, iv:1.0, ranged:false, fx:"darkslash", pos:{l:72.1,b:14.7}, posM:{l:56,b:21}, anim:unitAnim("unit_dark_attack.png",125,290,20,16.5)},
+ {id:"giant",   name:{ja:"巨人砲兵",en:"Siege Giant",zh:"巨人炮兵"}, sprite:"unit_giant.png", base:150e6, dmg:50000, iv:5.0, ranged:true, proj:"cannonball", fx:"cannon-impact", fx2:"shock", projOrigin:{x:.8,y:.27}, pos:{l:28,b:10.5}, posM:{l:30,b:8}, anim:unitAnim("unit_giant_attack.png",260,1040,72,56,520)},
+ {id:"dragong", name:{ja:"翠竜",en:"Jade Dragon",zh:"翠龙"}, sprite:"unit_dragong.png", base:300e6, dmg:14000, iv:1.8, ranged:true, proj:"fire-green", fx:"fire-green", fly:true, orbit:{phase:0.1,rx:18,ry:4,speed:.55}, anim:unitAnim("unit_dragong_attack.png",110,600,20,16,220)},
+ {id:"dragonp", name:{ja:"紫竜",en:"Violet Dragon",zh:"紫龙"}, sprite:"unit_dragonp.png", base:1.5e9, dmg:36000, iv:1.8, ranged:true, proj:"fire-violet", fx:"fire-violet", fly:true, orbit:{phase:2.2,rx:35,ry:18,speed:-.46}, anim:unitAnim("unit_dragonp_attack.png",110,600,20,16,220)},
+ {id:"dragonr", name:{ja:"紅竜",en:"Crimson Dragon",zh:"红龙"}, sprite:"unit_dragonr.png", base:8e9, dmg:90000, iv:1.8, ranged:true, proj:"fire-crimson", fx:"fire-crimson", fly:true, orbit:{phase:4.3,rx:52,ry:30,speed:.42}, anim:unitAnim("unit_dragonr_attack.png",110,600,20,16,220)},
+ {id:"angel",   name:{ja:"大天使",en:"Archangel",zh:"大天使"}, sprite:"unit_angel.png", base:40e9, dmg:250000, iv:2.0, ranged:true, proj:"holy", fx:"holy", pos:{l:26.3,b:68.1}, posM:{l:26.3,b:68.1}, fly:true, anim:unitAnim("unit_angel_attack.png",120,720,21,16,360)},
+ {id:"dragong2",name:{ja:"古代翠竜",en:"Ancient Jade Dragon",zh:"远古翠龙"}, sprite:"unit_dragong.png", base:200e9, dmg:800000, iv:1.8, ranged:true, proj:"fire-green", fx:"fire-green", multiProj:3, fly:true, orbit:{phase:1.2,rx:72,ry:42,speed:-.34}, anim:unitAnim("unit_dragong_attack.png",100,580,22,17,200)},
+ {id:"dragonr2",name:{ja:"覚醒紅竜",en:"Awakened Crimson Dragon",zh:"觉醒红龙"}, sprite:"unit_dragonr.png", base:1e12, dmg:3000000, iv:1.8, ranged:true, proj:"fire-crimson", fx:"fire-crimson", multiProj:3, fly:true, orbit:{phase:3.3,rx:90,ry:50,speed:.31}, anim:unitAnim("unit_dragonr_attack.png",100,580,22,17,200)},
+ {id:"angel2",  name:{ja:"熾天使",en:"Seraph",zh:"炽天使"}, sprite:"unit_angel.png", base:5e12, dmg:12000000, iv:2.0, ranged:true, proj:"holy", fx:"holy", pos:{l:43,b:48}, posM:{l:43,b:48}, fly:true, anim:unitAnim("unit_angel_attack.png",105,680,23,17.5,315)},
+ {id:"darkgod", name:{ja:"魔神",en:"Demon God",zh:"魔神"}, sprite:"unit_dark.png", base:25e12, dmg:50000000, iv:1.0, ranged:false, fx:"darkslash", fx2:"shock", pos:{l:73.2,b:11.1}, posM:{l:48,b:13.2}, anim:{...unitAnim("unit_dark_attack.png",95,250,22,18),sequence:[0,1,2,2,3,0]}},
+];
+// 縦画面（スマホ）判定：画面が縦長 かつ 幅が狭い
+function isPortrait(){ return window.matchMedia("(max-width:680px)").matches && window.innerHeight>window.innerWidth; }
+function unitPos(u){
+ const profile=LAYOUT_MOBILE||isPortrait()?"mobile":"desktop";
+ const saved=LAYOUT_MODE&&layoutDraft[profile]&&layoutDraft[profile][u.id];
+ if(saved) return saved;
+ if(u.orbit) return {l:50,b:50};
+ return (profile==="mobile"&&u.posM)?u.posM:u.pos;
+}
+
+// 表示名・説明・効果文(ef)は I18N.<lang>.hero[id] に分離。ここは数値パラメータのみ。
+const HERO=[
+ {id:"click",base:60,  scale:1.5},
+ {id:"gpk",  base:120, scale:1.5},
+ {id:"crate",base:250, scale:1.6, max:35},
+ {id:"cmult",base:900, scale:1.7},
+ {id:"gold", base:500, scale:1.55},
+ {id:"combo",base:1200,scale:1.65,max:30},
+ {id:"aspd", base:800, scale:1.3, max:40},
+];
+
+// 10回強化ごとに進化。id=専用アイコン、col=攻撃色、snd=サンプル・重ね音・低音。
+const WEAPONS=[
+ {"id":"kitchen","name":{"ja":"キッチンナイフ","en":"Kitchen Knife","zh":"菜刀"},"col":"#e8edf2","snd":{"sample":"blade","rate":1.45,"vol":0.52,"f":320,"sw":2400}},
+ {"id":"dagger","name":{"ja":"アサシンダガー","en":"Assassin Dagger","zh":"刺客匕首"},"col":"#cdd6df","snd":{"sample":"needle","rate":1.5,"vol":0.8,"layer":"blade","layerVol":0.26,"f":360,"sw":2700}},
+ {"id":"shortsword","name":{"ja":"鋼鉄のショートソード","en":"Steel Shortsword","zh":"精钢短剑"},"col":"#bfeaff","snd":{"sample":"blade","rate":1.22,"vol":0.62,"f":300,"sw":2500}},
+ {"id":"longsword","name":{"ja":"騎士のロングソード","en":"Knight's Longsword","zh":"骑士长剑"},"col":"#9fd8ff","snd":{"sample":"blade","rate":1.02,"vol":0.66,"layer":"swing","layerVol":0.14,"f":260,"sw":2300}},
+ {"id":"axe","name":{"ja":"戦斧ブレイクファング","en":"Breakfang Axe","zh":"碎牙战斧"},"col":"#ffcaa0","snd":{"sample":"blade","rate":0.8,"vol":0.72,"layer":"swing","layerVol":0.22,"bass":78,"f":160,"sw":1500}},
+ {"id":"hammer","name":{"ja":"ウォーハンマー","en":"War Hammer","zh":"战锤"},"col":"#ffb27a","fx":"crush","snd":{"sample":"blade","rate":0.63,"vol":0.76,"filter":1800,"layer":"swing","layerVol":0.24,"bass":52,"f":110,"sw":1100}},
+ {"id":"greatsword","name":{"ja":"巨剣グレートスレイヤー","en":"Greatslayer","zh":"巨剑斩灭者"},"col":"#d7b6ff","snd":{"sample":"swing","rate":0.9,"vol":0.3,"layer":"blade","layerVol":0.76,"bass":64,"f":220,"sw":2000}},
+ {"id":"muramasa","name":{"ja":"妖刀ムラマサ","en":"Muramasa Blade","zh":"妖刀村正"},"col":"#ff9bd0","snd":{"sample":"needle","rate":1.28,"vol":0.8,"layer":"blade","layerVol":0.62,"f":380,"sw":3200}},
+ {"id":"dragonslayer","name":{"ja":"竜殺しの剣","en":"Dragonslayer","zh":"屠龙剑"},"col":"#8affc0","snd":{"sample":"blade","rate":0.86,"vol":0.72,"layer":"magic","layerVol":0.25,"bass":68,"f":240,"sw":2600}},
+ {"id":"excalibur","name":{"ja":"神剣エクスカリバー","en":"Excalibur","zh":"神剑 王者之剑"},"col":"#ffe066","snd":{"sample":"blade","rate":1.08,"vol":0.72,"layer":"magic","layerVol":0.4,"f":520,"sw":3600}},
+];
+const WEAPON_CURSOR_BODIES={"axe":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#eaa46f\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M32 8H38V63H32Z\" fill=\"#785039\"/><path d=\"M31 11Q16 15 14 7Q6 21 15 36Q17 25 31 28Z\" fill=\"url(#metal)\"/><path d=\"M39 11Q53 15 56 7Q64 21 55 36Q53 25 39 28Z\" fill=\"url(#metal)\"/><path d=\"M15 10Q10 22 15 32M55 10Q60 22 55 32\" stroke=\"#fff\"/><path d=\"M29 14H41V25H29Z\" fill=\"url(#gold)\"/><path d=\"M31 48H39M31 54H39M31 60H39\" stroke=\"#d6b077\" stroke-width=\"2\"/></g></svg>\n","dagger":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#91b8cc\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 15L42 33L35 44L28 33Z\" fill=\"url(#metal)\"/><path d=\"M35 16V43\" stroke=\"#fff\"/><path d=\"M24 43Q35 38 46 43L44 47H26Z\" fill=\"url(#gold)\"/><path d=\"M32 47H38V60H32Z\" fill=\"#613e2d\"/><circle cx=\"35\" cy=\"61\" r=\"3\" fill=\"url(#gold)\"/></g></svg>\n","dragonslayer":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#4ee0a2\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L45 14L41 20L45 26L41 32L43 39L35 46L27 39L29 32L25 26L29 20L25 14Z\" fill=\"url(#metal)\"/><path d=\"M35 8V41\" stroke=\"#63ffbf\" stroke-width=\"2\"/><path d=\"M17 43L23 37L28 44H42L47 37L53 43L48 51L40 48H30L22 51Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V62H32Z\" fill=\"#184d3d\"/><path d=\"M29 63L35 58L41 63L35 69Z\" fill=\"#43da98\"/><path d=\"M33 21L36 18L38 22L34 25L37 28\" fill=\"none\" stroke=\"#d3ffee\"/></g></svg>\n","excalibur":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ffe484\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 2L42 13L39 19V42L35 46L31 42V19L28 13Z\" fill=\"url(#metal)\"/><path d=\"M35 5V40\" stroke=\"#fff4b0\" stroke-width=\"2\"/><path d=\"M18 38L27 43H43L52 38L48 48H22Z\" fill=\"url(#gold)\"/><path d=\"M32 48H38V62H32Z\" fill=\"#e0ad4a\"/><path d=\"M35 41L39 46L35 51L31 46Z\" fill=\"#72dffc\"/><circle cx=\"35\" cy=\"64\" r=\"4\" fill=\"url(#gold)\"/><path d=\"M12 18H22M17 13V23M49 28H57M53 24V32\" stroke=\"#fff2b3\" stroke-width=\"1.5\"/></g></svg>\n","greatsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#b49afa\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L45 15L43 40L39 44H31L27 40L25 15Z\" fill=\"url(#metal)\"/><path d=\"M35 7V40\" stroke=\"#ddceff\" stroke-width=\"2\"/><path d=\"M20 45L23 39L35 43L47 39L50 45L44 49H26Z\" fill=\"#9682b2\"/><path d=\"M32 49H38V64H32Z\" fill=\"#382c53\"/><path d=\"M32 52H38M32 57H38M32 62H38\" stroke=\"#b6a0dd\"/><path d=\"M30 65L35 61L40 65L35 69Z\" fill=\"#c6a1ff\"/></g></svg>\n","hammer":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ea9b52\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M32 25H38V64H32Z\" fill=\"#734734\"/><path d=\"M13 9H56V29H13Z\" fill=\"url(#metal)\"/><path d=\"M12 8H20V31H12ZM49 8H57V31H49Z\" fill=\"url(#gold)\"/><path d=\"M25 12H44V25H25Z\" fill=\"#314453\"/><path d=\"M35 11L29 19L35 26L41 19Z\" fill=\"#f6bc61\"/><path d=\"M31 49H39M31 55H39M31 61H39\" stroke=\"#cf9d60\" stroke-width=\"2\"/></g></svg>\n","kitchen":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ccd6df\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M28 12H43V44H28Z\" fill=\"url(#metal)\"/><path d=\"M28 12H43L39 7H28Z\" fill=\"#f0f6ff\"/><path d=\"M28 14V44\" stroke=\"#fff\"/><path d=\"M31 44H39V61H31Z\" fill=\"#70492c\"/><circle cx=\"35\" cy=\"48\" r=\"1\" fill=\"#dbb879\"/><circle cx=\"35\" cy=\"57\" r=\"1\" fill=\"#dbb879\"/></g></svg>\n","longsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#6ac1ff\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 3L40 14V43L35 47L30 43V14Z\" fill=\"url(#metal)\"/><path d=\"M35 6V42\" stroke=\"#fff\"/><path d=\"M21 45L26 42L35 45L44 42L49 45L45 49H25Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V63H32Z\" fill=\"#253c74\"/><path d=\"M32 52H38M32 57H38M32 61H38\" stroke=\"#95bbdf\"/><circle cx=\"35\" cy=\"65\" r=\"3\" fill=\"#81dbff\"/></g></svg>\n","muramasa":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#ff689c\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M43 3Q44 26 33 48L27 45Q38 23 43 3Z\" fill=\"url(#metal)\"/><path d=\"M42 8Q42 29 31 46\" stroke=\"#ffd6e3\"/><ellipse cx=\"30\" cy=\"48\" rx=\"10\" ry=\"3\" fill=\"#ce6080\" transform=\"rotate(20 30 48)\"/><path d=\"M27 50L33 52L28 65L22 63Z\" fill=\"#401c30\"/><path d=\"M26 53L31 57M24 58L29 62\" stroke=\"#ee8baa\" stroke-width=\"2\"/><path d=\"M22 64Q9 61 16 53\" fill=\"none\" stroke=\"#ae284d\" stroke-width=\"2\"/></g></svg>\n","shortsword":"<defs><linearGradient id=\"metal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\".3\"><stop stop-color=\"#526779\"/><stop offset=\".46\" stop-color=\"#b9cedd\"/><stop offset=\".5\" stop-color=\"#f4fafc\"/><stop offset=\".57\" stop-color=\"#a7deff\"/><stop offset=\"1\" stop-color=\"#536679\"/></linearGradient><linearGradient id=\"gold\" x2=\"0.8\" y2=\"1\"><stop stop-color=\"#fff0aa\"/><stop offset=\".45\" stop-color=\"#d3a854\"/><stop offset=\"1\" stop-color=\"#775126\"/></linearGradient></defs><g transform=\"translate(36 36) rotate(35) translate(-36 -36)\" stroke=\"#17202b\" stroke-width=\"1.4\" stroke-linejoin=\"round\"><path d=\"M35 7L41 17V42L35 47L29 42V17Z\" fill=\"url(#metal)\"/><path d=\"M35 9V43\" stroke=\"#f1fcff\"/><path d=\"M23 44H47V49H23Z\" fill=\"url(#gold)\"/><path d=\"M32 49H38V61H32Z\" fill=\"#364a60\"/><path d=\"M32 52H38M32 56H38\" stroke=\"#9eacbc\"/><circle cx=\"35\" cy=\"63\" r=\"3\" fill=\"url(#gold)\"/></g></svg>\n"};
+function weaponTier(lv){ return Math.min(WEAPONS.length-1, Math.floor((lv!=null?lv:S.hero.click)/10)); }
+function curWeapon(){ return WEAPONS[weaponTier()]; }
+function weaponIcon(w){return `../../assets/weapons/${w.id}.svg`;}
+function weaponIconHtml(w,cls="weapon-icon"){return `<img class="${cls}" src="${weaponIcon(w)}" alt="${L(w.name)}" width="62" height="62">`;}
+let _cursorWeapon="";
+function updateWeaponCursor(){
+ const w=curWeapon();if(_cursorWeapon===w.id)return;_cursorWeapon=w.id;
+ // A 32px cursor is accepted by browsers that reject larger SVG cursors.
+ // Embedded assets already end with </svg>; keep exactly one root closing tag.
+ const body=WEAPON_CURSOR_BODIES[w.id].replace(/<\/svg>\s*$/, '');
+ const icon=encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 72 72">${body}</svg>`);
+ field.style.cursor=`url("data:image/svg+xml,${icon}") 22 4, crosshair`;
+}
+// 表示レベル：最終武器に到達後はそのまま伸び続ける。それ以外は1〜10で循環
+function weaponSubLevel(){
+ const lv=S.hero.click, last=WEAPONS.length-1;
+ return Math.floor(lv/10)>=last ? (lv-last*10)+1 : (lv%10)+1;
+}
+
+let S;
+function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
+function freshState(){return Core.fresh(UNITS.map(u=>u.id));}
+let pendingOffline=null,saveAvailable=true;
+function load(){
+ try{
+  const current=localStorage.getItem("sbr2_preview_forest_save3"),legacy=localStorage.getItem("sbr2_preview_forest_save2");
+  const raw=current||legacy;
+  S=raw?Core.migrate(JSON.parse(raw),UNITS.map(u=>u.id)):freshState();
+  if(!current&&legacy&&!localStorage.getItem("sbr2_preview_forest_backup_v2"))localStorage.setItem("sbr2_preview_forest_backup_v2",legacy);
+  pendingOffline=Core.offline(S,UNITS);S.gold+=pendingOffline.gold;S.lastSeen=Date.now();
+ }catch(e){S=freshState();saveAvailable=false;}
+}
+const PARAMS=new URLSearchParams(location.search);
+const CHEAT=PARAMS.has("cheat");
+const LAYOUT_MODE=PARAMS.has("layout");
+const LAYOUT_MOBILE=LAYOUT_MODE&&PARAMS.has("mobile");
+const SHOWCASE=PARAMS.has("showcase")||LAYOUT_MODE;
+const LAYOUT_KEY="sbr2_preview_forest_unit_layout_v1";
+let layoutDraft={desktop:{},mobile:{}},layoutUndo=[],layoutSelectedId="giant";
+if(LAYOUT_MODE){
+ try{
+  if(PARAMS.has("resetLayout"))localStorage.removeItem(LAYOUT_KEY);
+  const parsed=JSON.parse(localStorage.getItem(LAYOUT_KEY)||"null");
+  if(parsed&&parsed.desktop&&parsed.mobile)layoutDraft=parsed;
+ }catch(e){}
+ document.body.classList.add("layout-mode");
+ if(LAYOUT_MOBILE)document.body.classList.add("layout-mobile");
+ if(PARAMS.has("resetLayout")){
+  PARAMS.delete("resetLayout");
+  history.replaceState(null,"",location.pathname+"?"+PARAMS.toString());
+ }
+}
+function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_forest_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
+function earnGold(amount){if(!Number.isFinite(amount)||amount<=0)return;S.gold=Math.min(1e150,S.gold+amount);S.earned=Math.min(1e150,S.earned+amount);}
+function unitOwned(u){return S.owned[u.id]>=1;}
+function unitBuyCost(u){return Core.unitCost(S,u);}
+function unitUpgCost(u){return Core.upgradeCost(S,u);}
+function heroCost(h){return Core.heroCost(S,h);}
+function awakenMul(u){return Core.awaken(S.ulvl[u.id]);}
+function unitDmg(u){return Core.damage(S,u)*Core.formation(S,UNITS);}
+function unitIv(u){return Core.interval(S,u);}
+function unitDPS(u){return Core.unitDps(S,u)*Core.formation(S,UNITS);}
+function totalDPS(){return Core.armyDps(S,UNITS);}
+function clickBaseDmg(lv){return Core.clickBase(lv);}
+function clickDmg(){return CHEAT?bossMaxHp()*2:Core.clickDamage(S,window.ArmyView?.ready?ArmyView.engagedDps:totalDPS());}
+function critRate(){return Math.min(.75,.05+.02*S.hero.crate+.02*Core.skill(S,'critical'));}
+function critMul(){return 2+.3*S.hero.cmult;}
+function goldMul(){return Core.goldMultiplier(S);}
+function prestigeFactor(){return Core.mastery({...S,renown:S.renown+S.clearedBossWave+Math.max(0,S.bossCycle-1)*10});}
+
+const REPEAT_BONUS_EVERY=5;
+
+let bossIndex=0, bossDead=false,encounterId=0,runId=0,respawnTimer=null;
+function cycleHpMul(){return Core.cycleHp(S);}
+function cycleGoldMul(){return Core.cycleGold(S);}
+function bossMaxHp(){return Core.hp(S);}
+function goldReward(){return Core.killGold(S);}
+function spawnBoss(reset){
+ clearTimeout(respawnTimer);encounterId++;
+ bossDead=false;
+ bossIndex=(S.bossWave-1)%BOSS.length;
+ const b=BOSS[bossIndex];
+ S.bossHpMax=bossMaxHp();
+ if(reset||!S.bossHp||S.bossHp>S.bossHpMax) S.bossHp=S.bossHpMax;
+ bossEl.classList.toggle("wide",!!b.wide);
+ bossEl.classList.toggle("flip",!!b.flip);
+ bossEl.classList.toggle("fly",!!b.fly);
+ const baseH=b.wide?46:62, baseMW=b.wide?72:48, sc=b.scale||1;
+ // スマホ縦画面では味方を置く左半分を空けるため、ボスを右に寄せて横幅を抑える
+ const port=isPortrait();
+ const mwFactor=port?0.82:1;
+ bossEl.style.height=(baseH*sc)+"%";
+ bossEl.style.maxWidth=(baseMW*sc*mwFactor)+"%";
+ bossEl.style.bottom=(b.bottom!=null?b.bottom:(b.wide?34:14))+"%";
+ bossEl.style.right=(b.right!=null?b.right:(b.wide?2:(port?3:8)))+"%";
+ // drop-shadow grounds the cut-out art; per-boss filter tames over-bright sprites
+ bossImg.style.filter="drop-shadow(0 7px 11px rgba(0,0,0,.5))"+(b.filter?" "+b.filter:"");
+ // 画像ロード中に古い絵が新サイズに引き伸ばされるフラッシュを防ぐ
+ bossImg.style.opacity="0";
+ bossImg.onload=()=>{ bossImg.style.opacity="1"; };
+ // 読み込み失敗時も非表示のまま固まらないよう復帰させる（保険）
+ bossImg.onerror=()=>{ bossImg.style.opacity="1"; };
+ bossImg.src="../../assets/"+b.img;
+ if(bossImg.complete) bossImg.style.opacity="1";
+ setBossName(b.name);
+ bossEl.classList.remove("dying");
+ updateBossBar(); updateStageTag();
+ window.Rework?.spawned();window.BattleControl?.encounter();
+ syncBgm();
+}
+function updateBossBar(){
+ const p=Math.max(0,Math.min(100,S.bossHp/S.bossHpMax*100));
+ $("#bossLiquid").style.width=p+"%";
+ const txt=fmt(Math.max(0,S.bossHp))+" / "+fmt(S.bossHpMax);
+ const el=$("#hptext"); el.textContent=txt;
+ // 桁数に応じてフォントを自動縮小し、常に1行に収める（折り返しのチラつき防止）
+ el.style.fontSize=Math.max(8,Math.min(13,80/(txt.length*0.55))).toFixed(1)+"px";
+}
+// ボス名を名前バナーに反映。nameObj={ja,en,zh}、各値は [二つ名(epithet), 名前]。
+// 長い名前だけ二つ名を上段に分けて表示。和文/中文は文字数で判定、英語は語が
+// 長いので常に分割する（判定はレイアウト計測に依存しない）。
+function setBossName(nameObj){
+ const frame=$("#bossNameFrame");
+ const arr=(nameObj&&(nameObj[LANG]||nameObj.ja))||["",""];
+ const epi=arr[0]||"", main=arr[1]!=null?arr[1]:(arr[0]||"");
+ const combinedLen=(epi?epi.length+1:0)+main.length;
+ const doSplit = !!epi && (LANG==="en" || combinedLen>=12);
+ if(doSplit){
+   frame.classList.add("split");
+   frame.innerHTML='<span class="bn-epi"></span><span class="bn-main"></span>';
+   frame.children[0].textContent=epi;
+   frame.children[1].textContent=main;
+ } else {
+   frame.classList.remove("split");
+   frame.innerHTML='<span class="bn-line"></span>';
+   frame.firstChild.textContent=epi?(epi+" "+main):main;
+ }
+}
+// スマホ幅では、ボス名とHPオーブを左上パネルと右上パネルの隙間の中央へ置き、
+// 隙間に入らない分だけ縮小する（パネル幅は所持金の桁数や次ボスボタンで変わる）。
+function fitBossPlate(){
+ const plate=$("#bossPlate");plate.style.left="";plate.style.transform="";
+}
+
+if(window.ResizeObserver){
+ const ro=new ResizeObserver(()=>fitBossPlate());
+ ["#field","#hud","#stageTag","#bossNameFrame"].forEach(sel=>{ const el=$(sel); if(el) ro.observe(el); });
+} else window.addEventListener("resize",fitBossPlate);
+function updateStageTag(){
+ $("#stStage").textContent=S.globalWave-1;
+ $("#stWave").textContent="BOSS "+S.bossWave+((S.bossCycle||1)>1?" · LOOP "+S.bossCycle:"");
+ // ラスボスまで残り何体かをオーブ内に表示。最終ボスでは「残り：0 体」
+ const remain=Math.max(0,BOSS.length-S.bossWave);
+ $("#bossRem").textContent=t('remaining',remain);
+ const status=[];if((S.bossCycle||1)>1)status.push("HP×"+fmt(cycleHpMul()));
+ if(S.prestige>0)status.push(t('prestige_count',S.prestige,fmt(S.goldBonus)));
+ $("#stPres").textContent=status.join(" / ");
+ // 連続撃破ボーナスのメーター（このボスを1回以上倒したら＝初回撃破後に表示）
+ const bm=$("#bonusMeter"), k=S.bossKills[S.bossWave]||0;
+ if(k>0){
+   const into=k%REPEAT_BONUS_EVERY, remain=REPEAT_BONUS_EVERY-into;
+   bm.style.display="block";
+   const pips='<span class="pip pf"></span>'.repeat(into)+'<span class="pip pe"></span>'.repeat(remain);
+   bm.innerHTML='<span class="pips">'+pips+'</span><span class="btxt">'
+     +(remain===1?t('bonus_meter_next'):t('bonus_meter',remain))+'</span>';
+ } else { bm.style.display="none"; }
+ const nb=$("#nextBossBtn");
+ if(S.clearedBossWave>=S.bossWave){
+   nb.style.display="block";
+   nb.textContent=S.bossWave>=BOSS.length?t('to_first_boss'):t('to_next_boss');
+ } else { nb.style.display="none"; }
+ $("#prevBossBtn").style.display=S.bossWave>1?"block":"none";
+}
+
+function dealDamage(amt,x,y,kind,gold,sourceId){
+ if(bossDead||window.Rework?.paused||window.BattleControl?.defeated||document.hidden)return;
+ amt=window.Rework?Rework.damage(amt,kind,sourceId):amt;
+ const actual=Math.min(Math.max(0,S.bossHp),Math.max(0,amt));
+ S.bossHp-=amt;
+ recordDamage(actual);
+ floatDmg(amt,x,y,kind,gold);
+ window.BattleControl?.hit(actual);
+ if(S.bossHp<=0) killBoss();
+ else updateBossBar();
+}
+function killBoss(){
+ bossDead=true; S.bossHp=0; updateBossBar();
+ const reward=Core.contract(S),g=reward.base; earnGold(reward.total);window.BattleControl?.victory();
+ // City contracts pay immediately. First clears and every fifth clear add fixed grants.
+ const kills=(S.bossKills[S.bossWave]=(S.bossKills[S.bossWave]||0)+1);
+ const isBonus=(kills%REPEAT_BONUS_EVERY===0);
+ const bonus=reward.repeat;
+ S.globalWave++;
+ let firstClear=false;
+ if(S.clearedBossWave<S.bossWave){
+   S.clearedBossWave=S.bossWave;S.runBest=Math.max(S.runBest,S.clearedBossWave);if(!S.codex.includes(S.bossWave))S.codex.push(S.bossWave); firstClear=true;
+   // first kill of this boss — progress milestone for analytics
+   try{ gtag('event','boss_kill',{boss_wave:S.bossWave,boss_name:BOSS[bossIndex].name.ja.join(" ")}); }catch(e){}
+   // first full clear: roll credits (once per player, survives prestige)
+   if(S.bossWave>=BOSS.length && !S.gameCleared){
+     S.gameCleared=true;
+     try{ gtag('event','game_clear',{prestige_count:S.prestige}); }catch(e){}
+     setTimeout(()=>$("#creditsModal").classList.add("on"),1600);
+   }
+ }
+ if(isBonus){ try{ gtag('event','boss_repeat_bonus',{boss_wave:S.bossWave,kills}); }catch(e){} }
+ bossEl.classList.add("dying");
+ sndKill();
+ const r=bossEl.getBoundingClientRect(), fr=field.getBoundingClientRect();
+ for(let i=0;i<(isBonus?28:14);i++) particle(r.left-fr.left+r.width/2, r.top-fr.top+r.height/2);
+ floatDmg(g,72,16,"click",true);
+ sndGold();
+ // 撃破バナー：通常は「撃破！＋G」。ボーナス回は金色に強調＋ボーナスG、初回撃破は特典ヒントを併記。
+ const kb=$("#killBanner"), kbB=$("#kbBonus");
+ $("#kbGold").textContent=(LANG==='ja'?'市の討伐報酬 ':LANG==='zh'?'城市讨伐报酬 ':'City bounty ')+fmt(reward.total)+" G";
+ kb.classList.toggle("bonus",isBonus);
+ if(isBonus){
+   kbB.style.display="inline-block";
+   kbB.textContent=t('bonus_get')+" +"+fmt(bonus)+" G";
+   sndBonus();
+   floatDmg(bonus,50,30,"crit",true);
+ } else if(firstClear){
+   kbB.style.display="inline-block";
+   kbB.textContent=(LANG==='ja'?'初回依頼達成 ＋':LANG==='zh'?'首次完成委托 ＋':'First-clear grant +')+fmt(reward.first)+" G";
+ } else {
+   kbB.style.display="none";
+ }
+ kb.classList.add("on");
+ setTimeout(()=>{ kb.classList.remove("on","bonus"); }, isBonus?2100:1400);
+ // auto-respawn same boss
+ const defeated=encounterId;
+ const respawn=()=>{if(defeated!==encounterId)return;if(window.Rework?.paused||document.hidden){respawnTimer=setTimeout(respawn,200);return;}spawnBoss(true);renderCards();updateHud();save();};
+ respawnTimer=setTimeout(respawn,1500);
+ renderCards();window.SupplyFactory?.translate();updateStageTag(); save();
+}
+
+$("#nextBossBtn").addEventListener("click",()=>{
+ if(S.clearedBossWave<S.bossWave)return;
+ if(S.bossWave>=BOSS.length){S.bossWave=1;S.bossCycle=(S.bossCycle||1)+1;S.clearedBossWave=0;}
+ else S.bossWave++;
+ spawnBoss(true); renderCards(); updateHud(); save();
+});
+$("#prevBossBtn").addEventListener("click",()=>{
+ if(S.bossWave<=1) return;
+ S.bossWave--;
+ spawnBoss(true); renderCards(); updateHud(); save();
+});
+
+const MAXDMG=28;
+function floatDmg(amt,xPct,yPct,kind,gold){
+ const previous=field.querySelectorAll(".dmg");if(previous.length>=18)previous[0].remove();
+ const d=document.createElement("div");
+ d.className="dmg "+kind;
+ d.textContent=(gold?"+"+fmt(amt)+"G":fmt(amt));
+ if(gold) d.style.color="#f3c34a";
+ d.style.left=xPct+"%"; d.style.top=yPct+"%";
+ field.appendChild(d);
+ setTimeout(()=>d.remove(),820);
+}
+function particle(x,y){
+ const previous=field.querySelectorAll(".particle");if(previous.length>=24)previous[0].remove();
+ const scale=field.getBoundingClientRect().width/field.clientWidth||1;x/=scale;y/=scale;
+ const p=document.createElement("div"); p.className="particle";
+ p.style.left=x+"px"; p.style.top=y+"px";
+ const a=Math.random()*Math.PI*2, dist=rnd(20,70);
+ p.animate([{transform:"translate(0,0)",opacity:1},
+   {transform:`translate(${Math.cos(a)*dist}px,${Math.sin(a)*dist}px)`,opacity:0}],
+   {duration:600,easing:"ease-out"});
+ field.appendChild(p); setTimeout(()=>p.remove(),600);
+}
+function spawnAtkFx(kind,xPct,yPct){
+ const previous=field.querySelectorAll(".atk-fx");if(previous.length>=12)previous[0].remove();
+ const f=document.createElement("div");
+ f.className="atk-fx "+kind;
+ f.style.left=xPct+"%"; f.style.top=yPct+"%";
+ field.appendChild(f);
+ const sparkColor=kind.includes("cyan")?"#68f5ff":kind.includes("violet")||kind==="darkslash"?"#d07aff":
+   kind.includes("green")?"#9cff58":kind.includes("crimson")?"#ff6845":kind==="holy"||kind==="shock"?"#ffe877":"#fff2c2";
+ if(field.querySelectorAll(".impact-spark").length<36){
+  const fr=field.getBoundingClientRect(), sx=xPct/100*field.clientWidth, sy=yPct/100*field.clientHeight;
+  for(let i=0;i<5;i++){
+   const s=document.createElement("i"); s.className="impact-spark"; s.style.setProperty("--spark",sparkColor);
+   s.style.left=sx+"px"; s.style.top=sy+"px"; field.appendChild(s);
+   const a=Math.PI*2*i/5+Math.random()*.45, dist=rnd(20,48);
+   s.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:1},
+    {transform:`translate(calc(-50% + ${Math.cos(a)*dist}px),calc(-50% + ${Math.sin(a)*dist}px)) scale(.25)`,opacity:0}],
+    {duration:360+rnd(0,150),easing:"cubic-bezier(.1,.7,.25,1)"});
+   setTimeout(()=>s.remove(),540);
+  }
+ }
+ setTimeout(()=>f.remove(),700);
+}
+function projectile(fromX,fromY,kind,target){
+ const previous=field.querySelectorAll(".proj");if(previous.length>=12)previous[0].remove();
+ const p=document.createElement("div"); p.className="proj "+kind;
+ p.style.left=fromX+"%"; p.style.top=fromY+"%";
+ field.appendChild(p);
+ const fr=field.getBoundingClientRect();
+ // aim at the boss image's actual rendered centre rather than a fixed point
+ const br=bossImg.getBoundingClientRect();
+ let toXpct=82, toYpct=38;
+ if(target){
+   toXpct=target.x; toYpct=target.y;
+ } else if(br.width&&fr.width){
+   toXpct=(br.left-fr.left+br.width*0.5)/fr.width*100;
+   toYpct=(br.top-fr.top+br.height*0.5)/fr.height*100;
+ }
+ const tx=(toXpct-fromX)/100*field.clientWidth;
+ const ty=(toYpct-fromY)/100*field.clientHeight;
+ const angle=Math.atan2(ty,tx)*180/Math.PI;
+ const flightMs=kind==="cannonball"?520:kind==="bomb"?500:380;
+ p.animate([
+   {transform:`translate(0,0) rotate(${angle}deg)`,opacity:0},
+   {transform:`translate(${tx*0.08}px,${ty*0.08-fr.height*0.02}px) rotate(${angle}deg)`,opacity:1,offset:.12},
+   {transform:`translate(${tx*0.5}px,${ty*0.5-fr.height*0.06}px) rotate(${angle}deg)`,opacity:1},
+   {transform:`translate(${tx}px,${ty}px) rotate(${angle}deg)`,opacity:.2}
+ ],{duration:flightMs,easing:(kind==="cannonball"||kind==="bomb")?"cubic-bezier(.2,.55,.45,1)":"linear"});
+ setTimeout(()=>p.remove(),flightMs);
+}
+// Anchor hit FX / damage numbers to the boss IMAGE's actual rendered box.
+// Spawns within the central ~50% of the image rect, expressed as % of #field,
+// so it matches every boss regardless of aspect ratio / transparent padding.
+function bossHitPt(){
+ const r=bossImg.getBoundingClientRect(), fr=field.getBoundingClientRect();
+ if(!r.width||!fr.width) return {x:82, y:38};
+ // central 50% band of the rect
+ const cx=r.left-fr.left + r.width*rnd(0.25,0.75);
+ const cy=r.top-fr.top  + r.height*rnd(0.25,0.75);
+ return {x:cx/fr.width*100, y:cy/fr.height*100};
+}
+
+let combo=0, comboTimer=0;
+function addCombo(){
+ combo++; comboTimer=2+.5*Core.skill(S,"rhythm");
+ if(combo>=2){ $("#comboTag").classList.add("on"); $("#comboNum").textContent=combo;
+   $("#comboMul").textContent=""; }
+}
+
+
+function spawnClickFx(xPct,yPct,crit){
+ const previous=field.querySelectorAll(".clickfx");if(previous.length>=8)previous[0].remove();
+ const f=document.createElement("div");
+ f.className="clickfx"+(crit?" crit":"")+(curWeapon().fx?" "+curWeapon().fx:"");
+ f.style.left=xPct+"%"; f.style.top=yPct+"%";
+ f.style.setProperty("--ang",Math.floor(rnd(0,360))+"deg");
+ f.style.setProperty("--wcol",curWeapon().col);
+ f.style.marginLeft=(crit?-65:-45)+"px"; f.style.marginTop=(crit?-65:-45)+"px";
+ field.appendChild(f);
+ setTimeout(()=>f.remove(),240);
+}
+
+// The native cursor remains a fallback; a DOM sprite allows real hilt-pivot swings.
+const weaponPointer=document.createElement('div');
+weaponPointer.id='weaponPointer';weaponPointer.setAttribute('aria-hidden','true');
+weaponPointer.innerHTML='<i class="weapon-trail"></i><i class="weapon-impact"></i><img alt="" draggable="false">';
+document.body.appendChild(weaponPointer);
+const weaponPointerImg=weaponPointer.querySelector('img');
+let weaponPointerOver=false,weaponPointerTimer=0,weaponSwingCount=0;
+function setWeaponPointerPosition(x,y){weaponPointer.style.transform=`translate(${x}px,${y}px)`;}
+function syncWeaponPointer(){
+ const w=curWeapon();
+ if(weaponPointer.dataset.weapon!==w.id){weaponPointer.dataset.weapon=w.id;weaponPointerImg.src=weaponIcon(w);}
+ weaponPointer.style.setProperty('--weapon-color',w.col);
+}
+function hideWeaponPointer(){
+ weaponPointerOver=false;clearTimeout(weaponPointerTimer);
+ weaponPointer.classList.remove('visible');field.classList.remove('weapon-pointer-active');
+}
+function trackWeaponPointer(e){
+ if(e.pointerType!=='mouse'||LAYOUT_MODE||window.BattleControl?.placement||!$('#titleScreen').classList.contains('hidden')||
+    e.target.closest('button,input,select,a,[role="button"]')){hideWeaponPointer();return;}
+ weaponPointerOver=true;syncWeaponPointer();setWeaponPointerPosition(e.clientX,e.clientY);
+ weaponPointer.classList.add('visible');field.classList.add('weapon-pointer-active');
+}
+$('#field').addEventListener('pointermove',trackWeaponPointer);
+$('#field').addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')hideWeaponPointer();});
+window.addEventListener('blur',hideWeaponPointer);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)hideWeaponPointer();});
+function animateWeaponAttack(pt,crit=false){
+ if(LAYOUT_MODE)return;
+ syncWeaponPointer();
+ if(!weaponPointerOver){const r=field.getBoundingClientRect();setWeaponPointerPosition(r.left+r.width*pt.x/100,r.top+r.height*pt.y/100);}
+ weaponPointer.classList.add('visible');
+ const w=curWeapon(),heavy=['axe','hammer','greatsword'].includes(w.id),thrust=w.id==='dagger';
+ weaponPointer.dataset.kind=heavy?'heavy':thrust?'thrust':'slash';
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const duration=reduced?120:heavy?330:thrust?180:250;
+ const direction=heavy?1:(weaponSwingCount++%2?-1:1);
+ // Cancel the previous swing on rapid input instead of stacking animations/nodes.
+ weaponPointer.querySelectorAll('*').forEach(el=>el.getAnimations().forEach(a=>a.cancel()));
+ const frames=reduced?[{transform:'rotate(-8deg)'},{transform:'rotate(12deg)'},{transform:'none'}]:thrust?
+  [{transform:'translate(-9px,12px) rotate(-12deg)',offset:0},{transform:'translate(12px,-18px) rotate(-12deg) scale(1.12)',offset:.3},{transform:'translate(10px,-15px) rotate(-12deg)',offset:.43},{transform:'none',offset:1}]:
+  [{transform:`rotate(${-48*direction}deg) scale(1.04)`,offset:0},
+   {transform:`rotate(${65*direction}deg) scale(${crit?1.22:1.12})`,offset:.28},
+   {transform:`rotate(${70*direction}deg) scale(1.08)`,offset:.43},
+   {transform:`rotate(${-7*direction}deg)`,offset:.82},{transform:'none',offset:1}];
+ weaponPointerImg.animate(frames,{duration,easing:'linear'});
+ if(!reduced){
+  weaponPointer.querySelector('.weapon-trail').animate([
+   {opacity:0,transform:`rotate(${-90*direction}deg) scale(.55)`,offset:0},
+   {opacity:crit?1:.85,transform:`rotate(${-20*direction}deg) scale(${heavy?1.2:1})`,offset:.2},
+   {opacity:0,transform:`rotate(${95*direction}deg) scale(1.25)`,offset:.7},{opacity:0,offset:1}
+  ],{duration});
+  weaponPointer.querySelector('.weapon-impact').animate([
+   {opacity:0,transform:'scale(.3)',offset:0},{opacity:0,offset:.22},
+   {opacity:1,transform:`scale(${crit?1.45:.9})`,offset:.3},
+   {opacity:0,transform:`scale(${heavy?2:1.5})`,offset:.85},{opacity:0,offset:1}
+  ],{duration});
+ }
+ clearTimeout(weaponPointerTimer);
+ weaponPointerTimer=setTimeout(()=>{if(!weaponPointerOver)weaponPointer.classList.remove('visible');},duration+20);
+}
+
+function weaponEvolveFx(w){
+ const toast=$("#weaponToast"); if(!toast) return;
+ toast.innerHTML=`${weaponIconHtml(w)}<div class="wt-lead">${t('weapon_evolve')}</div><div class="wt-name">${L(w.name)}</div>`;
+ toast.classList.remove("on"); void toast.offsetWidth; toast.classList.add("on");
+ sndEvolve();
+}
+function heroAttack(){
+ if(!$("#titleScreen").classList.contains("hidden")||window.Rework?.paused||window.BattleControl?.defeated||document.hidden)return;
+ if(window.BattleControl?.placement)return;
+ if(window.SupplyFactory?.resourceTarget){SupplyFactory.harvestSelected();return;}
+ if(bossDead) return;
+ addCombo();
+ let dmg=clickDmg(), crit=Math.random()<critRate();
+ if(crit)dmg*=critMul();
+ dmg*=1+Math.min(Core.comboCap(S),combo*.005);
+ if(crit) sndCrit(); else sndClick();
+ const pt=bossHitPt();
+ animateWeaponAttack(pt,crit);
+ spawnClickFx(pt.x,pt.y,crit);
+ dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
+ window.Rework?.heroHit();
+}
+$("#field").addEventListener("pointerdown",e=>{if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
+const _heldKeys=new Set();
+let _cheatTimer=null;
+window.addEventListener("keydown",e=>{
+ if(window.Rework?.paused||e.target.matches("input,textarea,select"))return;
+ if(e.code==="Space"||e.key===" "){
+  e.preventDefault();
+  if(_heldKeys.has("Space")) return;
+  _heldKeys.add("Space");
+  heroAttack();
+  // cheat mode: hold spacebar to auto-fire rapidly
+  if(CHEAT && !_cheatTimer){ _cheatTimer=setInterval(heroAttack,60); }
+ }
+});
+window.addEventListener("keyup",e=>{ if(e.code==="Space"){ _heldKeys.delete("Space");
+ if(_cheatTimer){ clearInterval(_cheatTimer); _cheatTimer=null; } } });
+
+/* ===== UNIT RENDERING ===== */
+function renderUnits(reason){
+ if(window.ArmyView?.ready&&!LAYOUT_MODE){ArmyView.render(reason);return;}
+ field.querySelectorAll(".unit-sprite").forEach(e=>e.remove());
+ UNITS.filter(unitOwned).forEach(u=>{
+  const el=document.createElement("div");
+  const atier=Math.min(3,Math.floor(S.ulvl[u.id]/25));
+  const aclass=atier>0?" awakened"+atier:"";
+  el.className="unit-sprite "+(u.gold?"gold":(u.ranged?"ranged":"melee"))+(u.fly?" fly":" grounded")+(u.orbit?" orbiting":"")+(u.anim?" animated-unit":"")+aclass;
+  el.dataset.type=u.id;
+  if(LAYOUT_MODE&&u.id===layoutSelectedId)el.classList.add("layout-selected");
+  const p=unitPos(u);
+  el.style.left=p.l+"%";
+  el.style.bottom=p.b+"%";
+   if(u.fly&&!u.orbit){ const i=UNITS.indexOf(u);
+    el.style.animationDelay=(-i*0.7)+"s";           /* negative: stagger without a start pause */
+    el.style.animationDuration=(3+(i%4)*0.45)+"s"; } /* different speeds so they never sync */
+   // legacy CSS effects clean themselves up; sprite-sheet units are reset by playUnitAttack
+   el.addEventListener("animationend",e=>{ if(e.animationName==="unitAttackPulse") el.classList.remove("attacking");
+     if(e.animationName==="collect") el.classList.remove("collecting"); });
+   if(u.anim){
+    el.style.setProperty("--unit-height",(u.anim.height||15)+"%");
+    el.style.setProperty("--unit-height-mobile",(u.anim.heightMobile||12.5)+"%");
+    el.innerHTML='<span class="unit-anim" aria-hidden="true"></span>';
+    const visual=el.querySelector(".unit-anim");
+    visual.style.backgroundImage='url("../../assets/'+u.anim.sheet+'")';
+    visual.style.backgroundSize=(u.anim.frames*100)+"% 100%";
+    if(u.flip) visual.style.transform="scaleX(-1)";
+   }else{
+    el.innerHTML='<img src="../../assets/'+u.sprite+'"'+(u.flip?' style="transform:scaleX(-1)"':'')+' alt="">';
+   }
+  // level badge
+  if(S.ulvl[u.id]>0){
+    const b=document.createElement("div"); b.className="badge";
+    b.textContent=(atier?"★":"")+"Lv."+S.ulvl[u.id]; el.appendChild(b);
+  }
+  field.appendChild(el);
+ });
+}
+
+function initLayoutEditor(){
+ if(!LAYOUT_MODE)return;
+ const select=$("#layoutUnitSelect"),coords=$("#layoutCoords"),notice=$("#layoutNotice");
+ const profile=()=>LAYOUT_MOBILE||isPortrait()?"mobile":"desktop";
+ const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+ const currentPos=id=>{
+  const u=UNITS.find(x=>x.id===id);
+  return u?unitPos(u):{l:0,b:0};
+ };
+ const ensureProfile=()=>layoutDraft[profile()]||(layoutDraft[profile()]={});
+ const snapshot=()=>JSON.stringify(layoutDraft);
+ const pushUndo=()=>{layoutUndo.push(snapshot());if(layoutUndo.length>50)layoutUndo.shift();};
+ const setNotice=text=>{notice.textContent=text;clearTimeout(notice._timer);notice._timer=setTimeout(()=>notice.textContent="",1800);};
+ const refreshSelection=()=>{
+  $$(".unit-sprite.layout-selected").forEach(el=>el.classList.remove("layout-selected"));
+  const el=field.querySelector('.unit-sprite[data-type="'+layoutSelectedId+'"]');
+  if(el)el.classList.add("layout-selected");
+  select.value=layoutSelectedId;
+  const p=currentPos(layoutSelectedId);
+  coords.textContent="X "+p.l.toFixed(1)+" / Y "+p.b.toFixed(1);
+ };
+ const applyPos=(id,l,b)=>{
+  const p={l:Math.round(clamp(l,0,96)*10)/10,b:Math.round(clamp(b,0,92)*10)/10};
+  ensureProfile()[id]=p;
+  const el=field.querySelector('.unit-sprite[data-type="'+id+'"]');
+  if(el){el.style.left=p.l+"%";el.style.bottom=p.b+"%";}
+  if(id===layoutSelectedId)coords.textContent="X "+p.l.toFixed(1)+" / Y "+p.b.toFixed(1);
+  notice.textContent="未保存";
+ };
+ UNITS.forEach(u=>{
+  const option=document.createElement("option");option.value=u.id;option.textContent=u.name.ja;
+  select.appendChild(option);
+ });
+ select.addEventListener("change",()=>{layoutSelectedId=select.value;refreshSelection();});
+ let drag=null;
+ field.addEventListener("pointerdown",e=>{
+  const el=e.target.closest(".unit-sprite");if(!el)return;
+  e.preventDefault();e.stopPropagation();
+  layoutSelectedId=el.dataset.type;refreshSelection();pushUndo();
+  const p=currentPos(layoutSelectedId);
+  drag={id:layoutSelectedId,pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,startL:p.l,startB:p.b};
+  el.setPointerCapture(e.pointerId);
+ });
+ field.addEventListener("pointermove",e=>{
+  if(!drag||e.pointerId!==drag.pointerId)return;
+  const r=field.getBoundingClientRect();
+  applyPos(drag.id,drag.startL+(e.clientX-drag.startX)/r.width*100,drag.startB-(e.clientY-drag.startY)/r.height*100);
+ });
+ const endDrag=e=>{if(drag&&e.pointerId===drag.pointerId)drag=null;};
+ field.addEventListener("pointerup",endDrag);field.addEventListener("pointercancel",endDrag);
+ window.addEventListener("keydown",e=>{
+  if(!["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)||e.target.matches("input,textarea,select,button"))return;
+  e.preventDefault();pushUndo();const p=currentPos(layoutSelectedId),step=e.shiftKey?1:0.2;
+  applyPos(layoutSelectedId,p.l+(e.key==="ArrowRight"?step:e.key==="ArrowLeft"?-step:0),p.b+(e.key==="ArrowUp"?step:e.key==="ArrowDown"?-step:0));
+ });
+ $("#layoutUndo").addEventListener("click",()=>{
+  if(!layoutUndo.length){setNotice("戻せる変更がありません");return;}
+  layoutDraft=JSON.parse(layoutUndo.pop());renderUnits();refreshSelection();setNotice("1つ戻しました");
+ });
+ $("#layoutReset").addEventListener("click",()=>{
+  pushUndo();layoutDraft[profile()]={};renderUnits();refreshSelection();notice.textContent="未保存";
+ });
+ $("#layoutGridBtn").addEventListener("click",()=>document.body.classList.toggle("grid-on"));
+ $("#layoutPreviewBtn").addEventListener("click",()=>document.body.classList.add("layout-preview"));
+ $("#layoutReturn").addEventListener("click",()=>document.body.classList.remove("layout-preview"));
+ $("#layoutSave").addEventListener("click",()=>{
+  try{localStorage.setItem(LAYOUT_KEY,JSON.stringify(layoutDraft));setNotice("保存しました");}
+  catch(e){setNotice("保存できませんでした");}
+ });
+ $("#layoutCopy").addEventListener("click",async()=>{
+  const values={};UNITS.forEach(u=>{const p=currentPos(u.id);values[u.id]={l:p.l,b:p.b};});
+  const out=JSON.stringify({profile:profile(),units:values},null,2);
+  try{await navigator.clipboard.writeText(out);setNotice("配置をコピーしました");}
+  catch(e){setNotice("コピーできませんでした");}
+ });
+ refreshSelection();
+}
+
+function setUnitAnimFrame(el,u,frame){
+ if(!u.anim) return;
+ const visual=el.querySelector(".unit-anim");
+ if(!visual) return;
+ const last=Math.max(1,u.anim.frames-1);
+ visual.style.backgroundPosition=(frame/last*100)+"% 0";
+}
+function playUnitAttack(el,u){
+ if(el.classList.contains("army-anchor"))return;
+ clearTimeout(el._unitAnimTimer);
+ el.classList.remove("attacking");
+ void el.offsetWidth;
+ el.classList.add("attacking");
+ if(!u.anim) return;
+ const sequence=u.anim.sequence||[0,1,2,3,0];
+ const frameMs=u.anim.frameMs||100;
+ let cursor=0;
+ const advance=()=>{
+  if(!el.isConnected) return;
+  setUnitAnimFrame(el,u,sequence[cursor]);
+  cursor++;
+  if(cursor<sequence.length) el._unitAnimTimer=setTimeout(advance,frameMs);
+  else { setUnitAnimFrame(el,u,0); el.classList.remove("attacking"); }
+ };
+ advance();
+}
+
+function updateOrbitUnits(now){
+ const orbiters=field.querySelectorAll(".unit-sprite.orbiting");
+ if(!orbiters.length) return;
+ const fr=field.getBoundingClientRect(), br=bossImg.getBoundingClientRect();
+ if(!fr.width||!br.width) return;
+ const cx=br.left-fr.left+br.width*.5;
+ const cy=br.top-fr.top+br.height*.46;
+ const screenScale=Math.min(1,fr.width/900);
+ orbiters.forEach(el=>{
+  const u=UNITS.find(unit=>unit.id===el.dataset.type);
+  if(!u?.orbit) return;
+  const o=u.orbit;
+  const angle=now/1000*o.speed+o.phase;
+  const radiusX=Math.min(fr.width*.2,br.width*.52+o.rx*screenScale);
+  const radiusY=Math.min(fr.height*.24,br.height*.34+o.ry*screenScale);
+  const x=Math.max(fr.width*.06,Math.min(fr.width*.94,cx+Math.cos(angle)*radiusX));
+  const y=Math.max(fr.height*.16,Math.min(fr.height*.78,cy+Math.sin(angle)*radiusY));
+  el.style.left=(x/fr.width*100)+"%";
+  el.style.top=(y/fr.height*100)+"%";
+  el.style.bottom="auto";
+  const depth=(Math.sin(angle)+1)*.5;
+  el.style.zIndex=depth>.5?7:4;
+  el.style.transform=`translate(-50%,-50%) scale(${(.84+depth*.16).toFixed(3)})`;
+  el.style.opacity=(.78+depth*.22).toFixed(3);
+  const visual=el.querySelector(".unit-anim");
+  if(visual) visual.style.transform=x>cx?"scaleX(-1)":"scaleX(1)";
+ });
+}
+
+let lastT=performance.now();
+const utimers={}; UNITS.forEach((u,index)=>utimers[u.id]=u.iv*(.25+((index*.37)% .7)));
+function unitTick(dt){
+ if(window.ArmyView?.ready){ArmyView.tick(dt);return;}
+ UNITS.forEach(u=>{
+  if(S.owned[u.id]<=0) return;
+  utimers[u.id]-=dt;
+  if(utimers[u.id]<=0){ utimers[u.id]=unitIv(u); doUnitVolley(u); }
+ });
+}
+function doUnitVolley(u){
+ if(!unitOwned(u))return;const encounter=encounterId,run=runId;
+ if(window.Rework?.paused||document.hidden)return;window.ArmyView?.attack(u);
+ const sprites=field.querySelectorAll('.unit-sprite[data-type="'+u.id+'"]');
+ if(bossDead) return;
+ const total=unitDmg(u)*(S.owned[u.id]||0);
+  sprites.forEach(el=>playUnitAttack(el,u));
+  let volleyPt=null;
+  if(u.ranged && sprites.length){
+   const releaseDelay=u.anim?.release??0;
+   setTimeout(()=>{
+   if(encounter!==encounterId||run!==runId||bossDead||window.Rework?.paused||!sprites[0].isConnected)return;
+   volleyPt=bossHitPt();
+    const fr=field.getBoundingClientRect();
+    const r=sprites[0].getBoundingClientRect();
+    const origin=u.projOrigin||{x:.72,y:.42};
+    const fx=(r.left-fr.left+r.width*origin.x)/fr.width*100, fy=(r.top-fr.top+r.height*origin.y)/fr.height*100;
+    if(u.proj==="cannonball")sndCannonFire();
+    if(u.multiProj){
+      const offs=[0,-3,3,-6,6];
+      for(let i=0;i<u.multiProj;i++){ projectile(fx,fy+(offs[i]||0),u.proj,volleyPt); }
+    } else {
+      projectile(fx,fy,u.proj,volleyPt);
+    }
+   },releaseDelay);
+  }
+  const delay=u.anim?.impact ?? (u.ranged?370:100);
+  setTimeout(()=>{
+   if(encounter!==encounterId||run!==runId||bossDead||window.Rework?.paused||document.hidden)return;
+   const pt=volleyPt||bossHitPt();
+   sndUnitHit(u);
+   if(u.fx) spawnAtkFx(u.fx,pt.x,pt.y);
+   if(u.fx2) spawnAtkFx(u.fx2,pt.x,pt.y);
+   if(u.fxBoss) spawnAtkFx(u.fxBoss,pt.x,pt.y);
+   dealDamage(total,pt.x,pt.y,"unit",false,u.id);
+ },delay);
+}
+
+/* ===== CARDS ===== */
+function card(o){
+ const dis=o.maxed||S.gold<o.cost;
+ return `<div class="card ${dis?'dis':''} ${o.weapon?'weapon-card':''}" data-act="${o.act}" data-id="${o.id}" data-cost="${o.maxed?'Infinity':o.cost}">
+   ${o.weapon?weaponIconHtml(o.weapon):''}
+   <div class="top"><span class="nm">${o.nm}</span><span class="lv">${o.lv}</span></div>
+   ${o.desc?`<div class="desc">${o.desc}</div>`:''}
+   <div class="ef">${o.ef}</div>
+   <div class="cost">${o.maxed?'MAX':fmt(o.cost)+' G'}</div></div>`;
+}
+// クリック強化カードは武器名・武器レベル・進化予告を表示する特別版
+function clickCard(o){
+ const lv=S.hero.click, w=curWeapon(), cost=heroCost(o);
+ const engaged=window.ArmyView?.ready?ArmyView.engagedDps:totalDPS(),cur=Core.clickDamage(S,engaged),next=Core.clickDamage({...S,hero:{...S.hero,click:lv+1}},engaged);
+ const tierNow=Math.floor(lv/10);
+ let ef=t('ef_click_dmg',fmt(cur),fmt(next));
+ if(tierNow<WEAPONS.length-1){
+  const nextWeapon=WEAPONS[tierNow+1],remaining=10-lv%10;
+  const hint=LANG==='en'?`${remaining} upgrades to evolve`:LANG==='zh'?`再强化${remaining}次进化`:`あと${remaining}回で進化`;
+  ef+=`<div class="weapon-next">${weaponIconHtml(nextWeapon)}<span>${L(nextWeapon.name)}<br>${hint}</span></div><div class="weapon-progress"><i style="width:${(lv%10)*10}%"></i></div>`;
+ }
+ return card({act:"hero",id:"click",weapon:w,nm:L(w.name),desc:heroT('click').desc,lv:"Lv."+weaponSubLevel(),ef,cost});
+}
+// re-evaluate affordability live so cards unlock the moment gold is enough
+function refreshAffordable(){
+ $$(".card").forEach(c=>c.classList.toggle("dis",S.gold<+c.dataset.cost));
+}
+function renderCards(){
+ updateWeaponCursor();
+ syncWeaponPointer();
+ let h="";
+ let prevOwned=true; // units unlock in order: next buy card appears only after previous unit is owned
+ UNITS.forEach(u=>{
+  if(unitOwned(u)){
+   const lv=S.ulvl[u.id], nextAwaken=Math.ceil((lv+1)/50)*50;
+   const awTier=Math.floor(lv/50), awHint=(nextAwaken-lv<=10&&awTier<3)
+     ?`<br><span style="color:#7fc8ff">${t('awaken_hint',nextAwaken-lv,awTier+1,Math.pow(50,awTier+1).toLocaleString())}</span>`:"";
+   const ef=u.worker?'':t('ef_dps',fmt(unitDPS(u)),fmt(Core.unitDps(S,u,lv+1)));
+   h+=card({act:"upg",id:u.id,nm:t('unit_upg_name',L(u.name),lv>=50),lv:"Lv."+lv,ef,cost:unitUpgCost(u)});
+   prevOwned=true;
+  } else if(prevOwned){
+   h+=card({act:"buy",id:u.id,nm:L(u.name),lv:t('not_summoned'),
+     ef:u.gold?t('ef_autogold'):t('ef_dps_init',fmt(u.dmg/unitIv(u))),cost:unitBuyCost(u)});
+   prevOwned=false;
+  } else {
+   prevOwned=false;
+  }
+ });
+ $("#pane-summon").innerHTML=window.Rework?Rework.armyCards():h;
+ let hh="";
+ HERO.filter(o=>!["vitality","armor"].includes(o.id)).forEach(o=>{
+   if(o.id==="click"){ hh+=clickCard(o); return; }
+   const ht=heroT(o.id);
+   hh+=card({act:"hero",id:o.id,nm:ht.nm,desc:ht.desc,lv:"Lv."+S.hero[o.id],ef:ht.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max});
+ });
+ $("#pane-hero").innerHTML=hh;
+ const pb=$("#prestigeBtn");
+ if(S.clearedBossWave>=10){pb.disabled=false;
+   const nb=prestigeFactor();
+   pb.textContent=t('prestige_do',fmt(S.goldBonus),fmt(nb)); }
+ else { pb.disabled=true; pb.textContent=t('prestige_locked',S.bossWave); }
+}
+$("#panels").addEventListener("click",e=>{
+ const recruit=e.target.closest('[data-recruit]');if(recruit){Rework.recruit(recruit.dataset.recruit);return;}
+ const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
+ const act=c.dataset.act, id=c.dataset.id;
+ if(act==="buy"||(act==="upg"&&!e.target.closest("[data-train]")))return;
+ if(act==="buy"){ const u=UNITS.find(x=>x.id===id), cst=unitBuyCost(u);
+   if(S.gold>=cst && !unitOwned(u)){ S.gold-=cst; S.owned[id]=1; renderUnits(); sndLevelUp();
+     try{ gtag('event','unit_buy',{unit_id:id,unit_name:u.name.ja}); }catch(e){} } }
+ else if(act==="upg"){ const u=UNITS.find(x=>x.id===id), cst=unitUpgCost(u);
+   if(S.ulvl[id]<Core.MAX_LEVEL&&S.gold>=cst){const tier=Core.tier(S.ulvl[id]);S.gold-=cst;S.ulvl[id]++;const evolution=Core.tier(S.ulvl[id])>tier;renderUnits(evolution?{id,evolution}:undefined);if(evolution)window.Rework?.evolved(u);sndLevelUp();} }
+ else if(act==="hero"){ const o=HERO.find(x=>x.id===id), cst=heroCost(o);
+   if(!(o.max&&S.hero[id]>=o.max) && S.gold>=cst){
+     const before=(id==="click")?Math.floor(S.hero.click/10):0;
+     S.gold-=cst; S.hero[id]++;if(id==="vitality")S.captainHp=Math.min(Core.heroMax(S),S.captainHp+15);
+     if(id==="click"){ const after=Math.floor(S.hero.click/10);
+       if(after>before && after<WEAPONS.length){ weaponEvolveFx(WEAPONS[after]); } else { sndLevelUp(); } }
+     else sndLevelUp();
+   } }
+ renderCards(); updateHud(); save();
+});
+$$(".tab").forEach(t=>t.addEventListener("click",()=>{
+ $$(".tab").forEach(x=>x.classList.remove("active"));
+ $$(".pane").forEach(x=>x.classList.remove("active"));
+ t.classList.add("active");
+ $("#pane-"+t.dataset.t).classList.add("active");
+}));
+
+function openRanking(){
+ if(window.Rework){Rework.openRank(10);return;}
+ renderRanking();$("#rankModal").classList.add("on");
+ // iOSのiframe内でもキーボードを開けるよう、ユーザー操作中に同期的にfocusする。
+ try{$("#playerNameInput").focus({preventScroll:true});}catch(e){$("#playerNameInput").focus();}
+ void loadOnlineRanking();
+}
+$("#bgmBtn").addEventListener("click",e=>{e.stopPropagation();_bgmUnlocked=true;setBgm(!audioSettings.bgmOn);});
+$("#seBtn").addEventListener("click",e=>{e.stopPropagation();setSe(!audioSettings.seOn);});
+$("#playerBtn").addEventListener("click",e=>{e.stopPropagation();openRanking();});
+$("#rankBtn").addEventListener("click",e=>{e.stopPropagation();openRanking();});
+$("#rankClose").addEventListener("click",()=>$("#rankModal").classList.remove("on"));
+$("#rankModal").addEventListener("pointerdown",e=>{if(e.target===$("#rankModal"))$("#rankModal").classList.remove("on");});
+$("#playerSave").addEventListener("click",()=>{
+ playerName=cleanPlayerName($("#playerNameInput").value);try{localStorage.setItem(PLAYER_KEY,playerName);}catch(e){}
+ rankDirty=true;updatePlayerUi();renderRanking();updateHud();void syncOnlineScore();
+});
+$("#playerNameInput").addEventListener("pointerdown",e=>e.stopPropagation());
+$("#playerNameInput").addEventListener("click",e=>{e.stopPropagation();e.currentTarget.focus();});
+$("#playerNameInput").addEventListener("keydown",e=>{if(e.key==="Enter"){$("#playerSave").click();e.preventDefault();}});
+document.addEventListener("pointerdown",()=>{_bgmUnlocked=true;try{ac().resume();}catch(e){}syncBgm();},{once:true,capture:true});
+
+$("#prestigeBtn").addEventListener("click",()=>{ if(!$("#prestigeBtn").disabled) $("#modal").classList.add("on"); });
+$("#mNo").addEventListener("click",()=>$("#modal").classList.remove("on"));
+$("#creditsClose").addEventListener("click",()=>$("#creditsModal").classList.remove("on"));
+$("#mYes").addEventListener("click",()=>{
+ if(S.clearedBossWave<10)return;
+ const reached=S.clearedBossWave,reward=Core.soulsFor(S);runId++;S=Core.rebirth(S,UNITS.map(u=>u.id));
+ window.Rework?.track('prestige',{boss_wave:reached,souls:reward});
+ $("#modal").classList.remove("on");
+ spawnBoss(true);renderUnits();renderCards();updateHud();save();window.Rework?.afterRebirth(reward);
+});
+
+function updateHud(){
+ $("#goldBig").textContent=fmt(S.gold);
+ let tot=0; UNITS.forEach(u=>{ if(unitOwned(u))tot+=S.owned[u.id]; });
+ $("#hUnits").textContent=tot;
+ $("#hDps").textContent=fmt(window.ArmyView?.ready?ArmyView.engagedDps:totalDPS());
+ $("#hGpm").textContent=fmt(gpmRate);
+ $("#hTotalDmg").textContent=fmt(rankDamage());
+}
+
+let gpmRate=0,gpmTimer=0,lastGold=0,lastEarned=0,gpmWindow=[];
+function loop(now){
+ const dt=Math.min(0.25,(now-lastT)/1000); lastT=now;
+ if(comboTimer>0){ comboTimer-=dt; if(comboTimer<=0){ combo=0; $("#comboTag").classList.remove("on"); } }
+ if(!window.Rework?.paused&&!window.BattleControl?.defeated&&!document.hidden&&$("#titleScreen").classList.contains("hidden")){unitTick(dt);window.Rework?.tick(dt);}
+ if(!LAYOUT_MODE&&!window.ArmyView?.ready)updateOrbitUnits(now);
+ gpmTimer+=dt;
+ if(gpmTimer>=1){ const earned=Math.max(0,S.earned-lastEarned);lastEarned=S.earned;
+   gpmWindow.push(earned); if(gpmWindow.length>10) gpmWindow.shift();
+   gpmRate=gpmWindow.reduce((a,b)=>a+b,0)/gpmWindow.length*60;
+   lastGold=S.gold; gpmTimer=0; }
+ updateHud();
+ refreshAffordable();
+ requestAnimationFrame(loop);
+}
+
+/* ===== 言語適用 / タイトル画面 ===== */
+// 静的テキスト(data-i18n / data-i18n-html)を差し替え、動的描画を呼び直す。
+function applyLang(lang){
+ if(validLanguage(lang)) LANG=lang;
+ document.documentElement.lang=LANG;
+ $$("[data-i18n]").forEach(e=>{ e.textContent=t(e.dataset.i18n); });
+ $$("[data-i18n-html]").forEach(e=>{ e.innerHTML=t(e.dataset.i18nHtml); });
+ const lc=$("#langBtnCode"); if(lc) lc.textContent=LANG.toUpperCase();
+ if(BOSS[bossIndex]) setBossName(BOSS[bossIndex].name);
+ renderCards(); updateStageTag(); updateHud();window.Rework?.translate();
+}
+function chooseLang(lang){
+ try{ localStorage.setItem("sbr2_preview_forest_lang",lang); }catch(e){}
+ applyLang(lang);
+ $("#titleScreen").classList.add("hidden");
+ _bgmUnlocked=true;try{ ac().resume(); }catch(e){}syncBgm(); // ユーザー操作のタイミングで音声を解禁
+}
+$$("#titleScreen .ts-lang").forEach(b=>{
+ const pick=()=>{try{localStorage.setItem("sbr2_preview_forest_lang",b.dataset.lang);}catch(e){}applyLang(b.dataset.lang);};
+ b.addEventListener("click",pick);
+ b.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
+});
+$("#langBtn").addEventListener("click",()=>{ $("#titleScreen").classList.remove("hidden"); });
+
+if(PARAMS.has("reset")){
+ try{ localStorage.removeItem("sbr2_preview_forest_save3");localStorage.removeItem("sbr2_preview_forest_save2"); }catch(e){}
+ history.replaceState(null,"",location.pathname);
+}
+load();
+if(SHOWCASE){
+ S=freshState();
+ S.gold=1e15; S.bossWave=20; S.clearedBossWave=BOSS.length;
+ UNITS.forEach((u,i)=>{ S.owned[u.id]=1; if(PARAMS.has("awaken"))S.ulvl[u.id]=[0,50,100,150][i%4]; });
+}
+spawnBoss(); renderUnits(); renderCards(); updateHud();
+initLayoutEditor();
+applyLang(LANG);
+updatePlayerUi();updateAudioButtons();
+void loadOnlineRanking();
+if(rankDirty)scheduleRankSync(1500);
+// 初回（言語未選択）はタイトル画面を表示、選択済みなら隠す
+$("#titleScreen").classList.toggle("hidden", LANG_CHOSEN||LAYOUT_MODE);
+lastGold=S.gold;
+requestAnimationFrame(loop);
+
+// 画面回転・リサイズで縦/横レイアウトを切り替え（位置を取り直す）
+let _wasPortrait=isPortrait(), _reflowT=null;
+window.addEventListener("resize",()=>{
+  clearTimeout(_reflowT);
+  _reflowT=setTimeout(()=>{
+    const p=isPortrait();
+    if(p!==_wasPortrait){ _wasPortrait=p; spawnBoss(); renderUnits(); }
+  },180);
+});
+
+setInterval(()=>{if(!document.hidden)save();},10000);
+setInterval(()=>{ if(document.hidden)return; if($("#rankModal").classList.contains("on")) void loadOnlineRanking(); },60000);
+document.addEventListener("visibilitychange",()=>{if(document.hidden){save();void syncOnlineScore();}});
+window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
+
+
+/* Measurement, army progression and metagame UI live in rework.js. */
+
+/* ==========================================================================
+   スマホ限定：記事へ戻る導線
+   ・iframe内（記事に埋め込まれた状態）では出さない。押すと入れ子になるため
+   ・1024px以上でも出さない。PCは記事内のiframeで遊ぶ想定
+   ========================================================================== */
+(function(){
+ if(window.self!==window.top) return;      // 記事に埋め込まれているときは不要
+ if(window.innerWidth>=1024) return;       // スマホ・タブレットのみ
+ if(SHOWCASE||LAYOUT_MODE) return;
+
+ const BLOG="https://babblegum.hatenablog.com/entry/2026/06/12/144156";
+ const LABEL={ja:"← ブログに戻る",en:"← Back to the blog",zh:"← 返回博客"};
+
+ const css=document.createElement("style");
+ css.textContent=
+ "#backToBlog{display:block;margin:10px auto 14px;padding:9px 14px;max-width:320px;"+
+ " text-align:center;border:1px solid #4a4335;border-radius:8px;background:#1a212a;"+
+ " color:#c3b180;font:500 12.5px/1 system-ui;text-decoration:none;}"+
+ "#backToBlog:active{background:#232c37;}";
+ document.head.appendChild(css);
+
+ const a=document.createElement("a");
+ a.id="backToBlog"; a.href=BLOG; a.rel="noopener";
+ a.textContent=LABEL[LANG]||LABEL.ja;
+ // 広告のさらに下に置く。広告より上に入れて広告を押し下げないため
+ const box=document.getElementById("adBox");
+ if(box&&box.parentNode) box.parentNode.appendChild(a);
+ else document.getElementById("panels").appendChild(a);
+
+ const _origApplyLang=applyLang;
+ applyLang=function(l){ _origApplyLang(l); a.textContent=LABEL[LANG]||LABEL.ja; };
+})();
+
+
+/* ==========================================================================
+   広告の差し込み
+   忍者AdMaxのタグは document.write 形式で、Chrome が回線状況によって
+   ブロックする（初回だけ広告が出ず、リロードで出るのはこれが原因）。
+   ad.html に隔離して iframe で読み込むことで、メインのパーサを止めない。
+   ========================================================================== */
+(function(){
+ if(window.__MYTHOS_PLAYTEST__) return;
+ function mount(el,slot){
+  if(!el) return;
+  var f=document.createElement("iframe");
+  f.src="../ad-"+slot+".html";
+  f.title="広告";
+  f.setAttribute("scrolling","no");
+  f.setAttribute("frameborder","0");
+  f.style.cssText="display:block;border:0;width:100%;max-width:360px;height:300px;margin:0 auto;";
+  el.appendChild(f);
+ }
+ if(window.innerWidth>=1024) mount(document.getElementById("adSide"),"tb");
+ else mount(document.getElementById("adBox"), window.innerWidth<=680 ? "sp" : "tb");
+})();
+
+
+/* ==========================================================================
+   ランキングのボード切替（累積ダメージ / 入口の戦闘力）
+   ========================================================================== */
+(function(){
+ const modal=$("#rankModal"); if(!modal) return;
+ const status=$("#rankStatus"); if(!status||!status.parentNode) return;
+
+ const LAB={
+  ja:{dmg:"累積ダメージ",pow:"戦闘力",title:{dmg:"🏆 累積ダメージ ランキング",pow:"⚡ 戦闘力 ランキング"}},
+  en:{dmg:"Total damage",pow:"Power",title:{dmg:"🏆 Total damage ranking",pow:"⚡ Power ranking"}},
+  zh:{dmg:"累计伤害",pow:"战斗力",title:{dmg:"🏆 累计伤害排行",pow:"⚡ 战斗力排行"}}
+ };
+ const L=()=>LAB[LANG]||LAB.ja;
+
+ const css=document.createElement("style");
+ css.textContent=
+ "#rankTabs{display:flex;gap:6px;margin:0 0 9px;}"+
+ "#rankTabs button{flex:1;padding:7px 4px;cursor:pointer;border:1px solid #4a4335;border-radius:7px;"+
+ " background:#222a34;color:#9d947f;font:700 12px system-ui;}"+
+ "#rankTabs button.on{background:#8a6a2c;border-color:#ffd24a;color:#fff5d8;}";
+ document.head.appendChild(css);
+
+ const tabs=document.createElement("div");
+ tabs.id="rankTabs";
+ const bDmg=document.createElement("button"), bPow=document.createElement("button");
+ bDmg.type="button"; bPow.type="button";
+ tabs.append(bDmg,bPow);
+ status.parentNode.insertBefore(tabs,status);
+
+ const h3=modal.querySelector("h3");
+ function paint(){
+  const l=L();
+  bDmg.textContent=l.dmg; bPow.textContent=l.pow;
+  bDmg.classList.toggle("on",rankBoard!=="power");
+  bPow.classList.toggle("on",rankBoard==="power");
+  if(h3) h3.textContent=l.title[rankBoard==="power"?"pow":"dmg"];
+ }
+ function pick(board){
+  if(rankBoard===board) return;
+  rankBoard=board; onlineRankLoaded=false;
+  paint(); renderRanking(); void loadOnlineRanking();
+ }
+ bDmg.addEventListener("click",()=>pick("damage"));
+ bPow.addEventListener("click",()=>pick("power"));
+ paint();
+
+ const _origApplyLang=applyLang;
+ applyLang=function(l){ _origApplyLang(l); paint(); };
+})();
+
+</script>
+<script src="army-sim.js?v=20261020-review4"></script>
+<script src="army-view.js?v=20261020-review4"></script>
+<script src="boss-art.js"></script>
+<script src="battle-control.js?v=20261020-review4"></script>
+<script src="supply-factory.js?v=20261020-review4"></script>
+<script src="camp-training.js?v=20261020-review4"></script>
+<script src="rework.js?v=20261020-review4"></script>
+</body>
+</html>

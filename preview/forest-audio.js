@@ -1,13 +1,13 @@
 /* Original camp music; material impacts use noisy transients and damped resonances. */
 window.ForestAudio=(()=>{
  const defaults={bgmOn:true,seOn:true,bgmVol:.18,seVol:.5};
- let stored={};try{stored=JSON.parse(localStorage.getItem('sbr2_preview_forest_audio_v2')||localStorage.getItem('sbr2_preview_forest_audio_v1')||'{}')||{};}catch(e){}
+ let stored={};try{stored=JSON.parse(localStorage.getItem('sbr2_preview_outpost_audio_v2')||localStorage.getItem('sbr2_preview_outpost_audio_v1')||'{}')||{};}catch(e){}
  const finite=(n,f,max)=>Number.isFinite(n)?Math.max(0,Math.min(max,n)):f;
  const settings={bgmOn:stored.bgmOn!==false,seOn:stored.seOn!==false,bgmVol:finite(stored.bgmVol,defaults.bgmVol,.26),seVol:finite(stored.seVol,defaults.seVol,.6)};
  const music=new Audio('../assets/audio/forest-camp.mp3');music.loop=true;music.preload='metadata';music.volume=0;
  let ctx=null,bus=null,master=null,unlocked=false,fade=0,seed=345671,lastAuto=-Infinity,lastUser=-Infinity;
  const buffers=new Map(),voices=[];
- function save(){try{localStorage.setItem('sbr2_preview_forest_audio_v2',JSON.stringify(settings));}catch(e){}}
+ function save(){try{localStorage.setItem('sbr2_preview_outpost_audio_v2',JSON.stringify(settings));}catch(e){}}
  function context(){if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();bus=ctx.createDynamicsCompressor();bus.threshold.value=-16;bus.knee.value=16;bus.ratio.value=3;bus.attack.value=.005;bus.release.value=.12;master=ctx.createGain();master.gain.value=settings.seOn?settings.seVol:0;bus.connect(master);master.connect(ctx.destination);}return ctx;}
  function noise(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/2147483648-1;}
  function buffer(kind,variant=0){

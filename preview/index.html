@@ -564,7 +564,8 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261020-review4">
+<link rel="stylesheet" href="rework.css?v=20261020-outpost1">
+<link rel="stylesheet" href="outpost.css?v=20261020-outpost1">
 </head>
 <body>
 <div id="titleScreen">
@@ -580,8 +581,8 @@
   </div>
   <div class="ts-foot">PLAYTEST · Bubblegum · Online ranking off</div>
 </div>
-<div id="langBtn" title="言語 / Language"><span>🌐</span><span id="langBtnCode">JA</span></div>
-<div id="field">
+<button id="langBtn" type="button" aria-haspopup="dialog" title="言語 / Language"><span>🌐</span><span id="langBtnCode">JA</span></button>
+<div id="field" tabindex="0" role="region" aria-label="Game field">
  <img id="bgImg" src="../assets/stage-harbor.webp" alt="">
  <div id="battleGround" aria-hidden="true"></div>
  <div id="battleViewport"><div id="worldStage"><div id="battleWorld">
@@ -687,9 +688,11 @@
   <button class="no" id="rankClose" type="button">閉じる</button>
 </div></div>
 
-<script src="supply-core.js?v=20261020-review4"></script>
-<script src="game-core.js?v=20261020-review4"></script>
-<script src="forest-audio.js?v=20261020-review4"></script>
+<script>window.__OUTPOST_BUILD__=true;</script>
+<script src="outpost-core.js?v=20261020-outpost1"></script>
+<script src="supply-core.js?v=20261020-outpost1"></script>
+<script src="game-core.js?v=20261020-outpost1"></script>
+<script src="forest-audio.js?v=20261020-outpost1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -706,8 +709,8 @@ function statNumber(n){return Number.isFinite(n)&&Math.abs(n)<1000?Number(n.toFi
 
 /* ===== PLAYER / ONLINE DAMAGE RANKING ===== */
 function readStored(key){try{return localStorage.getItem(key);}catch{return null;}}
-const PLAYER_KEY="sbr2_preview_forest_player_name_v1",RANK_KEY="sbr2_preview_forest_damage_rank_v1";
-const PLAYER_ID_KEY="sbr2_preview_forest_player_id_v1",TOTAL_DAMAGE_KEY="sbr2_preview_forest_total_damage_v2";
+const PLAYER_KEY="sbr2_preview_outpost_player_name_v1",RANK_KEY="sbr2_preview_outpost_damage_rank_v1";
+const PLAYER_ID_KEY="sbr2_preview_outpost_player_id_v1",TOTAL_DAMAGE_KEY="sbr2_preview_outpost_total_damage_v2";
 const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard2";
 const RANK_VIEW_LIMIT=20; /* 表示件数。サーバー側も同じ値で頭打ちにしてある */
 function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
@@ -807,7 +810,7 @@ function renderRanking(){
 function updatePlayerUi(){const b=$("#playerBtn");if(b)b.textContent="👤 "+playerName;}
 
 /* ===== I18N ===== */
-// 言語は固有のlocalStorageキーで保持し、セーブ(sbr2_preview_forest_save2)とは分離。
+// 言語は固有のlocalStorageキーで保持し、セーブ(sbr2_preview_outpost_save2)とは分離。
 // 訳が無いキーは ja に自動フォールバックするので、未訳があっても画面は壊れない。
 const I18N={
  ja:{
@@ -930,7 +933,7 @@ const I18N={
 };
 const validLanguage=v=>["ja","en","zh"].includes(v);
 const requestedLanguage=new URLSearchParams(location.search).get("lang");
-const storedLanguage=readStored("sbr2_preview_forest_lang");
+const storedLanguage=readStored("sbr2_preview_outpost_lang");
 let LANG=validLanguage(requestedLanguage)?requestedLanguage:validLanguage(storedLanguage)?storedLanguage:"ja";
 const LANG_CHOSEN=validLanguage(requestedLanguage)||validLanguage(storedLanguage);
 function t(k,...a){ const d=I18N[LANG]||I18N.ja; let v=d[k]; if(v==null) v=I18N.ja[k]; if(v==null) return k;
@@ -1102,11 +1105,11 @@ function freshState(){return Core.fresh(UNITS.map(u=>u.id));}
 let pendingOffline=null,saveAvailable=true;
 function load(){
  try{
-  const current=localStorage.getItem("sbr2_preview_forest_save3"),legacy=localStorage.getItem("sbr2_preview_forest_save2");
+  const current=localStorage.getItem("sbr2_preview_outpost_save3"),legacy=localStorage.getItem("sbr2_preview_outpost_save2");
   const raw=current||legacy;
   S=raw?Core.migrate(JSON.parse(raw),UNITS.map(u=>u.id)):freshState();
-  if(!current&&legacy&&!localStorage.getItem("sbr2_preview_forest_backup_v2"))localStorage.setItem("sbr2_preview_forest_backup_v2",legacy);
-  pendingOffline=Core.offline(S,UNITS);S.gold+=pendingOffline.gold;S.lastSeen=Date.now();
+  if(!current&&legacy&&!localStorage.getItem("sbr2_preview_outpost_backup_v2"))localStorage.setItem("sbr2_preview_outpost_backup_v2",legacy);
+  pendingOffline=window.__OUTPOST_BUILD__?{seconds:0,gold:0}:Core.offline(S,UNITS);S.gold+=pendingOffline.gold;S.lastSeen=Date.now();
  }catch(e){S=freshState();saveAvailable=false;}
 }
 const PARAMS=new URLSearchParams(location.search);
@@ -1114,7 +1117,7 @@ const CHEAT=PARAMS.has("cheat");
 const LAYOUT_MODE=PARAMS.has("layout");
 const LAYOUT_MOBILE=LAYOUT_MODE&&PARAMS.has("mobile");
 const SHOWCASE=PARAMS.has("showcase")||LAYOUT_MODE;
-const LAYOUT_KEY="sbr2_preview_forest_unit_layout_v1";
+const LAYOUT_KEY="sbr2_preview_outpost_unit_layout_v1";
 let layoutDraft={desktop:{},mobile:{}},layoutUndo=[],layoutSelectedId="giant";
 if(LAYOUT_MODE){
  try{
@@ -1129,16 +1132,16 @@ if(LAYOUT_MODE){
   history.replaceState(null,"",location.pathname+"?"+PARAMS.toString());
  }
 }
-function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_forest_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
+function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_outpost_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
 function earnGold(amount){if(!Number.isFinite(amount)||amount<=0)return;S.gold=Math.min(1e150,S.gold+amount);S.earned=Math.min(1e150,S.earned+amount);}
 function unitOwned(u){return S.owned[u.id]>=1;}
 function unitBuyCost(u){return Core.unitCost(S,u);}
 function unitUpgCost(u){return Core.upgradeCost(S,u);}
 function heroCost(h){return Core.heroCost(S,h);}
 function awakenMul(u){return Core.awaken(S.ulvl[u.id]);}
-function unitDmg(u){return Core.damage(S,u)*Core.formation(S,UNITS);}
-function unitIv(u){return Core.interval(S,u);}
-function unitDPS(u){return Core.unitDps(S,u)*Core.formation(S,UNITS);}
+function unitDmg(u){if(window.__OUTPOST_BUILD__)return OutpostCore.stats(u.id)?.damage||0;return Core.damage(S,u)*Core.formation(S,UNITS);}
+function unitIv(u){return window.__OUTPOST_BUILD__?(OutpostCore.stats(u.id)?.interval||5):Core.interval(S,u);}
+function unitDPS(u){if(window.__OUTPOST_BUILD__)return Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0))*unitDmg(u)/unitIv(u);return Core.unitDps(S,u)*Core.formation(S,UNITS);}
 function totalDPS(){return Core.armyDps(S,UNITS);}
 function clickBaseDmg(lv){return Core.clickBase(lv);}
 function clickDmg(){return CHEAT?bossMaxHp()*2:Core.clickDamage(S,window.ArmyView?.ready?ArmyView.engagedDps:totalDPS());}
@@ -1500,6 +1503,7 @@ function heroAttack(){
  if(!$("#titleScreen").classList.contains("hidden")||window.Rework?.paused||window.BattleControl?.defeated||document.hidden)return;
  if(window.BattleControl?.placement)return;
  if(window.SupplyFactory?.resourceTarget){SupplyFactory.harvestSelected();return;}
+ if(window.Outpost?.ready){Outpost.manual();return;}
  if(bossDead) return;
  addCombo();
  let dmg=clickDmg(), crit=Math.random()<critRate();
@@ -1512,11 +1516,11 @@ function heroAttack(){
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  window.Rework?.heroHit();
 }
-$("#field").addEventListener("pointerdown",e=>{if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
+$("#field").addEventListener("pointerdown",e=>{if(!e.target.closest("button,input,select"))e.currentTarget.focus({preventScroll:true});if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;const point=ArmyView.point(e.clientX,e.clientY);if(window.Outpost?.ready){if(Rework.paused||!$("#titleScreen").classList.contains("hidden"))return;if(BattleControl.selectAt(point,e)||OutpostCamp.hitHouse(point))return;if(SupplyFactory.gatherAt(point))return;Outpost.manual(point);return;}if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
 const _heldKeys=new Set();
 let _cheatTimer=null;
 window.addEventListener("keydown",e=>{
- if(window.Rework?.paused||e.target.matches("input,textarea,select"))return;
+ if(e.defaultPrevented||window.Rework?.paused||e.target.closest("button,a,input,textarea,select,summary,[role=button]"))return;
  if(e.code==="Space"||e.key===" "){
   e.preventDefault();
   if(_heldKeys.has("Space")) return;
@@ -1910,20 +1914,20 @@ function applyLang(lang){
  renderCards(); updateStageTag(); updateHud();window.Rework?.translate();
 }
 function chooseLang(lang){
- try{ localStorage.setItem("sbr2_preview_forest_lang",lang); }catch(e){}
+ try{ localStorage.setItem("sbr2_preview_outpost_lang",lang); }catch(e){}
  applyLang(lang);
  $("#titleScreen").classList.add("hidden");
  _bgmUnlocked=true;try{ ac().resume(); }catch(e){}syncBgm(); // ユーザー操作のタイミングで音声を解禁
 }
 $$("#titleScreen .ts-lang").forEach(b=>{
- const pick=()=>{try{localStorage.setItem("sbr2_preview_forest_lang",b.dataset.lang);}catch(e){}applyLang(b.dataset.lang);};
+ const pick=()=>{try{localStorage.setItem("sbr2_preview_outpost_lang",b.dataset.lang);}catch(e){}applyLang(b.dataset.lang);};
  b.addEventListener("click",pick);
  b.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } });
 });
 $("#langBtn").addEventListener("click",()=>{ $("#titleScreen").classList.remove("hidden"); });
 
 if(PARAMS.has("reset")){
- try{ localStorage.removeItem("sbr2_preview_forest_save3");localStorage.removeItem("sbr2_preview_forest_save2"); }catch(e){}
+ try{ localStorage.removeItem("sbr2_preview_outpost_save3");localStorage.removeItem("sbr2_preview_outpost_save2"); }catch(e){}
  history.replaceState(null,"",location.pathname);
 }
 load();
@@ -2069,12 +2073,14 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261020-review4"></script>
-<script src="army-view.js?v=20261020-review4"></script>
+<script src="army-sim.js?v=20261020-outpost1"></script>
+<script src="army-view.js?v=20261020-outpost1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261020-review4"></script>
-<script src="supply-factory.js?v=20261020-review4"></script>
-<script src="camp-training.js?v=20261020-review4"></script>
-<script src="rework.js?v=20261020-review4"></script>
+<script src="battle-control.js?v=20261020-outpost1"></script>
+<script src="supply-factory.js?v=20261020-outpost1"></script>
+<script src="camp-training.js?v=20261020-outpost1"></script>
+<script src="outpost-camp.js?v=20261020-outpost1"></script>
+<script src="outpost.js?v=20261020-outpost1"></script>
+<script src="rework.js?v=20261020-outpost1"></script>
 </body>
 </html>

@@ -1,0 +1,50 @@
+{
+  "url": "http://127.0.0.1:4186/preview/",
+  "created": "2026-10-20T23:31:47.080Z",
+  "stateGrants": false,
+  "clips": [
+    {
+      "file": "harvest-and-worker.mp4",
+      "seconds": 10.5,
+      "source": "Fresh save, six actual tree clicks, manual delivery, first lumberjack placement, real worker output",
+      "audio": "Actual browser WebAudio and BGM encoded as AAC",
+      "audioOffsetSeconds": 0.074,
+      "audioMeanDb": -33.4,
+      "audioPeakDb": -10.2
+    },
+    {
+      "file": "speed-measurement.mp4",
+      "seconds": 8.5,
+      "source": "Five-second measurement, 30 actual Space presses, real result",
+      "audio": "Actual browser WebAudio and BGM encoded as AAC",
+      "audioOffsetSeconds": 0.119,
+      "audioMeanDb": -34.4,
+      "audioPeakDb": -20.7
+    },
+    {
+      "file": "rat-raid.mp4",
+      "seconds": 21.4,
+      "source": "Earned Wave 3 checkpoint from normal prior play, actual replay with no manual attacks or added troops",
+      "audio": "Actual browser WebAudio and BGM encoded as AAC",
+      "audioOffsetSeconds": 0.072,
+      "audioMeanDb": -34.4,
+      "audioPeakDb": -18.1
+    }
+  ],
+  "screens": [
+    "camp-fresh-desktop.png",
+    "six-logs-on-ground.png",
+    "first-worker-chopping.png",
+    "measurement.png",
+    "measurement-result.png",
+    "speed-ranking.png",
+    "camp-earned-desktop.png",
+    "rail-workshop.png",
+    "rat-pack-approach.png",
+    "rat-pack-under-fire.png",
+    "camp-earned-mobile.png",
+    "rail-workshop-mobile.png"
+  ],
+  "errors": [],
+  "checkpoint": "/workspace/scratch/outpost-qa/earned-wave3-storage-state.json"
+}

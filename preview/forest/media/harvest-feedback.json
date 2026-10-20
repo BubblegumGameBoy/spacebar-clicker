@@ -1,0 +1,15 @@
+{
+  "seconds": 22.4,
+  "video": "actual Chromium screencast, 20 fps",
+  "audio": "actual game BGM and Web Audio output, Opus capture encoded as AAC",
+  "audioOffsetSeconds": 0.293,
+  "progress": "fresh save: chop 3 logs, collect, place first worker, collect its output, recruit and place second worker",
+  "stateGrants": false,
+  "errors": [],
+  "sounds": [
+    "wood",
+    "pickup",
+    "hire",
+    "place"
+  ]
+}

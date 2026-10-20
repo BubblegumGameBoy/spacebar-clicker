@@ -1,0 +1,222 @@
+:root{--rx-gold:#eacb82;--rx-mint:#94d8bd;--rx-panel:#151e24;--rx-line:#425149}
+#field{isolation:isolate;background:#121b1c}
+#field>#bgImg{object-position:center;opacity:.86}
+#battleGround{position:absolute;inset:30% 0 0;z-index:1;pointer-events:none;background:#343a30 url('../../assets/battle-ground.webp') repeat;background-size:256px;mask-image:linear-gradient(transparent,#000 60px);opacity:.7;image-rendering:pixelated}
+#battleViewport{position:absolute;inset:0;z-index:2;overflow:auto;overscroll-behavior:contain;touch-action:pan-x pan-y;scrollbar-width:thin;scrollbar-color:#8a8058 #172322}
+#worldStage{position:relative;min-width:100%;min-height:100%}
+#battleWorld{position:absolute;transform-origin:0 0;overflow:hidden;background:transparent}
+#armyCanvas{position:absolute;top:0;left:0;pointer-events:none;z-index:6;image-rendering:pixelated}
+#battleWorld .army-anchor{width:1px!important;height:1px!important;max-width:1px!important;opacity:0;pointer-events:none;animation:none!important}
+#boss{pointer-events:none;max-width:none;z-index:5}#boss img{image-rendering:auto}
+#cameraTools{position:absolute;z-index:15;right:12px;bottom:12px;display:flex;align-items:center;gap:4px;background:#101a20e8;border:1px solid #596351;border-radius:8px;padding:4px;color:var(--rx-gold)}
+#cameraTools span{font:800 14px/1.4 system-ui;padding:0 8px}#cameraTools span:before{content:'⚑ ';color:#9ec8b3}
+#cameraTools button{border:0;background:#283831;color:#e9e5cc;width:28px;height:28px;border-radius:4px;cursor:pointer}
+#chapterTrail{position:absolute;z-index:11;left:12px;bottom:12px;color:#e6dfcb;max-width:55%;pointer-events:none;text-shadow:0 2px 3px #000}
+#chapterTrail b{display:block;font:700 17px/1.4 Georgia,serif;letter-spacing:.08em}#chapterTrail small{color:#bdcbb7;font-size:10px}#chapterTrail i{display:inline-block;width:15px;height:3px;background:#566653;margin:5px 3px 0 0}#chapterTrail i.done{background:var(--rx-gold)}
+#bossTrait{position:absolute;top:136px;left:50%;transform:translateX(-50%);z-index:10;padding:5px 13px;border:1px solid #d8c17c66;background:#0c191fdd;border-radius:20px;color:#c7ded2;font-size:11px;text-align:center;pointer-events:none;min-width:150px}
+#bossTrait:empty{display:none}#bossTrait.open{background:#9d7039;color:#fff3c5;box-shadow:0 0 28px #f7d97b44}
+#hud{background:#101b21e6;border:1px solid #53655866;border-radius:9px;backdrop-filter:blur(8px)}#hud .k{color:#a0b5a9}#goldBig{color:#f3d28a}
+#comboTag{top:auto;bottom:62px;font-size:22px}#killBanner{z-index:20}
+#deck{background:#111a20}#deckMain{min-width:0}#adSide:empty{display:none}#deck:has(#adSide:empty) #deckMain{width:100%}
+.rx-toolbar{display:flex;gap:6px;padding:9px 12px;border-bottom:1px solid #435048;align-items:center;flex-wrap:wrap;background:#19272a}
+.rx-toolbar button,.rx-button{font:700 12px/1.3 system-ui;border:1px solid #5e6e5b;background:#273832;color:#dfebdd;border-radius:6px;padding:8px 12px;cursor:pointer}
+.rx-toolbar .primary,.rx-button.primary{background:linear-gradient(130deg,#e2cc91,#b8a16c);color:#1a251f;border-color:#ebdcae}
+.rx-toolbar .quantity{margin-left:auto;display:flex;gap:2px}.rx-toolbar .quantity button{padding:5px 7px;font-size:10px}.rx-toolbar [aria-pressed=true]{border-color:#e8d393;color:#ffe4a1;background:#514d37}
+#armyRoster{display:flex;gap:7px;overflow:auto;padding:7px 12px;scrollbar-width:thin;border-bottom:1px solid #34453d;min-height:0}#armyRoster:empty{display:none}
+#armyRoster button{flex:0 0 auto;display:flex;gap:7px;align-items:center;border:1px solid #435e4a;border-radius:5px;padding:5px 9px;color:#d9dfd0;background:#1d2a25;font:11px system-ui;cursor:pointer}#armyRoster b{color:#e5cb89}#armyRoster small{color:#9ed9c4}
+#panels{padding:10px;scrollbar-width:thin}.pane.active{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:8px;align-content:start}
+.card.army-card{position:relative;margin:0;padding:12px 12px 10px;border-radius:8px;background:linear-gradient(130deg,#253431,#19232b);border:1px solid #48604e;cursor:pointer;min-height:157px;overflow:hidden}
+.army-card.dis{opacity:1}.army-card.dis .upgrade-line{opacity:.55}.army-card img.unit-portrait{position:absolute;right:10px;top:8px;width:64px;height:64px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 3px 5px #0008)}
+.army-card .nm{font-size:14px;padding-right:65px;display:block;color:#ece9d3}.army-card .company-size{font:900 23px/1.2 Georgia,serif;color:#eed596;margin:4px 0}.army-card .role{color:#a9c9b5;font-size:10px}.army-card .unit-rank{color:#e5c37d;font-size:11px;margin:6px 0}.army-card .evolution-track{height:3px;background:#101c1b;margin:5px 0 9px}.army-card .evolution-track i{display:block;height:100%;background:#b0d6b0}
+.army-card .upgrade-line{font-size:11px;color:#c8d3cb;display:flex;justify-content:space-between;gap:8px}.army-card .recruit-more{display:block;width:100%;margin-top:9px;border:1px solid #718f70;border-radius:4px;padding:7px;background:#374a36;color:#edf1ce;font:700 11px system-ui;cursor:pointer}.army-card .recruit-more:disabled{opacity:.45;cursor:default}.army-card .evolution-next{color:#e9cb83;font-size:10px}
+.army-card.tier-1{border-color:#78b5b9}.army-card.tier-2{border-color:#aa8ec2}.army-card.tier-3{border-color:#d8bc6a;box-shadow:inset 0 0 25px #d8bc6a11}
+.rx-overlay{position:fixed;inset:0;z-index:11000;display:none;align-items:center;justify-content:center;background:#070f12de;backdrop-filter:blur(8px);padding:16px;overscroll-behavior:contain}.rx-overlay.on{display:flex}
+.rx-dialog{position:relative;width:min(860px,100%);max-height:94dvh;overflow:auto;background:linear-gradient(135deg,#24322e,#111d25);border:1px solid #9e9a6e;border-radius:16px;padding:28px;color:#e9e8d6;box-shadow:0 30px 120px #000a;scrollbar-width:thin}
+.rx-dialog h2{font:700 clamp(22px,4vw,32px)/1.3 Georgia,'Yu Mincho',serif;color:#f0d899;letter-spacing:.05em;margin:3px 0 12px}.rx-kicker{font:700 10px system-ui;letter-spacing:.3em;color:#96c1ab}.rx-sub{font:12px/1.8 system-ui;color:#aabdac;margin:6px 0 18px}.rx-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:20px}.rx-actions button:disabled{opacity:.45;cursor:default}
+.rx-close{position:absolute;right:15px;top:13px;color:#ddd9bb;background:transparent;border:0;font-size:23px;cursor:pointer}.rx-choice{display:flex;gap:7px;justify-content:center;margin:12px 0}.rx-choice button{background:#13221f;border:1px solid #5d7763;border-radius:7px;padding:9px 16px;color:#c5d3c5;font:700 13px system-ui;cursor:pointer}.rx-choice button[aria-pressed=true]{background:#cebd85;color:#18231d;border-color:#f7e9b9}
+#measureDialog{text-align:center;background:linear-gradient(#172521e8,#102029f5),url('../../assets/stage-harbor.webp') center/cover}
+.measure-orb{position:relative;width:190px;height:190px;border:2px solid #b9c9a0;border-radius:50%;margin:22px auto;display:grid;place-content:center;background:radial-gradient(circle at 40% 35%,#416850,#142b2b 65%);box-shadow:inset 0 0 35px #0008,0 0 70px #91dab51a;cursor:pointer;touch-action:manipulation;user-select:none}
+.measure-orb b{font:800 54px/1.1 Georgia,serif;color:#f7edc9}.measure-orb small{display:block;color:#a8d7bc;font:700 10px system-ui;letter-spacing:.2em;margin-top:8px}.measure-orb.live{border-color:#f0d38c;box-shadow:0 0 60px #d2c68f33}.measure-bar{height:4px;background:#34453e;border-radius:4px;overflow:hidden;max-width:450px;margin:auto}.measure-bar i{display:block;height:100%;width:100%;background:#dcca8e}
+.measure-total{font:800 clamp(32px,7vw,62px)/1.3 Georgia,serif;color:#f4e4ac;margin:20px 0 8px}.measure-speed{font:900 clamp(40px,8vw,76px)/1.1 system-ui;color:#b9e3ca}.measure-best{color:#f2d18c;font-size:13px;margin:18px 0 6px}.measure-comment{color:#bdd7c7;font-size:14px;margin:12px 0}.measure-result-note{font-size:11px;color:#9aaf9e}.measure-person{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:20px;flex-wrap:wrap}.measure-person input{background:#0e1c20;color:#eee6cc;border:1px solid #556e5e;border-radius:5px;padding:8px;width:160px;min-width:0}
+.skill-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:20px}.skill-branch{border:1px solid #546657;border-radius:10px;padding:12px;background:#12231f66}.skill-branch h3{font:700 17px Georgia,serif;color:#cce4cf;margin:0 0 10px}.skill-node{display:block;text-align:left;width:100%;padding:12px 10px;border:1px solid #4b685b;border-radius:8px;background:#243b32;color:#dce7d7;cursor:pointer;margin-top:8px}.skill-node:disabled{cursor:default;background:#172924;opacity:.58}.skill-node.owned{border-color:#d5bd77;opacity:1}.skill-node.capstone{border-style:double;border-width:3px;background:#3b3b2c}.skill-node b{display:block;color:#e9dbb1;font-size:12px}.skill-node small{display:block;font-size:10px;line-height:1.6;margin-top:5px}.skill-node em{display:block;font-style:normal;text-align:right;color:#d2bd83;font-size:10px;margin-top:7px}
+.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}.codex-entry{background:#0e1b1d77;border:1px solid #4c6354;border-radius:8px;padding:10px;text-align:center}.codex-entry img{width:100%;height:100px;object-fit:contain}.codex-entry.locked img{filter:brightness(0);opacity:.3}.codex-entry b{display:block;font-size:11px;color:#dfd3ab}.codex-entry small{display:block;font-size:10px;line-height:1.6;color:#9eaf9e;margin-top:5px}
+.save-code{width:100%;height:120px;background:#0c181b;border:1px solid #4c6657;color:#d6e7d2;border-radius:8px;padding:12px;resize:vertical;font:11px monospace;user-select:text}.rx-status{font-size:12px;line-height:1.8;white-space:pre-line;color:#c8d6c3;min-height:20px}
+.rx-toast{position:fixed;z-index:12000;top:22%;left:50%;transform:translate(-50%,-10px);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;background:linear-gradient(100deg,#24483aef,#152825ef);border:1px solid #cfbd7a;border-radius:12px;box-shadow:0 10px 70px #0008;padding:20px 30px;text-align:center;max-width:90vw;min-width:260px}.rx-toast.on{opacity:1;transform:translate(-50%,0)}.rx-toast b{display:block;color:#f1d38f;font:700 23px/1.4 Georgia,serif}.rx-toast span{display:block;color:#c1ddcb;font:12px/1.6 system-ui;margin-top:6px}
+#titleScreen{background:linear-gradient(#0d201ed9,#0a141cf0),url('../../assets/stage-harbor.webp') center/cover}.ts-crest{font-size:38px}.ts-title{font-size:clamp(30px,5vw,60px)}.ts-langs{gap:6px}.ts-lang{padding:8px 12px;font-size:12px}.ts-lang .sub{display:none}.ts-prompt{margin-top:18px}.rx-launch{display:flex;flex-direction:column;gap:9px;max-width:330px;width:86vw;margin:22px auto 0}.rx-launch button{padding:13px;font-size:14px}.rx-launch .rx-sub{margin:4px 0 0;font-size:11px}.ts-foot{margin-top:14px}
+.rank-filters{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:15px 0}.rank-filters select{padding:7px;border:1px solid #63765b;color:#e6e5cc;background:#20342b;border-radius:5px}.rx-rank-list{list-style:none;padding:0;margin:15px 0}.rx-rank-list li{display:flex;justify-content:space-between;gap:12px;padding:12px;border-bottom:1px solid #415648;font-size:12px}.rx-rank-list li.me{background:#a9944922}.rx-rank-list strong{color:#eddb9f}
+@media(max-width:680px){#hud{padding:8px;width:113px;font-size:10px}#hud .row{gap:5px}#hud .row:has(#hTotalDmg),#hud .row:has(#hGpm){display:none}#hudTools{gap:3px}#hudTools button{font-size:8px;padding:4px}#stageTag{font-size:9px;padding:8px;right:7px;max-width:108px}#stageTag button{font-size:9px;padding:6px}#bossTrait{top:115px;min-width:125px;font-size:9px}#chapterTrail{bottom:10px;left:8px;max-width:50%}#chapterTrail b{font-size:12px}#chapterTrail small{font-size:8px}#cameraTools{right:7px;bottom:8px}#cameraTools span{font-size:11px;padding:0 4px}#cameraTools button{width:23px;height:25px}#deck{min-height:0}#tabs .tab{font-size:12px;padding:9px}.rx-toolbar{gap:4px;padding:7px}.rx-toolbar button{font-size:10px;padding:7px 9px}.rx-toolbar .quantity{width:100%;justify-content:flex-end}#armyRoster{padding:5px 7px}.pane.active{grid-template-columns:1fr}.card.army-card{min-height:153px}#panels{padding:7px}.rx-dialog{padding:25px 16px 20px;max-height:94dvh;border-radius:12px}.skill-columns{grid-template-columns:1fr;gap:8px}.skill-branch{display:grid;grid-template-columns:1fr 1fr;gap:7px}.skill-branch h3{grid-column:1/-1;margin:0}.skill-node{margin-top:0;padding:9px}.skill-node b{font-size:11px}.skill-node small{font-size:9px}.skill-node.capstone{grid-column:1/-1}.codex-grid{grid-template-columns:repeat(3,1fr);gap:7px}.codex-entry{padding:6px}.codex-entry img{height:75px}.codex-entry b{font-size:9px}.measure-orb{width:160px;height:160px;margin:18px auto}.rx-choice button{padding:8px 13px}.rx-actions{gap:6px}.rx-actions button{padding:9px 11px;font-size:11px}.rx-toast{padding:16px 20px}.rx-toast b{font-size:19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}.rx-toast{transition:none}}
+/* Mythos II: the captain and orders remain fixed while the battlefield camera moves. */
+#bossMotion{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:bottom;image-rendering:pixelated;pointer-events:none}
+#bossMotion[hidden]{display:none}
+/* Keep the boss steady between authored attack poses, including fallback art. */
+#boss:not(.dying) img,#boss:not(.dying) #bossMotion{animation:none;transform:none}
+#battleCommands{display:flex;gap:6px;align-items:center;padding:7px 12px;background:#1d2c2c;border-bottom:1px solid #49563f}
+#battleCommands button{border:1px solid #6e7e64;border-radius:5px;background:#293d34;color:#e9e6cb;font:700 11px system-ui;padding:7px 12px;cursor:pointer}
+#battleCommands #commandMode{background:#d3c18b;color:#1c2b22}#battleCommands #commandMode[aria-pressed=true]{background:#a5dfc4}#battleCommands #autoArmy{margin-left:auto}
+#captainHealth{position:absolute;left:12px;bottom:68px;z-index:12;width:170px;background:#102121ec;border:1px solid #56715c;border-radius:7px;padding:8px 10px;color:#cde6d4;font:10px system-ui;pointer-events:none}
+#captainHealth strong{float:right;font:700 11px system-ui;color:#e6e9ce}#captainHealth i{display:block;height:5px;background:#18272c;border-radius:4px;overflow:hidden;margin-top:6px}#captainHealth em{display:block;height:100%;background:#8ed1a8}#captainHealth.low em{background:#ef9a79}
+#battleOrderHelp{position:absolute;z-index:14;left:50%;bottom:59px;transform:translateX(-50%);width:min(420px,62%);padding:7px 10px;border:1px solid #9ab895;background:#102527ed;border-radius:8px;font:11px/1.6 system-ui;color:#e1e8ce;text-align:center;pointer-events:none}
+#battleOrderHelp[hidden]{display:none}#battleWarning{position:absolute;z-index:12;top:178px;left:50%;transform:translateX(-50%);padding:6px 14px;border:1px solid #ebac72;border-radius:7px;background:#412826e8;color:#ffdfae;font:700 12px system-ui;text-align:center;pointer-events:none}#battleWarning:empty{display:none}
+.command-mode{cursor:crosshair!important}.command-mode #battleViewport{touch-action:none}.command-mode #weaponPointer{display:none}
+.battle-defeat{position:fixed;inset:0;z-index:13000;display:grid;place-items:center;background:#0c141be8;padding:20px}.battle-defeat .rx-dialog{max-width:560px;text-align:center}
+.ts-title em{font-style:normal;color:#eed59b;text-shadow:0 0 40px #d3b77766}
+@media(max-width:680px){#captainHealth{left:8px;bottom:62px;width:129px;padding:6px 8px;font-size:9px}#captainHealth strong{font-size:10px}#battleCommands{padding:6px 7px;gap:5px}#battleCommands button{padding:6px 9px;font-size:10px}#battleOrderHelp{left:auto;right:8px;bottom:50px;transform:none;width:57%;font-size:9px;padding:6px}#battleWarning{top:146px;width:54%;font-size:10px;padding:5px}}
+#supplyInventory{position:absolute;top:202px;left:12px;z-index:12;display:flex;flex-direction:column;gap:4px;background:#122321eb;border:1px solid #54705a;padding:9px 11px;border-radius:7px;color:#b8ccb6;font:10px system-ui;pointer-events:none}#supplyInventory>b{color:#dfd5a8;font:700 11px system-ui;margin-bottom:2px}#supplyInventory strong{float:right;color:#eddb9d;margin-left:12px}#supplyInventory small{font-size:9px;color:#8da796}
+#supplyHelp{position:absolute;left:50%;bottom:58px;z-index:14;transform:translateX(-50%);width:min(470px,70%);background:#172b24ed;color:#d8e9c9;border:1px solid #a7be88;padding:8px 12px;border-radius:7px;font:11px/1.6 system-ui;text-align:center;pointer-events:none}#supplyHelp[hidden]{display:none}
+#battleCommands #buildRails[aria-pressed=true]{color:#18251f;background:#a7d6ad}.rail-mode #battleViewport{touch-action:none}.rail-mode{cursor:crosshair!important}
+@media(max-width:680px){#battleCommands{flex-wrap:wrap}#battleCommands #buildRails{margin-left:auto}#supplyInventory{left:8px;top:139px;padding:6px 8px;font-size:9px;gap:3px}#supplyInventory>b{font-size:9px}#supplyInventory small{display:none}#supplyHelp{font-size:9px;width:65%;bottom:52px;left:auto;right:8px;transform:none}}
+
+#boss.dying #bossMotion{animation:die .7s forwards}
+.codex-entry .boss-portrait{width:100%;height:100px;background-size:200% 200%;background-position:0 0;background-repeat:no-repeat;image-rendering:pixelated}.codex-entry.locked .boss-portrait{filter:brightness(0);opacity:.3}
+@media(max-width:680px){.codex-entry .boss-portrait{height:75px}}
+
+#field.command-mode~#weaponPointer,#field.rail-mode~#weaponPointer{display:none!important}
+
+#field.covenant-active #armyCanvas{filter:brightness(1.24) saturate(1.35)}#field.covenant-active #cameraTools{border-color:#a9f2d4;box-shadow:0 0 22px #9ce7c366}
+
+#cityContract{margin:7px 0 3px;padding:6px 0 2px;border-top:1px solid #5d644b;color:#c8ccb1;max-width:150px;font:10px/1.4 system-ui}#cityContract span,#cityContract b,#cityContract small{display:block}#cityContract b{color:#f1d48c;font-size:14px}#cityContract small{font-size:9px;color:#b4bf9e}@media(max-width:680px){#cityContract{font-size:8px;margin-top:4px;padding-top:4px}#cityContract b{font-size:11px}#cityContract small{font-size:7px}}
+/* Keep the company selector usable when the card area needs to scroll. */
+#armyRoster{flex:0 0 auto;min-height:42px}#armyRoster button{min-height:28px}
+#battleCommands,.rx-toolbar{flex-shrink:0}
+.card.army-card{gap:1px}.army-card .unit-rank{margin:4px 0}.army-card .company-size{margin:3px 0}.army-card .evolution-track{margin:4px 0 6px}.army-card .recruit-more{margin-top:6px}
+#field{height:55vh}@media(max-width:680px){#field{height:49vh}}
+
+/* The forest loop stays still: gather, place, then choose when to fight. */
+#field.gathering #boss,#field.gathering #bossPlate,#field.gathering #stageTag,#field.gathering #comboTag,#field.gathering #bossTrait{visibility:hidden}
+#field.gathering.placing #boss{visibility:visible;opacity:.32}
+#chapterTrail{display:none}
+#playGuide{position:absolute;z-index:14;bottom:13px;left:50%;transform:translateX(-50%);width:min(670px,calc(100% - 32px));padding:10px 16px;border:1px solid #8fa48a66;border-radius:8px;background:#12261fec;color:#e2e6c9;font:600 12px/1.6 system-ui;text-align:center;pointer-events:none}
+#hud{width:192px;max-width:45%;font-size:12px;padding:11px}
+#hud .row:has(#hGpm),#hud .row:has(#hTotalDmg),#field.gathering #hud .row:has(#hDps){display:none}
+#hudTools #playerBtn,#hudTools #rankBtn{display:none}
+#supplyInventory{position:static;display:block;max-width:none;margin:8px 0 0;padding:8px 0 0;border:0;border-top:1px solid #71836b55;border-radius:0;background:none;color:#dbe2c7}
+.resource-buttons{display:flex;gap:5px}.resource-buttons button{flex:1;padding:8px 3px;border:1px solid #66836b;border-radius:5px;background:#253a2e;color:#e6e6c8;font:700 11px system-ui;cursor:pointer}.resource-buttons button[aria-pressed=true]{background:#d2c18a;color:#1d2c24;border-color:#f4e1a0}
+#supplyInventory #gatherFeedback{display:block;min-height:43px;margin-top:6px;line-height:1.6;font-size:10px;color:#c2d2b7}
+#battleCommands button[aria-pressed=true]{background:#dbc68d;color:#1b2e25}#battleCommands button:disabled{opacity:.4;cursor:default}#battleCommands #commandMode{margin-left:auto;background:#2d4134;color:#dfdfc3}
+#battleCommands #placeRecruits{background:#d8c78f;color:#172a20}#battleCommands button[hidden]{display:none}
+.first-camp .tab[data-t=hero],.first-camp .rx-toolbar .quantity,body:not(.has-army) #armyRoster{display:none}
+.rx-toolbar button[hidden]{display:none}#prestigeBtn[hidden]{display:none}
+#bossOrb #orbWave{animation:none}#bossMotion,#bossImg{will-change:auto}
+@media(max-width:680px){#hud{width:148px;max-width:45%;padding:8px;font-size:11px}#hud .row{gap:4px}.resource-buttons button{font-size:10px;padding:8px 2px}#supplyInventory{padding-top:6px;margin-top:6px}#supplyInventory #gatherFeedback{font-size:9px;min-height:43px}#playGuide{bottom:10px;font-size:10px;padding:8px 11px;width:calc(100% - 20px)}#cameraTools{bottom:74px}#battleCommands{flex-wrap:wrap}#battleCommands button{font-size:10px;padding:8px 9px}}
+/* Each purchase is a button; explanatory card text never spends currency. */
+.card.army-card{min-height:187px;padding:14px;gap:5px;display:flex;flex-direction:column}.army-card .unit-portrait{width:63px;height:70px;right:12px;top:10px}.army-card .nm{font-size:15px;padding-right:61px}.army-card .role{font-size:10px}.army-card .company-size{font:600 12px/1.5 system-ui;color:#d1ddc1;margin:4px 0}.ally-description{font:11px/1.7 system-ui;color:#a5bba7;min-height:38px;margin:5px 0 8px;max-width:90%}.army-card .recruit-more{margin-top:auto;padding:9px 8px;white-space:normal;min-height:53px}.hire-label{display:block;font:700 13px/1.4 system-ui}.hire-price{display:block;font:10px/1.6 system-ui;opacity:.85}.army-card button.upgrade-line{display:block;border:1px solid #59715c;border-radius:5px;padding:7px;background:#20352a;color:#ddd9b9;font:11px system-ui;cursor:pointer}.army-card button.upgrade-line:disabled{opacity:.45;cursor:default}
+@media(max-width:680px){.card.army-card{min-height:182px;padding:13px}.army-card .unit-portrait{width:62px;height:65px}.army-card .ally-description{min-height:20px;font-size:11px}.army-card .recruit-more{min-height:53px}.army-card .company-size{font-size:12px}}
+#field.gathering,#field.gathering #battleWorld{cursor:default!important}#field.gathering~#weaponPointer{display:none!important}
+#supplyInventory{pointer-events:auto}
+/* One quiet background, no moving or repeated foreground texture. */
+#field>#bgImg{object-position:center top;opacity:1}#battleGround{display:none}
+#titleScreen{background:linear-gradient(#12291fcf,#101d1ee8),url('../../assets/forest-clearing.webp') center/cover}
+#boss.dying img,#boss.dying #bossMotion{animation:bossFade .35s ease forwards}@keyframes bossFade{to{opacity:0}}
+#weaponPointer{display:none!important}
+/* Recruitment remains the primary action after the first placement. */
+.army-card .recruit-more{order:2}.army-card .upgrade-line,.army-card .evolution-next{order:3}
+/* One field and one next action. No gather/battle screen switch. */
+#battleCommands{gap:10px;min-height:52px;flex-wrap:nowrap;padding:9px 12px}
+#playGuide{position:static;transform:none;flex:1;min-width:0;width:auto;margin:0;padding:0;border:0;background:none;text-align:left;font:600 12px/1.6 system-ui;color:#e5dfbc}
+#battleCommands button{flex-shrink:0}#battleCommands #commandMode{margin-left:0}
+#cameraTools{bottom:12px}.resource-buttons button{min-height:45px}.resource-buttons button small{display:block;font:9px/1.5 system-ui;min-height:13px;color:inherit;opacity:.8}
+#supplyInventory #gatherFeedback{min-height:16px;font:600 10px/1.6 system-ui;color:#e7dbad}#pickupFeedback{display:block;min-height:33px;font:10px/1.5 system-ui;color:#b8cbb4}
+#field:not(.has-combat):not(.target-boss) #bossPlate,#field:not(.has-combat):not(.target-boss) #stageTag{visibility:hidden}
+#field:not(.has-combat):not(.target-boss):not(.placing) #boss{opacity:.3}
+#commandMode[hidden]{display:none}#field{cursor:default!important}
+@media(max-width:680px){#battleCommands{padding:8px;gap:6px}#playGuide{font-size:10px}#battleCommands button{padding:8px 6px;font-size:9px}#cameraTools{bottom:10px}#pickupFeedback{font-size:9px;min-height:32px}.resource-buttons button{padding:5px 2px}}
+/* Materials lead the opening; provisional combat information appears with an army. */
+body:not(.resources-open) #hud .row:has(#goldBig),#field:not(.has-combat) #hud .row:has(#hDps){display:none}
+#field:not(.has-combat) #boss,#field:not(.has-combat) #bossPlate,#field:not(.has-combat) #stageTag{visibility:hidden}
+
+/* Review pass: short, local feedback and a legible resource -> ally loop. */
+#field.planning-combat #boss{visibility:visible;opacity:.72}
+#field.planning-combat #bossPlate{visibility:visible}
+#hud{width:196px;padding:9px 10px;font-size:11px}
+body:not(.has-army) #hud .row:has(#hUnits){display:none}
+#supplyInventory{padding-top:4px;margin-top:4px}
+.resource-buttons button{min-height:53px;padding:3px 5px}
+.resource-buttons button>span{display:flex;align-items:center;justify-content:center;gap:5px}
+.material-icon{width:30px;height:27px;object-fit:contain;image-rendering:pixelated;vertical-align:middle}
+.resource-buttons b{font:800 21px/1.1 system-ui}
+.resource-buttons button small{font-size:10px;min-height:12px}
+#supplyInventory #gatherFeedback{font-size:10px;min-height:14px;margin-top:3px}
+#pickupFeedback{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);min-height:0}
+#hudTools{margin-top:5px}#hudTools button{padding:4px 5px;font-size:9px}
+#playGuide{font-size:15px;line-height:1.5;color:#f7e7b4}
+#battleCommands{min-height:60px}
+#battleCommands #guideNext{background:#dec68c;color:#183026;border-color:#eadca5;font-size:13px}
+.first-camp #armyRoster,.first-camp #tabs{display:none}
+.pane.active{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));align-items:start}
+#panels{overflow-anchor:none}
+.card.army-card{padding:14px;min-height:215px;cursor:default;gap:4px}
+.army-card img.unit-portrait{height:65px;width:70px;object-fit:contain;object-position:center bottom}
+.army-card .nm{font-size:18px;line-height:1.5}
+.army-card .company-size{font-size:12px;margin:0 0 3px}
+.company-size b{font-size:18px;color:#f2dc9a}
+.unit-yield{display:flex;align-items:center;gap:5px;color:#e9e8cc;font:12px/1.4 system-ui}
+.unit-yield b{font-size:18px;color:#bce0c2}.unit-yield .material-icon{width:24px;height:24px}
+.ally-description{font-size:12px;min-height:20px;line-height:1.6;margin:3px 0 6px;max-width:100%;color:#bfceba}
+.army-card .recruit-more{min-height:55px;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 12px;margin-top:auto}
+.hire-label{font-size:15px;text-align:left}.hire-price{display:flex;align-items:center;gap:8px;font-size:12px}
+.material-cost{display:inline-flex;align-items:center;gap:2px}.material-cost .material-icon{width:25px;height:25px}.material-cost b{font-size:15px}
+.army-card .recruit-more:disabled{opacity:.65}.army-card .recruit-more:not(:disabled){background:#53623d;border-color:#d8c888;color:#fff3c2}
+.hire-shortage{order:2;font:11px/1.4 system-ui;min-height:15px;color:#cfb990}
+.army-card button.upgrade-line{order:3;text-align:left;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.5;margin-top:2px}
+.upgrade-line small{margin-left:auto}.upgrade-line b{font-size:12px;color:#bee5c6}
+@media(max-width:680px){
+ #hud{width:172px;max-width:none;padding:7px 8px;font-size:10px}
+ #hudTools button{font-size:8px;padding:3px 5px}
+ .resource-buttons button{min-height:47px}.resource-buttons b{font-size:18px}
+ #supplyInventory #gatherFeedback{font-size:9px;margin-top:2px}
+ #playGuide{font-size:13px;line-height:1.6}#battleCommands{padding:8px 10px;min-height:62px;gap:5px}
+ #battleCommands #guideNext{font-size:11px;padding:9px 7px}
+ .rx-toolbar{padding:6px 8px}.rx-toolbar button{padding:6px 8px}
+ .pane.active{grid-template-columns:1fr}.card.army-card{min-height:204px;padding:12px}
+ .army-card .recruit-more{min-height:53px}.army-card .nm{font-size:17px}
+}
+
+/* Enemy health occupies its own corner; it never squeezes between panels. */
+#bossPlate{display:flex;flex-direction:column;top:12px;right:12px;left:auto;width:184px;transform:none;font-family:system-ui}
+#bossNameFrame{position:static;transform:none;max-width:100%;display:block;white-space:normal;padding:4px 5px;background:#183027e8;border:1px solid #7a8768;border-radius:5px 5px 0 0;box-shadow:none}
+#bossNameFrame::before,#bossNameFrame::after,#orbGloss,#orbRim,#orbWave,#bossRem{display:none}
+#bossNameFrame .bn-line,#bossNameFrame.split .bn-main{font:700 13px/1.4 system-ui;letter-spacing:0}
+#bossNameFrame.split .bn-epi{font:10px/1.3 system-ui;letter-spacing:0}
+#bossOrb{width:100%;height:25px;border-radius:0 0 5px 5px;background:#39241f;border:1px solid #7a8768;box-shadow:none}
+#bossLiquid{height:100%!important;right:auto;background:linear-gradient(#c58052,#935737);transition:width .15s linear;box-shadow:none}
+#bossHpText{padding:0}#hptext{font:700 12px system-ui!important}
+#cityContract{padding:4px;margin:2px 0 0;border:0;max-width:none;text-align:center;font:11px/1.4 system-ui;background:#183027e8;border-radius:4px}
+#stageTag{display:none}
+@media(max-width:680px){#bossPlate{top:10px;right:8px;width:172px}#bossNameFrame .bn-line,#bossNameFrame.split .bn-main{font-size:12px}#cityContract{font-size:10px}}
+
+#bossNameFrame{order:0}#bossOrb{order:1}#cityContract{order:2}
+
+/* Combat rewards must never move a purchase button under a finger. */
+#tabs,#armyRoster,.rx-toolbar .quantity,.army-card button.upgrade-line{display:none}
+.army-details #tabs{display:flex}.army-details #armyRoster{display:flex}
+.army-details .rx-toolbar .quantity{display:flex}
+.army-details .army-card button.upgrade-line{display:flex}
+.rx-toolbar button:disabled{opacity:.45;cursor:default}
+#battleCommands #guidePrev{font-size:11px;padding:8px;color:#bacfb7;background:transparent;border-color:#60735c}
+
+#battleCommands{height:66px;min-height:66px;max-height:66px}
+#playGuide{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+.company-yield{font:11px/1.4 system-ui;color:#a7cab5;min-height:16px}
+
+/* Keep this corner the same height as gold and combat information unlock. */
+#hud{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:16px auto auto;gap:4px}
+#hud .row:has(#goldBig){grid-column:1;grid-row:1;gap:3px;font-size:10px;white-space:nowrap}
+#hud .row:has(#hUnits),body:not(.has-army) #hud .row:has(#hUnits){display:flex;grid-column:2;grid-row:1;gap:3px;font-size:10px;white-space:nowrap}
+#hud #goldBig,#hud #hUnits{font:800 12px/16px system-ui;overflow:hidden;text-overflow:ellipsis}
+#hud .row:has(#hDps){display:none}
+#supplyInventory{grid-column:1/-1;grid-row:2;border:0;margin:0;padding:0}
+#hudTools{grid-column:1/-1;grid-row:3;margin-top:0}
+.recruit-quantity{margin-left:auto}.recruit-quantity select{min-height:30px;padding:4px;border:1px solid #6c805f;background:#263c2e;color:#efe7c7;border-radius:5px;font:700 12px system-ui;cursor:pointer}
+.recruit-quantity select:disabled{opacity:.5;cursor:default}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.camp-training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.camp-unit{position:relative;padding:15px;border:1px solid #617755;border-radius:9px;background:#20392d}
+.camp-unit>img{position:absolute;right:10px;top:12px;width:58px;height:65px;object-fit:contain;image-rendering:pixelated}
+.camp-unit h3{font-size:17px;margin:0 60px 5px 0;color:#f0dea4}.camp-unit p{font-size:12px;color:#c7dcc7;margin:3px 55px 15px 0;min-height:38px}
+.camp-unit button{width:100%;min-height:76px;border:1px solid #a8b37b;background:#405537;color:#f8ebbe;padding:10px;border-radius:6px;cursor:pointer;text-align:left;font:700 14px/1.5 system-ui}
+.camp-unit button:disabled{opacity:.5;cursor:default}.camp-unit button b{float:right;color:#c1e6c5;font-size:12px}.camp-unit button small{display:block;font:12px/1.6 system-ui;margin-top:5px;color:#d2e4ca;clear:both}
+.training-wallet{font:800 19px system-ui;color:#eace8d}.camp-evolution{display:block;margin-top:8px;color:#d7c58e;font-size:11px}
+.camp-unit.tier-1{border-color:#79cbd0}.camp-unit.tier-2{border-color:#ba95df}.camp-unit.tier-3{border-color:#f1d487}
+.camp-tools{margin-top:20px;border-top:1px solid #647259;padding-top:15px}.camp-tools summary{cursor:pointer;color:#c9d9c0;font-size:13px}.camp-hero-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+@media(max-width:680px){.recruit-quantity select{min-height:30px;font-size:11px}.camp-training-grid,.camp-hero-grid{grid-template-columns:1fr}.camp-unit{padding:12px}.camp-unit h3{font-size:16px}}

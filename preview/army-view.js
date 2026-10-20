@@ -1,11 +1,14 @@
 /* Every recruited soldier is a real sprite. One culled canvas keeps large armies affordable. */
 window.ArmyView=(()=>{
  let canvas,ctx,viewport,world,stage,ground,terrainKey='',slots=[],counts={},images=new Map(),attacks={},camera={scale:1,target:1,fit:1,w:1100,h:540},frame=0,last=0,returnTimer,flash=null,manual=false,portraitFrame;
- let sim=new ArmySim.Battle(),lastState=null,accumulator=0,drawOrder=[],sortAt=0,projectiles=[],fxClock=0,spriteCache=new Map(),engagedDps=0,powerClock=0;
+ let sim=new ArmySim.Battle(),lastState=null,accumulator=0,drawOrder=[],sortAt=0,projectiles=[],fxClock=0,spriteCache=new Map(),engagedDps=0,powerClock=0,viewSize='';
  const root=()=>document.getElementById('field');
+ const outpost=()=>window.__OUTPOST_BUILD__===true;
+ function raidState(){return window.Outpost?.ready?Outpost.state():S.outpost;}
+ function bindRaid(){if(!outpost())return;const state=raidState();sim.outpostState=state;sim.roundToken=state?.round||0;sim.enemies=state?.phase==='active'?state.enemies:[];}
  const count=()=>Object.values(S.owned).reduce((n,v)=>n+v,0);
  function imageFor(u){
-  const evolved=Core.tier(S.ulvl[u.id]||0)>0;
+  const evolved=!outpost()&&Core.tier(S.ulvl[u.id]||0)>0;
   const name=evolved&&u.id==='sword'?'unit_sword_veteran.webp':u.anim?.sheet||u.sprite;
   if(!images.has(name)){
    const img=new Image();
@@ -30,15 +33,17 @@ window.ArmyView=(()=>{
  }
  function layout(){
   const n=count();
-  const giant=Math.min(340,240*Math.pow(1.025,S.bossWave-1));
-  camera.w=viewport.clientWidth<680?640:1100;
+  const size=viewport.clientWidth+':'+viewport.clientHeight,resized=size!==viewSize;viewSize=size;
+  const raid=outpost(),giant=Math.min(340,240*Math.pow(1.025,S.bossWave-1));
+  camera.w=raid?OutpostCore.WORLD.width:viewport.clientWidth<680?640:1100;
   // Reserve the distant horizon; every row stands on the continuous ground plane.
-  camera.h=500;
-  sim.bounds(camera.w,camera.h,{x:camera.w-55-giant*.40,y:camera.h-70-giant*.22,r:giant*.28});window.BattleControl?.resize(camera.w,camera.h);window.SupplyFactory?.resize(camera.w,camera.h);
+  camera.h=raid?OutpostCore.WORLD.height:500;
+  sim.fixedWorld=raid;
+  sim.bounds(camera.w,camera.h,raid?{x:10000,y:10000,r:0,alive:false}:{x:camera.w-55-giant*.40,y:camera.h-70-giant*.22,r:giant*.28});window.BattleControl?.resize(camera.w,camera.h);window.SupplyFactory?.resize(camera.w,camera.h);
   world.style.width=camera.w+'px';world.style.height=camera.h+'px';
   bossEl.style.height=giant+'px';bossEl.style.maxWidth=(giant*1.25)+'px';bossEl.style.bottom='48px';bossEl.style.right='55px';
   camera.fit=Math.min(1.15,viewport.clientWidth/camera.w,viewport.clientHeight/camera.h);
-  if(!manual)camera.target=camera.fit;
+  if(!manual){camera.target=camera.fit;if(resized)camera.scale=camera.fit;}
   applyCamera();
   for(const u of UNITS.filter(unitOwned)){
    let anchor=world.querySelector('.army-anchor[data-type="'+u.id+'"]');
@@ -47,7 +52,7 @@ window.ArmyView=(()=>{
    if(p){anchor.style.left=p.x+'px';anchor.style.top=(p.y-35)+'px';}
   }
  }
- const bodyHeight=u=>u.id==='giant'?106:u.fly?(u.id.includes('dragon')?86:66):54;
+ const bodyHeight=u=>u.id==='giant'?106:u.fly?(u.id.includes('dragon')?86:66):outpost()?64:54;
  function spriteAtlas(img,u,screenHeight,dpr){
   const ph=Math.max(2,Math.round(screenHeight*dpr)),geometry=img.geometry;if(!geometry)return null;const key=img.src+'@'+ph;
   if(spriteCache.has(key))return spriteCache.get(key);
@@ -68,9 +73,9 @@ window.ArmyView=(()=>{
  function fit(){manual=false;camera.target=camera.fit;viewport.scrollTo({left:0,top:0,behavior:'instant'});}
  function render(reason){
   if(!viewport)return;
-  const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];}
-  sim.stationary=true;layout();
-  const companies=UNITS.map(u=>({...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:unitIv(u),damage:unitDmg(u),speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:Core.healPower(S,u)}));
+  const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];accumulator=0;powerClock=0;engagedDps=0;}
+  sim.stationary=true;bindRaid();layout();
+  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
   if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
   if(restore)window.BattleControl?.restore();
@@ -93,12 +98,15 @@ window.ArmyView=(()=>{
   const top=Math.max(0,oy+camera.h*.28*z-30),tile=Math.max(20,256*z);
   const key=[top,tile,ox,oy].map(v=>v.toFixed(1)).join(':');
   if(key!==terrainKey){terrainKey=key;ground.style.top=top+'px';ground.style.backgroundSize=tile+'px';ground.style.backgroundPosition=ox+'px '+(oy-top)+'px';}
-  window.SupplyFactory?.draw(ctx,{ox,oy,z});
+  const raid=outpost(),view={ox,oy,z};
+  if(raid&&window.Outpost?.ready)Outpost.drawGround(ctx,view);
+  window.SupplyFactory?.draw(ctx,view);
   if(sim.time>sortAt||drawOrder.length!==slots.length){drawOrder=slots.slice().sort((a,b)=>a.y-b.y);sortAt=sim.time+.18;}
   // Depth order changes as soldiers walk; offscreen bodies do not consume draw calls.
-  for(let i=0;i<drawOrder.length;i++){
-   const p=drawOrder[i];if(p.enterAt>sim.time)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
-   const tier=Math.min(3,Core.tier(S.ulvl[p.id]));
+  const actors=raid&&window.Outpost?.ready?[...drawOrder,...Outpost.enemies()].sort((a,b)=>a.y-b.y):drawOrder;
+  for(let i=0;i<actors.length;i++){
+   const p=actors[i];if(!p.u){Outpost.drawEnemy(ctx,view,p);continue;}if(p.enterAt>sim.time)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
+   const tier=raid?0:Math.min(3,Core.tier(S.ulvl[p.id]));
    const crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight};
    const h=bodyHeight(u)*(1+tier*.03),w=h*crop.w/crop.h;
    const x=ox+p.x*z,y=oy+(p.y-(u.fly?25:0))*z;
@@ -116,21 +124,23 @@ window.ArmyView=(()=>{
    if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
    if(tier&&h*z>17){ctx.fillStyle=['','#6ae2ff','#d2a2ff','#ffdc6c'][tier];ctx.font=Math.max(7,9*z)+'px sans-serif';ctx.textAlign='center';ctx.fillText('◆'.repeat(tier),x,y-h*z-4*z);}
   }
-  projectiles=projectiles.filter(p=>p.until>sim.time);
-  for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,2*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*.035*z,y-(p.ty-p.y)*.035*z);ctx.stroke();}
-  window.BattleControl?.draw(ctx,{ox,oy,z});
+  projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
+  for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,2*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*.035*z,y-(p.ty-p.y)*.035*z);ctx.stroke();}
+  window.BattleControl?.draw(ctx,view);
+  if(raid)window.OutpostCamp?.drawOver(ctx,view);
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;
-  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=!bossDead;
+  const raid=outpost();
+  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=raid?false:!bossDead;bindRaid();
   powerClock+=dt;if(powerClock>.25){powerClock=0;engagedDps=slots.reduce((n,p)=>n+(sim.canHit(p)&&p.enterAt<=sim.time&&!p.stun?p.u.damage/p.interval:0),0);}
   accumulator=Math.min(.4,accumulator+dt);const period=slots.length>2000?.1:slots.length>500?.06:1/30;
   for(let updates=0;accumulator+1e-8>=period&&updates<3;updates++){
-   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;sim.boss.alive=!bossDead;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
+   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;if(raid){window.Outpost?.tick(elapsed);bindRaid();}sim.boss.alive=raid?false:!bossDead;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
    for(const e of events){const p=e.p,u=p.u;
     if(e.kind==='heal'){window.BattleControl?.heal(e.amount);continue;}
-    if(e.kind==='damage'){damage.set(p.id,(damage.get(p.id)||0)+e.amount);continue;}
-    if(e.kind==='release'&&(u.ranged||u.healer)){const target=u.healer?hero:sim.boss;const release=u.healer?0:(u.anim?.release||0)/1000,impact=u.healer?.25:(u.anim?.impact||450)/1000;projectiles.push({source:p,x:p.x,y:p.y-27,tx:target.x,ty:target.y,start:sim.time+release,duration:Math.max(.05,impact-release),until:sim.time+impact,heal:u.healer,col:u.proj==='holy'?'#ffdf87':'#d7e3cc'});if(projectiles.length>24)projectiles.shift();}
+    if(e.kind==='damage'){if(raid){const state=raidState();if(!state||e.roundToken!==state.round||e.target!==state.enemies.find(q=>q.key===e.targetKey)||!e.target.alive)continue;const applied=Outpost.hit(e.amount,p.id,e.targetKey);if(applied&&fxClock<=0){fxClock=.12;sndUnitHit(u);}}else damage.set(p.id,(damage.get(p.id)||0)+e.amount);continue;}
+    if(e.kind==='release'&&(u.ranged||u.healer)){const target=e.target||(u.healer?hero:sim.boss);const release=u.healer?0:(u.anim?.release||0)/1000,impact=u.healer?.25:(u.anim?.impact||450)/1000;projectiles.push({source:p,x:p.x,y:p.y-27,tx:target.x,ty:target.y-(raid?18:0),start:sim.time+release,duration:Math.max(.05,impact-release),until:sim.time+impact,heal:u.healer,col:u.proj==='holy'?'#ffdf87':'#d7e3cc',...(raid?{target:e.target,targetKey:e.targetKey,roundToken:e.roundToken}:{})});if(projectiles.length>24)projectiles.shift();}
    }
    for(const [id,amount]of damage){if(bossDead)break;const pt=bossHitPt();if(fxClock<=0){fxClock=.12;const u=UNITS.find(u=>u.id===id);sndUnitHit(u);if(u.fx)spawnAtkFx(u.fx,pt.x,pt.y);}dealDamage(amount,pt.x,pt.y,'unit',false,id);}
   }
