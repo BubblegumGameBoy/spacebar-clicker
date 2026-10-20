@@ -6,7 +6,7 @@ window.ArmyView=(()=>{
  const count=()=>Object.values(S.owned).reduce((n,v)=>n+v,0);
  function imageFor(u){
   const evolved=Core.tier(S.ulvl[u.id]||0)>0;
-  const name=evolved&&u.id==='sword'?'unit_sword_veteran.webp':evolved&&u.id==='woodcutter'?'unit_farmer_steward.webp':u.anim?.sheet||u.sprite;
+  const name=evolved&&u.id==='sword'?'unit_sword_veteran.webp':u.anim?.sheet||u.sprite;
   if(!images.has(name)){
    const img=new Image();
    img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);const data=x.getImageData(0,0,c.width,c.height).data,fw=Math.floor(c.width/(u.anim?.frames||1));let left=fw,right=0,top=c.height,bottom=0;for(let y=0;y<c.height;y++)for(let px=0;px<c.width;px++)if(data[(y*c.width+px)*4+3]>40){left=Math.min(left,px%fw);right=Math.max(right,px%fw);top=Math.min(top,y);bottom=Math.max(bottom,y);}img.crop={x:Math.max(0,left-2),y:Math.max(0,top-2),w:Math.min(fw,right-left+5),h:Math.min(c.height,bottom-top+5)};const preview=document.createElement('canvas');preview.width=Math.ceil(96*img.crop.w/img.crop.h);preview.height=96;preview.getContext('2d').drawImage(img,img.crop.x,img.crop.y,img.crop.w,img.crop.h,0,0,preview.width,96);img.portrait=preview.toDataURL();cancelAnimationFrame(portraitFrame);portraitFrame=requestAnimationFrame(()=>{if(window.Rework)renderCards();});};
@@ -85,7 +85,7 @@ window.ArmyView=(()=>{
    const p=drawOrder[i];if(p.enterAt>sim.time)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
    const tier=Math.min(3,Core.tier(S.ulvl[p.id]));
    const crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight};
-   const h=(u.id==='giant'?100:u.fly?62:47)*(1+tier*.13),w=h*crop.w/crop.h;
+   const h=(u.id==='giant'?100:u.id==='woodcutter'?66:u.fly?62:47)*(1+tier*.13),w=h*crop.w/crop.h;
    const x=ox+p.x*z,y=oy+(p.y-(u.fly?25:0))*z;
    if(x+w*z<0||x-w*z>width||y<0||y-h*z>height)continue;
    const elapsed=(sim.time-p.attackAt)*1000,duration=u.anim?.frameMs||120;
@@ -98,7 +98,7 @@ window.ArmyView=(()=>{
    if(flash?.id===p.id&&now<flash.until){ctx.fillStyle=flash.evolution?'#ffdc8899':'#91eece77';ctx.fillRect(x-w*z*.4,y-h*z-5*z,w*z*.8,2*z);}
    ctx.globalAlpha=p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
    const atlas=spriteAtlas(img,u,h*z,dpr),aw=atlas.w/dpr,ah=atlas.h/dpr;
-   ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-aw/2,y-ah,aw,ah);ctx.globalAlpha=1;
+   if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-aw/2,-ah,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-aw/2,y-ah,aw,ah);ctx.globalAlpha=1;
    if(tier&&h*z>17){ctx.fillStyle=['','#6ae2ff','#d2a2ff','#ffdc6c'][tier];ctx.font=Math.max(7,9*z)+'px sans-serif';ctx.textAlign='center';ctx.fillText('◆'.repeat(tier),x,y-h*z-4*z);}
   }
   projectiles=projectiles.filter(p=>p.until>sim.time);
@@ -107,11 +107,11 @@ window.ArmyView=(()=>{
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;
-  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=!bossDead&&window.BattleControl?.activity==='battle'&&!window.BattleControl?.placement;
+  fxClock=Math.max(0,fxClock-dt);window.SupplyFactory?.tick(dt);window.BattleControl?.tick(dt);if(window.BattleControl?.defeated)return;sim.boss.alive=!bossDead;
   powerClock+=dt;if(powerClock>.25){powerClock=0;engagedDps=slots.reduce((n,p)=>n+(sim.canHit(p)&&p.enterAt<=sim.time&&!p.stun?p.u.damage/p.interval:0),0);}
   accumulator=Math.min(.4,accumulator+dt);const period=slots.length>2000?.1:slots.length>500?.06:1/30;
   for(let updates=0;accumulator+1e-8>=period&&updates<3;updates++){
-   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;sim.boss.alive=!bossDead&&window.BattleControl?.activity==='battle'&&!window.BattleControl?.placement;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
+   const elapsed=Math.min(.1,accumulator);accumulator-=elapsed;sim.boss.alive=!bossDead;const hero=window.BattleControl?.hero||{x:150,y:350,hp:100,max:100},events=sim.step(elapsed,hero),damage=new Map();
    for(const e of events){const p=e.p,u=p.u;
     if(e.kind==='heal'){window.BattleControl?.heal(e.amount);continue;}
     if(e.kind==='damage'){damage.set(p.id,(damage.get(p.id)||0)+e.amount);continue;}

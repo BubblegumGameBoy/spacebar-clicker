@@ -8,7 +8,7 @@
  const num=(v,f=0,max=1e150)=>Number.isFinite(Number(v))?Math.max(0,Math.min(max,Number(v))):f;
  const integer=(v,f=0,max=MAX_LEVEL)=>Math.floor(num(v,f,max));
  const skill=(s,id)=>integer(s.skills?.[id],0,SKILLS[id]||0);
- function fresh(ids=[]){return {version:VERSION,gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,battle:null,pending:{},activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
+ function fresh(ids=[]){return {version:VERSION,gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,battle:null,pending:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
   s.gold=num(r.gold,150);s.globalWave=integer(r.globalWave,1,1e12)||1;s.bossWave=Math.max(1,integer(r.bossWave,1,40));s.bossCycle=Math.max(1,integer(r.bossCycle,1,100));
@@ -17,7 +17,7 @@
   s.renown=legacy?Math.max(s.prestige*10,num(r.goldBonus,1)>1?Math.round(Math.log1p(num(r.goldBonus,1))*8):0):num(r.renown,0,1e9);
   s.souls=integer(r.souls,legacy?Math.min(8,s.prestige*2):0,1e6);s.soulsEarned=integer(r.soulsEarned,s.souls,1e6);
   for(const id of Object.keys(SKILLS))s.skills[id]=legacy?0:integer(r.skills?.[id],0,SKILLS[id]);
-  s.pending={};s.activity=r.activity==='battle'?'battle':'gather';
+  s.firstWorkerPickup=r.firstWorkerPickup===true||(r.clearedBossWave>0&&(r.owned?.woodcutter||0)>0);s.pending={};s.activity=r.activity==='battle'?'battle':'gather';
   for(const id of ids){s.owned[id]=integer(r.owned?.[id],0,100000);s.ulvl[id]=integer(r.ulvl?.[id]);s.pending[id]=integer(r.pending?.[id],0,s.owned[id]);}
   // Early sequel prototypes used the old coin collectors. Retain their people as supply workers.
   for(const [old,id] of [['farmer','woodcutter'],['villager','porter']])if(ids.includes(id)&&!ids.includes(old)){
@@ -46,7 +46,7 @@
  const comboCap=s=>.2+.03*skill(s,'rhythm')+.01*Math.min(30,s.hero.combo);
  const discount=s=>1-.05*skill(s,'quartermaster');
  const trainingBase=u=>u.base<=600?u.base:600*Math.pow(u.base/600,.82);
- const unitCost=(s,u,count=s.owned[u.id]||0)=>Math.ceil(trainingBase(u)*Math.pow(1+count/25,1.15)*discount(s));
+ const unitCost=(s,u,count=s.owned[u.id]||0)=>u.worker?0:Math.ceil(trainingBase(u)*Math.pow(1+count/25,1.15)*discount(s));
  const upgradeCost=(s,u,lv=s.ulvl[u.id]||0)=>lv>=MAX_LEVEL?Infinity:Math.ceil(trainingBase(u)*1.2*Math.pow(1.14,lv)*discount(s)*(1-.04*skill(s,'awakening')));
  const heroScale={click:1.30,gpk:1.35,crate:1.4,cmult:1.45,gold:1.38,combo:1.4,aspd:1.25,vitality:1.35,armor:1.4};
  const heroCost=(s,h)=>Math.ceil(h.base*Math.pow(heroScale[h.id]||h.scale,s.hero[h.id]));

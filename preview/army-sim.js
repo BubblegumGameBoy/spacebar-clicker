@@ -6,7 +6,7 @@
  class Battle{
   constructor(){this.soldiers=[];this.time=0;this.nextKey=1;this.width=1100;this.height=500;this.ground=170;this.boss={x:930,y:370,r:100,alive:true,token:0};this.pending=[];this.stats={pairs:0,attacks:0};}
   bounds(width,height,boss){const oldW=this.width,oldH=this.height;this.width=width;this.height=height;this.ground=height*.34;for(const p of this.soldiers){p.x=p.x/oldW*width;p.y=clamp(p.y/oldH*height,this.ground+25,height-35);if(p.order){p.order.x=p.order.x/oldW*width;p.order.y=p.order.y/oldH*height;}}this.boss={...this.boss,...boss};}
-  encounter(token){this.boss.token=token;this.pending=[];this.navigation=null;for(const p of this.soldiers){p.cooldown=noise(p.key+token)*Math.max(.2,p.interval);p.windup=0;} }
+  encounter(token){this.boss.token=token;this.pending=[];this.navigation=null;for(const p of this.soldiers){if(p.u.worker)continue;p.cooldown=noise(p.key+token)*Math.max(.2,p.interval);p.windup=0;} }
   sync(companies,recruitId){
    const counts=new Map(companies.map(u=>[u.id,u.count]));
    this.soldiers=this.soldiers.filter(p=>p.index<(counts.get(p.id)||0));

@@ -111,3 +111,16 @@
 #weaponPointer{display:none!important}
 /* Recruitment remains the primary action after the first placement. */
 .army-card .recruit-more{order:2}.army-card .upgrade-line,.army-card .evolution-next{order:3}
+/* One field and one next action. No gather/battle screen switch. */
+#battleCommands{gap:10px;min-height:52px;flex-wrap:nowrap;padding:9px 12px}
+#playGuide{position:static;transform:none;flex:1;min-width:0;width:auto;margin:0;padding:0;border:0;background:none;text-align:left;font:600 12px/1.6 system-ui;color:#e5dfbc}
+#battleCommands button{flex-shrink:0}#battleCommands #commandMode{margin-left:0}
+#cameraTools{bottom:12px}.resource-buttons button{min-height:45px}.resource-buttons button small{display:block;font:9px/1.5 system-ui;min-height:13px;color:inherit;opacity:.8}
+#supplyInventory #gatherFeedback{min-height:16px;font:600 10px/1.6 system-ui;color:#e7dbad}#pickupFeedback{display:block;min-height:33px;font:10px/1.5 system-ui;color:#b8cbb4}
+#field:not(.has-combat):not(.target-boss) #bossPlate,#field:not(.has-combat):not(.target-boss) #stageTag{visibility:hidden}
+#field:not(.has-combat):not(.target-boss):not(.placing) #boss{opacity:.3}
+#commandMode[hidden]{display:none}#field{cursor:default!important}
+@media(max-width:680px){#battleCommands{padding:8px;gap:6px}#playGuide{font-size:10px}#battleCommands button{padding:8px 6px;font-size:9px}#cameraTools{bottom:10px}#pickupFeedback{font-size:9px;min-height:32px}.resource-buttons button{padding:5px 2px}}
+/* Materials lead the opening; provisional combat information appears with an army. */
+body:not(.resources-open) #hud .row:has(#goldBig),#field:not(.has-combat) #hud .row:has(#hDps){display:none}
+#field:not(.has-combat) #boss,#field:not(.has-combat) #bossPlate,#field:not(.has-combat) #stageTag{visibility:hidden}
