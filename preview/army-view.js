@@ -9,7 +9,21 @@ window.ArmyView=(()=>{
   const name=evolved&&u.id==='sword'?'unit_sword_veteran.webp':u.anim?.sheet||u.sprite;
   if(!images.has(name)){
    const img=new Image();
-   img.onload=()=>{const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);const data=x.getImageData(0,0,c.width,c.height).data,fw=Math.floor(c.width/(u.anim?.frames||1));let left=fw,right=0,top=c.height,bottom=0;for(let y=0;y<c.height;y++)for(let px=0;px<c.width;px++)if(data[(y*c.width+px)*4+3]>40){left=Math.min(left,px%fw);right=Math.max(right,px%fw);top=Math.min(top,y);bottom=Math.max(bottom,y);}img.crop={x:Math.max(0,left-2),y:Math.max(0,top-2),w:Math.min(fw,right-left+5),h:Math.min(c.height,bottom-top+5)};const preview=document.createElement('canvas');preview.width=Math.ceil(96*img.crop.w/img.crop.h);preview.height=96;preview.getContext('2d').drawImage(img,img.crop.x,img.crop.y,img.crop.w,img.crop.h,0,0,preview.width,96);img.portrait=preview.toDataURL();cancelAnimationFrame(portraitFrame);portraitFrame=requestAnimationFrame(()=>{if(window.Rework)renderCards();});};
+   img.onload=()=>{
+    const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
+    const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);
+    const data=x.getImageData(0,0,c.width,c.height).data,frames=u.anim?.frames||1,fw=Math.floor(c.width/frames),boxes=[];
+    for(let f=0;f<frames;f++){
+     let l=fw,r=0,t=c.height,b=0;
+     for(let y=0;y<c.height;y++)for(let px=0;px<fw;px++)if(data[(y*c.width+f*fw+px)*4+3]>120){l=Math.min(l,px);r=Math.max(r,px);t=Math.min(t,y);b=Math.max(b,y);}
+     let fl=fw,fr=0;for(let y=Math.floor(b-(b-t)*.12);y<=b;y++)for(let px=l;px<=r;px++)if(data[(y*c.width+f*fw+px)*4+3]>120){fl=Math.min(fl,px);fr=Math.max(fr,px);}
+     boxes.push({x:Math.max(0,l-1),y:Math.max(0,t-1),w:r-l+3,h:b-t+3,footX:(fl+fr)/2,footY:b+1});
+    }
+    // Scale the idle body, not the raised weapon or transparent sprite sheet.
+    const idle=boxes[0];img.geometry={boxes,bodyHeight:idle.h,left:Math.min(...boxes.map(b=>b.x-b.footX)),right:Math.max(...boxes.map(b=>b.x+b.w-b.footX)),top:Math.min(...boxes.map(b=>b.y-b.footY)),bottom:Math.max(...boxes.map(b=>b.y+b.h-b.footY))};
+    img.crop=idle;
+    const preview=document.createElement('canvas');preview.width=Math.ceil(96*idle.w/idle.h);preview.height=96;preview.getContext('2d').drawImage(img,idle.x,idle.y,idle.w,idle.h,0,0,preview.width,96);img.portrait=preview.toDataURL();cancelAnimationFrame(portraitFrame);portraitFrame=requestAnimationFrame(()=>{if(window.Rework)renderCards();window.CampTraining?.refresh();});
+   };
    img.src='../assets/'+name;images.set(name,img);
   }
   return images.get(name);
@@ -33,12 +47,13 @@ window.ArmyView=(()=>{
    if(p){anchor.style.left=p.x+'px';anchor.style.top=(p.y-35)+'px';}
   }
  }
+ const bodyHeight=u=>u.id==='giant'?106:u.fly?(u.id.includes('dragon')?86:66):54;
  function spriteAtlas(img,u,screenHeight,dpr){
-  const ph=Math.max(2,Math.round(screenHeight*dpr)),crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight},key=img.src+'@'+ph+':'+crop.w+':'+crop.h;
+  const ph=Math.max(2,Math.round(screenHeight*dpr)),geometry=img.geometry;if(!geometry)return null;const key=img.src+'@'+ph;
   if(spriteCache.has(key))return spriteCache.get(key);
-  const w=Math.max(1,Math.round(ph*crop.w/crop.h)),frames=u.anim?.frames||1,c=document.createElement('canvas');c.width=w*frames;c.height=ph;const context=c.getContext('2d');context.imageSmoothingEnabled=false;
-  for(let f=0;f<frames;f++)context.drawImage(img,f*img.naturalWidth/frames+crop.x,crop.y,crop.w,crop.h,f*w,0,w,ph);
-  const atlas={canvas:c,w,h:ph};spriteCache.set(key,atlas);if(spriteCache.size>240)spriteCache.delete(spriteCache.keys().next().value);return atlas;
+  const scale=ph/geometry.bodyHeight,w=Math.max(1,Math.ceil((geometry.right-geometry.left)*scale)),h=Math.max(1,Math.ceil((geometry.bottom-geometry.top)*scale)),frames=u.anim?.frames||1,c=document.createElement('canvas');c.width=w*frames;c.height=h;const context=c.getContext('2d');context.imageSmoothingEnabled=false;
+  for(let f=0;f<frames;f++){const b=geometry.boxes[f];context.drawImage(img,f*img.naturalWidth/frames+b.x,b.y,b.w,b.h,f*w+(b.x-b.footX-geometry.left)*scale,(b.y-b.footY-geometry.top)*scale,b.w*scale,b.h*scale);}
+  const atlas={canvas:c,w,h,anchorX:-geometry.left*scale,anchorY:-geometry.top*scale};spriteCache.set(key,atlas);if(spriteCache.size>240)spriteCache.delete(spriteCache.keys().next().value);return atlas;
  }
  function applyCamera(){
   const sw=Math.max(viewport.clientWidth,camera.w*camera.scale),sh=Math.max(viewport.clientHeight,camera.h*camera.scale);
@@ -85,7 +100,7 @@ window.ArmyView=(()=>{
    const p=drawOrder[i];if(p.enterAt>sim.time)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
    const tier=Math.min(3,Core.tier(S.ulvl[p.id]));
    const crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight};
-   const h=(u.id==='giant'?100:u.id==='woodcutter'?66:u.fly?62:47)*(1+tier*.13),w=h*crop.w/crop.h;
+   const h=bodyHeight(u)*(1+tier*.03),w=h*crop.w/crop.h;
    const x=ox+p.x*z,y=oy+(p.y-(u.fly?25:0))*z;
    if(x+w*z<0||x-w*z>width||y<0||y-h*z>height)continue;
    const elapsed=(sim.time-p.attackAt)*1000,duration=u.anim?.frameMs||120;
@@ -97,8 +112,8 @@ window.ArmyView=(()=>{
    if(tier){ctx.fillStyle=['','#64dfff66','#d399ff88','#ffd96a99'][tier];ctx.beginPath();ctx.ellipse(x,y-2*z,w*z*.35,3*z,0,0,Math.PI*2);ctx.fill();}
    if(flash?.id===p.id&&now<flash.until){ctx.fillStyle=flash.evolution?'#ffdc8899':'#91eece77';ctx.fillRect(x-w*z*.4,y-h*z-5*z,w*z*.8,2*z);}
    ctx.globalAlpha=p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
-   const atlas=spriteAtlas(img,u,h*z,dpr),aw=atlas.w/dpr,ah=atlas.h/dpr;
-   if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-aw/2,-ah,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-aw/2,y-ah,aw,ah);ctx.globalAlpha=1;
+   const atlas=spriteAtlas(img,u,h*z,dpr);if(!atlas)continue;const aw=atlas.w/dpr,ah=atlas.h/dpr,ax=atlas.anchorX/dpr,ay=atlas.anchorY/dpr;
+   if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
    if(tier&&h*z>17){ctx.fillStyle=['','#6ae2ff','#d2a2ff','#ffdc6c'][tier];ctx.font=Math.max(7,9*z)+'px sans-serif';ctx.textAlign='center';ctx.fillText('◆'.repeat(tier),x,y-h*z-4*z);}
   }
   projectiles=projectiles.filter(p=>p.until>sim.time);
@@ -121,7 +136,7 @@ window.ArmyView=(()=>{
   }
  }
  function snapshot(){const h=window.BattleControl?.hero;return {width:camera.w,height:camera.h,captain:{x:Math.round(h?.x||150),y:Math.round(h?.y||370)},units:slots.map(p=>[p.id,p.index,Math.round(p.x),Math.round(p.y),p.commanded&&p.order?Math.round(p.order.x):-1,p.commanded&&p.order?Math.round(p.order.y):-1])};}
- function orderUnits(a,b){const order=['sword','arch','healer','woodcutter','miner','porter'];const rank=u=>order.includes(u.id)?order.indexOf(u.id):7+UNITS.indexOf(u);return rank(a)-rank(b);}
+ function orderUnits(a,b){const order=['woodcutter','miner','arch','sword','heavy','healer','porter'];const rank=u=>order.includes(u.id)?order.indexOf(u.id):7+UNITS.indexOf(u);return rank(a)-rank(b);}
  function point(clientX,clientY){const r=world.getBoundingClientRect();return {x:(clientX-r.left)/camera.scale,y:(clientY-r.top)/camera.scale};}
  function zoom(factor){manual=true;camera.target=Math.max(camera.fit*.7,Math.min(2.2,camera.target*factor));}
  function boot(){
@@ -134,5 +149,5 @@ window.ArmyView=(()=>{
   new ResizeObserver(()=>layout()).observe(viewport);
   render();window.BattleControl?.boot();window.SupplyFactory?.boot();camera.scale=camera.target;applyCamera();frame=requestAnimationFrame(draw);
  }
- return {boot,render,focus,fit,layout,tick,point,snapshot,orderUnits,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
+ return {boot,render,focus,fit,layout,tick,point,snapshot,orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
 })();

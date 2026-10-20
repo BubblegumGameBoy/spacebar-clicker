@@ -54,7 +54,7 @@
  const nextEvolution=lv=>lv<10?10:lv<25?25:lv<50?50:Math.ceil((lv+1)/25)*25;
  const awaken=lv=>Math.pow(1.8,tier(lv))*Math.pow(1.03,Math.max(0,lv-50));
  const damage=(s,u,lv=s.ulvl[u.id]||0)=>u.worker||u.healer?0:Math.max(u.dmg||0,.035*Math.pow(u.powerBase||u.base,.85)*u.iv)*(1+.3*lv)*Math.pow(1.06,lv)*awaken(lv);
- const interval=(s,u)=>u.iv/Math.min(3.5,(1+.05*s.hero.aspd)*(1+.05*skill(s,'haste')));
+ const interval=(s,u)=>u.iv/Math.min(3.5,(1+.05*s.hero.aspd)*(1+.05*skill(s,'haste'))*(u.worker?Math.min(4,1+.06*(s.ulvl[u.id]||0)):1));
  const unitDps=(s,u,lv=s.ulvl[u.id]||0)=>u.healer||u.worker||!s.owned[u.id]?0:damage(s,u,lv)*Math.max(0,(s.owned[u.id]||0)-(s.pending?.[u.id]||0))/interval(s,u);
  const formation=(s,units)=>1+.13*Math.max(0,Math.min(3,new Set(units.filter(u=>(s.owned[u.id]||0)>(s.pending?.[u.id]||0)).map(role)).size-1));
  const armyDps=(s,units)=>units.reduce((n,u)=>n+unitDps(s,u),0)*formation(s,units);

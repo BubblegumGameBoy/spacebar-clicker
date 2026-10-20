@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>音と動きの確認 — Mythos Slayers II</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#10201b;color:#e2e6d2;font:15px/1.6 system-ui}main{max-width:1440px;margin:auto;padding:20px}h1{font-size:23px;margin:0 0 5px;color:#f0d998}p{margin:5px 0 16px;color:#b9cdb8}a{color:#eed49b}button{font:700 14px system-ui;min-height:43px;border:1px solid #78916b;border-radius:6px;padding:10px 14px;background:#2c4736;color:#eff0cf;cursor:pointer}button:hover,button[aria-pressed=true]{border-color:#f0d998;background:#59633e}button:disabled{opacity:.4;cursor:default}.bar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:16px}.panel{padding:15px;border:1px solid #4d6a50;border-radius:9px;background:#182c23}.panel h2{font-size:16px;margin:0 0 10px;color:#e9d49e}.panel p{font-size:12px;margin:0 0 10px}.panel button{width:100%;text-align:left;margin-bottom:8px}.panel section+section{border-top:1px solid #526649;margin-top:16px;padding-top:16px}iframe{border:1px solid #6c7a55;border-radius:8px;width:100%;height:800px;background:#13231e;display:block}#status{min-height:25px;font-size:13px;color:#dfcf98}.note{font-size:12px;margin-top:12px}button:focus-visible,a:focus-visible{outline:3px solid #efd99b;outline-offset:3px}@media(max-width:800px){main{padding:12px}.layout{grid-template-columns:1fr}.panel{display:flex;flex-wrap:wrap;gap:10px}.panel section{flex:1 1 180px}.panel section+section{border:0;padding:0;margin:0}iframe{height:844px}.panel button{font-size:12px}h1{font-size:20px}}
+</style>
+<script src="workshop.js?v=20261020-review4" defer></script>
+</head>
+<body><main>
+<h1>音と動きの確認</h1>
+<p>本編と同じ音・絵・動きを、その場でくり返し確認できます。ゲームのセーブとは別の確認用データで動きます。</p>
+<div class="bar"><a href="./?v=review4">ゲームを遊ぶ →</a></div>
+<div id="status" role="status">読み込み中…</div>
+<div class="layout">
+<aside class="panel">
+<section><h2>成長を見くらべる</h2><p>同じ森で、1人と8人の作業量・音の重なりを比べます。</p>
+<button type="button" data-scene="forest" disabled>最初の森</button>
+<button type="button" data-scene="one" disabled>木こり 1人</button>
+<button type="button" data-scene="eight" disabled>木こり 8人</button>
+<button type="button" data-scene="army" disabled>木こり・石ほり・弓兵</button></section>
+<section><h2>一打の反応</h2><p>木・石は実際の採取。画面を直接クリックしても試せます。</p>
+<button type="button" data-hit="wood" disabled>木をたたく</button>
+<button type="button" data-hit="stone" disabled>石をたたく</button>
+<button type="button" data-sound="pickup" disabled>ひろった音</button>
+<button type="button" data-sound="hire" disabled>なかまが増えた音</button>
+<button type="button" data-sound="victory" disabled>たおした音</button></section>
+<section><h2>重ねて確かめる</h2>
+<button type="button" id="music" aria-pressed="false" disabled>曲も鳴らす：OFF</button>
+<button type="button" id="pause" aria-pressed="false" disabled>動きを止める</button>
+<p>止めた状態でも、上のボタンで効果音だけを鳴らせます。自動の作業音を止めたいときにも使えます。</p></section>
+</aside>
+<div><iframe id="game" src="index.html?lab=1&amp;capture" title="確認用のゲーム画面" allow="autoplay"></iframe><p class="note">確認用の人数は各ボタンから用意した状態です。通常の初見プレイの記録ではありません。</p></div>
+</div>
+</main></body></html>

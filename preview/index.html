@@ -564,7 +564,7 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261020-harvest">
+<link rel="stylesheet" href="rework.css?v=20261020-review4">
 </head>
 <body>
 <div id="titleScreen">
@@ -687,9 +687,9 @@
   <button class="no" id="rankClose" type="button">閉じる</button>
 </div></div>
 
-<script src="supply-core.js?v=20261020-harvest"></script>
-<script src="game-core.js?v=20261020-harvest"></script>
-<script src="forest-audio.js?v=20261020-harvest"></script>
+<script src="supply-core.js?v=20261020-review4"></script>
+<script src="game-core.js?v=20261020-review4"></script>
+<script src="forest-audio.js?v=20261020-review4"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -702,6 +702,7 @@ function fmt(n){if(!Number.isFinite(n))return n>0?'∞':'0';if(n>=1e21)return n.
   return (i===0?n:(n<10?n.toFixed(2):n<100?n.toFixed(1):Math.floor(n)))+u[i];
 }
 function rnd(a,b){return a+Math.random()*(b-a);}
+function statNumber(n){return Number.isFinite(n)&&Math.abs(n)<1000?Number(n.toFixed(1)).toString():fmt(n);}
 
 /* ===== PLAYER / ONLINE DAMAGE RANKING ===== */
 function readStored(key){try{return localStorage.getItem(key);}catch{return null;}}
@@ -1013,7 +1014,7 @@ const unitAnim=(sheet,frameMs,impact,height=16,heightMobile=12.5,release=0)=>({
 });
 const UNITS=[
  {id:"woodcutter",name:{ja:"木こり",en:"Lumberjack",zh:"伐木工"},sprite:"unit_farmer.png",base:35,dmg:0,iv:2.4,worker:"woodcutter",pos:{l:18,b:20},anim:unitAnim("unit_woodcutter_chop.webp",150,300,16,13)},
- {id:"miner",name:{ja:"採掘係",en:"Miner",zh:"矿工"},sprite:"unit_dwarfb.png",base:45,dmg:0,iv:3.1,worker:"miner",pos:{l:22,b:22},anim:unitAnim("unit_dwarfb_attack.png",120,270,17,14)},
+ {id:"miner",name:{ja:"石ほり",en:"Miner",zh:"矿工"},sprite:"unit_dwarfb.png",base:45,dmg:0,iv:3.1,worker:"miner",pos:{l:22,b:22},anim:unitAnim("unit_dwarfb_attack.png",120,270,17,14)},
  {id:"porter",name:{ja:"運搬係",en:"Porter",zh:"搬运工"},sprite:"unit_villager.png",base:30,dmg:0,iv:1.2,worker:"porter",pos:{l:15,b:18},anim:unitAnim("unit_villager_collect.png",120,250,16,13)},
  {id:"healer",name:{ja:"治癒師",en:"Healer",zh:"治疗师"},sprite:"unit_paladin.png",base:180,dmg:0,iv:2.5,ranged:true,healer:true,proj:"holy",fx:"holy",pos:{l:20,b:18},anim:unitAnim("unit_paladin_attack.png",115,270,19,16)},
  // Original art is reused; sequel movement and range are simulated per soldier.
@@ -1188,7 +1189,7 @@ function spawnBoss(reset){
 }
 function updateBossBar(){
  const p=Math.max(0,Math.min(100,S.bossHp/S.bossHpMax*100));
- $("#bossLiquid").style.height=p+"%";
+ $("#bossLiquid").style.width=p+"%";
  const txt=fmt(Math.max(0,S.bossHp))+" / "+fmt(S.bossHpMax);
  const el=$("#hptext"); el.textContent=txt;
  // 桁数に応じてフォントを自動縮小し、常に1行に収める（折り返しのチラつき防止）
@@ -1217,17 +1218,9 @@ function setBossName(nameObj){
 // スマホ幅では、ボス名とHPオーブを左上パネルと右上パネルの隙間の中央へ置き、
 // 隙間に入らない分だけ縮小する（パネル幅は所持金の桁数や次ボスボタンで変わる）。
 function fitBossPlate(){
- const plate=$("#bossPlate"), frame=$("#bossNameFrame");
- plate.style.left=""; plate.style.transform="";
- if(!window.matchMedia("(max-width:680px)").matches) return;
- const f=$("#field").getBoundingClientRect(), h=$("#hud").getBoundingClientRect(), t=$("#stageTag").getBoundingClientRect();
- if(!f.width) return;
- const L=h.right-f.left+6, R=t.left-f.left-6;
- const need=Math.max(frame.offsetWidth, $("#bossOrb").offsetWidth);
- const scale=Math.max(.5, Math.min(1, (R-L)/need));
- plate.style.left=((L+R)/2)+"px";
- plate.style.transform="translateX(-50%) scale("+scale.toFixed(3)+")";
+ const plate=$("#bossPlate");plate.style.left="";plate.style.transform="";
 }
+
 if(window.ResizeObserver){
  const ro=new ResizeObserver(()=>fitBossPlate());
  ["#field","#hud","#stageTag","#bossNameFrame"].forEach(sel=>{ const el=$(sel); if(el) ro.observe(el); });
@@ -1317,7 +1310,7 @@ function killBoss(){
  const defeated=encounterId;
  const respawn=()=>{if(defeated!==encounterId)return;if(window.Rework?.paused||document.hidden){respawnTimer=setTimeout(respawn,200);return;}spawnBoss(true);renderCards();updateHud();save();};
  respawnTimer=setTimeout(respawn,1500);
- updateStageTag(); save();
+ renderCards();window.SupplyFactory?.translate();updateStageTag(); save();
 }
 
 $("#nextBossBtn").addEventListener("click",()=>{
@@ -1808,7 +1801,7 @@ function renderCards(){
  });
  $("#pane-summon").innerHTML=window.Rework?Rework.armyCards():h;
  let hh="";
- HERO.forEach(o=>{
+ HERO.filter(o=>!["vitality","armor"].includes(o.id)).forEach(o=>{
    if(o.id==="click"){ hh+=clickCard(o); return; }
    const ht=heroT(o.id);
    hh+=card({act:"hero",id:o.id,nm:ht.nm,desc:ht.desc,lv:"Lv."+S.hero[o.id],ef:ht.ef(S.hero[o.id]),cost:heroCost(o),maxed:o.max&&S.hero[o.id]>=o.max});
@@ -1822,7 +1815,6 @@ function renderCards(){
 }
 $("#panels").addEventListener("click",e=>{
  const recruit=e.target.closest('[data-recruit]');if(recruit){Rework.recruit(recruit.dataset.recruit);return;}
- const buy=e.target.closest('.card[data-act="buy"]');if(buy&&window.Rework){Rework.recruit(buy.dataset.id);return;}
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
  const act=c.dataset.act, id=c.dataset.id;
  if(act==="buy"||(act==="upg"&&!e.target.closest("[data-train]")))return;
@@ -2077,11 +2069,12 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261020-harvest"></script>
-<script src="army-view.js?v=20261020-harvest"></script>
+<script src="army-sim.js?v=20261020-review4"></script>
+<script src="army-view.js?v=20261020-review4"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261020-harvest"></script>
-<script src="supply-factory.js?v=20261020-harvest"></script>
-<script src="rework.js?v=20261020-harvest"></script>
+<script src="battle-control.js?v=20261020-review4"></script>
+<script src="supply-factory.js?v=20261020-review4"></script>
+<script src="camp-training.js?v=20261020-review4"></script>
+<script src="rework.js?v=20261020-review4"></script>
 </body>
 </html>
