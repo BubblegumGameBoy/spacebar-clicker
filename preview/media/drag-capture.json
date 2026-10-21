@@ -1,0 +1,30 @@
+{
+  "url": "http://127.0.0.1:4192/preview/",
+  "freshNormalInputs": true,
+  "grantedProgress": false,
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "actions": [
+    "six normal tree clicks",
+    "drag six earned logs onto house",
+    "buy and place one worker with earned six wood",
+    "drag worker-produced log onto house"
+  ],
+  "video": {
+    "file": "/workspace/scratch/nonreader-drag-review/harvest-drag-worker-silent.mp4",
+    "seconds": 15.45,
+    "startedAt": 1792624755001,
+    "silent": true,
+    "source": "actual browser input; no simulated armies or score submissions"
+  },
+  "audio": {
+    "file": "/workspace/scratch/nonreader-drag-review/harvest-drag-worker.webm",
+    "startedAt": 1792624753771,
+    "offsetSeconds": 1.23,
+    "source": "Actual browser Web Audio and music output; not listening-approved"
+  },
+  "output": "/workspace/scratch/nonreader-drag-review/harvest-drag-worker.mp4",
+  "errors": []
+}

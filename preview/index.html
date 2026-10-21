@@ -564,8 +564,8 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261020-outpost1">
-<link rel="stylesheet" href="outpost.css?v=20261020-outpost1">
+<link rel="stylesheet" href="rework.css?v=20261022-drag1">
+<link rel="stylesheet" href="outpost.css?v=20261022-drag1">
 </head>
 <body>
 <div id="titleScreen">
@@ -689,10 +689,10 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="outpost-core.js?v=20261020-outpost1"></script>
-<script src="supply-core.js?v=20261020-outpost1"></script>
-<script src="game-core.js?v=20261020-outpost1"></script>
-<script src="forest-audio.js?v=20261020-outpost1"></script>
+<script src="outpost-core.js?v=20261022-drag1"></script>
+<script src="supply-core.js?v=20261022-drag1"></script>
+<script src="game-core.js?v=20261022-drag1"></script>
+<script src="forest-audio.js?v=20261022-drag1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -954,7 +954,7 @@ function updateAudioButtons(){ForestAudio.updateButtons(LANG);}
 function sndClick(){ForestAudio.play('strike');}
 function sndCrit(){ForestAudio.play('critical');}
 function sndEvolve(){ForestAudio.play('evolve');}
-function sndUnitHit(){ForestAudio.play('strike',{group:'unit',level:.65});}
+function sndUnitHit(u){ForestAudio.play(u?.ranged?'arrow':'strike',{group:'unit',level:.65});}
 function sndCannonFire(){ForestAudio.play('strike',{group:'unit',level:.7});}
 function sndKill(){ForestAudio.play('victory');}
 function sndLevelUp(){ForestAudio.play('hire');}
@@ -1139,8 +1139,8 @@ function unitBuyCost(u){return Core.unitCost(S,u);}
 function unitUpgCost(u){return Core.upgradeCost(S,u);}
 function heroCost(h){return Core.heroCost(S,h);}
 function awakenMul(u){return Core.awaken(S.ulvl[u.id]);}
-function unitDmg(u){if(window.__OUTPOST_BUILD__)return OutpostCore.stats(u.id)?.damage||0;return Core.damage(S,u)*Core.formation(S,UNITS);}
-function unitIv(u){return window.__OUTPOST_BUILD__?(OutpostCore.stats(u.id)?.interval||5):Core.interval(S,u);}
+function unitDmg(u){if(window.__OUTPOST_BUILD__)return OutpostCore.stats(u.id,S.camp)?.damage||0;return Core.damage(S,u)*Core.formation(S,UNITS);}
+function unitIv(u){return window.__OUTPOST_BUILD__?(OutpostCore.stats(u.id,S.camp)?.interval||5):Core.interval(S,u);}
 function unitDPS(u){if(window.__OUTPOST_BUILD__)return Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0))*unitDmg(u)/unitIv(u);return Core.unitDps(S,u)*Core.formation(S,UNITS);}
 function totalDPS(){return Core.armyDps(S,UNITS);}
 function clickBaseDmg(lv){return Core.clickBase(lv);}
@@ -2073,14 +2073,14 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261020-outpost1"></script>
-<script src="army-view.js?v=20261020-outpost1"></script>
+<script src="army-sim.js?v=20261022-drag1"></script>
+<script src="army-view.js?v=20261022-drag1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261020-outpost1"></script>
-<script src="supply-factory.js?v=20261020-outpost1"></script>
-<script src="camp-training.js?v=20261020-outpost1"></script>
-<script src="outpost-camp.js?v=20261020-outpost1"></script>
-<script src="outpost.js?v=20261020-outpost1"></script>
-<script src="rework.js?v=20261020-outpost1"></script>
+<script src="battle-control.js?v=20261022-drag1"></script>
+<script src="supply-factory.js?v=20261022-drag1"></script>
+<script src="camp-training.js?v=20261022-drag1"></script>
+<script src="outpost-camp.js?v=20261022-drag1"></script>
+<script src="outpost.js?v=20261022-drag1"></script>
+<script src="rework.js?v=20261022-drag1"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* Harvest -> a visible ground pile -> manual pickup -> more placed workers. */
 window.SupplyFactory=(()=>{
- const words={wood:['木','Wood','木材'],stone:['石','Stone','石材'],ground:['おちてる','Ground','地面'],pickup:['ひろう','Pick up','拾取'],target:['SPACE：','SPACE: ','空格：'],enemy:['敵を攻撃','Attack enemy','攻击敌人'],empty:['採り尽くしました。別の木・岩をクリックしてください。','Depleted. Click another tree or rock.','已采空，请点击其他树木或岩石。'],noRoom:['資材を運んで空きを作るか、全景を表示しよう。','Deliver a pile to make room, or show the whole camp.','运回材料腾出空地，或显示营地全景。'],fallen:['地面に落ちました。クリックで拾えます。','On the ground. Click the pile to pick it up.','已落到地面，点击材料堆拾取。'],received:['ひろった！','Picked up','已拾取'],per:['近くの資源を切り出す','Harvests a nearby resource','采集附近资源'],chopFirst:['木を たたこう！ クリック / SPACE','Hit a tree 3 times. Click it, or press Space.','点击树木或按空格，采集3次。'],pickFirst:['まるたを クリックして ひろおう！','Click the fallen logs. One click collects the whole pile.','点击掉落木材，一次拾取整堆。'],hireWood:['木が3こ！ 下の「木こり ＋1」を おそう。','Hire a lumberjack below. 3 wood adds one worker.','点击下方雇佣伐木工。3木材增加1人。'],placeFirst:['木のそばの ＋ を おそう！','Use Awaiting placement to put the lumberjack beside a tree.','点击等待布置，将伐木工放在树旁空地。'],watch:['木こりが 切ってくれる！ おちた木を ひろおう。','The lumberjack swings the axe and drops logs. Click the fallen pile.','伐木工挥斧后会掉落木材，点击材料堆拾取。'],expand:['木こりを ふやそう。石をひろうと 石ほり・弓兵も！','Add more lumberjacks. Hit rocks and pick up stone to hire miners or archers.','可增加伐木工。采集岩石并拾取石材，雇佣矿工或弓箭手。'],army:['弓兵が たたかってくれる！ 木と石で なかまを ふやそう。','Allies attack automatically. Gather and collect supplies to grow. Click the enemy to help.','伙伴自动攻击中。采集拾取材料壮大队伍，点击敌人助战。'],pickReady:['おちてる 木と石を ひろって、なかまを ふやそう！','Supplies are on the ground. Click a pile to collect it.','地面上有材料，点击材料堆拾取。']};
+ const words={wood:['き','Wood','木材'],stone:['いし','Stone','石材'],ground:['おちてる','Ground','地面'],pickup:['ひろう','Pick up','拾取'],target:['SPACE：','SPACE: ','空格：'],enemy:['敵を攻撃','Attack enemy','攻击敌人'],empty:['ここは もう とれないよ。べつの き や いしを おそう。','Depleted. Click another tree or rock.','已采空，请点击其他树木或岩石。'],noRoom:['おちている ものを ひろって、あきを つくろう。','Deliver a pile to make room, or show the whole camp.','运回材料腾出空地，或显示营地全景。'],fallen:['じめんに おちたよ。つかんで おうちへ！','On the ground. Drag the pile into the house.','已落到地面，请拖到房屋。'],received:['ひろった！','Picked up','已拾取'],per:['近くの資源を切り出す','Harvests a nearby resource','采集附近资源'],chopFirst:['木を たたこう！ クリック / SPACE','Hit a tree 3 times. Click it, or press Space.','点击树木或按空格，采集3次。'],pickFirst:['まるたを つかんで おうちへ！','Drag the fallen logs into the house.','将掉落木材拖到房屋。'],hireWood:['木が3こ！ 下の「木こり ＋1」を おそう。','Hire a lumberjack below. 3 wood adds one worker.','点击下方雇佣伐木工。3木材增加1人。'],placeFirst:['木のそばの ＋ を おそう！','Use Awaiting placement to put the lumberjack beside a tree.','点击等待布置，将伐木工放在树旁空地。'],watch:['木こりが 切ってくれる！ おちた木を ひろおう。','The lumberjack swings the axe and drops logs. Click the fallen pile.','伐木工挥斧后会掉落木材，点击材料堆拾取。'],expand:['木こりを ふやそう。石をひろうと 石ほり・弓兵も！','Add more lumberjacks. Hit rocks and pick up stone to hire miners or archers.','可增加伐木工。采集岩石并拾取石材，雇佣矿工或弓箭手。'],army:['弓兵が たたかってくれる！ 木と石で なかまを ふやそう。','Allies attack automatically. Gather and collect supplies to grow. Click the enemy to help.','伙伴自动攻击中。采集拾取材料壮大队伍，点击敌人助战。'],pickReady:['おちてる 木と石を ひろって、なかまを ふやそう！','Supplies are on the ground. Click a pile to collect it.','地面上有材料，点击材料堆拾取。']};
  const tr=k=>words[k][Math.max(0,['ja','en','zh'].indexOf(LANG))];
  const outpostMode=()=>window.__OUTPOST_BUILD__===true||window.Outpost?.ready===true;
  let ready=false,stateRef=null,width=1100,height=500,targetKey=null,feedback='',ui=0,dirty=false,saveClock=0,work=[],chips=[],hits=new Map(),flights=[],reflowAt=0,targetLabel=null;
@@ -31,22 +31,28 @@ window.SupplyFactory=(()=>{
   if(textWidths.size>256)textWidths.clear();textWidths.set(key,value);return value;
  }
  function pileGeometry(d,z=ArmyView.camera.scale){
-  const h=Math.max(32*z,25),crop=loot.crops[d.type==='wood'?0:1],w=h*(crop?crop.w/crop.h:1.8);
-  const text=tr('pickup')+' ×'+fmt(Math.floor(d.count)),labelW=textWidth(text,12)+20,baseline=d.y-(h+5)/z;
+  const compact=outpostMode(),h=compact?Math.max(18,25*z):Math.max(32*z,25),crop=loot.crops[d.type==='wood'?0:1],w=h*(crop?crop.w/crop.h:1.8);
   const image={left:d.x-w/2/z,right:d.x+w/2/z,top:d.y-h/z,bottom:d.y};
+  if(compact){
+   const text=d.count>=1000?'999+':String(Math.floor(d.count)),badgeW=28,badgeH=14,right=d.x+(w/2+2)/z;
+   const label={left:right-badgeW/z,right,top:d.y-8/z,bottom:d.y+6/z};
+   const bounds=union(image,label);return {image,label,text,h,w,compact:true,baseline:d.y+3/z,bounds};
+  }
+  const text=tr('pickup')+' ×'+fmt(Math.floor(d.count)),labelW=textWidth(text,12)+20,baseline=d.y-(h+5)/z;
   const label={left:d.x-labelW/2/z,right:d.x+labelW/2/z,top:baseline-17/z,bottom:baseline+8/z};
-  return {image,label,text,h,baseline,bounds:union(union(image,label),{left:d.x-Math.max(17,23*z)/z,right:d.x+Math.max(17,23*z)/z,top:d.y,bottom:d.y+(2+Math.max(7,9*z))/z})};
+  return {image,label,text,h,w,compact:false,baseline,bounds:union(union(image,label),{left:d.x-Math.max(17,23*z)/z,right:d.x+Math.max(17,23*z)/z,top:d.y,bottom:d.y+(2+Math.max(7,9*z))/z})};
  }
  function nodeInput(n,z=ArmyView.camera.scale){const half=Math.max((n.type==='wood'?85:66)/2,23/z);return {left:n.x-half,right:n.x+half,top:n.y-(n.type==='wood'?100:54)-5,bottom:n.y+9};}
  function nodeBlock(n,z){
   const h=n.type==='wood'?100:54,crop=scenery.crops[n.type==='stone'?1:n.key%2?3:0],half=h*(crop?crop.w/crop.h:n.type==='wood'?.95:1.25)/2;
   const input=nodeInput(n,z),art={left:n.x-half,right:n.x+half,top:n.y-h,bottom:n.y};
-  const text=LANG==='ja'?(n.type==='wood'?'木をたたく':'石をたたく'):LANG==='en'?'HIT · '+tr(n.type):'点击'+tr(n.type),size=Math.max(12,14*z),labelHalf=(textWidth(text,size)/2+10)/z,base=n.y-h-8/z;
-  return union(union(input,art),{left:n.x-labelHalf,right:n.x+labelHalf,top:base-(size+5)/z,bottom:base+8/z});
+  // Only a label actually drawn on the selected node occupies space. Reserving a
+  // large translated label for all four nodes used to fill the mobile map.
+  return union(input,art);
  }
  function fieldUI(){
   if(typeof ArmyView.point!=='function')return [];
-  return ['campWarehouse','raidBoard','cameraTools'].flatMap(id=>{
+  return ['campWarehouse','raidBoard','cameraTools','campaignGoal'].flatMap(id=>{
    const el=document.getElementById(id),r=el?.getBoundingClientRect();if(!r||!r.width||!r.height||el.hidden)return [];
    const style=window.getComputedStyle?.(el);if(style&&(style.display==='none'||style.visibility==='hidden'||style.opacity==='0'))return [];
    const a=ArmyView.point(r.left,r.top),b=ArmyView.point(r.right,r.bottom);
@@ -54,7 +60,7 @@ window.SupplyFactory=(()=>{
   });
  }
  function pileLayout(){
-  const s=state(),z=ArmyView.camera.scale,pad=5/z,blocks=s.nodes.map(n=>nodeBlock(n,z));
+  const s=state(),z=ArmyView.camera.scale,pad=3/z,blocks=s.nodes.map(n=>nodeBlock(n,z));
   blocks.push({left:s.depot.x-60,right:s.depot.x+60,top:s.depot.y-96,bottom:s.depot.y+15});
   if(targetLabel)blocks.push(targetLabel);
   for(const p of [...ArmyView.sim.soldiers,...BattleControl.reserved]){const h=p.u?(ArmyView.bodyHeight?.(p.u)||64):64,half=Math.max(22,(p.r||10)+12);blocks.push({left:p.x-half,right:p.x+half,top:p.y-h-5,bottom:p.y+12});}
@@ -72,9 +78,16 @@ window.SupplyFactory=(()=>{
  function outpostDropPoint(node,ignore,amount,layout=pileLayout()){
   const count=ignore?ignore.count:amount||1;
   if(ignore&&legalPile(ignore,count,node.type,layout,ignore))return ignore;
-  if(!ignore){const existing=layout.s.drops.filter(d=>d.type===node.type&&d.source===node.key).sort((a,b)=>Math.hypot(a.x-node.x,a.y-node.y)-Math.hypot(b.x-node.x,b.y-node.y)).find(d=>legalPile(d,d.count+count,node.type,layout,d));if(existing)return existing;}
+  if(!ignore){
+   const existing=layout.s.drops.find(d=>d.type===node.type&&d.source===node.key);
+   if(existing){
+    if(legalPile(existing,existing.count+count,node.type,layout,existing))return existing;
+    const moved=outpostDropPoint(node,existing,0,layout);
+    if(moved){existing.x=moved.x;existing.y=moved.y;dirty=true;return existing;}
+   }
+  }
   let best=null,score=Infinity;
-  const consider=p=>{if(!legalPile(p,count,node.type,layout,ignore))return;const box=pileGeometry({...p,count,type:node.type},layout.z).bounds,visible=!layout.visible||(box.left>=layout.visible.left&&box.right<=layout.visible.right&&box.top>=layout.visible.top&&box.bottom<=layout.visible.bottom);const value=Math.hypot(p.x-node.x,p.y-node.y)+(visible?0:10000);if(value<score){score=value;best=p;}};
+  const consider=p=>{if(!legalPile(p,count,node.type,layout,ignore))return;const box=pileGeometry({...p,count,type:node.type},layout.z).bounds,visible=!layout.visible||(box.left>=layout.visible.left&&box.right<=layout.visible.right&&box.top>=layout.visible.top&&box.bottom<=layout.visible.bottom);const roads=window.OutpostCore?.WORLD,nearRoad=roads&&p.x>=roads.turnX&&p.x<=roads.entryX&&[roads.upper,roads.lower].some(y=>box.top<y+20&&box.bottom>y-20);const value=Math.hypot(p.x-node.x,p.y-node.y)+(visible?0:10000)+(nearRoad?180:0);if(value<score){score=value;best=p;}};
   for(const dx of [0,65,-65,100,-100,145,-145,190,-190])for(const dy of [65,95,130,160,30,-35,-80])consider({x:node.x+dx,y:node.y+dy});
   if(best&&score<10000)return best;
   // Search the full playable world. Obstacle edges also cover gaps narrower than the grid.
@@ -83,8 +96,17 @@ window.SupplyFactory=(()=>{
   for(const b of [...layout.blocks,...layout.s.drops.filter(d=>d!==ignore).map(d=>expand(pileGeometry(d,layout.z).bounds,layout.pad))]){xs.push(b.left-shape.right-.1,b.right-shape.left+.1);ys.push(b.top-shape.bottom-.1,b.bottom-shape.top+.1);}
   for(const x of xs)for(const y of ys)consider({x,y});return best;
  }
+ function consolidatePiles(){
+  const s=state(),bySource=new Map();let changed=false;
+  s.drops=s.drops.filter(d=>{
+   if(d.source==null||d.carrier)return true;const key=d.type+':'+d.source,first=bySource.get(key);
+   if(!first){bySource.set(key,d);return true;}
+   first.count=Math.min(1e150,first.count+d.count);first.worker=first.worker||d.worker;changed=true;return false;
+  });
+  if(changed){dirty=true;dropHits.clear();dropViewKey='';}
+ }
  function reflowDrops(){
-  if(!outpostMode())return;const layout=pileLayout(),s=layout.s;
+  if(!outpostMode())return;consolidatePiles();const layout=pileLayout(),s=layout.s;
   const key=JSON.stringify([LANG,layout.z,layout.blocks,layout.visible,loot.crops.map(c=>[c.w,c.h]),s.drops.map(d=>[d.key,d.x,d.y,d.count])]);
   if(key===dropViewKey)return;dropViewKey=key;dropHits.clear();
   for(const d of s.drops){const node=s.nodes.find(n=>n.key===d.source&&n.type===d.type)||s.nodes.filter(n=>n.type===d.type).sort((a,b)=>Math.hypot(a.x-d.x,a.y-d.y)-Math.hypot(b.x-d.x,b.y-d.y))[0];if(!node)continue;const p=outpostDropPoint(node,d,0,layout);if(p&&(p.x!==d.x||p.y!==d.y)){d.x=p.x;d.y=p.y;dirty=true;}}
@@ -106,16 +128,17 @@ window.SupplyFactory=(()=>{
   if(!free.length)for(let y=height-18;y>height*.34;y-=35)for(let x=56/z;x<width-56/z;x+=55)if(!blocksGuide({x,y}))free.push({x,y});
   return (free.length?free:points).sort((a,b)=>(overlap(a)+Math.hypot(a.x-node.x,a.y-node.y))-(overlap(b)+Math.hypot(b.x-node.x,b.y-node.y)))[0];
  }
- function take(node,amount=1,worker=false,source=null){const s=state(),actual=Math.min(node.stock,amount);if(!actual)return null;const point=dropPoint(node,null,actual);if(!point){feedback=tr('noRoom');blockedUntil=s.time+2;return null;}const d=SupplyCore.drop(s,node.type,actual,point.x,point.y,node.key);if(!d)return null;blockedUntil=0;node.stock-=actual;if(!node.stock)node.regrow=s.time+65;if(worker)d.worker=true;chips.push({node,x:source?node.x+Math.sign(source.x-node.x)*24:node.x,y:source?Math.min(node.y-5,source.y-18):node.y-25,amount:actual,worker,until:s.time+.38});if(chips.length>24)chips.shift();hits.set(node.key,{at:s.time,worker});dirty=true;ForestAudio.play(node.type,{group:worker?'worker':'user'});return d;}
+ function take(node,amount=1,worker=false,source=null){const s=state(),actual=Math.min(node.stock,amount);if(!actual)return null;if(outpostMode())reflowDrops();const point=dropPoint(node,null,actual);if(!point){feedback=tr('noRoom');blockedUntil=s.time+2;return null;}const d=SupplyCore.drop(s,node.type,actual,point.x,point.y,node.key);if(!d)return null;blockedUntil=0;node.stock-=actual;window.Outpost?.logHarvest?.(node.type,actual,worker);if(!node.stock)node.regrow=s.time+65;if(worker)d.worker=true;chips.push({node,x:source?node.x+Math.sign(source.x-node.x)*24:node.x,y:source?Math.min(node.y-5,source.y-18):node.y-25,amount:actual,worker,to:{x:d.x,y:d.y},started:s.time,until:s.time+.38});if(chips.length>24)chips.shift();hits.set(node.key,{at:s.time,worker});dirty=true;ForestAudio.play(node.type,{group:worker?'worker':'user'});return d;}
  function choose(type){const s=state(),node=s.nodes.find(n=>n.key===targetKey&&n.type===type&&n.stock>0)||s.nodes.find(n=>n.type===type&&n.stock>0);if(node)targetKey=node.key;translate();return node;}
  function selectBoss(){targetKey=null;feedback='';document.getElementById('field').classList.add('target-boss');translate();}
  function harvestSelected(){if(!ready||Rework.paused||BattleControl.placement)return false;const node=state().nodes.find(n=>n.key===targetKey);if(!node||!node.stock){feedback=tr('empty');translate();return false;}if(!take(node)){translate();return false;}feedback=tr('fallen');document.getElementById('field').classList.remove('target-boss');translate();save();dirty=false;return true;}
  function pickup(item){if(outpostMode())return window.OutpostCamp?.pickup(item)||false;const reward=SupplyCore.deliver(state(),item);if(!reward)return false;flights.push({x:item.x,y:item.y,type:item.type,count:reward.count,at:state().time});if(flights.length>6)flights.shift();const first=!S.firstWorkerPickup&&item.worker&&reward.type==='wood';if(first)S.firstWorkerPickup=true;if(reward.type==='gold')earnGold(reward.count);feedback='＋'+reward.count+' '+(reward.type==='gold'?'G':tr(reward.type))+' · '+tr('received');ForestAudio.play('pickup');translate();if(first)renderCards();updateHud();save();dirty=false;const counter=document.getElementById('gather'+(reward.type==='wood'?'Wood':'Stone'));counter?.animate?.([{transform:'scale(1.1)',background:'#e2ce8b'},{transform:'scale(1)'}],{duration:180});return true;}
+ function pileAt(point){const z=ArmyView.camera.scale;return state().drops.filter(d=>{const r=dropHits.get(d)||pileGeometry(d,z);return contains(r.image,point)||contains(r.label,point);}).sort((a,b)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y))[0]||null;}
  function gatherAt(point){const s=state(),z=ArmyView.camera.scale;
   const label=targetLabel&&contains(targetLabel,point),nodes=s.nodes.filter(n=>contains(nodeInput(n,z),point)).sort((a,b)=>Math.hypot(a.x-point.x,a.y-35-point.y)-Math.hypot(b.x-point.x,b.y-35-point.y));
   if(outpostMode()){
-   reflowDrops();if(label){targetKey=targetLabel.key;return harvestSelected();}if(nodes.length){targetKey=nodes[0].key;harvestSelected();return true;}
-   const drop=s.drops.filter(d=>{const r=dropHits.get(d)||pileGeometry(d,z);return contains(r.image,point)||contains(r.label,point);}).sort((a,b)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y))[0];return drop?pickup(drop):false;
+   reflowDrops();if(nodes.length){targetKey=nodes[0].key;harvestSelected();return true;}if(label){targetKey=targetLabel.key;return harvestSelected();}
+   const drop=pileAt(point);return drop?pickup(drop):false;
   }
   const drop=s.drops.filter(d=>Math.abs(d.x-point.x)<Math.max(30,42/z)&&point.y>=d.y-Math.max(32,25/z)-26/z&&point.y<=d.y+14/z).sort((a,b)=>Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(b.x-point.x,b.y-point.y))[0];if(drop)return pickup(drop);if(label){targetKey=targetLabel.key;return harvestSelected();}if(!nodes.length)return false;targetKey=nodes[0].key;harvestSelected();return true;
  }
@@ -148,20 +171,27 @@ window.SupplyFactory=(()=>{
    if(kick&&!reduced){ctx.rotate(Math.sin(age*65)*kick*(hit.worker?.018:.055));ctx.scale(1+kick*.035,1-kick*.025);}
    ctx.globalAlpha=n.stock?1:.25;
    sprite(ctx,scenery,n.type==='stone'?1:n.key%2?3:0,0,0,n.type==='wood'?100:54,z);ctx.restore();
+   if(outpostMode()&&!n.stock){const left=Math.max(0,Math.ceil(n.regrow-s.time));pill(ctx,LANG==='ja'?'あと '+left+'びょう':LANG==='zh'?left+'秒':left+'s',x,y-12*z,11);}
    if(selected){
     const firstWoodCost=outpostMode()&&window.OutpostCore?OutpostCore.recipe('woodcutter',0,1).wood:3;
     const initial=!(S.owned.woodcutter||0)&&!S.clearedBossWave,needsPickup=initial&&s.inventory.wood+totalGround('wood')>=firstWoodCost;
-    if(!needsPickup){const label=LANG==='ja'?(n.type==='wood'?'木をたたく':'石をたたく'):LANG==='en'?'HIT · '+tr(n.type):'点击'+tr(n.type);const size=Math.max(12,14*z),base=y-(n.type==='wood'?100:54)*z-8;ctx.font='700 '+size+'px system-ui';const half=ctx.measureText(label).width/2+10;
-     const people=BattleControl.neighbors(n,180/z),clear=py=>!people.some(p=>Math.abs(X(p.x)-x)<half+23*z&&py+8>Y(p.y)-ArmyView.bodyHeight(p.u)*z&&py-size-5<Y(p.y)+8*z)&&(!outpostMode()||!s.drops.some(d=>intersects(pileGeometry(d,z).bounds,{left:n.x-half/z,right:n.x+half/z,top:(py-size-5-oy)/z,bottom:(py+8-oy)/z})));
-     let labelY=base;for(const lift of [0,28,56,84,112]){const py=Math.max(size+14,base-lift);if(clear(py)){labelY=py;break;}}
+    if(!needsPickup&&(!outpostMode()||S.outpost?.phase!=='active')){const label=LANG==='ja'?(n.type==='wood'?'きを たたく':'いしを たたく'):LANG==='en'?'HIT · '+tr(n.type):'点击'+tr(n.type);const size=Math.max(12,14*z),base=y-(n.type==='wood'?100:54)*z-8;ctx.font='700 '+size+'px system-ui';const half=ctx.measureText(label).width/2+10;
+     const people=BattleControl.neighbors(n,180/z),clear=py=>{const box={left:n.x-half/z,right:n.x+half/z,top:(py-size-5-oy)/z,bottom:(py+8-oy)/z};return !people.some(p=>Math.abs(X(p.x)-x)<half+23*z&&py+8>Y(p.y)-ArmyView.bodyHeight(p.u)*z&&py-size-5<Y(p.y)+8*z)&&(!outpostMode()||(!s.nodes.some(other=>other.key!==n.key&&intersects(box,nodeInput(other,z)))&&!fieldUI().some(ui=>intersects(box,ui))&&!s.drops.some(d=>intersects(pileGeometry(d,z).bounds,box))));};
+     let labelY=base;for(const py of [base,Y(n.y)+size+14,base-28,base-56,base-84,base-112].map(v=>Math.max(size+14,v))){if(clear(py)){labelY=py;break;}}
      pill(ctx,label,x,labelY,size);targetLabel={key:n.key,left:n.x-half/z,right:n.x+half/z,top:(labelY-size-5-oy)/z,bottom:(labelY+8-oy)/z};}
     if(initial&&!needsPickup){ctx.fillStyle='#ffdf83';ctx.font='900 27px system-ui';ctx.textAlign='center';ctx.fillText('↓',x,y-28*z);const collected=Math.min(firstWoodCost,s.inventory.wood+totalGround('wood'));for(let i=0;i<firstWoodCost;i++){ctx.beginPath();ctx.arc(x+(i-(firstWoodCost-1)/2)*13,y+15,4,0,Math.PI*2);ctx.fillStyle=i<collected?'#ffdf83':'#183327';ctx.fill();ctx.strokeStyle='#ffdf83';ctx.lineWidth=1;ctx.stroke();}}
    }
   }
   for(const c of chips){const t=(c.until-s.time)/.38;ctx.globalAlpha=t;sprite(ctx,loot,c.node.type==='wood'?2:3,X(c.x+12*(1-t)),Y(c.y-(1-t)*18),30,z);ctx.globalAlpha=1;if(!c.worker){ctx.font='900 20px system-ui';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#173328';ctx.strokeText('+'+c.amount,X(c.node.x+24),Y(c.node.y-55)-(1-t)*20);ctx.fillStyle='#ffe6a2';ctx.fillText('+'+c.amount,X(c.node.x+24),Y(c.node.y-55)-(1-t)*20);}}
-  for(const d of s.drops){const x=X(d.x),y=Y(d.y),geometry=pileGeometry(d,z);dropHits.set(d,geometry);ctx.fillStyle='#e3d19b33';ctx.beginPath();ctx.ellipse(x,y+2,Math.max(17,23*z),Math.max(7,9*z),0,0,Math.PI*2);ctx.fill();sprite(ctx,loot,d.type==='wood'?0:1,x,y,geometry.h/z,z);pill(ctx,geometry.text,x,Y(geometry.baseline),12);}
+  for(const d of s.drops){if(window.OutpostCamp?.isHeld(d))continue;const x=X(d.x),y=Y(d.y),geometry=pileGeometry(d,z);dropHits.set(d,geometry);ctx.fillStyle='#e3d19b33';ctx.beginPath();ctx.ellipse(x,y+2,geometry.compact?geometry.w*.43:Math.max(17,23*z),geometry.compact?3:Math.max(7,9*z),0,0,Math.PI*2);ctx.fill();sprite(ctx,loot,d.type==='wood'?0:1,x,y,geometry.h/z,z);
+   if(geometry.compact){const r=geometry.label,l=X(r.left),t=Y(r.top),w=(r.right-r.left)*z,h=(r.bottom-r.top)*z;ctx.fillStyle='#19372df0';ctx.beginPath();if(ctx.roundRect){ctx.roundRect(l,t,w,h,4);ctx.fill();}else ctx.fillRect(l,t,w,h);ctx.font='800 11px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0bb';ctx.fillText(geometry.text,l+w/2,t+11);}else pill(ctx,geometry.text,x,Y(geometry.baseline),12);
+  }
+  // The packet traces the actual resource-to-pile destination, which can be
+  // farther away on a narrow screen. It never credits inventory or moves allies.
+  if(outpostMode())for(const c of chips){if(!c.to)continue;const t=Math.min(1,Math.max(0,(s.time-c.started)/.3));if(t>=1)continue;const from={x:c.node.x,y:c.node.y-26},ease=1-Math.pow(1-t,2),x=X(from.x+(c.to.x-from.x)*ease),y=Y(from.y+(c.to.y-from.y)*ease)-(reduced?0:Math.sin(t*Math.PI)*18);ctx.globalAlpha=reduced?1-t:.95;sprite(ctx,loot,c.node.type==='wood'?0:1,x,y,Math.max(13,18*z),1);ctx.globalAlpha=1;}
+
   for(const f of flights){const t=Math.min(1,(s.time-f.at)/.42),button=document.getElementById(f.type==='wood'?'gatherWood':'gatherStone'),rect=button.getBoundingClientRect(),view=document.getElementById('armyCanvas').getBoundingClientRect(),endX=rect.left+rect.width/2-view.left,endY=rect.top+rect.height/2-view.top;const ease=1-Math.pow(1-t,2),x=X(f.x)+(endX-X(f.x))*ease,y=Y(f.y)+(endY-Y(f.y))*ease-(reduced?0:Math.sin(t*Math.PI)*24);ctx.globalAlpha=1-t*.6;sprite(ctx,loot,f.type==='wood'?0:1,x,y,22,1);ctx.globalAlpha=1;}
  }
  function boot(){if(ready)return;ready=true;state();const inv=document.createElement('div');inv.id='supplyInventory';inv.innerHTML='<div class="resource-buttons"><button id="gatherWood" type="button"></button><button id="gatherStone" type="button"></button></div><small id="gatherFeedback"></small><small id="pickupFeedback" role="status"></small>';document.getElementById('hudTools').before(inv);for(const type of ['wood','stone'])document.getElementById('gather'+(type==='wood'?'Wood':'Stone')).onclick=()=>{BattleControl.setPlacement(false);choose(type);harvestSelected();};const city=document.createElement('div');city.id='cityContract';document.getElementById('bossPlate').append(city);window.addEventListener('pagehide',()=>{if(dirty)save();});resize(width,height);translate();}
- return {boot,tick,draw,resize,translate,workerStats,resources,canRecruit,pay,costText,costHTML,icon,harvestSelected,gatherAt,selectBoss,choose,pickup,nearby,guide,totalGround,get resourceTarget(){return targetKey!==null;},get state(){return state();},get artReady(){return scenery.crops.length===4&&loot.crops.length===4;},get stats(){return {pendingWork:work.length,ground:state().drops.length,woodGround:totalGround('wood'),stoneGround:totalGround('stone')};},get building(){return false;},setBuilding:()=>{}};
+ return {boot,tick,draw,resize,translate,workerStats,resources,canRecruit,pay,costText,costHTML,icon,harvestSelected,gatherAt,pileAt,pileBounds:d=>pileGeometry(d).bounds,selectBoss,choose,pickup,nearby,guide,totalGround,get resourceTarget(){return targetKey!==null;},get state(){return state();},get artReady(){return scenery.crops.length===4&&loot.crops.length===4;},get stats(){return {pendingWork:work.length,ground:state().drops.length,woodGround:totalGround('wood'),stoneGround:totalGround('stone')};},get building(){return false;},setBuilding:()=>{}};
 })();

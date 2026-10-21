@@ -14,7 +14,7 @@
   if(!raw||raw.version!==1||!factory)return null;
   const key=value=>Number.isInteger(value)&&value>=1&&value<=1e12;
   const coordinate=(value,max)=>Number.isFinite(value)?Math.max(0,Math.min(max,value)):null;
-  const camp={version:1,links:[],cargo:[],nextKey:1},links=new Set(),cargoKeys=new Set();
+  const camp={version:1,links:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true},links=new Set(),cargoKeys=new Set();
   for(const link of (Array.isArray(raw.links)?raw.links:[]).slice(0,500)){
    if(!link||!key(link.nodeKey)||!['wood','stone'].includes(link.type)||links.has(link.nodeKey))continue;
    if(!factory.nodes.some(node=>node.key===link.nodeKey&&node.type===link.type))continue;

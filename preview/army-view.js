@@ -75,16 +75,16 @@ window.ArmyView=(()=>{
   if(!viewport)return;
   const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];accumulator=0;powerClock=0;engagedDps=0;}
   sim.stationary=true;bindRaid();layout();
-  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
+  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
   if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
-  if(restore)window.BattleControl?.restore();
+  if(restore){for(const p of slots)p.enterAt=sim.time-.34;window.BattleControl?.restore();}
   document.getElementById('armyCount').textContent=count().toLocaleString();
   document.getElementById('armyRoster').innerHTML=UNITS.filter(unitOwned).sort(orderUnits).map(u=>'<button type="button" data-focus="'+u.id+'"><span>'+L(u.name)+'</span><b>×'+S.owned[u.id].toLocaleString()+'</b><small>'+('◆'.repeat(Math.min(3,Core.tier(S.ulvl[u.id])))||'Lv.'+S.ulvl[u.id])+'</small></button>').join('');
   if(reason?.id)focus(reason.id,reason.evolution);
  }
- function draw(now){
-  frame=requestAnimationFrame(draw);if(document.hidden||window.Rework?.paused)return;
+ function draw(now,force=false){
+  if(!force)frame=requestAnimationFrame(draw);if(document.hidden||window.Rework?.paused&&!force)return;
   const dt=Math.min(40,now-last);last=now;
   if(Math.abs(camera.scale-camera.target)>.0004){camera.scale+=(camera.target-camera.scale)*(matchMedia('(prefers-reduced-motion: reduce)').matches?1:Math.min(1,dt/180));applyCamera();}
   const width=viewport.clientWidth,height=viewport.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
@@ -126,7 +126,7 @@ window.ArmyView=(()=>{
   }
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
   for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,2*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*.035*z,y-(p.ty-p.y)*.035*z);ctx.stroke();}
-  window.BattleControl?.draw(ctx,view);
+  if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);window.BattleControl?.draw(ctx,view);
   if(raid)window.OutpostCamp?.drawOver(ctx,view);
  }
  function tick(dt){
@@ -159,5 +159,5 @@ window.ArmyView=(()=>{
   new ResizeObserver(()=>layout()).observe(viewport);
   render();window.BattleControl?.boot();window.SupplyFactory?.boot();camera.scale=camera.target;applyCamera();frame=requestAnimationFrame(draw);
  }
- return {boot,render,focus,fit,layout,tick,point,snapshot,orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
+ return {boot,render,focus,fit,layout,tick,point,snapshot,captureFrame:()=>{draw(performance.now(),true);return canvas.toDataURL();},orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
 })();
