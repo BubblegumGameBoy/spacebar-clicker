@@ -213,3 +213,20 @@ body.outpost-game #railEditor [data-rail-action=rotate]{border-color:#d8cf8e;col
 body.outpost-game #groundStorageStatus{display:block;margin-top:5px;font:600 11px/1.4 system-ui;color:#efdcaa}
 body.outpost-game .equipment-card button{border:1px solid #baa366;border-radius:5px;background:#3c543d;color:#f5e6bc;padding:11px 14px;font:700 14px system-ui;cursor:pointer;min-height:44px}
 body.outpost-game .equipment-card button:hover{background:#4d694b}
+/* A common tool panel for allies and construction, always named and explicitly ended. */
+body.outpost-game #placementControls{position:sticky;top:0;z-index:25;padding:12px 14px;background:#20372e;color:#f4e6bd;border:1px solid #708562;box-shadow:0 3px 8px #12271c44;font:13px/1.5 system-ui}
+#placementControls .placement-heading{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.placement-current{font-size:16px;flex:1}.placement-waiting{color:#f6d68c;font-weight:700}.placement-tools{display:flex;gap:7px;flex-wrap:wrap}
+#placementControls button{min-height:40px;border:1px solid #819176;border-radius:5px;padding:8px 12px;background:#314b3a;color:#e9e3cd;font:600 13px system-ui;cursor:pointer}
+#placementControls button[aria-pressed=true]{background:#dac27d;color:#1e3225;border:2px solid #ffe7a5;padding:7px 11px}
+#placementControls button:disabled{opacity:.45;cursor:default}#placementControls [data-placement-finish]{background:#756743;border-color:#e0c786;color:#fff0c8}#placementControls [hidden]{display:none!important}
+#placementControls .placement-hint{margin:8px 0 0;color:#d4dfc9}.placement-raid{margin:4px 0;color:#edcc8a}
+body.unified-placement #placementControls #railEditor{margin-top:8px;padding:8px 0 0;border:0;border-top:1px solid #748563;background:transparent}
+body.unified-placement #railEditor [data-rail-action=cancel],body.unified-placement #commandMode,body.unified-placement #placeRecruits{display:none!important}
+body.unified-placement #battleCommands{padding:8px 0 0;background:transparent;border:0}
+body.unified-placement:has(#field.laying-rails) #battleCommands{display:none}
+body.unified-placement:has(#field.laying-rails) .army-card button{pointer-events:auto;opacity:1}
+body.unified-placement #field.laying-rails #campaignGoal,body.unified-placement #field.laying-rails #campWarehouse{visibility:visible}
+body.unified-placement #field[data-tool=allies],body.unified-placement #field[data-tool=belt],body.unified-placement #field[data-tool=platform]{outline:2px solid #d7bd78;outline-offset:-2px}
+@media(max-width:680px){body.outpost-game #placementControls{padding:9px 10px}.placement-current{font-size:14px}#placementControls .placement-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px}#placementControls button{min-height:40px;font-size:12px;padding:7px 9px}#placementControls button[aria-pressed=true]{padding:6px 8px}#placementControls .placement-hint{font-size:12px}}
+
+body.unified-placement #conveyorBuild,body.unified-placement #conveyorPlatformBuild{display:none!important}

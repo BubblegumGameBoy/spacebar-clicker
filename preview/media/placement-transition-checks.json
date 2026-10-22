@@ -1,0 +1,11 @@
+{
+  "fixture": "Materials provided and countdown shortened for transition integration only",
+  "checks": [
+    "Opening and closing a menu cancels its held preview without finishing tool or spending materials",
+    "Switching away from a held ally preview cannot place on late release",
+    "Combat ally remains a preview until release and shares explicit Finish behavior",
+    "Blur discards held belt geometry",
+    "Timed raid clears unfinished construction and disables ally placement without a charge"
+  ],
+  "errors": []
+}
