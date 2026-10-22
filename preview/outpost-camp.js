@@ -2,13 +2,13 @@
 window.OutpostCamp = (() => {
  'use strict';
  const WORLD = {width:960,height:540}, HOME = {x:100,y:340};
- const COST = {wood:32,stone:40};
+ const COST = {wood:32,stone:40},BELT_PORT={x:162,y:328};
  const words = {
   warehouse:['おうち','Warehouse','仓库'],workshop:['つくる','Workshop','工坊'],close:['とじる','Close','关闭'],
   wood:['き','Wood','木材'],stone:['いし','Stone','石材'],gold:['おかね','Gold','金币'],
   title:['なかまの しごとば','The camp workshop','营地工坊'],
-  intro:['レールで はこぶ。どうぐで はやく。おうちを おおきくしよう。','Connect rails, improve tools, and build the way to town.','连接轨道、升级工具，建设通往城镇的道路。'],
-  rail:['レール','Wooden rail','木轨道'],build:['ここを つなぐ','Connect this route','连接这条路线'],
+  intro:['コンベアの うえに おくと、おうちへ ながれるよ。おうちから ひっぱって つくろう。','Items on a conveyor move into the house. Drag from the house to build.','放在传送带上的物资会运入房屋。从房屋拖动建造。'],
+  rail:['コンベア','Conveyor','传送带'],build:['ここを つなぐ','Connect this route','连接这条路线'],
   extend:['つぎも つなぐ','Connect another worksite','延伸至下个采集点'],
   complete:['ぜんぶ つながった！','All worksites connected','全部已连接'],
   woodSite:['きの ばしょ','Wood site','伐木点'],stoneSite:['いしの ばしょ','Stone site','采石点'],
@@ -22,20 +22,21 @@ window.OutpostCamp = (() => {
   inTransit:['はこんでいるよ','On the way','运送中'],arrived:['おうちに とどいた！','Delivered home','已送达仓库'],
   tapHome:['おうちを おすと つくれるよ。','Tap the house to open the workshop.','点击房屋打开工坊。'],
   clickPile:['き・いしを つかんで おうちへ！','Drag fallen supplies into the house.','将掉落物资拖到房屋！'],dragging:['おうちへ はなしてね！','Release over the house!','拖到房屋后松开！'],returned:['もどしたよ。つかんで おうちへ！','Returned. Drag it into the house.','已放回，请拖到房屋！'],
-  firstRail:['はじめの ごほうびで レール！ ひろう しごとを まかせよう。','Spend the first bounty on a wood rail to automate pickup.','用首次奖励修建木轨道，自动回收物资。'],
+  firstRail:['コンベアを おして、おうちから ひっぱろう！','Choose Conveyor, then drag out from the house!','选择传送带，再从房屋向外拖动！'],
   stoneNext:['つぎは いしの ばしょも おうちへ つなごう。','Connect a stone worksite next.','接下来连接采石点。'],
-  bothRails:['きと いしが じどうで とどく。なかまを ふやそう！','Wood and stone arrive automatically. Place allies to defend the camp.','木材和石材自动送达，布置伙伴守卫营地。']
+  bothRails:['うごく ベルトに のせると おうちへ とどく！','Place items on the moving belt to send them home!','放在移动的传送带上，物资就会运入房屋！']
  };
+ const beltWords={platformBlocked:['ここには おけないよ。べつの ばしょに おこう。','Choose another clear place for the platform.','这里不能放置，请选择其他空地。'],platformBuild:['▦ うけとるだい','▦ Receiving platform','▦ 接料平台'],platformHint:['だいを おこう。やじるしの さきに ベルトを つなごう。','Place a platform. Connect a belt at its output arrow.','放置平台，并把传送带连接到箭头出口。'],platformCost:['き8・いし4','8 wood · 4 stone','8木材·4石材'],rotate:['むき ↻','Turn ↻','转向 ↻'],freeBeltHint:['とどけたい ばしょから ひっぱろう！ やじるしは はじめの ばしょへ。','Drag from the destination toward the incoming items. Arrows point back to your starting point.','从接收处向来料方向拖动，箭头指向起点。'],beltCollect:['まず きを おうちへ はこぼう（き 2〜）','First carry wood into the house (2+ wood).','先把木材送入房屋（至少2木材）。'],beltBuild:['▰ コンベア','▰ Conveyor','▰ 传送带'],beltHint:['とどけたい ところから ひっぱって のばそう！','Drag from the destination toward incoming items!','从接收处向来料方向拖动延伸！'],beltRelease:['はなすと つくれるよ。き ','Release to build. Wood ','松开建造。木材 '],beltWood:['きが たりないよ。みじかく ひこう。','Not enough wood. Draw a shorter belt.','木材不足，请缩短传送带。'],beltPlaced:['できた！ うえに き・いしを のせよう！','Built! Drop wood or stone onto the belt!','建好了！把木石放到传送带上！'],beltFeed:['コンベアか おうちへ はなそう！','Release on a conveyor or the house!','在传送带或房屋上松开！']};
  const railWords={chooseSource:['どこから はこぶ？ き・いしの ○ を おそう。','Choose a worksite: click its loading circle.','选择采集点，点击装货圆圈。'],layRoute:['ちかくの じめんを おして レールを のばそう。おうちまで つなごう。','Click nearby ground to extend the rails. Reach the house.','点击附近地面延伸轨道，直到房屋。'],confirmRoute:['おうちに つながった！ ねだんを みて つくろう。','Connected to the house. Check the price and build.','已连接房屋，确认费用后建造。'],undo:['ひとつ もどす','Undo point','撤销一点'],cancelRail:['やめる','Cancel','取消'],layRail:['この みちを つくる','Build this route','修建此路线'],gap:['とおすぎるよ。ちかくに ひとつずつ おこう。','Too far. Place one short section at a time.','太远了，请逐段铺设。'],object:['き・いわを よけて おこう。','Go around trees and rocks.','请绕开树木和岩石。'],bounds:['じめんの なかに おこう。','Keep the rails on the field.','请在场地内铺设。'],short:['もうすこし はなれた ところへ。','Choose a point farther away.','请选择稍远一点的位置。'],long:['みちが ながすぎるよ。もどして みじかくしよう。','Route too long. Undo some points.','路线过长，请撤销部分节点。'],remove:['こわす・はんぶん もどる','Remove / half refund','拆除·退还一半'],railPrice:['8G ＋ ながさ32ごとに2G','8G station + 2G per 32 distance','站点8G＋每32距离2G'],draw:['じぶんで レールを しく','Lay rails yourself','手动铺设轨道']};
- const projectWords={rails:['レール','Rails','轨道'],growth:['どうぐ・おうち','Tools / home','工具·营地'],woodTool:['きこりの どうぐ','Lumberjack tools','伐木工具'],stoneTool:['いしほりの どうぐ','Mining tools','采矿工具'],cart:['おおきな にぐるま','Larger carts','大货车'],gate:['みはりの もん','Watch gate','守望门'],beacon:['まちへの あかり','Town beacon','城镇灯塔'],made:['できた！','Built!','已建成！'],make:['つくる','Build','建造'],locked:['まずは ここまで まもろう','Defend up to this raid first','先守住这一波'],rank:['だんかい','Level','阶段'],materials:['つかうもの','Materials','材料'],faster:['ひとりで はやく はたらける！','Each worker gathers faster.','每位工人采集更快。'],cartEffect:['いちどに 8こ はこべる！','Carry 8 per trip instead of 4.','每趟运送8份，原为4份。'],gateEffect:['おうちの まえで 2.5びょう まにあう！','A 2.5-second rescue window at the house.','房屋前有2.5秒的救援时间。'],beaconEffect:['まちへの みちを ひらく あかり。さいごの むれを まもろう！','Light the way to town, then defend the final raid.','点亮通往城镇的道路，守住最终袭击。'],projectDone:['できた！ なかまの しごとを みてみよう。','Built! Watch your camp work.','建好了！看看营地的变化。']};
+ const projectWords={rails:['コンベア','Conveyors','传送带'],growth:['どうぐ・おうち','Tools / home','工具·营地'],woodTool:['きこりの どうぐ','Lumberjack tools','伐木工具'],stoneTool:['いしほりの どうぐ','Mining tools','采矿工具'],cart:['コンベアの モーター','Conveyor motor','传送带马达'],gate:['みはりの もん','Watch gate','守望门'],beacon:['まちへの あかり','Town beacon','城镇灯塔'],made:['できた！','Built!','已建成！'],make:['つくる','Build','建造'],locked:['まずは ここまで まもろう','Defend up to this raid first','先守住这一波'],rank:['だんかい','Level','阶段'],materials:['つかうもの','Materials','材料'],faster:['ひとりで はやく はたらける！','Each worker gathers faster.','每位工人采集更快。'],cartEffect:['ベルトの はやさ ×1.25！','Belt speed ×1.25!','传送带速度×1.25！'],gateEffect:['おうちの まえで 2.5びょう まにあう！','A 2.5-second rescue window at the house.','房屋前有2.5秒的救援时间。'],beaconEffect:['まちへの みちを ひらく あかり。さいごの むれを まもろう！','Light the way to town, then defend the final raid.','点亮通往城镇的道路，守住最终袭击。'],projectDone:['できた！ なかまの しごとを みてみよう。','Built! Watch your camp work.','建好了！看看营地的变化。']};
  let drag=null,dragGhost=null,dragInstalled=false;
- let railDraft=null,railPanel=null,railHover=null,railError='';
+ let railDraft=null,railPanel=null,railHover=null,railError='',beltPointer=null,beltButton=null,beltHistory=[],platformButton=null,platformMode=false,platformPreview=null,platformDir=0;
  let activeTab='rails',workshopMessage='';
  let booted=false,activeCamp=null,railClock=0,uiClock=0,houseFlash=0;
  let warehouse=null,overlay=null,goldLabel=null,deliveryLabel=null,workshopStatus=null;
  let statusKey='clickPile',statusUntil=0,visualTime=0,positionKey='',languageKey='',notices=[];
  const language=()=>typeof LANG==='string'?LANG:'ja';
- const tr=key=>(words[key]||projectWords[key]||railWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
+ const tr=key=>(words[key]||projectWords[key]||railWords[key]||beltWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
  const format=n=>typeof fmt==='function'?fmt(n):String(Math.floor(n));
  const current=()=>typeof S==='undefined'?null:S;
  const setText=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value;};
@@ -57,7 +58,7 @@ window.OutpostCamp = (() => {
    s.factory.nodes=[{key:1,type:'wood',x:280,y:300},{key:2,type:'wood',x:470,y:300},{key:3,type:'stone',x:330,y:395},{key:4,type:'stone',x:490,y:395}].map(n=>({...n,stock:300,radius:n.type==='wood'?16:19,regrow:0}));
    s.factory.next=Math.max(5,s.factory.next||1,...s.factory.drops.map(d=>(Number(d.key)||0)+1));
   }
-  s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen'])s.camp[flag]=s.camp[flag]===true;
+  s.camp.platforms??=[];s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen'])s.camp[flag]=s.camp[flag]===true;
   if(activeCamp!==s.camp){
    activeCamp=s.camp;railClock=0;uiClock=0;houseFlash=0;notices=[];railDraft=null;railHover=null;
    statusKey='clickPile';statusUntil=0;languageKey='';
@@ -65,7 +66,7 @@ window.OutpostCamp = (() => {
   return s;
  }
  const linked=(s,node)=>s.camp.links.some(link=>keyEqual(link.nodeKey,node.key));
- const railExists=type=>{const s=state();return !!s?.camp.links.some(link=>link.type===type);};
+ const railExists=type=>{const s=state(),id=type==='wood'?'woodcutter':'miner';return (window.ArmyView?.sim?.soldiers||[]).some(p=>{if(p.id!==id)return false;const n=s.factory.nodes.filter(n=>n.type===type).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];if(!n)return false;const out=window.SupplyFactory?.outputForWorker?.(p,n)||{x:p.x+Math.sign(p.x-n.x)*24,y:p.y+24};return !!ConveyorCore.contact(s.camp.links,out)||!!ConveyorCore.platformAt(s.camp.platforms,out);});};
  function workersAt(node){
   const id=node.type==='wood'?'woodcutter':'miner';
   return (window.ArmyView?.sim?.soldiers||[]).filter(p=>p.id===id&&Math.hypot(p.x-node.x,p.y-node.y)<72).length;
@@ -102,7 +103,7 @@ window.OutpostCamp = (() => {
   overlay.addEventListener('click',e=>{
    if(e.target===overlay){window.Rework?.close();return;}
    const tab=e.target.closest('[data-camp-tab]');if(tab){activeTab=tab.dataset.campTab;syncWorkshop(state());return;}const project=e.target.closest('[data-camp-project]');if(project&&!project.disabled){build(project.dataset.campProject);return;}
-   const remove=e.target.closest('[data-camp-remove]');if(remove){removeRail(remove.dataset.campRemove);return;}const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
+   const turn=e.target.closest('[data-platform-turn]');if(turn){const p=state().camp.platforms.find(p=>p.key===Number(turn.dataset.platformTurn));if(p){p.dir=(p.dir+1)%4;persist();syncWorkshop(state());}return;}const platformRemove=e.target.closest('[data-platform-remove]');if(platformRemove){const i=state().camp.platforms.findIndex(p=>p.key===Number(platformRemove.dataset.platformRemove));if(i>=0){state().camp.platforms.splice(i,1);state().factory.inventory.wood+=4;state().factory.inventory.stone+=2;persist();syncWorkshop(state());}return;}const remove=e.target.closest('[data-camp-remove]');if(remove){removeRail(remove.dataset.campRemove);return;}const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
   });
  }
 
@@ -118,22 +119,13 @@ window.OutpostCamp = (() => {
   setText(overlay.querySelector('.camp-workshop-note'),tr('available'));
   for(const button of overlay.querySelectorAll('[data-camp-tab]')){setText(button,tr(button.dataset.campTab));button.setAttribute('aria-pressed',String(activeTab===button.dataset.campTab));}overlay.querySelector('.camp-rail-options').hidden=activeTab!=='rails';overlay.querySelector('.camp-projects').hidden=activeTab!=='growth';overlay.querySelector('.camp-rail-options').style.display=activeTab==='rails'?'grid':'none';overlay.querySelector('.camp-projects').style.display=activeTab==='growth'?'grid':'none';syncProjects(s);
   for(const type of ['wood','stone']){
-   const card=overlay.querySelector('[data-camp-option="'+type+'"]'),node=nextNode(s,type),count=s.camp.links.filter(link=>link.type===type).length;
-   const button=card.querySelector('button'),enough=s.gold>=RailCore.STATION+RailCore.PRICE;
-   setText(card.querySelector('h3'),tr(type)+' · '+tr('rail'));
-   setText(card.querySelector('.camp-rail-count'),count?tr('connected')+' '+count:'');
-   setText(card.querySelector('.camp-route-origin'),tr(type==='wood'?'woodSite':'stoneSite'));
-   setText(card.querySelector('.camp-route-home'),tr('warehouse'));
-   setText(card.querySelector('.camp-rail-rate'),language()==='ja'?'1だいで '+(s.camp.cart?8:4)+'こ。とおい みちは はこぶのに じかんが かかるよ。':language()==='zh'?'每车'+(s.camp.cart?8:4)+'份，路线越长运输越慢。':'One cart holds '+(s.camp.cart?8:4)+'. Longer routes take more time.');
-   const people=node?workersAt(node):0;
-   setText(card.querySelector('.camp-rail-workers'),node?(people?tr('worker')+' '+people+tr('people'):tr('noWorker')):tr('automated'));
-   setText(button.querySelector('span'),!node?tr('complete'):tr('draw'));
-   setText(button.querySelector('strong'),node?'8 G +':'✓');
-   setText(card.querySelector('.camp-rail-afford'),node&&!enough?tr('needed')+' '+format(10-s.gold)+' G':tr('railPrice'));
-   let routes=card.querySelector('.camp-existing-routes');if(!routes){routes=document.createElement('div');routes.className='camp-existing-routes';card.append(routes);}routes.replaceChildren(...s.camp.links.filter(l=>l.type===type).map(l=>{const button=document.createElement('button');button.type='button';button.dataset.campRemove=l.nodeKey;const n=s.factory.nodes.find(n=>keyEqual(n.key,l.nodeKey));button.textContent=(n?siteName(s,n):tr(type))+' · '+tr('remove')+' +'+Math.floor((l.cost||COST[type])*.5)+' G';return button;}));
-   button.disabled=!node||!enough;card.classList.toggle('is-connected',!node);
-   const hasWood=s.camp.links.some(link=>link.type==='wood'),hasStone=s.camp.links.some(link=>link.type==='stone');
-   card.classList.toggle('camp-next-route',!!node&&(type==='wood'&&!hasWood||type==='stone'&&hasWood&&!hasStone));
+   const card=overlay.querySelector('[data-camp-option="'+type+'"]');card.hidden=type==='stone';card.style.display=type==='stone'?'none':'';if(type==='stone')continue;
+   setText(card.querySelector('h3'),tr('rail'));setText(card.querySelector('.camp-rail-count'),String(s.camp.links.length));
+   setText(card.querySelector('.camp-route-origin'),tr('wood')+' / '+tr('stone'));setText(card.querySelector('.camp-route-home'),tr('warehouse'));
+   setText(card.querySelector('.camp-rail-rate'),tr('intro'));setText(card.querySelector('.camp-rail-workers'),tr('beltHint'));
+   const button=card.querySelector('[data-camp-build]');setText(button.querySelector('span'),tr('beltBuild'));setText(button.querySelector('strong'),language()==='ja'?'き 2〜':language()==='zh'?'木材 2起':'Wood: 2+');button.disabled=s.factory.inventory.wood<1;
+   setText(card.querySelector('.camp-rail-afford'),s.factory.inventory.wood<1?tr('beltWood'):'');
+   let routes=card.querySelector('.camp-existing-routes');if(!routes){routes=document.createElement('div');routes.className='camp-existing-routes';card.append(routes);}routes.replaceChildren(...s.camp.links.map(l=>{const b=document.createElement('button');b.type='button';b.dataset.campRemove=l.nodeKey;b.textContent=tr('rail')+' '+l.nodeKey+' ×';return b;}),...s.camp.platforms.flatMap(p=>{const turn=document.createElement('button'),remove=document.createElement('button');turn.type=remove.type='button';turn.dataset.platformTurn=p.key;remove.dataset.platformRemove=p.key;turn.textContent=tr('platformBuild')+' '+p.key+' ↻';remove.textContent=tr('platformBuild')+' '+p.key+' ×';return[turn,remove];}));
   }
  }
 
@@ -147,8 +139,8 @@ window.OutpostCamp = (() => {
     setText(warehouse.querySelector('.camp-gold span'),tr('gold'));
     for(const type of ['wood','stone'])document.getElementById(type==='wood'?'gatherWood':'gatherStone')?.setAttribute('data-camp-label',tr(type));
    }
-   setText(goldLabel,format(s.gold)+' G');
-   const hasCargo=s.camp.cargo.length>0;
+   setText(goldLabel,format(s.gold)+' G');if(beltButton)setText(beltButton,tr('beltBuild'));if(platformButton)setText(platformButton,tr('platformBuild'));
+   const hasCargo=s.camp.cargo.length>0||s.factory.drops.some(d=>!heldDrop(d)&&ConveyorCore.contact(s.camp.links,d));
    setText(deliveryLabel,statusUntil>visualTime?tr(statusKey):tr(hasCargo?'inTransit':'tapHome'));
   }
   if(overlay?.classList.contains('on'))syncWorkshop(s);if(railDraft)syncRailPanel();
@@ -180,7 +172,7 @@ window.OutpostCamp = (() => {
   if(n>=3&&!c.cart)return quote('cart');return null;
  }
  function projectIcon(id){
-  const paths={woodTool:'<path d="M9 28L22 5" stroke="#805b36" stroke-width="4"/><path d="M21 4L29 9L24 17L17 12Z" fill="#b8c7b4"/>',stoneTool:'<path d="M9 28L21 6" stroke="#805b36" stroke-width="4"/><path d="M10 11Q22 2 29 15" fill="none" stroke="#b8c7b4" stroke-width="5"/>',cart:'<path d="M4 12H28L25 23H7Z" fill="#97723f"/><path d="M4 10H28M8 12V22M16 12V22M24 12V22" stroke="#d4b272"/><circle cx="9" cy="26" r="3" fill="#b7c6ad"/><circle cx="23" cy="26" r="3" fill="#b7c6ad"/>',gate:'<path d="M5 29V9H10V29M22 29V9H27V29M5 10V5H27V10M10 16H22" fill="#89643b" stroke="#d4b272" stroke-width="2"/><path d="M14 15L17 20L20 15" fill="#779665"/>',beacon:'<path d="M11 29L13 15H21L23 29Z" fill="#9a9d7e"/><path d="M12 15V8H22V15Z" fill="#e3c773" stroke="#d5dfa0"/><path d="M10 8L17 3L24 8Z" fill="#886840"/><path d="M3 11H8M26 11H31M8 2L11 5M26 2L23 5" stroke="#eed38a" stroke-width="2"/>'};
+  const paths={woodTool:'<path d="M9 28L22 5" stroke="#805b36" stroke-width="4"/><path d="M21 4L29 9L24 17L17 12Z" fill="#b8c7b4"/>',stoneTool:'<path d="M9 28L21 6" stroke="#805b36" stroke-width="4"/><path d="M10 11Q22 2 29 15" fill="none" stroke="#b8c7b4" stroke-width="5"/>',cart:'<path d="M5 12H29V26H5Z" fill="#71856d" stroke="#d6c58b"/><circle cx="17" cy="18" r="7" fill="#384c3d" stroke="#dfd497"/><path d="M17 8V28M7 18H27" stroke="#dfd497" stroke-width="3"/>',gate:'<path d="M5 29V9H10V29M22 29V9H27V29M5 10V5H27V10M10 16H22" fill="#89643b" stroke="#d4b272" stroke-width="2"/><path d="M14 15L17 20L20 15" fill="#779665"/>',beacon:'<path d="M11 29L13 15H21L23 29Z" fill="#9a9d7e"/><path d="M12 15V8H22V15Z" fill="#e3c773" stroke="#d5dfa0"/><path d="M10 8L17 3L24 8Z" fill="#886840"/><path d="M3 11H8M26 11H31M8 2L11 5M26 2L23 5" stroke="#eed38a" stroke-width="2"/>'};
   return '<svg viewBox="0 0 34 34" width="42" height="42" aria-hidden="true">'+paths[id]+'</svg>';
  }
  function priceHTML(cost){return ['wood','stone'].filter(type=>cost[type]).map(type=>'<span class="camp-material-price">'+(window.SupplyFactory?.icon(type)||tr(type))+' <b>'+format(cost[type])+'</b></span>').join('')+(cost.gold?'<span class="camp-gold-price">'+format(cost.gold)+' G</span>':'');}
@@ -212,44 +204,49 @@ window.OutpostCamp = (() => {
   if(s.camp.beacon){const x=82,y=248;ctx.fillStyle='#4d5140';ctx.fillRect(x-15,y-34,30,37);ctx.fillStyle='#929779';ctx.fillRect(x-11,y-34,22,34);ctx.fillStyle='#dbca85';ctx.fillRect(x-13,y-48,26,17);ctx.fillStyle='#f4e5a7';ctx.fillRect(x-8,y-45,16,10);ctx.fillStyle='#705739';ctx.beginPath();ctx.moveTo(x-18,y-48);ctx.lineTo(x,y-61);ctx.lineTo(x+18,y-48);ctx.closePath();ctx.fill();ctx.strokeStyle='#dfd08b88';ctx.lineWidth=2;for(const dx of [-1,1]){ctx.beginPath();ctx.moveTo(x+dx*20,y-40);ctx.lineTo(x+dx*34,y-40);ctx.stroke();}}
  }
 
- function buildRail(type){
-  const s=state();if(!s||!Object.hasOwn(COST,type)||!nextNode(s,type)||s.gold<10)return false;
-  endDrag(null,true);window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);window.Rework?.close();
-  railDraft={type,nodeKey:null,points:[],finished:false,owner:s};railHover=null;railError='';
-  document.getElementById('field').classList.add('laying-rails');syncRailPanel();return true;
+ function buildRail(){
+  platformMode=false;platformPreview=null;const s=state();if(!s)return false;endDrag(null,true);window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);window.Rework?.close();
+  railDraft={points:[],owner:s};railHover=null;railError='';document.getElementById('field').classList.add('laying-rails');syncRailPanel();return true;
  }
- function stopRails(){railDraft=null;railHover=null;railError='';document.getElementById('field')?.classList.remove('laying-rails');if(railPanel)railPanel.hidden=true;}
+ function stopRails(){platformMode=false;platformPreview=null;railDraft=null;railHover=null;railError='';beltPointer=null;document.getElementById('field')?.classList.remove('laying-rails');if(railPanel)railPanel.hidden=true;}
  function syncRailPanel(){
-  if(!railPanel){railPanel=document.createElement('section');railPanel.id='railEditor';railPanel.innerHTML='<b role="status"></b><strong class="rail-price"></strong><div><button type="button" data-rail-action="undo"></button><button type="button" data-rail-action="cancel"></button><button type="button" data-rail-action="confirm"></button></div>';document.getElementById('deckMain').prepend(railPanel);railPanel.onclick=e=>{const action=e.target.closest('[data-rail-action]')?.dataset.railAction;if(action==='cancel')stopRails();if(action==='undo'&&railDraft){if(railDraft.points.length>1)railDraft.points.pop();else{railDraft.nodeKey=null;railDraft.points=[];}railDraft.finished=false;railError='';syncRailPanel();}if(action==='confirm')commitRails();};}
-  railPanel.hidden=!railDraft;if(!railDraft)return;
-  setText(railPanel.querySelector('b'),railError?tr(railError):tr(!railDraft.nodeKey?'chooseSource':railDraft.finished?'confirmRoute':'layRoute'));
-  const price=railDraft.points.length>1?RailCore.cost(railDraft.points):0;setText(railPanel.querySelector('.rail-price'),price?price+' G / '+format(state().gold)+' G':tr('railPrice'));
-  for(const [id,key]of [['undo','undo'],['cancel','cancelRail'],['confirm','layRail']])setText(railPanel.querySelector('[data-rail-action="'+id+'"]'),tr(key));
-  railPanel.querySelector('[data-rail-action="undo"]').disabled=!railDraft.points.length;
-  railPanel.querySelector('[data-rail-action="confirm"]').disabled=!railDraft.finished||state().gold<price;
+  if(!railPanel){railPanel=document.createElement('section');railPanel.id='railEditor';railPanel.innerHTML='<b role="status"></b><strong class="rail-price"></strong><div><button type="button" data-rail-action="rotate"></button><button type="button" data-rail-action="undo"></button><button type="button" data-rail-action="cancel"></button></div>';document.getElementById('deckMain').prepend(railPanel);railPanel.onclick=e=>{const action=e.target.closest('[data-rail-action]')?.dataset.railAction;if(action==='cancel')stopRails();if(action==='undo')undoBelt();if(action==='rotate'){platformDir=(platformDir+1)%4;syncRailPanel();}};}
+  railPanel.hidden=!railDraft;if(!railDraft)return;railPanel.querySelector('[data-rail-action="rotate"]').hidden=!platformMode;setText(railPanel.querySelector('[data-rail-action="rotate"]'),tr('rotate'));if(platformMode){setText(railPanel.querySelector('b'),railError?tr(railError==='area'?'platformBlocked':'beltWood'):tr('platformHint'));setText(railPanel.querySelector('.rail-price'),tr('platformCost'));setText(railPanel.querySelector('[data-rail-action="undo"]'),tr('undo'));setText(railPanel.querySelector('[data-rail-action="cancel"]'),tr('cancelRail'));return;}const price=railDraft.points.length>1?ConveyorCore.cost(railDraft.points)-(railDraft.oldCost||0):0;
+  const missing=Math.max(0,Math.max(1,price)-state().factory.inventory.wood);setText(railPanel.querySelector('b'),beltPointer!==null&&price>0&&missing>0?(language()==='ja'?'きが あと '+Math.ceil(missing)+'こ。みじかく のばそう。':language()==='zh'?'还缺'+Math.ceil(missing)+'木材，请缩短。':'Need '+Math.ceil(missing)+' more wood. Draw a shorter belt.'):railError?tr('beltWood'):state().factory.inventory.wood<2?tr('beltCollect'):beltPointer!==null?tr('beltRelease')+Math.max(1,price):tr('beltHint'));
+  setText(railPanel.querySelector('.rail-price'),(language()==='ja'?'き ':language()==='zh'?'木材 ':'Wood ')+Math.max(0,Math.floor(state().factory.inventory.wood)));
+  setText(railPanel.querySelector('[data-rail-action="undo"]'),tr('undo'));setText(railPanel.querySelector('[data-rail-action="cancel"]'),tr('cancelRail'));railPanel.querySelector('[data-rail-action="undo"]').disabled=!beltHistory.length;
  }
  function commitRails(){
-  const s=state(),d=railDraft;if(window.Rework?.paused||!d||d.owner!==s||!d.finished||d.points.length<2)return false;
-  const node=s.factory.nodes.find(n=>keyEqual(n.key,d.nodeKey)),price=RailCore.cost(d.points);if(!node||linked(s,node)||s.gold<price)return false;
-  s.gold-=price;s.camp.links.push({nodeKey:node.key,type:node.type,points:d.points.map(p=>({...p})),cost:price});
-  stopRails();audio('build');statusKey='linked';statusUntil=visualTime+3;window.Rework?.track?.('rail_built',{type:node.type,points:d.points.length,cost:price});if(typeof updateHud==='function')updateHud();persist();syncDOM();return true;
+  const s=state(),d=railDraft;if(!d||d.owner!==s||d.points.length<2)return false;if(ConveyorCore.length(d.points)-(d.startLength||0)<10)return false;const fullCost=ConveyorCore.cost(d.points),price=Math.max(d.link?1:2,fullCost-(d.oldCost||0));if(s.factory.inventory.wood<price){railError='wood';syncRailPanel();return false;}
+  const old=d.link?{...d.link,points:d.link.points.map(p=>({...p}))}:null;s.factory.inventory.wood-=price;
+  if(d.link){d.link.points=d.points.map(p=>({...p}));d.link.costWood=(d.link.costWood||d.oldCost||0)+price;d.link.kind='conveyor';}
+  else{const nodeKey=Math.max(0,...s.camp.links.map(l=>Number(l.nodeKey)||0))+1;s.camp.links.push({nodeKey,type:'wood',kind:'conveyor',points:d.points.map(p=>({...p})),costWood:price});}
+  beltHistory.push({nodeKey:d.link?.nodeKey||s.camp.links.at(-1).nodeKey,old,price});railDraft={points:[],owner:s};railError='';statusKey='beltPlaced';statusUntil=visualTime+4;audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();return true;
  }
- function removeRail(key){
-  const s=state(),index=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,key));if(index<0)return false;const link=s.camp.links[index];s.camp.links.splice(index,1);s.gold+=Math.floor((link.cost||COST[link.type])*.5);audio('place');persist();syncDOM();syncWorkshop(s);return true;
+ function undoBelt(){const h=beltHistory.pop(),s=state();if(!h)return;if(h.platform){const j=s.camp.platforms.findIndex(p=>p.key===h.platform);if(j>=0){s.camp.platforms.splice(j,1);s.factory.inventory.wood+=8;s.factory.inventory.stone+=4;}persist();window.SupplyFactory?.translate();syncRailPanel();return;}const i=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,h.nodeKey));if(i<0)return;if(h.old)s.camp.links[i]=h.old;else s.camp.links.splice(i,1);s.factory.inventory.wood+=h.price;persist();window.SupplyFactory?.translate();syncRailPanel();}
+ function removeRail(key){const s=state(),i=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,key));if(i<0)return false;const link=s.camp.links[i];s.camp.links.splice(i,1);s.factory.inventory.wood+=Math.floor((link.costWood||0)*.5);persist();syncDOM();syncWorkshop(s);return true;}
+ function buildPlatform(){buildRail();platformMode=true;platformPreview=null;railError='';syncRailPanel();return true;}
+ function platformFits(point){const s=state();return point.x>=50&&point.x<=910&&point.y>=170&&point.y<=500&&Math.hypot(point.x-HOME.x,point.y-HOME.y)>=75&&!s.camp.platforms.some(p=>Math.abs(p.x-point.x)<96&&Math.abs(p.y-point.y)<64);}
+ function placePlatform(point){const s=state();if(s.factory.inventory.wood<8||s.factory.inventory.stone<4){railError='materials';syncRailPanel();return false;}if(!platformFits(point)){railError='area';syncRailPanel();return false;}
+  const key=Math.max(0,...s.camp.platforms.map(p=>p.key))+1;s.factory.inventory.wood-=8;s.factory.inventory.stone-=4;s.camp.platforms.push({key,x:point.x,y:point.y,w:96,h:64,dir:platformDir,costWood:8,costStone:4});beltHistory.push({platform:key});railError='';audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();return true;
  }
- function routePoint(point){
-  const d=railDraft,s=state();if(window.Rework?.paused||!d||d.owner!==s)return;
-  if(!d.nodeKey){const n=s.factory.nodes.find(n=>n.type===d.type&&!linked(s,n)&&Math.hypot(point.x-n.x,point.y-(n.y+12))<Math.max(30,26/ArmyView.camera.scale));if(!n)return;d.nodeKey=n.key;d.points=[{x:n.x,y:n.y+12}];railError='';syncRailPanel();return;}
-  if(d.finished)return;
-  const end=houseContains(point),p=end?{...HOME}:RailCore.snap(point),error=RailCore.validateStep(d.points,p,{source:d.nodeKey,nodes:s.factory.nodes});
-  if(error){railError=error;syncRailPanel();return;}d.points.push(p);d.finished=end;railError='';audio('place');syncRailPanel();
+ function beltStart(point){
+  const s=state();if(!railDraft||Rework.paused)return false;const max=Math.max(18,16/ArmyView.camera.scale);let start=null,link=null;
+  for(const l of s.camp.links){if(!l.points?.length)continue;const ps=ConveyorCore.oriented(l);if(ConveyorCore.distance(ps.at(-1),point)<max){start=ps;link=l;break;}}
+  if(!start&&(ConveyorCore.distance(point,BELT_PORT)<max||Math.hypot(point.x-HOME.x,point.y-HOME.y)<30))start=[{...HOME},{...BELT_PORT}];
+  if(!start){const near=ConveyorCore.contact(s.camp.links,point,ConveyorCore.WIDTH);start=[near?{x:near.x,y:near.y}:{x:clamp(point.x,14,946),y:clamp(point.y,140,520)}];}
+  railDraft.points=start.map(p=>({...p}));railDraft.link=link;railDraft.oldCost=link?ConveyorCore.cost(start):0;railDraft.startLength=ConveyorCore.length(start);railError='';return true;
  }
+
  function installRails(){
-  const field=document.getElementById('field');field.addEventListener('pointerdown',e=>{if(!railDraft||e.target.closest('button,input,select'))return;e.preventDefault();e.stopImmediatePropagation();if(e.button===0&&e.isPrimary!==false)routePoint(ArmyView.point(e.clientX,e.clientY));},true);
-  field.addEventListener('pointermove',e=>{if(!railDraft)return;railHover=RailCore.snap(ArmyView.point(e.clientX,e.clientY));},true);
-  window.addEventListener('keydown',e=>{if(!railDraft)return;if(e.key==='Escape')stopRails();if(e.key==='Backspace'){e.preventDefault();railPanel.querySelector('[data-rail-action="undo"]').click();}});
-  window.addEventListener('pagehide',stopRails);
+  const field=document.getElementById('field');beltButton=document.createElement('button');beltButton.id='conveyorBuild';beltButton.type='button';beltButton.textContent=tr('beltBuild');beltButton.onclick=()=>railDraft&&!platformMode?stopRails():buildRail();document.getElementById('rxToolbar').prepend(beltButton);platformButton=document.createElement('button');platformButton.id='conveyorPlatformBuild';platformButton.type='button';platformButton.textContent=tr('platformBuild');platformButton.onclick=()=>platformMode?stopRails():buildPlatform();beltButton.after(platformButton);
+  field.addEventListener('pointerdown',e=>{if(!railDraft||e.target.closest('button,input,select'))return;e.preventDefault();e.stopImmediatePropagation();if(e.button!==0||e.isPrimary===false)return;if(platformMode){platformPreview=ArmyView.point(e.clientX,e.clientY);}else if(!beltStart(ArmyView.point(e.clientX,e.clientY)))return;beltPointer=e.pointerId;try{field.setPointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
+  field.addEventListener('pointermove',e=>{if(platformMode&&railDraft){platformPreview=ArmyView.point(e.clientX,e.clientY);if(beltPointer!==e.pointerId)return;}if(!railDraft||beltPointer!==e.pointerId)return;e.preventDefault();e.stopImmediatePropagation();const p=ArmyView.point(e.clientX,e.clientY);p.x=clamp(p.x,14,946);p.y=clamp(p.y,140,520);if(platformMode)platformPreview=p;else railDraft.points=ConveyorCore.stretch(railDraft.points,p);railHover=p;syncRailPanel();},true);
+  field.addEventListener('pointerup',e=>{if(beltPointer!==e.pointerId)return;e.preventDefault();e.stopImmediatePropagation();beltPointer=null;if(platformMode){placePlatform(ArmyView.point(e.clientX,e.clientY));}else commitRails();if(railDraft){railDraft.points=[];railDraft.link=null;railDraft.oldCost=0;}try{field.releasePointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
+  field.addEventListener('pointercancel',e=>{if(beltPointer!==e.pointerId)return;beltPointer=null;if(railDraft)railDraft.points=[];syncRailPanel();},true);
+  window.addEventListener('keydown',e=>{if(!railDraft)return;if(e.key==='Escape')stopRails();if(e.key==='Backspace'){e.preventDefault();undoBelt();}});window.addEventListener('blur',()=>{beltPointer=null;if(railDraft)railDraft.points=[];});window.addEventListener('pagehide',stopRails);
  }
+
  function openWorkshop(tab){if(tab==='rails'||tab==='growth')activeTab=tab;
 
   if(!booted)boot();const s=state();if(!s)return false;
@@ -275,18 +272,18 @@ window.OutpostCamp = (() => {
  function refreshDrag(e){
   if(!drag)return;drag.x=e.clientX;drag.y=e.clientY;drag.over=dragTarget(e);
   if(!drag.over&&drag.items.length<handCapacity()){const extra=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(extra&&!heldDrop(extra)){drag.items.push({drop:extra,count:1});audio('pickup');}}
-  dragGhost.innerHTML=drag.items.map(item=>'<span>'+(window.SupplyFactory?.icon(item.drop.type)||'')+'</span>').join('')+'<b>'+drag.items.length+' / '+handCapacity()+'</b>';
+  dragGhost.innerHTML='<b>'+drag.items.length+' / '+handCapacity()+'</b>';
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
   dragGhost.classList.toggle('can-deliver',drag.over);document.getElementById('field').classList.toggle('delivery-ready',drag.over);
  }
  function endDrag(e,cancel=false){
   if(!drag||e&&e.pointerId!==drag.pointerId)return;
-  const held=drag,s=state(),ok=!cancel&&!window.Rework?.paused&&dragTarget(e)&&s===held.state;
+  const held=drag,s=state(),allowed=!cancel&&!window.Rework?.paused&&s===held.state,ok=allowed&&dragTarget(e),point=allowed?ArmyView.point(e.clientX,e.clientY):null,belt=point?ConveyorCore.contact(s.camp.links,point,ConveyorCore.WIDTH):null,platform=point?ConveyorCore.platformAt(s.camp.platforms,point):null;
   drag=null;dragGhost?.remove();dragGhost=null;const field=document.getElementById('field');field?.classList.remove('dragging-supplies','delivery-ready');
   try{if(field?.hasPointerCapture(held.pointerId))field.releasePointerCapture(held.pointerId);}catch(_){}
   if(ok){
    const arrivals=[];for(const item of held.items){const drop=item.drop,count=Math.min(item.count,drop.count),index=s.factory.drops.indexOf(drop);if(count>0&&index>=0){if(count===drop.count)s.factory.drops.splice(index,1);else drop.count-=count;arrivals.push({type:drop.type,count,worker:drop.worker===true});}}receive(s,arrivals);
-  }else{statusKey='returned';statusUntil=visualTime+1.7;syncDOM();}
+  }else if(allowed&&platform&&!belt){for(let i=0;i<held.items.length;i++){const d=held.items[i].drop;d.x=clamp(point.x+i*16,platform.x-platform.w/2+4,platform.x+platform.w/2-4);d.y=clamp(point.y,platform.y-platform.h/2+4,platform.y+platform.h/2-4);d.onConveyor=true;}persist();syncDOM();}else if(allowed&&belt){for(let i=0;i<held.items.length;i++){const drop=held.items[i].drop,p=ConveyorCore.at(belt.points,Math.max(0,belt.along+i*18));drop.x=p.x;drop.y=p.y;drop.onConveyor=true;}statusKey='inTransit';statusUntil=visualTime+2;persist();syncDOM();}else{statusKey='returned';statusUntil=visualTime+1.7;syncDOM();}
   window.SupplyFactory?.translate();
  }
  function installDrag(){
@@ -295,8 +292,8 @@ window.OutpostCamp = (() => {
    if(railDraft||!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;
    const s=state(),drop=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!drop||drag)return;
    e.preventDefault();e.stopImmediatePropagation();
-   drag={drop,count:1,items:[{drop,count:1}],state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,over:false};
-   dragGhost=document.createElement('div');dragGhost.id='campDragGhost';dragGhost.setAttribute('aria-hidden','true');dragGhost.innerHTML=(window.SupplyFactory?.icon(drop.type)||'')+'<b>×'+format(drag.count)+'</b>';document.body.append(dragGhost);
+   const view=document.getElementById('battleWorld').getBoundingClientRect(),z=ArmyView.camera.scale;drag={drop,count:1,items:[{drop,count:1}],state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,offset:{x:view.left+drop.x*z-e.clientX,y:view.top+drop.y*z-e.clientY},over:false};
+   dragGhost=document.createElement('div');dragGhost.id='campDragGhost';dragGhost.setAttribute('aria-hidden','true');dragGhost.innerHTML='<b>1 / '+handCapacity()+'</b>';document.body.append(dragGhost);
    field.classList.add('dragging-supplies');try{field.setPointerCapture(e.pointerId);}catch(_){}
    refreshDrag(e);statusKey='dragging';statusUntil=visualTime+3600;syncDOM();
   },true);
@@ -308,19 +305,15 @@ window.OutpostCamp = (() => {
   window.addEventListener('keydown',e=>{if(e.key==='Escape')endDrag(null,true);});
  }
 
- function dispatch(s){
-  let moved=false;
-  for(const link of s.camp.links){
-   const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey));if(!node)continue;
-   if(s.camp.cargo.some(c=>railCargo(c)&&keyEqual(c.source,node.key)))continue;
-   let capacity=s.camp.cart?8:4;const cargoIndex=s.camp.cargo.length;
-   const drops=s.factory.drops.filter(d=>!heldDrop(d)&&d.type===link.type&&(d.source!=null?keyEqual(d.source,node.key):Math.hypot(d.x-node.x,d.y-node.y)<=150));
-   drops.sort((a,b)=>Math.hypot(a.x-node.x,a.y-node.y)-Math.hypot(b.x-node.x,b.y-node.y));
-   for(const drop of drops){if(!capacity)break;const count=Math.min(capacity,drop.count);if(send(s,drop,count,'rail',node)){capacity-=count;moved=true;}}
-   const batch=s.camp.cargo.slice(cargoIndex);if(batch.length>1){const cart=batch[0];cart.count=batch.reduce((n,c)=>n+c.count,0);cart.worker=batch.some(c=>c.worker);s.camp.cargo.splice(cargoIndex,batch.length,cart);}
+ function dispatch(s,dt=0){
+  let moved=false;const arrivals=[],speed=ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(s.camp.cart?1.25:1),occupied=[];
+  for(const drop of s.factory.drops.slice().filter(d=>!heldDrop(d)&&!window.SupplyFactory?.isAirborne?.(d))){const next=ConveyorCore.step(s.camp.links,s.camp.platforms,drop,dt,speed);if(!next.onConveyor)continue;drop.onConveyor=true;
+   if(next.arrived){const index=s.factory.drops.indexOf(drop);if(index>=0){s.factory.drops.splice(index,1);arrivals.push({type:drop.type,count:drop.count,worker:drop.worker});}moved=true;continue;}
+   if(!occupied.some(p=>Math.hypot(p.x-next.x,p.y-next.y)<13)){drop.x=next.x;drop.y=next.y;drop.beltId=next.beltId;drop.platformKey=next.platformKey;drop.conveyorBlocked=next.blocked;occupied.push(next);moved=true;}
   }
-  return moved;
+  receive(s,arrivals);return moved;
  }
+
  function receive(s,arrivals){
   if(!arrivals.length)return;
   const totals={wood:0,stone:0,gold:0};let first=false;
@@ -349,48 +342,25 @@ window.OutpostCamp = (() => {
    if(cargo.progress>=1)arrivals.push(cargo);else remaining.push(cargo);
   }
   s.camp.cargo=remaining;receive(s,arrivals);
-  railClock+=dt;let dispatched=false;
-  while(railClock>=2){railClock-=2;dispatched=dispatch(s)||dispatched;}
-  if(dispatched){window.SupplyFactory?.translate();persist();}
+  const dispatched=dispatch(s,dt);railClock+=dt;if(dispatched&&railClock>=1){railClock=0;persist();}
   uiClock+=dt;if(uiClock>=.25){uiClock=0;syncDOM();}
  }
 
  function railSegment(ctx,a,b){
-  const dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);if(length<1)return;const nx=-dy/length,ny=dx/length;
-  ctx.lineCap='round';ctx.strokeStyle='#493b2d';ctx.lineWidth=7;
-  for(let t=5;t<length;t+=13){const x=a.x+dx*t/length,y=a.y+dy*t/length;ctx.beginPath();ctx.moveTo(x-nx*8,y-ny*8);ctx.lineTo(x+nx*8,y+ny*8);ctx.stroke();}
-  for(const offset of [-5,5]){ctx.strokeStyle='#302c23';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(a.x+nx*offset,a.y+ny*offset);ctx.lineTo(b.x+nx*offset,b.y+ny*offset);ctx.stroke();ctx.strokeStyle='#c9b17c';ctx.lineWidth=1.3;ctx.stroke();}
+  const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);if(len<1)return;const nx=-dy/len,ny=dx/len;ctx.lineCap='butt';ctx.strokeStyle='#252e2c';ctx.lineWidth=29;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.strokeStyle='#778b80';ctx.lineWidth=25;ctx.stroke();ctx.strokeStyle='#344c40';ctx.lineWidth=19;ctx.stroke();
+  const phase=(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%10;ctx.strokeStyle='#849879';ctx.lineWidth=2;for(let t=-phase;t<len;t+=10){if(t<0)continue;const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.beginPath();ctx.moveTo(x-nx*9,y-ny*9);ctx.lineTo(x+nx*9,y+ny*9);ctx.stroke();}
+  for(let t=Math.min(10,len/2);t<len;t+=60){const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.strokeStyle='#f3d17a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+dx/len*5+nx*5,y+dy/len*5+ny*5);ctx.lineTo(x-dx/len*3,y-dy/len*3);ctx.lineTo(x+dx/len*5-nx*5,y+dy/len*5-ny*5);ctx.stroke();}
  }
- function rail(ctx,node,link){
-  const points=link.points?.length>1?link.points:[{x:node.x,y:node.y+12},HOME];for(let i=1;i<points.length;i++)railSegment(ctx,points[i-1],points[i]);
-  ctx.fillStyle='#8e7346';ctx.strokeStyle='#d6bd82';ctx.lineWidth=1;ctx.fillRect(node.x-13,node.y+7,26,10);ctx.strokeRect(node.x-13,node.y+7,26,10);
- }
+ function drawPlatform(ctx,p,preview=false){ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle=preview?(p.invalid?'#995d4b99':'#62775299'):'#61775c';ctx.strokeStyle='#b9c69e';ctx.lineWidth=3;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeStyle='#40583f';ctx.lineWidth=4;const horizontal=(p.dir||0)%2===0,phase=((p.dir||0)>=2?-1:1)*(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%12;for(let t=-48-phase;t<48;t+=12){ctx.beginPath();if(horizontal){ctx.moveTo(t,-p.h/2+3);ctx.lineTo(t,p.h/2-3);}else{ctx.moveTo(-p.w/2+3,t);ctx.lineTo(p.w/2-3,t);}ctx.stroke();}ctx.rotate((p.dir||0)*Math.PI/2);ctx.fillStyle='#ffe295';ctx.beginPath();ctx.moveTo(-22,0);ctx.lineTo(-7,-12);ctx.lineTo(-7,-5);ctx.lineTo(17,-5);ctx.lineTo(17,5);ctx.lineTo(-7,5);ctx.lineTo(-7,12);ctx.closePath();ctx.fill();ctx.restore();const out=ConveyorCore.outlet(p);const ready=ConveyorCore.downstream(state().camp.links,out,null,ConveyorCore.WIDTH/2+1);ctx.strokeStyle=ready?'#bfe69b':'#e8a76b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(out.x,out.y,7,0,Math.PI*2);ctx.stroke();if(!ready){ctx.fillStyle='#e8a76b';ctx.fillRect(out.x-4,out.y-5,3,10);ctx.fillRect(out.x+2,out.y-5,3,10);}}
  function drawUnder(ctx,{ox,oy,z}){
-  if(!booted)return;const s=state();if(!s)return;
-  ctx.save();ctx.translate(ox,oy);ctx.scale(z,z);
-  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey));if(node)rail(ctx,node,link);}
-  drawProjects(ctx,s);
-  if(railDraft){
-   const d=railDraft;for(const n of s.factory.nodes)if(n.type===d.type&&!linked(s,n)){ctx.fillStyle='#e9cf6b50';ctx.strokeStyle='#ffe9a2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(n.x,n.y+12,24,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff0b9';ctx.font='bold 18px system-ui';ctx.textAlign='center';ctx.fillText('+',n.x,n.y+18);}
-   for(let i=1;i<d.points.length;i++)railSegment(ctx,d.points[i-1],d.points[i]);
-   for(const p of d.points){ctx.fillStyle='#ffe39a';ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill();}
-   if(d.points.length&&!d.finished){const a=d.points[d.points.length-1];ctx.strokeStyle='#d7c98d50';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(a.x,a.y,RailCore.MAX_SEGMENT,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);if(railHover){const error=RailCore.validateStep(d.points,railHover,{source:d.nodeKey,nodes:s.factory.nodes});ctx.strokeStyle=error?'#d99482':'#f5e5a3';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(railHover.x,railHover.y);ctx.stroke();ctx.setLineDash([]);}}
-   ctx.strokeStyle='#f6e5a1';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.strokeRect(HOME.x-56,HOME.y-93,112,108);ctx.setLineDash([]);
-  }
+  if(!booted)return;const s=state();if(!s)return;ctx.save();ctx.translate(ox,oy);ctx.scale(z,z);
+  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey)),points=link.points?.length>1?ConveyorCore.oriented(link):node?[HOME,{x:node.x,y:node.y+12}]:null;if(!points)continue;if(!link.points)link.points=points;for(let i=1;i<points.length;i++)railSegment(ctx,points[i-1],points[i]);const end=points[0],connected=ConveyorCore.distance(end,HOME)<60||!!ConveyorCore.downstream(s.camp.links,end,link)||!!ConveyorCore.platformAt(s.camp.platforms,end);if(!connected){ctx.fillStyle='#dc9c64';ctx.strokeStyle='#3b302a';ctx.lineWidth=2;ctx.fillRect(end.x-7,end.y-7,14,14);ctx.strokeRect(end.x-7,end.y-7,14,14);ctx.fillStyle='#513a2b';ctx.fillRect(end.x-3,end.y-4,2,8);ctx.fillRect(end.x+2,end.y-4,2,8);}}
+  for(const platform of s.camp.platforms)drawPlatform(ctx,platform);if(platformMode&&platformPreview)drawPlatform(ctx,{...platformPreview,w:96,h:64,dir:platformDir,invalid:s.factory.inventory.wood<8||s.factory.inventory.stone<4||!platformFits(platformPreview)},true);drawProjects(ctx,s);if(railDraft){if(railDraft.points.length>1){ctx.globalAlpha=.7;for(let i=1;i<railDraft.points.length;i++)railSegment(ctx,railDraft.points[i-1],railDraft.points[i]);ctx.globalAlpha=1;if(Math.max(1,ConveyorCore.cost(railDraft.points)-(railDraft.oldCost||0))>s.factory.inventory.wood){ctx.strokeStyle='#ec9b80';ctx.lineWidth=5;ctx.setLineDash([6,5]);ctx.beginPath();railDraft.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);}}}
   ctx.restore();
  }
- function cargoArt(ctx,cargo,x,y,z){
-  const scale=Math.max(.65,z),cart=railCargo(cargo);ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);
-  ctx.fillStyle='#17241d44';ctx.beginPath();ctx.ellipse(0,3,cart?12:9,4,0,0,Math.PI*2);ctx.fill();
-  if(cart){ctx.fillStyle='#443525';ctx.fillRect(-12,-4,24,7);ctx.strokeStyle='#c5a56c';ctx.lineWidth=1;ctx.strokeRect(-12,-4,24,7);ctx.fillStyle='#262b24';ctx.beginPath();ctx.arc(-7,4,3,0,Math.PI*2);ctx.arc(7,4,3,0,Math.PI*2);ctx.fill();}
-  ctx.lineWidth=1;ctx.strokeStyle='#4c3b24';
-  if(cargo.type==='wood'){
-   for(let i=0;i<Math.min(8,Math.ceil(cargo.count));i++){const cols=Math.min(4,Math.ceil(cargo.count)),px=(i%cols-(cols-1)/2)*7-3.5,py=-10-Math.floor(i/cols)*8;ctx.fillStyle='#9d6433';ctx.fillRect(px,py,7,8);ctx.strokeRect(px,py,7,8);ctx.fillStyle='#d9ad62';ctx.beginPath();ctx.ellipse(px+3.5,py,3.5,2,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
-  }else if(cargo.type==='stone'){
-   for(let i=0;i<Math.min(8,Math.ceil(cargo.count));i++){const cols=Math.min(4,Math.ceil(cargo.count));ctx.save();ctx.translate((i%cols-(cols-1)/2)*8,-Math.floor(i/cols)*7);ctx.fillStyle='#969a8c';ctx.strokeStyle='#454d47';ctx.beginPath();ctx.moveTo(-5,-4);ctx.lineTo(-4,-11);ctx.lineTo(0,-14);ctx.lineTo(5,-9);ctx.lineTo(6,-3);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#c7c9b5';ctx.beginPath();ctx.moveTo(-3,-10);ctx.lineTo(0,-12);ctx.lineTo(2,-8);ctx.stroke();ctx.restore();}
-  }else{ctx.fillStyle='#d6b35b';ctx.fillRect(-7,-15,14,10);}
-  ctx.restore();
- }
+
+ function cargoArt(ctx,cargo,x,y,z){window.SupplyFactory?.drawItem?.(ctx,cargo.type,x,y,Math.max(20*z,10));}
+
  function positionWarehouse({ox,oy,z}){
   if(!warehouse)return;const field=document.getElementById('field'),canvas=document.getElementById('armyCanvas');if(!field||!canvas)return;
   const rect=field.getBoundingClientRect(),view=canvas.getBoundingClientRect(),w=warehouse.offsetWidth,h=warehouse.offsetHeight;
@@ -407,7 +377,9 @@ window.OutpostCamp = (() => {
    const p=onRail&&cargo.path?.length>1?RailCore.at(cargo.path,t):{x:cargo.from.x+(HOME.x-cargo.from.x)*ease,y:cargo.from.y+(HOME.y-cargo.from.y)*ease},x=p.x,y=p.y;
    cargoArt(ctx,cargo,ox+x*z,oy+y*z-(onRail||reduced?0:Math.sin(t*Math.PI)*14*z),z);
   }
-  if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0b0';ctx.fillText(tr('dragging'),ox+HOME.x*z,oy+(HOME.y-104)*z);}
+  if(railDraft&&!platformMode){const handles=[BELT_PORT,...s.camp.links.filter(l=>l.points?.length).map(l=>ConveyorCore.oriented(l).at(-1))];for(const p of handles){const x=ox+p.x*z,y=oy+p.y*z,r=Math.max(15,24*z);ctx.fillStyle='#45623bea';ctx.strokeStyle='#ffe9a2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff1b0';ctx.font='bold '+Math.max(19,23*z)+'px system-ui';ctx.textAlign='center';ctx.fillText('↔',x,y+7);}}
+  if(drag){const rect=document.getElementById('armyCanvas').getBoundingClientRect();for(let i=0;i<drag.items.length;i++){const item=drag.items[i],geometry=window.SupplyFactory?.itemGeometry?.(item.drop),h=geometry?.h||Math.max(20*z,10);window.SupplyFactory?.drawItem?.(ctx,item.drop.type,drag.x-rect.left+(drag.offset?.x||0)+i*(h+3),drag.y-rect.top+(drag.offset?.y||0),h);}}
+  if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0b0';ctx.fillText(tr('beltFeed'),ox+HOME.x*z,oy+(HOME.y-104)*z);}
   if(houseFlash){ctx.fillStyle='#f8d77a'+Math.round(houseFlash/.42*100).toString(16).padStart(2,'0');ctx.beginPath();ctx.ellipse(ox+HOME.x*z,oy+(HOME.y-4)*z,26*z,10*z,0,0,Math.PI*2);ctx.fill();}
   notices.forEach((n,i)=>{
    ctx.globalAlpha=Math.min(1,(1.1-n.age)*3);ctx.font='800 '+Math.max(12,14*z)+'px system-ui';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#25362b';ctx.fillStyle='#ffe7a0';
@@ -427,11 +399,11 @@ window.OutpostCamp = (() => {
  }
  function guide(){
   const s=state();if(!s)return '';
-  if(railDraft)return tr(!railDraft.nodeKey?'chooseSource':railDraft.finished?'confirmRoute':'layRoute');
-  if(!railExists('wood')&&(s.gold>=COST.wood||s.clearedBossWave>0))return tr('firstRail');
-  if(railExists('wood')&&!railExists('stone'))return tr('stoneNext');
+  if(railDraft)return tr(platformMode?'platformHint':'freeBeltHint');
+  if(!s.camp.links.length&&s.factory.inventory.wood>=1)return tr('firstRail');
+  if(s.camp.links.length)return tr('bothRails');
   if(railExists('wood')&&railExists('stone'))return tr('bothRails');
-  return drag?tr('dragging'):s.camp.cargo.length?tr('inTransit'):tr('clickPile');
+  return drag?tr('beltFeed'):s.camp.cargo.length?tr('inTransit'):tr('clickPile');
  }
- return {boot,tick,quote,build,beginRail:buildRail,commitRails,cancelRails:stopRails,removeRail,get layingRails(){return !!railDraft;},get draftRoute(){return railDraft?{type:railDraft.type,nodeKey:railDraft.nodeKey,points:railDraft.points.map(p=>({...p})),finished:railDraft.finished,cost:RailCore.cost(railDraft.points)}:null;},get dragging(){return !!drag;},isHeld:heldDrop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
+ return {boot,tick,quote,build,isTransported:d=>d.onConveyor===true||!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),onBelt:d=>!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),beltAt:p=>ConveyorCore.contact(state().camp.links,p),platformAt:p=>ConveyorCore.platformAt(state().camp.platforms,p),prepareForRaid:()=>{},beginRail:buildRail,buildPlatform,commitRails,cancelRails:stopRails,removeRail,get layingRails(){return !!railDraft;},get draftRoute(){return railDraft?{points:railDraft.points.map(p=>({...p})),cost:railDraft.points.length>1?ConveyorCore.cost(railDraft.points):0}:null;},get dragging(){return !!drag;},isHeld:heldDrop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
 })();

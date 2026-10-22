@@ -14,7 +14,15 @@
  const pathLength=lane=>WORLD.entryX-WORLD.turnX+Math.hypot(WORLD.turnX-WORLD.home.x,laneY(lane)-WORLD.home.y);
 
  function fresh(){
-  return {version:1,phase:'prep',wave:1,cleared:0,round:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0},result:null};
+  return {version:1,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:150,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0},result:null};
+ }
+ // The preparation clock is advanced explicitly by the live game, separately from battle simulation.
+ function preparationSeconds(state){if(!state||state.round===0)return 150;const next=state.result?.win?Math.min(MAX_WAVE,state.result.wave+1):state.wave;return state.result&&!state.result.win?90:next<=3?90:120;}
+ function preparationTick(state,dt){
+  if(!state||state.phase==='active'||state.completed||!Number.isFinite(dt)||dt<=0)return false;
+  if(state.prepScheduledRound!==state.round){state.prepScheduledRound=state.round;state.prepRemaining=preparationSeconds(state);}
+  state.prepRemaining=Math.max(0,finite(state.prepRemaining,preparationSeconds(state),0,150)-dt);
+  return state.prepRemaining<=EPS;
  }
  function chapter(value){return Math.min(3,Math.ceil(waveNumber(value)/3));}
  function plan(value){
@@ -55,6 +63,7 @@
   if(!raw||typeof raw!=='object'||raw.version!==1)return state;
   state.phase=['prep','active','result'].includes(raw.phase)?raw.phase:'prep';
   state.wave=waveNumber(raw.wave);state.cleared=integer(raw.cleared,0,0,MAX_WAVE);state.round=integer(raw.round,0,0,1e9);
+  state.prepScheduledRound=Number.isInteger(raw.prepScheduledRound)&&raw.prepScheduledRound>=0&&raw.prepScheduledRound<=state.round?raw.prepScheduledRound:-1;state.prepRemaining=finite(raw.prepRemaining,150,0,150);
   state.elapsed=finite(raw.elapsed,0,0,plan(state.wave).duration);state.gateSeconds=finite(raw.gateSeconds,1,1,2.5);state.boxes=integer(raw.boxes,3,0,3);
   state.claimedFirst=[...new Set((Array.isArray(raw.claimedFirst)?raw.claimedFirst:[]).slice(0,1024).filter(n=>Number.isInteger(n)&&n>=1&&n<=MAX_WAVE))];
   for(let wave=1;wave<=state.cleared;wave++)if(!state.claimedFirst.includes(wave))state.claimedFirst.push(wave);
@@ -182,5 +191,5 @@
   if(id==='sword')return {damage:3,interval:1.2,range:28};
   return null;
  }
- return {WORLD,MAX_WAVE,fresh,migrate,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ return {WORLD,MAX_WAVE,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });

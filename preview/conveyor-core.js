@@ -1,0 +1,35 @@
+/* Physical belts: only a touching item moves; path order runs from home outwards. */
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;else root.ConveyorCore=api;})(typeof globalThis!=='undefined'?globalThis:this,()=>{
+ 'use strict';
+ const WIDTH=25,SPEED=45,HOME={x:100,y:340},distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),length=ps=>ps.slice(1).reduce((n,p,i)=>n+distance(ps[i],p),0);
+ function homeFirst(points){return distance(points[0],HOME)<=distance(points.at(-1),HOME)?points:points.slice().reverse();}
+ function nearest(points,p){let best=null,start=0;for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);if(!l)continue;const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(l*l))),x=a.x+dx*t,y=a.y+dy*t,d=Math.hypot(p.x-x,p.y-y);if(!best||d<best.distance)best={x,y,distance:d,along:start+l*t,segment:i};start+=l;}return best;}
+ function at(points,s){s=Math.max(0,s);for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],l=distance(a,b);if(s<=l&&l)return{x:a.x+(b.x-a.x)*s/l,y:a.y+(b.y-a.y)*s/l};s-=l;}return {...points.at(-1)};}
+ const oriented=link=>link.kind==='conveyor'?link.points:homeFirst(link.points);
+ function contact(links,p,radius=WIDTH/2){let hit=null;for(const link of links){if(!link.points||link.points.length<2)continue;const points=oriented(link),q=nearest(points,p);if(q&&q.distance<=radius&&(!hit||q.distance<hit.distance))hit={...q,points,link};}return hit;}
+ const cost=points=>Math.max(1,Math.ceil((length(points)-.001)/48));
+ function stretch(points,p){const end=points.at(-1),d=distance(end,p);if(d<10)return points;const steps=Math.ceil(d/20),out=points.slice();for(let i=1;i<=steps;i++)out.push({x:end.x+(p.x-end.x)*i/steps,y:end.y+(p.y-end.y)*i/steps});return out.slice(0,128);}
+ function platformAt(platforms,p){return (platforms||[]).find(a=>Math.abs(p.x-a.x)<=a.w/2&&Math.abs(p.y-a.y)<=a.h/2)||null;}
+ function outlet(a){const dirs=[[-1,0],[0,-1],[1,0],[0,1]],d=dirs[a.dir||0];return{x:a.x+d[0]*a.w/2,y:a.y+d[1]*a.h/2};}
+ function downstream(links,p,exclude,radius=WIDTH){return contact(links.filter(l=>l!==exclude),p,radius);}
+ function step(links,platforms,item,dt,speed=SPEED){
+  const result={x:item.x,y:item.y,arrived:false,onConveyor:false,blocked:false,beltId:item.beltId||null,platformKey:null};let remaining=Math.max(0,dt*speed),visits=0,preferred=item.beltId;
+  while(remaining>1e-8&&visits++<64){
+   let hit=preferred?contact(links.filter(l=>String(l.nodeKey)===String(preferred)),result):null;if(!hit)hit=contact(links,result);preferred=null;
+   const platform=platformAt(platforms,result);if(platform&&hit&&hit.along<1&&distance(outlet(platform),result)>1&&distance(hit.points[0],HOME)>=60)hit=null;
+   // An explicitly carried belt item owns its belt at overlap; loose objects on a
+   // receiving platform follow the platform's output rather than an arbitrary crossing.
+   if(platform&&!hit){result.onConveyor=true;result.platformKey=platform.key;const out=outlet(platform),d=distance(result,out),move=Math.min(remaining,d);if(d>1e-8){result.x+=(out.x-result.x)*move/d;result.y+=(out.y-result.y)*move/d;remaining-=move;}if(move<d)return result;
+    const next=downstream(links,out,null,WIDTH/2+1);if(!next){result.blocked=true;return result;}const gap=distance(result,next),bridge=Math.min(remaining,gap);if(gap>1e-8){result.x+=(next.x-result.x)*bridge/gap;result.y+=(next.y-result.y)*bridge/gap;remaining-=bridge;}if(bridge<gap)return result;preferred=next.link.nodeKey;result.beltId=preferred;continue;
+   }
+   if(!hit)return result;result.onConveyor=true;result.beltId=hit.link.nodeKey;const move=Math.min(remaining,hit.along),p=at(hit.points,hit.along-move);result.x=p.x;result.y=p.y;remaining-=move;if(move<hit.along)return result;
+   if(distance(hit.points[0],HOME)<60){result.arrived=true;return result;}
+   const next=downstream(links,result,hit.link);if(next&&next.along>1){const gap=distance(result,next),bridge=Math.min(remaining,gap);if(gap>1e-8){result.x+=(next.x-result.x)*bridge/gap;result.y+=(next.y-result.y)*bridge/gap;remaining-=bridge;}if(bridge<gap)return result;preferred=next.link.nodeKey;result.beltId=preferred;continue;}
+   const platformNext=platformAt(platforms,result);if(platformNext){const out=outlet(platformNext);if(distance(result,out)>1){result.beltId=null; // Drop a tiny distance onto the platform interior without leaving its footprint.
+     const centerDistance=distance(result,platformNext),nudge=Math.min(remaining,Math.min(2,centerDistance));if(centerDistance){result.x+=(platformNext.x-result.x)*nudge/centerDistance;result.y+=(platformNext.y-result.y)*nudge/centerDistance;remaining-=nudge;}return result;}}
+   result.blocked=true;return result;
+  }
+  if(visits>=64)result.blocked=true;return result;
+ }
+ return {WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
+});

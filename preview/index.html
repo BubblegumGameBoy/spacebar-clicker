@@ -564,9 +564,9 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261022-workshop1">
-<link rel="stylesheet" href="harvest-skills.css?v=20261022-workshop1">
-<link rel="stylesheet" href="outpost.css?v=20261022-workshop1">
+<link rel="stylesheet" href="rework.css?v=20261023-worksite1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261023-worksite1">
+<link rel="stylesheet" href="outpost.css?v=20261023-worksite1">
 </head>
 <body>
 <div id="titleScreen">
@@ -690,11 +690,11 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261022-workshop1"></script>
-<script src="outpost-core.js?v=20261022-workshop1"></script>
-<script src="supply-core.js?v=20261022-workshop1"></script>
-<script src="game-core.js?v=20261022-workshop1"></script>
-<script src="forest-audio.js?v=20261022-workshop1"></script>
+<script src="harvest-skill-core.js?v=20261023-worksite1"></script>
+<script src="outpost-core.js?v=20261023-worksite1"></script>
+<script src="supply-core.js?v=20261023-worksite1"></script>
+<script src="game-core.js?v=20261023-worksite1"></script>
+<script src="forest-audio.js?v=20261023-worksite1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -1823,8 +1823,14 @@ function renderCards(){
    pb.textContent=t('prestige_do',fmt(S.goldBonus),fmt(nb)); }
  else { pb.disabled=true; pb.textContent=t('prestige_locked',S.bossWave); }
 }
+// Direct touch activation survives a preceding captured drag without relying on
+// the browser's optional compatibility click; scrolling never buys an ally.
+let _recruitTouch=null,_lastRecruitTouch=null;
+$("#panels").addEventListener("pointerdown",e=>{if(e.pointerType!=="touch")return;const b=e.target.closest('[data-recruit]');_recruitTouch=b&&!b.disabled?{id:b.dataset.recruit,x:e.clientX,y:e.clientY,at:performance.now()}:null;});
+$("#panels").addEventListener("pointercancel",()=>_recruitTouch=null);
+$("#panels").addEventListener("pointerup",e=>{if(e.pointerType!=="touch")return;const t=_recruitTouch,b=e.target.closest('[data-recruit]');_recruitTouch=null;if(!t||!b||b.disabled||b.dataset.recruit!==t.id||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();_lastRecruitTouch={id:t.id,at:performance.now()};Rework.recruit(t.id);});
 $("#panels").addEventListener("click",e=>{
- const recruit=e.target.closest('[data-recruit]');if(recruit){Rework.recruit(recruit.dataset.recruit);return;}
+ const recruit=e.target.closest('[data-recruit]');if(recruit){if(e.pointerType==="touch"&&_lastRecruitTouch?.id===recruit.dataset.recruit&&performance.now()-_lastRecruitTouch.at<700)return;Rework.recruit(recruit.dataset.recruit);return;}
  const c=e.target.closest(".card"); if(!c||c.classList.contains("dis")) return;
  const act=c.dataset.act, id=c.dataset.id;
  if(act==="buy"||(act==="upg"&&!e.target.closest("[data-train]")))return;
@@ -2079,16 +2085,17 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261022-workshop1"></script>
-<script src="army-view.js?v=20261022-workshop1"></script>
+<script src="army-sim.js?v=20261023-worksite1"></script>
+<script src="army-view.js?v=20261023-worksite1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261022-workshop1"></script>
-<script src="supply-factory.js?v=20261022-workshop1"></script>
-<script src="camp-training.js?v=20261022-workshop1"></script>
-<script src="rail-core.js?v=20261022-workshop1"></script>
-<script src="outpost-camp.js?v=20261022-workshop1"></script>
-<script src="outpost.js?v=20261022-workshop1"></script>
-<script src="rework.js?v=20261022-workshop1"></script>
-<script src="harvest-skills.js?v=20261022-workshop1"></script>
+<script src="battle-control.js?v=20261023-worksite1"></script>
+<script src="supply-factory.js?v=20261023-worksite1"></script>
+<script src="camp-training.js?v=20261023-worksite1"></script>
+<script src="rail-core.js?v=20261023-worksite1"></script>
+<script src="conveyor-core.js?v=20261023-worksite1"></script>
+<script src="outpost-camp.js?v=20261023-worksite1"></script>
+<script src="outpost.js?v=20261023-worksite1"></script>
+<script src="rework.js?v=20261023-worksite1"></script>
+<script src="harvest-skills.js?v=20261023-worksite1"></script>
 </body>
 </html>

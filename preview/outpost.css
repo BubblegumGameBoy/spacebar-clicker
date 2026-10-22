@@ -186,3 +186,24 @@ body.outpost-game .camp-existing-routes{display:grid;gap:5px;margin-top:10px}
 body.outpost-game .camp-existing-routes button{background:#3e3c2c;font-size:10px;min-height:32px;color:#e0c89c}
 body.outpost-game:has(#field.laying-rails) #battleCommands{display:none}
 body.outpost-game:has(#field.laying-rails) .army-card button{pointer-events:none;opacity:.4}
+
+/* Tangible conveyor tool: drag a visible handle; there is no source-selection wizard. */
+body.outpost-game #conveyorBuild{min-height:34px;padding:6px 12px;border:1px solid #edce7d;border-radius:5px;background:#4f6545;color:#fff0b4;font:800 12px system-ui;cursor:pointer}
+body.outpost-game #field.laying-rails{cursor:crosshair}
+body.outpost-game #campDragGhost{padding:1px 5px;border:0;background:transparent;box-shadow:none;color:#fff1bb;text-shadow:1px 1px 2px #16251d, -1px -1px 2px #16251d;translate:8px -150%;font-size:11px}
+body.outpost-game .camp-rail-options{grid-template-columns:1fr}
+body.outpost-game .camp-route-track{height:16px!important;border:2px solid #8c9b7f!important;background:repeating-linear-gradient(90deg,#38543f 0 8px,#7d9075 8px 10px)!important}
+body.outpost-game #railEditor{border:1px solid #b9aa6f;background:#293e2e}
+@media(max-width:680px){body.outpost-game #conveyorBuild{min-height:34px;font-size:11px;padding:6px 9px}body.outpost-game #railEditor{flex-wrap:wrap}body.outpost-game #railEditor>b{flex-basis:100%}}
+
+/* A calm, prominent deadline; construction remains visible and never shakes. */
+body.outpost-game #raidBoard.raid-preparing .raid-clock{font-size:17px;line-height:1.35;font-weight:900;color:#fff0b4}
+body.outpost-game #raidBoard.raid-preparing .raid-heading{align-self:center}
+body.outpost-game #raidBoard.raid-imminent{border-color:#edbf70;background:#473b25f0}
+body.outpost-game #raidBoard.raid-imminent .raid-clock{color:#ffdb94}
+@media(max-width:680px){body.outpost-game #raidBoard.raid-preparing .raid-clock{font-size:15px}}
+/* Timed danger remains readable while extending a belt. */
+body.outpost-game #field.laying-rails #raidBoard{visibility:visible!important}
+body.outpost-game #conveyorPlatformBuild{min-height:34px;padding:6px 12px;border:1px solid #b6c888;border-radius:5px;background:#445c42;color:#edf0b3;font:800 12px system-ui;cursor:pointer}
+body.outpost-game #railEditor [data-rail-action=rotate]{border-color:#d8cf8e;color:#ffe8a7}
+@media(max-width:680px){body.outpost-game #conveyorPlatformBuild{font-size:11px;padding:6px 9px}}
