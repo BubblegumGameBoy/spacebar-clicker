@@ -696,7 +696,7 @@ function rnd(a,b){return a+Math.random()*(b-a);}
 function readStored(key){try{return localStorage.getItem(key);}catch{return null;}}
 const PLAYER_KEY="sbr_player_name_v1",RANK_KEY="sbr_damage_rank_v1";
 const PLAYER_ID_KEY="sbr_player_id_v1",TOTAL_DAMAGE_KEY="sbr_total_damage_v2";
-const RANK_API="https://spacebar-clicker-ranking-api.bubblegum-island.workers.dev/api/leaderboard";
+const RANK_API="https://spacebar-clicker-ranking-api.spacebar-clicker.workers.dev/api/leaderboard";
 const RANK_VIEW_LIMIT=20; /* 表示件数。サーバー側も同じ値で頭打ちにしてある */
 function cleanPlayerName(v){return (v||"").replace(/[<>\u0000-\u001f]/g,"").trim().slice(0,12)||"名無し";}
 function createPlayerId(){

@@ -17,7 +17,7 @@
     {
       "binding": "DB",
       "database_name": "spacebar-clicker-leaderboard",
-      "database_id": "bcdb78c5-c8b1-400b-b70b-7b328799e4fd",
+      "database_id": "dc885e33-8630-4fd1-99d0-ca08f4d599b4",
       "migrations_dir": "migrations"
     }
   ]
