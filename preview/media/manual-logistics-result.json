@@ -1,0 +1,169 @@
+{
+  "status": "passed",
+  "fixture": "Fresh normal-time input, no resource/army/time grants. State reads aid deterministic targeting. Simulated reviewer perspective, not real child.",
+  "elapsedSeconds": 70.446,
+  "checks": [
+    "Holding harvest creates individual ground objects without inventory credit",
+    "One drag delivers one object, leaving the other five",
+    "Worker output also remains individual and must be delivered",
+    "Buying opens an empty editor, not an automatically connected rail",
+    "Actual player waypoints, route cost and explicit confirmation determine the connection",
+    "A cart follows the authored polyline and credits only after arriving"
+  ],
+  "state": {
+    "gold": 16,
+    "inventory": {
+      "wood": 4,
+      "stone": 0
+    },
+    "ground": [
+      {
+        "key": 44,
+        "type": "stone",
+        "count": 1,
+        "source": 3,
+        "x": 279.17710183016123,
+        "y": 399.83702285984765,
+        "worker": true
+      },
+      {
+        "key": 47,
+        "type": "stone",
+        "count": 1,
+        "source": 3,
+        "x": 244.1760581058112,
+        "y": 391.66345154664054,
+        "worker": true
+      },
+      {
+        "key": 49,
+        "type": "stone",
+        "count": 1,
+        "source": 3,
+        "x": 396.3856342108305,
+        "y": 338.76880251652284,
+        "worker": true
+      },
+      {
+        "key": 50,
+        "type": "wood",
+        "count": 1,
+        "source": 1,
+        "x": 219.30431751129527,
+        "y": 252.04480750048882,
+        "worker": true
+      },
+      {
+        "key": 51,
+        "type": "stone",
+        "count": 1,
+        "source": 3,
+        "x": 318.8956229668797,
+        "y": 482.3865123933644,
+        "worker": true
+      },
+      {
+        "key": 52,
+        "type": "wood",
+        "count": 1,
+        "source": 1,
+        "x": 225.14233024329582,
+        "y": 358.1575526059773,
+        "worker": true
+      },
+      {
+        "key": 53,
+        "type": "stone",
+        "count": 1,
+        "source": 3,
+        "x": 369.73038783170955,
+        "y": 479.3575864648478,
+        "worker": true
+      },
+      {
+        "key": 54,
+        "type": "wood",
+        "count": 1,
+        "source": 1,
+        "x": 200.28651041454518,
+        "y": 339.93558417871276,
+        "worker": true
+      }
+    ],
+    "cargo": [],
+    "owned": {
+      "woodcutter": 1,
+      "miner": 1,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 1,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "phase": "result",
+    "cleared": 1,
+    "result": {
+      "wave": 1,
+      "win": true,
+      "boxes": 3,
+      "kills": 3,
+      "escaped": 0,
+      "gold": 38,
+      "first": true
+    },
+    "links": [
+      {
+        "nodeKey": 1,
+        "type": "wood",
+        "points": [
+          {
+            "x": 280,
+            "y": 312
+          },
+          {
+            "x": 216,
+            "y": 360
+          },
+          {
+            "x": 144,
+            "y": 384
+          },
+          {
+            "x": 100,
+            "y": 340
+          }
+        ],
+        "cost": 22
+      }
+    ],
+    "journey": {
+      "seconds": 68.74729999999884,
+      "handWood": 21,
+      "handStone": 8,
+      "crewWood": 12,
+      "crewStone": 7
+    },
+    "guide": "↑ 0ひき　↓ 4ひき。なかまを おいて まもろう！",
+    "draft": null
+  },
+  "errors": []
+}

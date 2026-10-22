@@ -564,8 +564,9 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261022-drag1">
-<link rel="stylesheet" href="outpost.css?v=20261022-drag1">
+<link rel="stylesheet" href="rework.css?v=20261022-workshop1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261022-workshop1">
+<link rel="stylesheet" href="outpost.css?v=20261022-workshop1">
 </head>
 <body>
 <div id="titleScreen">
@@ -689,10 +690,11 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="outpost-core.js?v=20261022-drag1"></script>
-<script src="supply-core.js?v=20261022-drag1"></script>
-<script src="game-core.js?v=20261022-drag1"></script>
-<script src="forest-audio.js?v=20261022-drag1"></script>
+<script src="harvest-skill-core.js?v=20261022-workshop1"></script>
+<script src="outpost-core.js?v=20261022-workshop1"></script>
+<script src="supply-core.js?v=20261022-workshop1"></script>
+<script src="game-core.js?v=20261022-workshop1"></script>
+<script src="forest-audio.js?v=20261022-workshop1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -1017,7 +1019,7 @@ const unitAnim=(sheet,frameMs,impact,height=16,heightMobile=12.5,release=0)=>({
 });
 const UNITS=[
  {id:"woodcutter",name:{ja:"木こり",en:"Lumberjack",zh:"伐木工"},sprite:"unit_farmer.png",base:35,dmg:0,iv:2.4,worker:"woodcutter",pos:{l:18,b:20},anim:unitAnim("unit_woodcutter_chop.webp",150,300,16,13)},
- {id:"miner",name:{ja:"石ほり",en:"Miner",zh:"矿工"},sprite:"unit_dwarfb.png",base:45,dmg:0,iv:3.1,worker:"miner",pos:{l:22,b:22},anim:unitAnim("unit_dwarfb_attack.png",120,270,17,14)},
+ {id:"miner",name:{ja:"石ほり",en:"Miner",zh:"矿工"},sprite:"unit_dwarfb.png",base:45,dmg:0,iv:3.1,worker:"miner",pos:{l:22,b:22},anim:{...unitAnim("unit_miner_pickaxe.webp",150,300,17,14),footX:[240/543,270/543,205/543,210/543],footY:673/724}},
  {id:"porter",name:{ja:"運搬係",en:"Porter",zh:"搬运工"},sprite:"unit_villager.png",base:30,dmg:0,iv:1.2,worker:"porter",pos:{l:15,b:18},anim:unitAnim("unit_villager_collect.png",120,250,16,13)},
  {id:"healer",name:{ja:"治癒師",en:"Healer",zh:"治疗师"},sprite:"unit_paladin.png",base:180,dmg:0,iv:2.5,ranged:true,healer:true,proj:"holy",fx:"holy",pos:{l:20,b:18},anim:unitAnim("unit_paladin_attack.png",115,270,19,16)},
  // Original art is reused; sequel movement and range are simulated per soldier.
@@ -1516,7 +1518,7 @@ function heroAttack(){
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  window.Rework?.heroHit();
 }
-$("#field").addEventListener("pointerdown",e=>{if(!e.target.closest("button,input,select"))e.currentTarget.focus({preventScroll:true});if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;const point=ArmyView.point(e.clientX,e.clientY);if(window.Outpost?.ready){if(Rework.paused||!$("#titleScreen").classList.contains("hidden"))return;if(BattleControl.selectAt(point,e)||OutpostCamp.hitHouse(point))return;if(SupplyFactory.gatherAt(point))return;Outpost.manual(point);return;}if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
+$("#field").addEventListener("pointerdown",e=>{if(!e.target.closest("button,input,select"))e.currentTarget.focus({preventScroll:true});if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;const point=ArmyView.point(e.clientX,e.clientY);if(window.Outpost?.ready){if(Rework.paused||!$("#titleScreen").classList.contains("hidden"))return;if(BattleControl.selectAt(point,e)||OutpostCamp.hitHouse(point))return;if(SupplyFactory.gatherAt(point)){SupplyFactory.beginHold('pointer',e.pointerId);return;}Outpost.manual(point);return;}if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
 const _heldKeys=new Set();
 let _cheatTimer=null;
 window.addEventListener("keydown",e=>{
@@ -1526,12 +1528,16 @@ window.addEventListener("keydown",e=>{
   if(_heldKeys.has("Space")) return;
   _heldKeys.add("Space");
   heroAttack();
+  if(window.Outpost?.ready&&window.SupplyFactory?.resourceTarget)SupplyFactory.beginHold('key');
   // cheat mode: hold spacebar to auto-fire rapidly
   if(CHEAT && !_cheatTimer){ _cheatTimer=setInterval(heroAttack,60); }
  }
 });
-window.addEventListener("keyup",e=>{ if(e.code==="Space"){ _heldKeys.delete("Space");
+window.addEventListener("keyup",e=>{ if(e.code==="Space"){ _heldKeys.delete("Space");window.SupplyFactory?.stopHold("key");
  if(_cheatTimer){ clearInterval(_cheatTimer); _cheatTimer=null; } } });
+
+window.addEventListener("blur",()=>{_heldKeys.clear();window.SupplyFactory?.stopHold();});
+document.addEventListener("visibilitychange",()=>{if(document.hidden){_heldKeys.clear();window.SupplyFactory?.stopHold();}});
 
 /* ===== UNIT RENDERING ===== */
 function renderUnits(reason){
@@ -2073,14 +2079,16 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261022-drag1"></script>
-<script src="army-view.js?v=20261022-drag1"></script>
+<script src="army-sim.js?v=20261022-workshop1"></script>
+<script src="army-view.js?v=20261022-workshop1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261022-drag1"></script>
-<script src="supply-factory.js?v=20261022-drag1"></script>
-<script src="camp-training.js?v=20261022-drag1"></script>
-<script src="outpost-camp.js?v=20261022-drag1"></script>
-<script src="outpost.js?v=20261022-drag1"></script>
-<script src="rework.js?v=20261022-drag1"></script>
+<script src="battle-control.js?v=20261022-workshop1"></script>
+<script src="supply-factory.js?v=20261022-workshop1"></script>
+<script src="camp-training.js?v=20261022-workshop1"></script>
+<script src="rail-core.js?v=20261022-workshop1"></script>
+<script src="outpost-camp.js?v=20261022-workshop1"></script>
+<script src="outpost.js?v=20261022-workshop1"></script>
+<script src="rework.js?v=20261022-workshop1"></script>
+<script src="harvest-skills.js?v=20261022-workshop1"></script>
 </body>
 </html>

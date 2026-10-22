@@ -26,14 +26,16 @@ window.OutpostCamp = (() => {
   stoneNext:['つぎは いしの ばしょも おうちへ つなごう。','Connect a stone worksite next.','接下来连接采石点。'],
   bothRails:['きと いしが じどうで とどく。なかまを ふやそう！','Wood and stone arrive automatically. Place allies to defend the camp.','木材和石材自动送达，布置伙伴守卫营地。']
  };
+ const railWords={chooseSource:['どこから はこぶ？ き・いしの ○ を おそう。','Choose a worksite: click its loading circle.','选择采集点，点击装货圆圈。'],layRoute:['ちかくの じめんを おして レールを のばそう。おうちまで つなごう。','Click nearby ground to extend the rails. Reach the house.','点击附近地面延伸轨道，直到房屋。'],confirmRoute:['おうちに つながった！ ねだんを みて つくろう。','Connected to the house. Check the price and build.','已连接房屋，确认费用后建造。'],undo:['ひとつ もどす','Undo point','撤销一点'],cancelRail:['やめる','Cancel','取消'],layRail:['この みちを つくる','Build this route','修建此路线'],gap:['とおすぎるよ。ちかくに ひとつずつ おこう。','Too far. Place one short section at a time.','太远了，请逐段铺设。'],object:['き・いわを よけて おこう。','Go around trees and rocks.','请绕开树木和岩石。'],bounds:['じめんの なかに おこう。','Keep the rails on the field.','请在场地内铺设。'],short:['もうすこし はなれた ところへ。','Choose a point farther away.','请选择稍远一点的位置。'],long:['みちが ながすぎるよ。もどして みじかくしよう。','Route too long. Undo some points.','路线过长，请撤销部分节点。'],remove:['こわす・はんぶん もどる','Remove / half refund','拆除·退还一半'],railPrice:['8G ＋ ながさ32ごとに2G','8G station + 2G per 32 distance','站点8G＋每32距离2G'],draw:['じぶんで レールを しく','Lay rails yourself','手动铺设轨道']};
  const projectWords={rails:['レール','Rails','轨道'],growth:['どうぐ・おうち','Tools / home','工具·营地'],woodTool:['きこりの どうぐ','Lumberjack tools','伐木工具'],stoneTool:['いしほりの どうぐ','Mining tools','采矿工具'],cart:['おおきな にぐるま','Larger carts','大货车'],gate:['みはりの もん','Watch gate','守望门'],beacon:['まちへの あかり','Town beacon','城镇灯塔'],made:['できた！','Built!','已建成！'],make:['つくる','Build','建造'],locked:['まずは ここまで まもろう','Defend up to this raid first','先守住这一波'],rank:['だんかい','Level','阶段'],materials:['つかうもの','Materials','材料'],faster:['ひとりで はやく はたらける！','Each worker gathers faster.','每位工人采集更快。'],cartEffect:['いちどに 8こ はこべる！','Carry 8 per trip instead of 4.','每趟运送8份，原为4份。'],gateEffect:['おうちの まえで 2.5びょう まにあう！','A 2.5-second rescue window at the house.','房屋前有2.5秒的救援时间。'],beaconEffect:['まちへの みちを ひらく あかり。さいごの むれを まもろう！','Light the way to town, then defend the final raid.','点亮通往城镇的道路，守住最终袭击。'],projectDone:['できた！ なかまの しごとを みてみよう。','Built! Watch your camp work.','建好了！看看营地的变化。']};
  let drag=null,dragGhost=null,dragInstalled=false;
+ let railDraft=null,railPanel=null,railHover=null,railError='';
  let activeTab='rails',workshopMessage='';
  let booted=false,activeCamp=null,railClock=0,uiClock=0,houseFlash=0;
  let warehouse=null,overlay=null,goldLabel=null,deliveryLabel=null,workshopStatus=null;
  let statusKey='clickPile',statusUntil=0,visualTime=0,positionKey='',languageKey='',notices=[];
  const language=()=>typeof LANG==='string'?LANG:'ja';
- const tr=key=>(words[key]||projectWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
+ const tr=key=>(words[key]||projectWords[key]||railWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
  const format=n=>typeof fmt==='function'?fmt(n):String(Math.floor(n));
  const current=()=>typeof S==='undefined'?null:S;
  const setText=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value;};
@@ -41,6 +43,9 @@ window.OutpostCamp = (() => {
  const audio=event=>window.ForestAudio?.play(event);
  const clamp=(n,min,max)=>Math.max(min,Math.min(Math.max(min,max),n));
  const keyEqual=(a,b)=>String(a)===String(b);
+ const skillEffects=()=>window.HarvestSkillCore?.effects?.(current()?.harvestSkills)||{carryCapacity:1,cartSpeed:1};
+ const handCapacity=()=>Math.max(1,Math.min(4,Math.floor(skillEffects().carryCapacity||1)));
+ const heldDrop=drop=>drag?.items.some(item=>item.drop===drop)===true;
  const railCargo=cargo=>cargo.mode==='rail'||(!cargo.mode&&cargo.duration>.61);
 
  function state(){
@@ -54,7 +59,7 @@ window.OutpostCamp = (() => {
   }
   s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen'])s.camp[flag]=s.camp[flag]===true;
   if(activeCamp!==s.camp){
-   activeCamp=s.camp;railClock=0;uiClock=0;houseFlash=0;notices=[];
+   activeCamp=s.camp;railClock=0;uiClock=0;houseFlash=0;notices=[];railDraft=null;railHover=null;
    statusKey='clickPile';statusUntil=0;languageKey='';
   }
   return s;
@@ -97,7 +102,7 @@ window.OutpostCamp = (() => {
   overlay.addEventListener('click',e=>{
    if(e.target===overlay){window.Rework?.close();return;}
    const tab=e.target.closest('[data-camp-tab]');if(tab){activeTab=tab.dataset.campTab;syncWorkshop(state());return;}const project=e.target.closest('[data-camp-project]');if(project&&!project.disabled){build(project.dataset.campProject);return;}
-   const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
+   const remove=e.target.closest('[data-camp-remove]');if(remove){removeRail(remove.dataset.campRemove);return;}const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
   });
  }
 
@@ -114,17 +119,18 @@ window.OutpostCamp = (() => {
   for(const button of overlay.querySelectorAll('[data-camp-tab]')){setText(button,tr(button.dataset.campTab));button.setAttribute('aria-pressed',String(activeTab===button.dataset.campTab));}overlay.querySelector('.camp-rail-options').hidden=activeTab!=='rails';overlay.querySelector('.camp-projects').hidden=activeTab!=='growth';overlay.querySelector('.camp-rail-options').style.display=activeTab==='rails'?'grid':'none';overlay.querySelector('.camp-projects').style.display=activeTab==='growth'?'grid':'none';syncProjects(s);
   for(const type of ['wood','stone']){
    const card=overlay.querySelector('[data-camp-option="'+type+'"]'),node=nextNode(s,type),count=s.camp.links.filter(link=>link.type===type).length;
-   const button=card.querySelector('button'),enough=s.gold>=COST[type];
+   const button=card.querySelector('button'),enough=s.gold>=RailCore.STATION+RailCore.PRICE;
    setText(card.querySelector('h3'),tr(type)+' · '+tr('rail'));
    setText(card.querySelector('.camp-rail-count'),count?tr('connected')+' '+count:'');
-   setText(card.querySelector('.camp-route-origin'),node?siteName(s,node):tr(type==='wood'?'woodSite':'stoneSite'));
+   setText(card.querySelector('.camp-route-origin'),tr(type==='wood'?'woodSite':'stoneSite'));
    setText(card.querySelector('.camp-route-home'),tr('warehouse'));
-   setText(card.querySelector('.camp-rail-rate'),language()==='ja'?'2びょうごとに '+(s.camp.cart?8:4)+'こずつ はこぶ':language()==='zh'?'每2秒运送'+(s.camp.cart?8:4)+'份物资。':'Carries '+(s.camp.cart?8:4)+' every 2 seconds.');
+   setText(card.querySelector('.camp-rail-rate'),language()==='ja'?'1だいで '+(s.camp.cart?8:4)+'こ。とおい みちは はこぶのに じかんが かかるよ。':language()==='zh'?'每车'+(s.camp.cart?8:4)+'份，路线越长运输越慢。':'One cart holds '+(s.camp.cart?8:4)+'. Longer routes take more time.');
    const people=node?workersAt(node):0;
    setText(card.querySelector('.camp-rail-workers'),node?(people?tr('worker')+' '+people+tr('people'):tr('noWorker')):tr('automated'));
-   setText(button.querySelector('span'),!node?tr('complete'):tr(count?'extend':'build'));
-   setText(button.querySelector('strong'),node?COST[type]+' G':'✓');
-   setText(card.querySelector('.camp-rail-afford'),node&&!enough?tr('needed')+' '+format(COST[type]-s.gold)+' G':'');
+   setText(button.querySelector('span'),!node?tr('complete'):tr('draw'));
+   setText(button.querySelector('strong'),node?'8 G +':'✓');
+   setText(card.querySelector('.camp-rail-afford'),node&&!enough?tr('needed')+' '+format(10-s.gold)+' G':tr('railPrice'));
+   let routes=card.querySelector('.camp-existing-routes');if(!routes){routes=document.createElement('div');routes.className='camp-existing-routes';card.append(routes);}routes.replaceChildren(...s.camp.links.filter(l=>l.type===type).map(l=>{const button=document.createElement('button');button.type='button';button.dataset.campRemove=l.nodeKey;const n=s.factory.nodes.find(n=>keyEqual(n.key,l.nodeKey));button.textContent=(n?siteName(s,n):tr(type))+' · '+tr('remove')+' +'+Math.floor((l.cost||COST[type])*.5)+' G';return button;}));
    button.disabled=!node||!enough;card.classList.toggle('is-connected',!node);
    const hasWood=s.camp.links.some(link=>link.type==='wood'),hasStone=s.camp.links.some(link=>link.type==='stone');
    card.classList.toggle('camp-next-route',!!node&&(type==='wood'&&!hasWood||type==='stone'&&hasWood&&!hasStone));
@@ -145,7 +151,7 @@ window.OutpostCamp = (() => {
    const hasCargo=s.camp.cargo.length>0;
    setText(deliveryLabel,statusUntil>visualTime?tr(statusKey):tr(hasCargo?'inTransit':'tapHome'));
   }
-  if(overlay?.classList.contains('on'))syncWorkshop(s);
+  if(overlay?.classList.contains('on'))syncWorkshop(s);if(railDraft)syncRailPanel();
  }
 
  function cleared(s=state()){return Math.max(0,s?.outpost?.cleared||0,s?.clearedBossWave||0);}
@@ -207,11 +213,42 @@ window.OutpostCamp = (() => {
  }
 
  function buildRail(type){
-  const s=state();if(!s||!Object.hasOwn(COST,type))return false;
-  const node=nextNode(s,type);if(!node||linked(s,node)||s.gold<COST[type])return false;
-  s.gold-=COST[type];s.camp.links.push({nodeKey:node.key,type});
-  workshopMessage='linked';setText(workshopStatus,tr(workshopMessage));audio('place');
-  if(typeof updateHud==='function')updateHud();persist();syncDOM();syncWorkshop(s);return true;
+  const s=state();if(!s||!Object.hasOwn(COST,type)||!nextNode(s,type)||s.gold<10)return false;
+  endDrag(null,true);window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);window.Rework?.close();
+  railDraft={type,nodeKey:null,points:[],finished:false,owner:s};railHover=null;railError='';
+  document.getElementById('field').classList.add('laying-rails');syncRailPanel();return true;
+ }
+ function stopRails(){railDraft=null;railHover=null;railError='';document.getElementById('field')?.classList.remove('laying-rails');if(railPanel)railPanel.hidden=true;}
+ function syncRailPanel(){
+  if(!railPanel){railPanel=document.createElement('section');railPanel.id='railEditor';railPanel.innerHTML='<b role="status"></b><strong class="rail-price"></strong><div><button type="button" data-rail-action="undo"></button><button type="button" data-rail-action="cancel"></button><button type="button" data-rail-action="confirm"></button></div>';document.getElementById('deckMain').prepend(railPanel);railPanel.onclick=e=>{const action=e.target.closest('[data-rail-action]')?.dataset.railAction;if(action==='cancel')stopRails();if(action==='undo'&&railDraft){if(railDraft.points.length>1)railDraft.points.pop();else{railDraft.nodeKey=null;railDraft.points=[];}railDraft.finished=false;railError='';syncRailPanel();}if(action==='confirm')commitRails();};}
+  railPanel.hidden=!railDraft;if(!railDraft)return;
+  setText(railPanel.querySelector('b'),railError?tr(railError):tr(!railDraft.nodeKey?'chooseSource':railDraft.finished?'confirmRoute':'layRoute'));
+  const price=railDraft.points.length>1?RailCore.cost(railDraft.points):0;setText(railPanel.querySelector('.rail-price'),price?price+' G / '+format(state().gold)+' G':tr('railPrice'));
+  for(const [id,key]of [['undo','undo'],['cancel','cancelRail'],['confirm','layRail']])setText(railPanel.querySelector('[data-rail-action="'+id+'"]'),tr(key));
+  railPanel.querySelector('[data-rail-action="undo"]').disabled=!railDraft.points.length;
+  railPanel.querySelector('[data-rail-action="confirm"]').disabled=!railDraft.finished||state().gold<price;
+ }
+ function commitRails(){
+  const s=state(),d=railDraft;if(window.Rework?.paused||!d||d.owner!==s||!d.finished||d.points.length<2)return false;
+  const node=s.factory.nodes.find(n=>keyEqual(n.key,d.nodeKey)),price=RailCore.cost(d.points);if(!node||linked(s,node)||s.gold<price)return false;
+  s.gold-=price;s.camp.links.push({nodeKey:node.key,type:node.type,points:d.points.map(p=>({...p})),cost:price});
+  stopRails();audio('build');statusKey='linked';statusUntil=visualTime+3;window.Rework?.track?.('rail_built',{type:node.type,points:d.points.length,cost:price});if(typeof updateHud==='function')updateHud();persist();syncDOM();return true;
+ }
+ function removeRail(key){
+  const s=state(),index=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,key));if(index<0)return false;const link=s.camp.links[index];s.camp.links.splice(index,1);s.gold+=Math.floor((link.cost||COST[link.type])*.5);audio('place');persist();syncDOM();syncWorkshop(s);return true;
+ }
+ function routePoint(point){
+  const d=railDraft,s=state();if(window.Rework?.paused||!d||d.owner!==s)return;
+  if(!d.nodeKey){const n=s.factory.nodes.find(n=>n.type===d.type&&!linked(s,n)&&Math.hypot(point.x-n.x,point.y-(n.y+12))<Math.max(30,26/ArmyView.camera.scale));if(!n)return;d.nodeKey=n.key;d.points=[{x:n.x,y:n.y+12}];railError='';syncRailPanel();return;}
+  if(d.finished)return;
+  const end=houseContains(point),p=end?{...HOME}:RailCore.snap(point),error=RailCore.validateStep(d.points,p,{source:d.nodeKey,nodes:s.factory.nodes});
+  if(error){railError=error;syncRailPanel();return;}d.points.push(p);d.finished=end;railError='';audio('place');syncRailPanel();
+ }
+ function installRails(){
+  const field=document.getElementById('field');field.addEventListener('pointerdown',e=>{if(!railDraft||e.target.closest('button,input,select'))return;e.preventDefault();e.stopImmediatePropagation();if(e.button===0&&e.isPrimary!==false)routePoint(ArmyView.point(e.clientX,e.clientY));},true);
+  field.addEventListener('pointermove',e=>{if(!railDraft)return;railHover=RailCore.snap(ArmyView.point(e.clientX,e.clientY));},true);
+  window.addEventListener('keydown',e=>{if(!railDraft)return;if(e.key==='Escape')stopRails();if(e.key==='Backspace'){e.preventDefault();railPanel.querySelector('[data-rail-action="undo"]').click();}});
+  window.addEventListener('pagehide',stopRails);
  }
  function openWorkshop(tab){if(tab==='rails'||tab==='growth')activeTab=tab;
 
@@ -223,8 +260,8 @@ window.OutpostCamp = (() => {
  function send(s,drop,count,mode,node){
   const index=s.factory.drops.indexOf(drop);if(index<0||!Number.isFinite(count)||count<=0)return false;
   count=Math.min(count,drop.count);if(!(count>0))return false;
-  const from=mode==='rail'?{x:node.x,y:node.y+8}:{x:drop.x,y:drop.y};
-  s.camp.cargo.push({key:s.camp.nextKey++,type:drop.type,count,from,progress:0,duration:mode==='rail'?1.2+Math.hypot(from.x-HOME.x,from.y-HOME.y)/300:.6,worker:drop.worker===true,source:drop.source??node?.key??null,mode});
+  const from=mode==='rail'?{x:node.x,y:node.y+12}:{x:drop.x,y:drop.y},link=mode==='rail'?s.camp.links.find(l=>keyEqual(l.nodeKey,node.key)):null,path=link?.points?.length>1?link.points.map(p=>({...p})):null;
+  s.camp.cargo.push({key:s.camp.nextKey++,type:drop.type,count,from,progress:0,duration:mode==='rail'?.6+(path?RailCore.length(path):Math.hypot(from.x-HOME.x,from.y-HOME.y))/(120*Math.max(1,skillEffects().cartSpeed||1)):.6,...(path?{path}:{}),worker:drop.worker===true,source:drop.source??node?.key??null,mode});
   if(count>=drop.count)s.factory.drops.splice(index,1);else drop.count-=count;
   return true;
  }
@@ -237,27 +274,28 @@ window.OutpostCamp = (() => {
  }
  function refreshDrag(e){
   if(!drag)return;drag.x=e.clientX;drag.y=e.clientY;drag.over=dragTarget(e);
+  if(!drag.over&&drag.items.length<handCapacity()){const extra=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(extra&&!heldDrop(extra)){drag.items.push({drop:extra,count:1});audio('pickup');}}
+  dragGhost.innerHTML=drag.items.map(item=>'<span>'+(window.SupplyFactory?.icon(item.drop.type)||'')+'</span>').join('')+'<b>'+drag.items.length+' / '+handCapacity()+'</b>';
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
   dragGhost.classList.toggle('can-deliver',drag.over);document.getElementById('field').classList.toggle('delivery-ready',drag.over);
  }
  function endDrag(e,cancel=false){
   if(!drag||e&&e.pointerId!==drag.pointerId)return;
-  const held=drag,s=state(),ok=!cancel&&!window.Rework?.paused&&dragTarget(e)&&s===held.state&&s.factory.drops.includes(held.drop);
+  const held=drag,s=state(),ok=!cancel&&!window.Rework?.paused&&dragTarget(e)&&s===held.state;
   drag=null;dragGhost?.remove();dragGhost=null;const field=document.getElementById('field');field?.classList.remove('dragging-supplies','delivery-ready');
   try{if(field?.hasPointerCapture(held.pointerId))field.releasePointerCapture(held.pointerId);}catch(_){}
   if(ok){
-   const count=Math.min(held.count,held.drop.count),index=s.factory.drops.indexOf(held.drop);
-   if(count>0&&index>=0){if(count===held.drop.count)s.factory.drops.splice(index,1);else held.drop.count-=count;receive(s,[{type:held.drop.type,count,worker:held.drop.worker===true}]);}
+   const arrivals=[];for(const item of held.items){const drop=item.drop,count=Math.min(item.count,drop.count),index=s.factory.drops.indexOf(drop);if(count>0&&index>=0){if(count===drop.count)s.factory.drops.splice(index,1);else drop.count-=count;arrivals.push({type:drop.type,count,worker:drop.worker===true});}}receive(s,arrivals);
   }else{statusKey='returned';statusUntil=visualTime+1.7;syncDOM();}
   window.SupplyFactory?.translate();
  }
  function installDrag(){
   if(dragInstalled)return;dragInstalled=true;const field=document.getElementById('field');
   field.addEventListener('pointerdown',e=>{
-   if(!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;
+   if(railDraft||!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;
    const s=state(),drop=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!drop||drag)return;
    e.preventDefault();e.stopImmediatePropagation();
-   drag={drop,count:drop.count,state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,over:false};
+   drag={drop,count:1,items:[{drop,count:1}],state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,over:false};
    dragGhost=document.createElement('div');dragGhost.id='campDragGhost';dragGhost.setAttribute('aria-hidden','true');dragGhost.innerHTML=(window.SupplyFactory?.icon(drop.type)||'')+'<b>×'+format(drag.count)+'</b>';document.body.append(dragGhost);
    field.classList.add('dragging-supplies');try{field.setPointerCapture(e.pointerId);}catch(_){}
    refreshDrag(e);statusKey='dragging';statusUntil=visualTime+3600;syncDOM();
@@ -274,10 +312,12 @@ window.OutpostCamp = (() => {
   let moved=false;
   for(const link of s.camp.links){
    const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey));if(!node)continue;
-   let capacity=s.camp.cart?8:4;
-   const drops=s.factory.drops.filter(d=>d!==drag?.drop&&d.type===link.type&&(d.source!=null?keyEqual(d.source,node.key):Math.hypot(d.x-node.x,d.y-node.y)<=150));
+   if(s.camp.cargo.some(c=>railCargo(c)&&keyEqual(c.source,node.key)))continue;
+   let capacity=s.camp.cart?8:4;const cargoIndex=s.camp.cargo.length;
+   const drops=s.factory.drops.filter(d=>!heldDrop(d)&&d.type===link.type&&(d.source!=null?keyEqual(d.source,node.key):Math.hypot(d.x-node.x,d.y-node.y)<=150));
    drops.sort((a,b)=>Math.hypot(a.x-node.x,a.y-node.y)-Math.hypot(b.x-node.x,b.y-node.y));
    for(const drop of drops){if(!capacity)break;const count=Math.min(capacity,drop.count);if(send(s,drop,count,'rail',node)){capacity-=count;moved=true;}}
+   const batch=s.camp.cargo.slice(cargoIndex);if(batch.length>1){const cart=batch[0];cart.count=batch.reduce((n,c)=>n+c.count,0);cart.worker=batch.some(c=>c.worker);s.camp.cargo.splice(cargoIndex,batch.length,cart);}
   }
   return moved;
  }
@@ -300,7 +340,7 @@ window.OutpostCamp = (() => {
  }
  function tick(dt){
   if(!booted||!Number.isFinite(dt)||dt<=0)return;
-  const s=state();if(!s)return;visualTime+=dt;
+  const s=state();if(!s)return;if(railDraft&&railDraft.owner!==s)stopRails();visualTime+=dt;
   notices.forEach(n=>n.age+=dt);notices=notices.filter(n=>n.age<1.1);
   houseFlash=Math.max(0,houseFlash-dt);if(!houseFlash)warehouse?.classList.remove('camp-received');
   const arrivals=[],remaining=[];
@@ -315,21 +355,28 @@ window.OutpostCamp = (() => {
   uiClock+=dt;if(uiClock>=.25){uiClock=0;syncDOM();}
  }
 
- function rail(ctx,node){
-  const ax=HOME.x,ay=HOME.y,bx=node.x,by=node.y+8,dx=bx-ax,dy=by-ay,length=Math.hypot(dx,dy),nx=-dy/length,ny=dx/length;
+ function railSegment(ctx,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);if(length<1)return;const nx=-dy/length,ny=dx/length;
   ctx.lineCap='round';ctx.strokeStyle='#493b2d';ctx.lineWidth=7;
-  for(let t=14;t<length-7;t+=15){const x=ax+dx*t/length,y=ay+dy*t/length;ctx.beginPath();ctx.moveTo(x-nx*9,y-ny*9);ctx.lineTo(x+nx*9,y+ny*9);ctx.stroke();}
-  for(const offset of [-5,5]){
-   ctx.strokeStyle='#302c23';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(ax+nx*offset,ay+ny*offset);ctx.lineTo(bx+nx*offset,by+ny*offset);ctx.stroke();
-   ctx.strokeStyle='#b69b65';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(ax+nx*offset,ay+ny*offset-1);ctx.lineTo(bx+nx*offset,by+ny*offset-1);ctx.stroke();
-  }
-  ctx.fillStyle='#8e7346';ctx.strokeStyle='#3e3427';ctx.lineWidth=1;ctx.fillRect(bx-11,by-4,22,8);ctx.strokeRect(bx-11,by-4,22,8);
+  for(let t=5;t<length;t+=13){const x=a.x+dx*t/length,y=a.y+dy*t/length;ctx.beginPath();ctx.moveTo(x-nx*8,y-ny*8);ctx.lineTo(x+nx*8,y+ny*8);ctx.stroke();}
+  for(const offset of [-5,5]){ctx.strokeStyle='#302c23';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(a.x+nx*offset,a.y+ny*offset);ctx.lineTo(b.x+nx*offset,b.y+ny*offset);ctx.stroke();ctx.strokeStyle='#c9b17c';ctx.lineWidth=1.3;ctx.stroke();}
+ }
+ function rail(ctx,node,link){
+  const points=link.points?.length>1?link.points:[{x:node.x,y:node.y+12},HOME];for(let i=1;i<points.length;i++)railSegment(ctx,points[i-1],points[i]);
+  ctx.fillStyle='#8e7346';ctx.strokeStyle='#d6bd82';ctx.lineWidth=1;ctx.fillRect(node.x-13,node.y+7,26,10);ctx.strokeRect(node.x-13,node.y+7,26,10);
  }
  function drawUnder(ctx,{ox,oy,z}){
   if(!booted)return;const s=state();if(!s)return;
   ctx.save();ctx.translate(ox,oy);ctx.scale(z,z);
-  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey));if(node)rail(ctx,node);}
+  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey));if(node)rail(ctx,node,link);}
   drawProjects(ctx,s);
+  if(railDraft){
+   const d=railDraft;for(const n of s.factory.nodes)if(n.type===d.type&&!linked(s,n)){ctx.fillStyle='#e9cf6b50';ctx.strokeStyle='#ffe9a2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(n.x,n.y+12,24,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff0b9';ctx.font='bold 18px system-ui';ctx.textAlign='center';ctx.fillText('+',n.x,n.y+18);}
+   for(let i=1;i<d.points.length;i++)railSegment(ctx,d.points[i-1],d.points[i]);
+   for(const p of d.points){ctx.fillStyle='#ffe39a';ctx.beginPath();ctx.arc(p.x,p.y,4,0,Math.PI*2);ctx.fill();}
+   if(d.points.length&&!d.finished){const a=d.points[d.points.length-1];ctx.strokeStyle='#d7c98d50';ctx.lineWidth=1;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(a.x,a.y,RailCore.MAX_SEGMENT,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);if(railHover){const error=RailCore.validateStep(d.points,railHover,{source:d.nodeKey,nodes:s.factory.nodes});ctx.strokeStyle=error?'#d99482':'#f5e5a3';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(railHover.x,railHover.y);ctx.stroke();ctx.setLineDash([]);}}
+   ctx.strokeStyle='#f6e5a1';ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.strokeRect(HOME.x-56,HOME.y-93,112,108);ctx.setLineDash([]);
+  }
   ctx.restore();
  }
  function cargoArt(ctx,cargo,x,y,z){
@@ -338,9 +385,9 @@ window.OutpostCamp = (() => {
   if(cart){ctx.fillStyle='#443525';ctx.fillRect(-12,-4,24,7);ctx.strokeStyle='#c5a56c';ctx.lineWidth=1;ctx.strokeRect(-12,-4,24,7);ctx.fillStyle='#262b24';ctx.beginPath();ctx.arc(-7,4,3,0,Math.PI*2);ctx.arc(7,4,3,0,Math.PI*2);ctx.fill();}
   ctx.lineWidth=1;ctx.strokeStyle='#4c3b24';
   if(cargo.type==='wood'){
-   for(const [px,py]of [[-7,-10],[1,-10],[-3,-16]]){ctx.fillStyle='#9d6433';ctx.fillRect(px,py,7,8);ctx.strokeRect(px,py,7,8);ctx.fillStyle='#d9ad62';ctx.beginPath();ctx.ellipse(px+3.5,py,3.5,2,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
+   for(let i=0;i<Math.min(8,Math.ceil(cargo.count));i++){const cols=Math.min(4,Math.ceil(cargo.count)),px=(i%cols-(cols-1)/2)*7-3.5,py=-10-Math.floor(i/cols)*8;ctx.fillStyle='#9d6433';ctx.fillRect(px,py,7,8);ctx.strokeRect(px,py,7,8);ctx.fillStyle='#d9ad62';ctx.beginPath();ctx.ellipse(px+3.5,py,3.5,2,0,0,Math.PI*2);ctx.fill();ctx.stroke();}
   }else if(cargo.type==='stone'){
-   ctx.fillStyle='#969a8c';ctx.strokeStyle='#454d47';ctx.beginPath();ctx.moveTo(-9,-5);ctx.lineTo(-7,-14);ctx.lineTo(0,-18);ctx.lineTo(8,-12);ctx.lineTo(10,-4);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#c7c9b5';ctx.beginPath();ctx.moveTo(-5,-13);ctx.lineTo(0,-16);ctx.lineTo(3,-11);ctx.stroke();
+   for(let i=0;i<Math.min(8,Math.ceil(cargo.count));i++){const cols=Math.min(4,Math.ceil(cargo.count));ctx.save();ctx.translate((i%cols-(cols-1)/2)*8,-Math.floor(i/cols)*7);ctx.fillStyle='#969a8c';ctx.strokeStyle='#454d47';ctx.beginPath();ctx.moveTo(-5,-4);ctx.lineTo(-4,-11);ctx.lineTo(0,-14);ctx.lineTo(5,-9);ctx.lineTo(6,-3);ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#c7c9b5';ctx.beginPath();ctx.moveTo(-3,-10);ctx.lineTo(0,-12);ctx.lineTo(2,-8);ctx.stroke();ctx.restore();}
   }else{ctx.fillStyle='#d6b35b';ctx.fillRect(-7,-15,14,10);}
   ctx.restore();
  }
@@ -357,7 +404,7 @@ window.OutpostCamp = (() => {
   ctx.save();
   for(const cargo of s.camp.cargo){
    const t=clamp(cargo.progress||0,0,1),onRail=railCargo(cargo),ease=onRail?t:1-Math.pow(1-t,2);
-   const x=cargo.from.x+(HOME.x-cargo.from.x)*ease,y=cargo.from.y+(HOME.y-cargo.from.y)*ease;
+   const p=onRail&&cargo.path?.length>1?RailCore.at(cargo.path,t):{x:cargo.from.x+(HOME.x-cargo.from.x)*ease,y:cargo.from.y+(HOME.y-cargo.from.y)*ease},x=p.x,y=p.y;
    cargoArt(ctx,cargo,ox+x*z,oy+y*z-(onRail||reduced?0:Math.sin(t*Math.PI)*14*z),z);
   }
   if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0b0';ctx.fillText(tr('dragging'),ox+HOME.x*z,oy+(HOME.y-104)*z);}
@@ -370,19 +417,21 @@ window.OutpostCamp = (() => {
   ctx.restore();positionWarehouse(view);
  }
  function hitHouse(point){
+  if(railDraft)return true;
   if(!booted||!point)return false;
   const hit=Math.abs(point.x-HOME.x)<=58&&point.y>=HOME.y-94&&point.y<=HOME.y+15;
   if(hit)openWorkshop();return hit;
  }
  function boot(){
-  const s=state();if(!s)return false;booted=true;document.body.classList.add('outpost-game');makeDOM();makeWorkshop();installDrag();syncDOM();return true;
+  const s=state();if(!s)return false;booted=true;document.body.classList.add('outpost-game');makeDOM();makeWorkshop();installDrag();installRails();syncDOM();return true;
  }
  function guide(){
   const s=state();if(!s)return '';
+  if(railDraft)return tr(!railDraft.nodeKey?'chooseSource':railDraft.finished?'confirmRoute':'layRoute');
   if(!railExists('wood')&&(s.gold>=COST.wood||s.clearedBossWave>0))return tr('firstRail');
   if(railExists('wood')&&!railExists('stone'))return tr('stoneNext');
   if(railExists('wood')&&railExists('stone'))return tr('bothRails');
   return drag?tr('dragging'):s.camp.cargo.length?tr('inTransit'):tr('clickPile');
  }
- return {boot,tick,quote,build,get dragging(){return !!drag;},isHeld:drop=>drag?.drop===drop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
+ return {boot,tick,quote,build,beginRail:buildRail,commitRails,cancelRails:stopRails,removeRail,get layingRails(){return !!railDraft;},get draftRoute(){return railDraft?{type:railDraft.type,nodeKey:railDraft.nodeKey,points:railDraft.points.map(p=>({...p})),finished:railDraft.finished,cost:RailCore.cost(railDraft.points)}:null;},get dragging(){return !!drag;},isHeld:heldDrop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
 })();

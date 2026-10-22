@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "grants": false,
+  "timeAcceleration": false,
+  "source": "Earned first-rail checkpoint continued using actual resources, individual hand deliveries and real skill purchase",
+  "checks": [
+    "Existing hand-built route supplies wood without input",
+    "Purchase consumes exact materials and increases capacity",
+    "Two physically contacted objects travel together only after the upgrade"
+  ],
+  "seconds": 11.05,
+  "audio": "Actual browser output, timbre not subjectively listened to",
+  "errors": []
+}

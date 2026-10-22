@@ -20,7 +20,7 @@ window.ArmyView=(()=>{
      let l=fw,r=0,t=c.height,b=0;
      for(let y=0;y<c.height;y++)for(let px=0;px<fw;px++)if(data[(y*c.width+f*fw+px)*4+3]>120){l=Math.min(l,px);r=Math.max(r,px);t=Math.min(t,y);b=Math.max(b,y);}
      let fl=fw,fr=0;for(let y=Math.floor(b-(b-t)*.12);y<=b;y++)for(let px=l;px<=r;px++)if(data[(y*c.width+f*fw+px)*4+3]>120){fl=Math.min(fl,px);fr=Math.max(fr,px);}
-     boxes.push({x:Math.max(0,l-1),y:Math.max(0,t-1),w:r-l+3,h:b-t+3,footX:(fl+fr)/2,footY:b+1});
+     boxes.push({x:Math.max(0,l-1),y:Math.max(0,t-1),w:r-l+3,h:b-t+3,footX:u.anim?.footX?.[f]!==undefined?u.anim.footX[f]*fw:(fl+fr)/2,footY:u.anim?.footY!==undefined?u.anim.footY*c.height:b+1});
     }
     // Scale the idle body, not the raised weapon or transparent sprite sheet.
     const idle=boxes[0];img.geometry={boxes,bodyHeight:idle.h,left:Math.min(...boxes.map(b=>b.x-b.footX)),right:Math.max(...boxes.map(b=>b.x+b.w-b.footX)),top:Math.min(...boxes.map(b=>b.y-b.footY)),bottom:Math.max(...boxes.map(b=>b.y+b.h-b.footY))};

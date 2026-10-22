@@ -171,3 +171,18 @@ body.outpost-game #field.dragging-supplies #weaponPointer{display:none!important
 /* Leave the upper road and tall captain visible while a raid is running. */
 body.outpost-game #raidBoard.raid-active{grid-template-areas:'heading clock' 'forecast boxes';padding:6px 10px;gap:2px 8px}
 body.outpost-game #raidBoard.raid-active .raid-result,body.outpost-game #raidBoard.raid-active #raidWorkshop{display:none}
+
+/* The player lays each section; construction controls stay outside the field. */
+body.outpost-game #railEditor{padding:12px;background:#293f30;border-bottom:1px solid #b8a46b;display:flex;align-items:center;flex-wrap:wrap;gap:9px;color:#f7e7b5;font:12px/1.5 system-ui}
+body.outpost-game #railEditor[hidden]{display:none}
+body.outpost-game #railEditor>b{flex:1;min-width:180px}
+body.outpost-game #railEditor>div{display:flex;gap:7px;flex-wrap:wrap}
+body.outpost-game #railEditor button{min-height:38px;padding:7px 12px;border:1px solid #a69968;border-radius:5px;background:#3b5136;color:#f7e6b3;font-weight:bold}
+body.outpost-game #railEditor button[data-rail-action="confirm"]{background:#b7a35b;color:#1d3025}
+body.outpost-game #railEditor button:disabled{opacity:.4}
+body.outpost-game #field.laying-rails{cursor:crosshair!important}
+body.outpost-game #field.laying-rails #raidBoard,body.outpost-game #field.laying-rails #campaignGoal,body.outpost-game #field.laying-rails #campWarehouse{visibility:hidden}
+body.outpost-game .camp-existing-routes{display:grid;gap:5px;margin-top:10px}
+body.outpost-game .camp-existing-routes button{background:#3e3c2c;font-size:10px;min-height:32px;color:#e0c89c}
+body.outpost-game:has(#field.laying-rails) #battleCommands{display:none}
+body.outpost-game:has(#field.laying-rails) .army-card button{pointer-events:none;opacity:.4}
