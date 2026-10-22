@@ -15,8 +15,9 @@
   if(!raw||raw.version!==1)return null;
   const s={version:1,seed:finite(raw.seed),width:Math.max(640,finite(raw.width,1100,1e6)),height:Math.max(500,finite(raw.height,500,1e6)),next:finite(raw.next,1),time:finite(raw.time),inventory:{wood:finite(raw.inventory?.wood),stone:finite(raw.inventory?.stone)},depot:point(raw.depot)?{x:raw.depot.x,y:raw.depot.y}:{x:128,y:384},nodes:[],drops:[],rails:[],delivered:finite(raw.delivered)};
   s.nodes=(Array.isArray(raw.nodes)?raw.nodes:[]).filter(n=>point(n)&&['wood','stone'].includes(n.type)).slice(0,500).map(n=>({key:finite(n.key),type:n.type,x:n.x,y:n.y,stock:finite(n.stock,100,10000),radius:n.type==='wood'?16:19,regrow:finite(n.regrow)}));
-  s.drops=(Array.isArray(raw.drops)?raw.drops:[]).filter(d=>point(d)&&types.has(d.type)&&Number.isFinite(d.count)&&d.count>0).slice(0,10000).map(d=>({key:finite(d.key),x:d.x,y:d.y,type:d.type,count:finite(d.count,1,1e150),worker:d.worker===true,...(d.physical===true?{physical:true}:{}),...(Number.isInteger(d.beltId)&&d.beltId>0?{beltId:d.beltId}:{}),...(sourceKey(d.source)!==undefined?{source:d.source}:{})}));
+  s.drops=(Array.isArray(raw.drops)?raw.drops:[]).filter(d=>point(d)&&types.has(d.type)&&Number.isFinite(d.count)&&d.count>0).slice(0,10000).map(d=>({key:finite(d.key),x:d.x,y:d.y,type:d.type,count:finite(d.count,1,1e150),worker:d.worker===true,...(d.onConveyor===true?{onConveyor:true}:{}),...(d.physical===true?{physical:true}:{}),...(Number.isInteger(d.beltId)&&d.beltId>0?{beltId:d.beltId}:{}),...(sourceKey(d.source)!==undefined?{source:d.source}:{})}));
   s.rails=(Array.isArray(raw.rails)?raw.rails:[]).filter(e=>point(e.a)&&point(e.b)&&Math.abs(e.a.x-e.b.x)+Math.abs(e.a.y-e.b.y)===TILE).slice(0,8192).map(e=>({a:snap(e.a),b:snap(e.b)}));
+  if(raw.compactDrops===true)s.compactDrops=true;
   if(raw.individualDrops===true){s.legacyLoose=(Array.isArray(raw.legacyLoose)?raw.legacyLoose:[]).filter(d=>point(d)&&types.has(d.type)&&Number.isFinite(d.count)&&d.count>0).map(d=>({...d,count:Math.floor(d.count)}));individualize(s);}
   return s;
  }
@@ -30,14 +31,26 @@
   }
   s.drops=pieces;s.legacyLoose=reserve;return s;
  }
- function unpackLegacy(s,limit=16){
-  if(!s.individualDrops||!s.legacyLoose?.length)return 0;let made=0;
-  while(s.legacyLoose.length&&s.drops.length<MAX_LOOSE&&made<limit){const d=s.legacyLoose[0];s.drops.push({...d,key:s.next++,count:1});d.count--;made++;if(d.count<=0)s.legacyLoose.shift();}return made;
+ const looseLimit=capacity=>Math.max(1,Math.min(MAX_LOOSE,Number.isFinite(capacity)?Math.floor(capacity):MAX_LOOSE));
+ function compactManualDrops(s,camp={},conveyor=null){
+  if(!s||s.compactDrops)return false;
+  for(const d of s.drops){
+   // Existing automation is player-authored. Never teleport its output or items
+   // waiting on a belt/platform when introducing compact manual worksite piles.
+   if(d.worker||d.beltId||d.onConveyor||conveyor?.contact(camp.links||[],d)||conveyor?.platformAt(camp.platforms||[],d))continue;
+   const n=s.nodes.find(n=>n.key===d.source);if(!n)continue;
+   d.x=n.x+72;d.y=n.y+28;d.physical=true;
+  }
+  s.compactDrops=true;return true;
  }
- function drop(s,type,count,x,y,source=null){if(!types.has(type)||!Number.isFinite(count)||count<=0)return null;if(s.individualDrops){count=Math.floor(count);if(!count||s.drops.length+count>MAX_LOOSE)return null;const origin=sourceKey(source&&typeof source==='object'?source.source:source);let first=null;for(let i=0;i<count;i++){const d={key:s.next++,type,count:1,x,y,...(origin!==undefined?{source:origin}:{})};s.drops.push(d);if(!first)first=d;}return first;}const origin=sourceKey(source&&typeof source==='object'?source.source:source),sameSource=d=>sourceKey(d.source)===origin;const nearby=s.drops.find(d=>!d.carrier&&d.type===type&&sameSource(d)&&Math.hypot(d.x-x,d.y-y)<12);if(nearby){nearby.count=Math.min(1e150,nearby.count+count);return nearby;}if(s.drops.length>=10000){const packet=s.drops.find(d=>!d.carrier&&d.type===type&&sameSource(d));if(packet){packet.count=Math.min(1e150,packet.count+count);return packet;}return null;}const d={key:s.next++,type,count,x,y,...(origin!==undefined?{source:origin}:{})};s.drops.push(d);return d;}
+ function unpackLegacy(s,limit=16,capacity=MAX_LOOSE){
+  if(!s.individualDrops||!s.legacyLoose?.length)return 0;let made=0;
+  while(s.legacyLoose.length&&s.drops.length<looseLimit(capacity)&&made<limit){const d=s.legacyLoose[0];s.drops.push({...d,key:s.next++,count:1});d.count--;made++;if(d.count<=0)s.legacyLoose.shift();}return made;
+ }
+ function drop(s,type,count,x,y,source=null,capacity=MAX_LOOSE){if(!types.has(type)||!Number.isFinite(count)||count<=0)return null;if(s.individualDrops){count=Math.floor(count);if(!count||s.drops.length+count>looseLimit(capacity))return null;const origin=sourceKey(source&&typeof source==='object'?source.source:source);let first=null;for(let i=0;i<count;i++){const d={key:s.next++,type,count:1,x,y,...(origin!==undefined?{source:origin}:{})};s.drops.push(d);if(!first)first=d;}return first;}const origin=sourceKey(source&&typeof source==='object'?source.source:source),sameSource=d=>sourceKey(d.source)===origin;const nearby=s.drops.find(d=>!d.carrier&&d.type===type&&sameSource(d)&&Math.hypot(d.x-x,d.y-y)<12);if(nearby){nearby.count=Math.min(1e150,nearby.count+count);return nearby;}if(s.drops.length>=10000){const packet=s.drops.find(d=>!d.carrier&&d.type===type&&sameSource(d));if(packet){packet.count=Math.min(1e150,packet.count+count);return packet;}return null;}const d={key:s.next++,type,count,x,y,...(origin!==undefined?{source:origin}:{})};s.drops.push(d);return d;}
  function deliver(s,item){const index=s.drops.indexOf(item);if(index<0)return null;s.drops.splice(index,1);s.delivered+=item.count;if(item.type!=='gold')s.inventory[item.type]=Math.min(1e9,s.inventory[item.type]+item.count);return {type:item.type,count:item.count};}
  function route(s){const graph=new Map();const add=(a,b)=>{const k=key(a);if(!graph.has(k))graph.set(k,{point:a,links:[]});graph.get(k).links.push(key(b));};for(const edge of s.rails){add(edge.a,edge.b);add(edge.b,edge.a);}const depotKey=key(s.depot),routes=new Map([[depotKey,{point:s.depot,next:null,distance:0}]]),queue=[depotKey];for(let i=0;i<queue.length;i++){const k=queue[i];for(const other of graph.get(k)?.links||[]){if(routes.has(other))continue;routes.set(other,{point:graph.get(other).point,next:k,distance:routes.get(k).distance+1});queue.push(other);}}return routes;}
  function quote(s,from,to){const a=snap(from),b=snap(to),points=[a];let p={...a};while(p.x!==b.x&&points.length<512){p={x:p.x+Math.sign(b.x-p.x)*TILE,y:p.y};points.push(p);}while(p.y!==b.y&&points.length<512){p={x:p.x,y:p.y+Math.sign(b.y-p.y)*TILE};points.push(p);}const exists=new Set(s.rails.map(e=>[key(e.a),key(e.b)].sort().join('|'))),edges=[];for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],k=[key(a),key(b)].sort().join('|');if(!exists.has(k)){exists.add(k);edges.push({a,b});}}const cost=edges.length*8;return {cost,edges,end:points.at(-1),fits:s.rails.length+edges.length<=8192};}
  function build(s,from,to,budget=0){const q=quote(s,from,to);if(!q.fits||!Number.isFinite(budget)||budget<q.cost)return {ok:false,cost:q.cost};s.rails.push(...q.edges);return {ok:true,cost:q.cost,edges:q.edges.length,end:q.end};}
- return {TILE,key,snap,fresh,migrate,drop,deliver,route,quote,build,individualize,unpackLegacy,MAX_LOOSE};
+ return {TILE,key,snap,fresh,migrate,drop,deliver,route,quote,build,individualize,unpackLegacy,compactManualDrops,looseLimit,MAX_LOOSE};
 });

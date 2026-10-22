@@ -207,3 +207,9 @@ body.outpost-game #field.laying-rails #raidBoard{visibility:visible!important}
 body.outpost-game #conveyorPlatformBuild{min-height:34px;padding:6px 12px;border:1px solid #b6c888;border-radius:5px;background:#445c42;color:#edf0b3;font:800 12px system-ui;cursor:pointer}
 body.outpost-game #railEditor [data-rail-action=rotate]{border-color:#d8cf8e;color:#ffe8a7}
 @media(max-width:680px){body.outpost-game #conveyorPlatformBuild{font-size:11px;padding:6px 9px}}
+
+.equipment-heading{grid-column:1/-1;margin:20px 0 0;font-size:17px;color:#ead4a0}.equipment-intro{grid-column:1/-1;margin:0 0 8px;font-size:13px;color:#c5cdbd}.equipment-card{display:flex;flex-direction:column;gap:8px;min-height:180px}.equipment-card p{font-size:13px;line-height:1.6;margin:0}.equipment-icon{font-size:35px;color:#d4bb79}.equipment-card button{margin-top:auto;min-height:42px;cursor:pointer}.equipment-card strong{font-size:13px;color:#ead4a0}
+
+body.outpost-game #groundStorageStatus{display:block;margin-top:5px;font:600 11px/1.4 system-ui;color:#efdcaa}
+body.outpost-game .equipment-card button{border:1px solid #baa366;border-radius:5px;background:#3c543d;color:#f5e6bc;padding:11px 14px;font:700 14px system-ui;cursor:pointer;min-height:44px}
+body.outpost-game .equipment-card button:hover{background:#4d694b}

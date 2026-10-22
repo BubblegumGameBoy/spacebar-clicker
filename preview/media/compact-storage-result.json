@@ -1,0 +1,13 @@
+{
+  "fresh": true,
+  "grants": false,
+  "timeAcceleration": false,
+  "checks": [
+    "12 separate objects overlap at one outlet",
+    "One drag delivers exactly one",
+    "Production resumes after space freed",
+    "Earned wood and stone buy capacity24",
+    "Two conveyor catalog choices"
+  ],
+  "errors": []
+}
