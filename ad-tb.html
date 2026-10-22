@@ -4,24 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ad</title>
-<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}</style>
+<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden;}#im-7485f88e6190457883b2c815ea13fc3e{display:flex;justify-content:center;}</style>
 </head>
 <body>
 <!--
-  忍者AdMax（681px以上・PCサイド枠）を、この小さなページの中だけで読み込む。
-
-  ポイントは script を「静的に置く」こと。
-  document.write で script を差し込むと、Chrome が
-  「document.write 経由の、別ドメインの、パーサを止めるスクリプト」とみなして
-  回線が遅いときブロックする（chromestatus 5718547946799104）。
-  初回だけ広告が出ず、リロードすると出るのはこれが原因だった。
-
-  静的な script タグなら document.write 経由ではないので介入の対象にならない。
-  タグ自身が内部で document.write を呼ぶのは、このページのパース中なので問題ない。
-
-  さらに、ゲーム本体から隔離されるので、広告側が何をしても
-  index.html が白くなることがなくなる。
+  i-mobile Ad Network（681px以上・PC右側の枠。タブレットもこちら（i-mobile サポートの回答 2026-10-22：タブレットはPCサイトのタグ））。2026-10-22 に忍者AdMax から置き換えた。
+  媒体「Bubblegum Game Play」（play.bubblegumgameboy.com、PC、メディアID 597606）のスポット spacebar-pc（1949267、300x250）。
+  この小さなページの中だけで読み込む作りは前と同じ（ゲーム本体を広告側のスクリプトから隔離する）。
+  親の index.html は iframe を 360x300 で置くので、300x250 がそのまま入る。
 -->
-<script src="https://adm.shinobi.jp/s/dce5f7f5ae36fcbf75f25a36c4409c63"></script>
+<div id="im-7485f88e6190457883b2c815ea13fc3e"></div>
+<script>(window.adsbyimobile=window.adsbyimobile||[]).push({pid:85517,mid:597606,asid:1949267,type:"banner",display:"inline",elementid:"im-7485f88e6190457883b2c815ea13fc3e"})</script>
+<script async src="https://imp-adedge.i-mobile.co.jp/script/v1/spot.js?20220104"></script>
 </body>
 </html>
