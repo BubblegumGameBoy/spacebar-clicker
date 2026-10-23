@@ -187,7 +187,7 @@
   const tools=camp?.tools||{},wood=integer(tools.wood,0,0,2),stone=integer(tools.stone,0,0,2);
   if(id==='woodcutter')return {damage:0,interval:[5,2.5,1.5][wood],range:0};
   if(id==='miner')return {damage:0,interval:[6,3,2][stone],range:0};
-  if(id==='arch')return {damage:5,interval:1.3,range:90};
+  if(id==='arch')return {damage:5,interval:1.3,range:camp?.beacon===true?110:90};
   if(id==='sword')return {damage:3,interval:1.2,range:28};
   return null;
  }

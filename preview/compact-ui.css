@@ -1,0 +1,129 @@
+/* The field is the main view; choosing a card temporarily puts that object in hand. */
+body.compact-play{height:100dvh;overflow:hidden}
+.compact-play #playLayout{display:grid;grid-template-columns:minmax(0,1fr) 276px;flex:1;min-height:0;width:100%;height:100dvh}
+body.compact-play #field{height:100%;min-height:0;width:100%}
+.compact-play #deck{height:100%;min-height:0;border-top:0;border-left:1px solid #4e624d}
+.compact-play #deckMain{min-height:0;overflow:hidden;background:#17251f}
+.compact-play #panels{padding:8px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+.compact-play .pane.active{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;align-content:start}
+.compact-play .catalog-heading{display:flex;justify-content:space-between;align-items:center;padding:10px 10px 4px;font:700 13px system-ui;color:#e4d6b5}
+.compact-play .catalog-heading button{min-width:32px;min-height:30px;border:1px solid #6e8262;background:#294233;color:#f1dfa7;border-radius:5px;cursor:pointer}
+.compact-play #rxToolbar{order:3;display:flex;gap:4px;padding:7px;flex-wrap:wrap;border-top:1px solid #40553f;background:#1e3027}
+.compact-play #rxToolbar>button{min-height:30px;padding:5px 7px;font-size:10px}
+.compact-play #rxToolbar #hudTools{margin-left:0;gap:3px}
+.compact-play #rxToolbar #rxArmyTools{display:none}
+.compact-play #rxToolbar .recruit-quantity{margin-left:auto}
+.compact-play #battleCommands,.compact-play #commandMode,.compact-play #placeRecruits,.compact-play #conveyorBuild,.compact-play #conveyorPlatformBuild{display:none!important}
+.compact-play #pendingPlacement{margin:4px 8px;padding:7px 9px;border:1px solid #ac965d;border-radius:5px;background:#564b31;color:#f3dfaa;text-align:left;font:600 12px system-ui;cursor:pointer;min-height:36px}
+.compact-play #pendingPlacement:disabled{opacity:.65;cursor:default}
+.compact-play [hidden]{display:none!important}
+/* Slim portrait cards. Only role, yield and real price compete for attention. */
+body.compact-play .card.army-card,body.compact-play .equipment-card{position:relative;display:flex;flex-direction:column;min-height:184px;padding:9px 7px;gap:3px;border:1px solid #4a6251;border-radius:7px;background:#20352b;box-shadow:none}
+body.compact-play .army-card img.unit-portrait{position:static;width:100%;height:56px;object-fit:contain;object-position:center bottom;margin:0;image-rendering:pixelated}
+body.compact-play .army-card .nm{font:700 14px/1.35 system-ui;padding:0;margin:3px 0 0;color:#f0e5c8}
+body.compact-play .army-card .company-size{position:absolute;right:6px;top:7px;margin:0;font:10px system-ui;color:#c6d8bc}
+body.compact-play .army-card .company-size b{font-size:12px}
+body.compact-play .army-card .unit-yield{display:flex;align-items:center;gap:3px;font:10px/1.4 system-ui;min-height:17px;color:#bdd4b4}
+body.compact-play .army-card .unit-yield b{font-size:12px}.compact-play .unit-yield .material-icon{height:17px;width:20px;object-fit:contain}
+body.compact-play .army-card .company-yield{display:none}
+body.compact-play .ally-description{margin:2px 0 5px;min-height:28px;max-width:100%;font:10px/1.4 system-ui;color:#b1c6af;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+body.compact-play .army-card .recruit-more{display:flex;flex-direction:column;justify-content:center;gap:2px;min-height:39px;padding:4px;margin-top:auto;border-radius:5px;text-align:center}
+body.compact-play .army-card .hire-label{font-size:11px;line-height:1.25}.compact-play .army-card .hire-price{font-size:10px;line-height:1.2}.compact-play .hire-price .material-icon{width:18px;height:16px}
+body.compact-play .hire-shortage{font:9px/1.25 system-ui;min-height:11px}
+body.compact-play .equipment-heading{margin:10px 0 1px;font-size:12px}.compact-play .equipment-intro{display:none}
+body.compact-play .equipment-card{min-height:174px}
+body.compact-play .equipment-icon{height:49px;display:grid;place-items:center;font-size:32px;color:#d4bf87}
+body.compact-play .equipment-card .nm{font:700 13px system-ui}
+body.compact-play .equipment-card p{font:10px/1.4 system-ui;color:#b1c6af;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+body.compact-play .equipment-card strong{font:10px/1.35 system-ui;color:#e5d39e}
+body.compact-play .equipment-card button{margin-top:auto;min-height:36px;padding:6px;font-size:11px}
+/* Context only: no mode chooser, no second instruction panel. */
+body.compact-play #placementControls{position:absolute;left:10px;right:10px;bottom:8px;top:auto;z-index:26;display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:7px 9px;border:1px solid #a48e58;border-radius:6px;background:#20372ef2;color:#f0e4c0;font:12px/1.4 system-ui;box-shadow:0 2px 7px #12251b55}
+.compact-play .placement-current{font-size:13px;flex:0 0 auto}.compact-play .placement-hint{margin:0;flex:1;font-size:11px;color:#c2d2bb}
+body.compact-play #placementControls button{min-height:32px;padding:5px 9px;background:#3a4e39;border:1px solid #9b986b;color:#eeddb0;border-radius:4px;font:600 11px system-ui;cursor:pointer}
+body.compact-play #placementControls [data-placement-finish]{margin-left:auto;order:5;background:#594c32}
+body.compact-play #placementControls #railEditor{display:contents;background:none;border:0;padding:0;margin:0}
+body.compact-play #placementControls #railEditor>b{flex:1;min-width:100px;order:1;font:500 11px/1.4 system-ui;color:#d7dcbf}
+body.compact-play #placementControls #railEditor .rail-price,body.compact-play #railEditor [data-rail-action=cancel],body.compact-play #railEditor [data-rail-action=undo]{display:none}
+.compact-play #railEditor>div{display:contents!important}.compact-play #railEditor [data-rail-action=rotate]{order:3}
+.compact-play #placementControls[data-mode=belt]>.placement-hint,.compact-play #placementControls[data-mode=platform]>.placement-hint{display:none}
+body.compact-play #contextGuide{position:absolute;bottom:8px;left:10px;z-index:18;max-width:min(640px,calc(100% - 20px));margin:0;padding:6px 10px;border:1px solid #6e815d66;border-radius:5px;background:#1b3028e8;color:#e0dcc3;font:11px/1.5 system-ui;pointer-events:none;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+body.compact-play #field.laying-rails #campWarehouse,body.compact-play #field.laying-rails #campaignGoal{visibility:visible}
+body.compact-play:has(#field.laying-rails) .army-card button{pointer-events:auto;opacity:1}
+/* Small stock label attached to the actual house; details live in the workshop. */
+body.compact-play #campWarehouse{width:140px;padding:5px 6px;background:#2b3123e8;border:1px solid #a08e61;border-radius:5px;box-shadow:0 2px 6px #13231a33}
+body.compact-play #campWarehouse::before,body.compact-play #campWarehouse::after{display:none}
+body.compact-play #campWarehouse .camp-house-label{width:65%;min-height:25px;padding:0;border:0;font-size:11px}
+body.compact-play #campWarehouse .camp-house-label b{display:none}.compact-play #campWarehouse .camp-house-label span{font-size:11px}
+body.compact-play #campWarehouse .camp-gold{position:absolute;top:10px;right:7px;padding:0}.compact-play #campWarehouse .camp-gold span{display:none}
+body.compact-play #campWarehouse .camp-gold strong{font-size:10px}
+body.compact-play #campWarehouse .resource-buttons{gap:4px;margin:2px 0 0}
+body.compact-play #campWarehouse .resource-buttons button{min-height:27px;padding:3px 4px;display:flex;justify-content:space-between;gap:4px;font-size:10px}
+body.compact-play #campWarehouse .resource-buttons button b{font-size:12px}.compact-play #campWarehouse .resource-buttons button::before{font-size:9px}
+body.compact-play #campWarehouse .resource-buttons button small{display:none}
+body.compact-play #groundStorageStatus{margin:4px 0 0;font:9px/1.3 system-ui}
+body.compact-play #campDeliveryNote{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);min-height:0;margin:0}
+/* A compact, dismissible workshop; the field stays visible around it. */
+body.compact-play #campWorkshop.on{align-items:flex-start;justify-content:flex-end;padding:18px 290px 18px 14px;background:#07150e33}
+body.compact-play #campWorkshop .camp-workshop{width:340px;max-width:calc(100vw - 28px);max-height:min(600px,calc(100dvh - 36px));padding:16px;overflow:auto;border-radius:8px}
+body.compact-play #campWorkshop h2{font-size:17px;margin:0 30px 10px 0}
+.compact-play #campWorkshop .rx-kicker,.compact-play #campWorkshop .camp-workshop-intro,.compact-play #campWorkshop .camp-route,.compact-play #campWorkshop .camp-rail-rate,.compact-play #campWorkshop .camp-rail-workers,.compact-play #campWorkshop .camp-workshop-note{display:none}
+body.compact-play #campWorkshop .camp-workshop-wallet{margin:4px 0;font-size:10px;gap:6px}.compact-play #campWorkshop .camp-workshop-wallet strong{font-size:13px}
+body.compact-play #campWorkshop .camp-stock-wallet{margin:5px 0;gap:12px;font-size:13px}.compact-play #campWorkshop .camp-stock-wallet .material-icon{height:19px;width:23px}
+body.compact-play #campWorkshop .camp-workshop-tabs{gap:5px;margin:9px 0;padding-bottom:7px}
+body.compact-play #campWorkshop .camp-workshop-tabs button{min-height:30px;padding:5px;font-size:11px}
+body.compact-play #campWorkshop .camp-rail-option{padding:9px}.compact-play #campWorkshop .camp-rail-heading h3{font-size:13px}
+body.compact-play #campWorkshop .camp-projects{grid-template-columns:1fr;gap:6px}
+body.compact-play #campWorkshop [data-camp-project]{min-height:76px;padding:9px;grid-template-columns:30px 1fr;gap:3px 7px}
+body.compact-play #campWorkshop .camp-project-icon{width:30px;height:40px}.compact-play .camp-project-icon svg{width:27px;height:27px}
+body.compact-play #campWorkshop [data-camp-project]>b{font-size:12px}.compact-play #campWorkshop .camp-project-effect{font-size:10px;line-height:1.4}
+.compact-play #campWorkshop .camp-project-price{font-size:10px}.compact-play #campWorkshop .camp-project-price .material-icon{height:16px;width:18px}
+body.compact-play #campWorkshop .camp-workshop-status{font-size:10px;min-height:0;margin:7px 0 0}
+@media(max-width:980px){
+ body.compact-play{height:auto;min-height:100dvh;overflow-y:auto}
+ .compact-play #playLayout{height:auto;display:flex;flex-direction:column;min-height:100dvh}
+ body.compact-play #field{height:54dvh;min-height:350px;max-height:500px;flex:none}
+ .compact-play #deck{height:auto;min-height:0;border-left:0;border-top:1px solid #536548;flex:none}
+ .compact-play #panels{padding:7px;overflow-x:auto;overflow-y:hidden}
+ .compact-play .pane.active{display:flex;gap:7px;align-items:stretch}
+ body.compact-play .card.army-card,body.compact-play .equipment-card{flex:0 0 126px;min-height:178px;width:126px}
+ .compact-play .equipment-heading{display:none}.compact-play .catalog-heading{padding:7px 10px 0;font-size:12px}
+ body.compact-play #campWorkshop.on{padding:12px;justify-content:center;align-items:flex-start}
+ body.compact-play #campWorkshop .camp-workshop{width:320px;max-height:min(440px,calc(100dvh - 24px));padding:13px}
+ body.compact-play #placementControls{left:6px;right:6px;padding:6px 7px;gap:5px;bottom:5px}
+ .compact-play .placement-current{font-size:12px}.compact-play .placement-hint{font-size:10px}
+ body.compact-play #placementControls button{min-height:36px;padding:6px 8px;font-size:11px}
+ body.compact-play #contextGuide{font-size:10px;left:7px;bottom:5px;padding:5px 7px}
+ body.compact-play #campWarehouse{width:130px;padding:4px 5px}
+ body.compact-play #campWarehouse .resource-buttons button{min-height:33px}
+ body.compact-play #campaignGoal{max-width:170px;padding:5px 7px}
+}
+/* Keep the unobstructed field readable while a small workshop is open. */
+body.compact-play #campWorkshop.on{backdrop-filter:none;background:#07150e22}
+body.compact-play #campWorkshop .camp-workshop{max-height:min(430px,calc(100dvh - 36px))}
+body.compact-play #campWorkshop .camp-route,body.compact-play #campWorkshop .camp-workshop-intro,body.compact-play #campWorkshop .camp-rail-rate,body.compact-play #campWorkshop .camp-rail-workers,body.compact-play #campWorkshop .camp-workshop-note{display:none}
+body.compact-play #raidWorkshop{display:none!important}
+body.compact-play #raidBoard{width:230px;padding:7px 9px;gap:3px 7px}
+body.compact-play #raidBoard .raid-result{min-height:0;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;overflow:hidden;font-size:10px}
+body.compact-play #contextGuide{position:static;max-width:none;display:-webkit-box;flex:none;margin:0;padding:7px 10px;border:0;border-bottom:1px solid #435c45;border-radius:0;background:#24382b;font-size:11px;min-height:30px;box-sizing:border-box}
+body.compact-play #adBox{display:none!important}
+@media(max-width:980px){body.compact-play #raidBoard{width:190px;padding:7px 8px}body.compact-play #contextGuide{min-height:30px;padding:6px 9px;font-size:11px}body.compact-play #campWorkshop .camp-workshop{max-height:390px}}
+
+.compact-play .catalog-scroll-hint{display:none}.compact-play #backToBlog{display:inline-flex!important;align-items:center;min-height:28px;margin:0;padding:4px 6px;max-width:none;border:0;background:none;font:10px/1.3 system-ui;color:#c6bb91}
+@media(max-width:980px){.compact-play .catalog-scroll-hint{display:inline;font:10px system-ui;color:#a9bca5;margin-left:auto}.compact-play #panels{scrollbar-width:thin;scrollbar-color:#7b9467 #22392a}.compact-play #panels::-webkit-scrollbar{height:4px}.compact-play #panels::-webkit-scrollbar-thumb{background:#7b9467;border-radius:4px}}
+body.compact-play .rx-toast{left:auto;right:288px;top:125px;width:260px;min-width:0;max-width:calc(100vw - 24px);padding:9px 12px;border-radius:6px;box-shadow:0 3px 12px #10261c44;text-align:left;transform:translateY(-6px)}
+body.compact-play .rx-toast.on{transform:translateY(0)}body.compact-play .rx-toast b{font:700 13px/1.4 system-ui}body.compact-play .rx-toast span{font:10px/1.4 system-ui;margin-top:3px}
+body.compact-play .rx-toast:has(.unlock-portrait){grid-template-columns:30px 1fr;gap:6px;padding:9px 12px}body.compact-play .rx-toast .unlock-portrait{width:30px!important;height:42px!important}
+@media(max-width:980px){body.compact-play .rx-toast{right:10px;top:110px;width:230px}}
+
+body.compact-play #rxToolbar #langBtn{position:static;left:auto;bottom:auto;min-height:28px;padding:4px 6px;margin:0;font-size:10px;border-radius:4px}
+body.compact-play #campWorkshop .camp-rail-options{grid-template-columns:1fr;gap:7px}
+body.compact-play #campWorkshop .camp-rail-heading{margin-bottom:6px}
+body.compact-play #campWorkshop [data-camp-build]{min-height:37px;padding:7px 9px;font-size:11px}
+body.compact-play #campWorkshop [data-camp-build] strong{font-size:12px}
+
+body.compact-play #placementControls{position:static;left:auto;right:auto;top:auto;bottom:auto;margin:0;border-width:0 0 1px;border-radius:0;box-shadow:none;flex-shrink:0}
+/* Reserve the camp postcard while its real screenshot loads, avoiding a collapsing ending. */
+body.compact-play #campaignEnding .ending-town{height:200px;min-height:160px;display:grid;place-items:center}
+body.compact-play #campaignEnding .ending-town img{width:100%;height:100%;max-height:200px;object-fit:contain}
+@media(max-width:680px){body.compact-play #campaignEnding .ending-town{height:160px;min-height:160px}body.compact-play #campaignEnding .ending-town img{max-height:160px}}

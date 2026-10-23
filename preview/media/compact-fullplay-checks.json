@@ -1,0 +1,41 @@
+{
+  "completed": true,
+  "method": "Normal-time browser input, starting fresh in an earlier reviewed build and resuming only its earned saves after UI/driver changes. Separate fresh PC/native-touch tests cover the new opening UI. No material grants or clock advancement.",
+  "gameSeconds": 1432.8422999996858,
+  "manualCombatAssistance": true,
+  "finalAttempt": {
+    "wave": 9,
+    "win": true,
+    "boxes": 3,
+    "kills": 37,
+    "escaped": 0,
+    "gold": 102,
+    "first": true,
+    "chiefDefeated": true
+  },
+  "finalCrew": {
+    "woodcutter": 6,
+    "miner": 6,
+    "sword": 4,
+    "arch": 20
+  },
+  "finalConveyors": 12,
+  "finalAttemptErrors": [],
+  "segments": [
+    {
+      "directory": "revision-campaign",
+      "covered": "Fresh start through wave 3",
+      "stopReason": "Test driver waited for materials with an obsolete ground threshold."
+    },
+    {
+      "directory": "compact-campaign",
+      "covered": "Earned save from wave 3 through wave 6",
+      "stopReason": "Test driver still used the old hidden workshop shortcut."
+    },
+    {
+      "directory": "compact-campaign-final",
+      "covered": "Earned save from wave 6 through wave 9, including one failed final attempt and a successful retry",
+      "stopReason": "Completed"
+    }
+  ]
+}

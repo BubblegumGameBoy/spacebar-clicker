@@ -19,7 +19,7 @@
     }
    }
   }
-  range(p){if(Array.isArray(this.enemies)){const core=outpostCore||globalThis.OutpostCore;return core?.stats(p.id)?.range||0;}return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
+  range(p){if(Array.isArray(this.enemies)){const core=outpostCore||globalThis.OutpostCore;return Number.isFinite(p.u.range)?clamp(p.u.range,0,240):(core?.stats(p.id)?.range||0);}return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
   target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r,{includeEnemyRadius:true})||null;}
   round(){return this.outpostState?.round??this.roundToken??this.boss.token;}
   distance(p){return Math.max(0,Math.hypot(p.x-this.boss.x,p.y-this.boss.y)-this.boss.r);}
