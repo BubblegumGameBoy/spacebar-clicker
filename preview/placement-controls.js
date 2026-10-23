@@ -34,7 +34,7 @@ window.PlacementControls=(()=>{
   bar.addEventListener('pointercancel',()=>touch=null,true);
   bar.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=touch,b=e.target.closest('button');touch=null;if(!t||!b||b.disabled||key(b)!==t.key||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();lastTouch={key:t.key,at:performance.now()};b.click();},true);
   bar.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&e.isTrusted&&e.detail>0&&lastTouch?.key===key(b)&&performance.now()-lastTouch.at<700){e.preventDefault();e.stopImmediatePropagation();}},true);
-  let extraTouch=null,extraLast=null;const extraSelector='#pendingPlacement,#quickBuildUndo,.camp-house-label';
+  let extraTouch=null,extraLast=null;const extraSelector='#pendingPlacement,#quickBuildUndo,.camp-house-label,#harvestSkillsButton,#onboardingAction';
   layout.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;const b=e.target.closest(extraSelector);extraTouch=b&&!b.disabled?{b,x:e.clientX,y:e.clientY,at:performance.now()}:null;},true);
   layout.addEventListener('pointercancel',()=>extraTouch=null,true);
   layout.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=extraTouch,b=e.target.closest(extraSelector);extraTouch=null;if(!t||b!==t.b||b.disabled||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();extraLast={b,at:performance.now()};b.click();},true);

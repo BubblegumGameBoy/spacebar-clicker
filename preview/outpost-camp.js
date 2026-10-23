@@ -290,7 +290,7 @@ window.OutpostCamp = (() => {
  }
  function refreshDrag(e){
   if(!drag)return;drag.x=e.clientX;drag.y=e.clientY;drag.over=dragTarget(e);
-  if(!drag.over&&drag.items.length<handCapacity()){const extra=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(extra&&!heldDrop(extra)){drag.items.push({drop:extra,count:1});audio('pickup');}}
+  if(!drag.over){let added=0;while(drag.items.length<handCapacity()){const extra=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!extra||heldDrop(extra))break;drag.items.push({drop:extra,count:1});added++;}if(added)audio('pickup');}
   dragGhost.innerHTML='<b>'+drag.items.length+' / '+handCapacity()+'</b>';
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
   dragGhost.classList.toggle('can-deliver',drag.over);document.getElementById('field').classList.toggle('delivery-ready',drag.over);
@@ -330,15 +330,15 @@ window.OutpostCamp = (() => {
    if(next.arrived){const index=s.factory.drops.indexOf(drop);if(index>=0){s.factory.drops.splice(index,1);arrivals.push({type:drop.type,count:drop.count,worker:drop.worker});}moved=true;continue;}
    if(!occupied.some(p=>Math.hypot(p.x-next.x,p.y-next.y)<13)){drop.x=next.x;drop.y=next.y;drop.beltId=next.beltId;drop.platformKey=next.platformKey;drop.conveyorBlocked=next.blocked;occupied.push(next);moved=true;}
   }
-  receive(s,arrivals);return moved;
+  receive(s,arrivals,true);return moved;
  }
 
- function receive(s,arrivals){
+ function receive(s,arrivals,automatic=false){
   if(!arrivals.length)return;
   const totals={wood:0,stone:0,gold:0};let first=false;
   for(const cargo of arrivals){
    if(!['wood','stone','gold'].includes(cargo.type)||!Number.isFinite(cargo.count)||cargo.count<=0)continue;
-   totals[cargo.type]+=cargo.count;
+   totals[cargo.type]+=cargo.count;window.OutpostTutorial?.delivered?.(cargo.type,cargo.count,automatic,cargo.worker===true);
    if(cargo.type==='gold'){if(typeof earnGold==='function')earnGold(cargo.count);else s.gold+=cargo.count;}
    else s.factory.inventory[cargo.type]=Math.min(1e9,(s.factory.inventory[cargo.type]||0)+cargo.count);
    s.factory.delivered=(s.factory.delivered||0)+cargo.count;

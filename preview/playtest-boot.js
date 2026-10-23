@@ -1,12 +1,14 @@
 /* Isolated playtest: no online scores, analytics or advertisements. */
 window.__MYTHOS_PLAYTEST__ = true;
 (() => {
-  if (new URLSearchParams(location.search).has('lab')) {
-    // Only this iframe's Storage prototype is changed. Ordinary play saves stay separate.
+  const params = new URLSearchParams(location.search);
+  const namespace = params.has('lab') ? 'mythos_lab:' : params.get('lesson') === '1' ? 'mythos_lesson:' : '';
+  if (namespace) {
+    // A separate practice slot preserves existing play and laboratory saves.
     for (const method of ['getItem', 'setItem', 'removeItem']) {
       const native = Storage.prototype[method];
       Storage.prototype[method] = function (key, ...args) {
-        return native.call(this, 'mythos_lab:' + key, ...args);
+        return native.call(this, namespace + key, ...args);
       };
     }
   }

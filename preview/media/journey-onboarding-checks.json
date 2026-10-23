@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "fresh": true,
+  "fixture": "Two fresh saves; earned material, real pointer and native touch. No state grants, no time acceleration.",
+  "checks": [
+    "Hold is one press",
+    "Rapid presses each produce individual logs",
+    "First10 individually dragged to physical warehouse",
+    "Wood-only first skill changes carry1→2",
+    "Player-chosen worker output and actual manual pickup",
+    "Manual belt building and real automated arrival",
+    "30wood upgraded carry2",
+    "Two defenders placed before explicit preparation countdown",
+    "Native mobile first10 and carry upgrade"
+  ],
+  "errors": [],
+  "elapsedSeconds": 92.44
+}

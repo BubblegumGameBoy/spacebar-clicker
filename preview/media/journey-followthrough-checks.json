@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "start": {
+    "prep": 88.96673200000005,
+    "round": 0
+  },
+  "checks": [
+    "Continued genuine tutorial save",
+    "Carry4 physically picks four in a straight drag",
+    "Carry3 paid exactly60wood and raises limitto6",
+    "First wave starts after actual countdown",
+    "Two player-placed archers defend first wave with no manualattack"
+  ],
+  "result": {
+    "result": {
+      "wave": 1,
+      "win": true,
+      "boxes": 3,
+      "kills": 3,
+      "escaped": 0,
+      "gold": 38,
+      "first": true
+    },
+    "tutorial": {
+      "version": 1,
+      "started": true,
+      "first10": true,
+      "stock30": true,
+      "woodDelivered": 159,
+      "stoneDelivered": 15,
+      "automaticWood": 30,
+      "workerDelivered": true
+    },
+    "skills": {
+      "carry": 3,
+      "hand": 0,
+      "route": 0,
+      "storage": 0
+    },
+    "seconds": 189.8591680000076
+  },
+  "errors": []
+}

@@ -1,0 +1,17 @@
+{
+  "file": "journey-first-upgrade.mp4",
+  "seconds": 17.85,
+  "startedAt": 1792732849558,
+  "silent": true,
+  "source": "actual browser input; no simulated armies or score submissions",
+  "fixture": "Fresh save, actual pointer input. First ten logs and upgrade earned; no grants, no accelerated time. Silent browser video.",
+  "checks": [
+    "Each press drops one item",
+    "10 physical individual deliveries",
+    "First carry upgrade paid exactly10wood",
+    "One drag now carries2 overlapping individuallogs",
+    "Gathering upgrade changes actualtap output to2individual items",
+    "Reload keeps skills and cumulative delivery"
+  ],
+  "errors": []
+}

@@ -564,10 +564,11 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261023-compact1">
-<link rel="stylesheet" href="harvest-skills.css?v=20261023-compact1">
-<link rel="stylesheet" href="outpost.css?v=20261023-compact1">
-<link rel="stylesheet" href="compact-ui.css?v=20261023-compact1">
+<link rel="stylesheet" href="rework.css?v=20261023-journey1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261023-journey1">
+<link rel="stylesheet" href="outpost.css?v=20261023-journey1">
+<link rel="stylesheet" href="compact-ui.css?v=20261023-journey1">
+<link rel="stylesheet" href="outpost-tutorial.css?v=20261023-journey1">
 </head>
 <body>
 <div id="titleScreen">
@@ -691,11 +692,11 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261023-compact1"></script>
-<script src="outpost-core.js?v=20261023-compact1"></script>
-<script src="supply-core.js?v=20261023-compact1"></script>
-<script src="game-core.js?v=20261023-compact1"></script>
-<script src="forest-audio.js?v=20261023-compact1"></script>
+<script src="harvest-skill-core.js?v=20261023-journey1"></script>
+<script src="outpost-core.js?v=20261023-journey1"></script>
+<script src="supply-core.js?v=20261023-journey1"></script>
+<script src="game-core.js?v=20261023-journey1"></script>
+<script src="forest-audio.js?v=20261023-journey1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -1519,7 +1520,7 @@ function heroAttack(){
  dealDamage(dmg, pt.x, pt.y, crit?"crit":"click");
  window.Rework?.heroHit();
 }
-$("#field").addEventListener("pointerdown",e=>{if(!e.target.closest("button,input,select"))e.currentTarget.focus({preventScroll:true});if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;const point=ArmyView.point(e.clientX,e.clientY);if(window.Outpost?.ready){if(Rework.paused||!$("#titleScreen").classList.contains("hidden"))return;if(BattleControl.selectAt(point,e)||OutpostCamp.hitHouse(point))return;if(SupplyFactory.gatherAt(point)){SupplyFactory.beginHold('pointer',e.pointerId);return;}Outpost.manual(point);return;}if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
+$("#field").addEventListener("pointerdown",e=>{if(!e.target.closest("button,input,select"))e.currentTarget.focus({preventScroll:true});if(LAYOUT_MODE||window.BattleControl?.placement||e.target.closest("button,input,select"))return;const point=ArmyView.point(e.clientX,e.clientY);if(window.Outpost?.ready){if(Rework.paused||!$("#titleScreen").classList.contains("hidden"))return;if(BattleControl.selectAt(point,e)||OutpostCamp.hitHouse(point))return;if(SupplyFactory.gatherAt(point))return;Outpost.manual(point);return;}if(SupplyFactory.gatherAt(ArmyView.point(e.clientX,e.clientY)))return;if(!BattleControl.hasCombat)return;const r=bossEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;SupplyFactory.selectBoss();heroAttack();});
 const _heldKeys=new Set();
 let _cheatTimer=null;
 window.addEventListener("keydown",e=>{
@@ -1529,7 +1530,7 @@ window.addEventListener("keydown",e=>{
   if(_heldKeys.has("Space")) return;
   _heldKeys.add("Space");
   heroAttack();
-  if(window.Outpost?.ready&&window.SupplyFactory?.resourceTarget)SupplyFactory.beginHold('key');
+
   // cheat mode: hold spacebar to auto-fire rapidly
   if(CHEAT && !_cheatTimer){ _cheatTimer=setInterval(heroAttack,60); }
  }
@@ -2086,18 +2087,20 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261023-compact1"></script>
-<script src="army-view.js?v=20261023-compact1"></script>
+<script src="army-sim.js?v=20261023-journey1"></script>
+<script src="army-view.js?v=20261023-journey1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261023-compact1"></script>
-<script src="supply-factory.js?v=20261023-compact1"></script>
-<script src="camp-training.js?v=20261023-compact1"></script>
-<script src="rail-core.js?v=20261023-compact1"></script>
-<script src="conveyor-core.js?v=20261023-compact1"></script>
-<script src="outpost-camp.js?v=20261023-compact1"></script>
-<script src="outpost.js?v=20261023-compact1"></script>
-<script src="rework.js?v=20261023-compact1"></script>
-<script src="harvest-skills.js?v=20261023-compact1"></script>
-<script src="placement-controls.js?v=20261023-compact1"></script>
+<script src="battle-control.js?v=20261023-journey1"></script>
+<script src="supply-factory.js?v=20261023-journey1"></script>
+<script src="camp-training.js?v=20261023-journey1"></script>
+<script src="rail-core.js?v=20261023-journey1"></script>
+<script src="conveyor-core.js?v=20261023-journey1"></script>
+<script src="outpost-camp.js?v=20261023-journey1"></script>
+<script src="outpost-tutorial-core.js?v=20261023-journey1"></script>
+<script src="outpost-tutorial.js?v=20261023-journey1"></script>
+<script src="outpost.js?v=20261023-journey1"></script>
+<script src="rework.js?v=20261023-journey1"></script>
+<script src="harvest-skills.js?v=20261023-journey1"></script>
+<script src="placement-controls.js?v=20261023-journey1"></script>
 </body>
 </html>
