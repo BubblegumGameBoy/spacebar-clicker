@@ -1,0 +1,1285 @@
+{
+  "status": "passed",
+  "date": "2026-10-25 JST",
+  "method": "Continued the genuinely earned fresh desktop onboarding save. Visible controls and pointer only; normal battle time; explicit Defend now button; player clicks assist combat. Farmer unlocked first. No food purchases, ballista unlock, resource grants, save editing or time acceleration in this progression run.",
+  "elapsedSeconds": 367,
+  "limits": [
+    "Browser automation duration is not an estimate of human play time.",
+    "This is click-assisted defence, not hands-off balance or all 24 work skills.",
+    "Farming route gameplay was completed before the subsequent output-preview wording changes; preview states have separate prepared integration tests."
+  ],
+  "allNine": [
+    {
+      "wave": 1,
+      "clickAssist": true,
+      "result": {
+        "wave": 1,
+        "win": true,
+        "boxes": 3,
+        "kills": 3,
+        "escaped": 0,
+        "gold": 38,
+        "first": true
+      }
+    },
+    {
+      "wave": 2,
+      "clickAssist": true,
+      "result": {
+        "wave": 2,
+        "win": true,
+        "boxes": 3,
+        "kills": 4,
+        "escaped": 0,
+        "gold": 46,
+        "first": true
+      }
+    },
+    {
+      "wave": 3,
+      "clickAssist": true,
+      "result": {
+        "wave": 3,
+        "win": true,
+        "boxes": 3,
+        "kills": 6,
+        "escaped": 0,
+        "gold": 54,
+        "first": true
+      }
+    },
+    {
+      "wave": 4,
+      "clickAssist": true,
+      "result": {
+        "wave": 4,
+        "win": true,
+        "boxes": 3,
+        "kills": 10,
+        "escaped": 0,
+        "gold": 62,
+        "first": true
+      }
+    },
+    {
+      "wave": 5,
+      "clickAssist": true,
+      "result": {
+        "wave": 5,
+        "win": true,
+        "boxes": 3,
+        "kills": 14,
+        "escaped": 0,
+        "gold": 70,
+        "first": true
+      }
+    },
+    {
+      "wave": 6,
+      "clickAssist": true,
+      "result": {
+        "wave": 6,
+        "win": true,
+        "boxes": 3,
+        "kills": 18,
+        "escaped": 0,
+        "gold": 78,
+        "first": true
+      }
+    },
+    {
+      "wave": 7,
+      "clickAssist": true,
+      "result": {
+        "wave": 7,
+        "win": true,
+        "boxes": 3,
+        "kills": 22,
+        "escaped": 0,
+        "gold": 86,
+        "first": true
+      }
+    },
+    {
+      "wave": 8,
+      "clickAssist": true,
+      "result": {
+        "wave": 8,
+        "win": true,
+        "boxes": 3,
+        "kills": 28,
+        "escaped": 0,
+        "gold": 94,
+        "first": true
+      }
+    },
+    {
+      "wave": 9,
+      "clickAssist": true,
+      "result": {
+        "wave": 9,
+        "win": true,
+        "boxes": 3,
+        "kills": 37,
+        "escaped": 0,
+        "gold": 102,
+        "first": true,
+        "chiefDefeated": true
+      }
+    }
+  ],
+  "farmProgression": [
+    {
+      "event": "farmer-first-unlock",
+      "seconds": 78,
+      "detail": {},
+      "inventory": {
+        "wood": 18,
+        "stone": 0,
+        "food": 0
+      },
+      "journey": {
+        "seconds": 0.1998999999999942,
+        "handWood": 0,
+        "handStone": 0,
+        "crewWood": 0,
+        "crewStone": 0,
+        "handFood": 0,
+        "crewFood": 0
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "event": "first-hand-delivered-food",
+      "seconds": 79,
+      "detail": {},
+      "inventory": {
+        "wood": 19,
+        "stone": 0,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 1.3333000000000033,
+        "handWood": 0,
+        "handStone": 0,
+        "crewWood": 1,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 0
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "event": "farmer-player-position",
+      "seconds": 82,
+      "detail": {
+        "p": {
+          "x": 589.3551648637873,
+          "y": 356.57297279026596
+        }
+      },
+      "inventory": {
+        "wood": 4,
+        "stone": 2,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 4.433199999999994,
+        "handWood": 0,
+        "handStone": 8,
+        "crewWood": 2,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 0
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "farmer",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "event": "farmer-authored-belt",
+      "seconds": 86,
+      "detail": {
+        "output": {
+          "x": 565.3551648637873,
+          "y": 380.57297279026596
+        }
+      },
+      "inventory": {
+        "wood": 11,
+        "stone": 2,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 8.366399999999983,
+        "handWood": 16,
+        "handStone": 8,
+        "crewWood": 2,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 0
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "farmer",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 91,
+      "detail": {
+        "key": 4,
+        "cost": {
+          "wood": 16,
+          "stone": 8,
+          "food": 0,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 4,
+        "stone": 2,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 12.432900000000023,
+        "handWood": 24,
+        "handStone": 16,
+        "crewWood": 3,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 0
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 100,
+      "detail": {
+        "key": 2,
+        "cost": {
+          "wood": 24,
+          "stone": 12,
+          "food": 0,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 0,
+        "stone": 2,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 19.69950000000005,
+        "handWood": 44,
+        "handStone": 28,
+        "crewWood": 4,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 1
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 3
+        },
+        {
+          "id": "arch",
+          "count": 1
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 108,
+      "detail": {
+        "key": 3,
+        "cost": {
+          "wood": 24,
+          "stone": 12,
+          "food": 0,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 2,
+        "stone": 2,
+        "food": 2
+      },
+      "journey": {
+        "seconds": 27.18250000000005,
+        "handWood": 68,
+        "handStone": 40,
+        "crewWood": 5,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 4
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 3
+        },
+        {
+          "id": "arch",
+          "count": 3
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 164,
+      "detail": {
+        "key": 2,
+        "cost": {
+          "wood": 36,
+          "stone": 18,
+          "food": 9,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 3,
+        "stone": 0,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 82.24689999999909,
+        "handWood": 96,
+        "handStone": 56,
+        "crewWood": 15,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 16
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 3
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "first-three-to-six-from-real-crops",
+      "seconds": 165,
+      "detail": {},
+      "inventory": {
+        "wood": 3,
+        "stone": 0,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 82.43019999999908,
+        "handWood": 96,
+        "handStone": 56,
+        "crewWood": 15,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 16
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 3
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 242,
+      "detail": {
+        "key": 3,
+        "cost": {
+          "wood": 36,
+          "stone": 18,
+          "food": 9,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 3,
+        "stone": 2,
+        "food": 1
+      },
+      "journey": {
+        "seconds": 158.94400000000627,
+        "handWood": 120,
+        "handStone": 76,
+        "crewWood": 26,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 26
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 255,
+      "detail": {
+        "key": 5,
+        "cost": {
+          "wood": 24,
+          "stone": 12,
+          "food": 0,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 1,
+        "stone": 2,
+        "food": 2
+      },
+      "journey": {
+        "seconds": 171.14360000000906,
+        "handWood": 152,
+        "handStone": 96,
+        "crewWood": 26,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 27
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        },
+        {
+          "id": "sword",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "event": "train-with-farm-food",
+      "seconds": 271,
+      "detail": {
+        "key": 6,
+        "cost": {
+          "wood": 24,
+          "stone": 12,
+          "food": 0,
+          "gold": 0
+        }
+      },
+      "inventory": {
+        "wood": 2,
+        "stone": 2,
+        "food": 3
+      },
+      "journey": {
+        "seconds": 185.69310000001195,
+        "handWood": 191,
+        "handStone": 120,
+        "crewWood": 27,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 28
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "farmer",
+          "count": 3
+        },
+        {
+          "id": "sword",
+          "count": 3
+        },
+        {
+          "id": "sword",
+          "count": 3
+        }
+      ]
+    }
+  ],
+  "final": {
+    "outpost": {
+      "phase": "result",
+      "wave": 9,
+      "round": 9,
+      "cleared": 9,
+      "result": {
+        "wave": 9,
+        "win": true,
+        "boxes": 3,
+        "kills": 37,
+        "escaped": 0,
+        "gold": 102,
+        "first": true,
+        "chiefDefeated": true
+      },
+      "prepRemaining": 119.05000000000003,
+      "journey": {
+        "seconds": 280.67280000002967,
+        "handWood": 191,
+        "handStone": 120,
+        "crewWood": 31,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 38
+      }
+    },
+    "expedition": {
+      "version": 1,
+      "initialized": true,
+      "groups": [
+        {
+          "key": 1,
+          "id": "woodcutter",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 223,
+            "y": 282
+          },
+          "positions": [
+            {
+              "x": 223,
+              "y": 282
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "count": 6,
+          "tier": 2,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 643,
+            "y": 250
+          },
+          "positions": [
+            {
+              "x": 643,
+              "y": 250
+            },
+            {
+              "x": 620,
+              "y": 255
+            },
+            {
+              "x": 656,
+              "y": 220
+            },
+            {
+              "x": 655,
+              "y": 288
+            },
+            {
+              "x": 603,
+              "y": 227
+            },
+            {
+              "x": 693,
+              "y": 238
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "count": 6,
+          "tier": 2,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 620,
+            "y": 495
+          },
+          "positions": [
+            {
+              "x": 620,
+              "y": 495
+            },
+            {
+              "x": 648,
+              "y": 502
+            },
+            {
+              "x": 638,
+              "y": 468
+            },
+            {
+              "x": 593,
+              "y": 509
+            },
+            {
+              "x": 584,
+              "y": 466
+            },
+            {
+              "x": 671,
+              "y": 492
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 4,
+          "id": "farmer",
+          "count": 3,
+          "tier": 1,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 589,
+            "y": 357
+          },
+          "positions": [
+            {
+              "x": 589,
+              "y": 357
+            },
+            {
+              "x": 688.6310485400686,
+              "y": 333.51843184964304
+            },
+            {
+              "x": 612,
+              "y": 334
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 5,
+          "id": "sword",
+          "count": 3,
+          "tier": 1,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 540,
+            "y": 235
+          },
+          "positions": [
+            {
+              "x": 540,
+              "y": 235
+            },
+            {
+              "x": 521,
+              "y": 222
+            },
+            {
+              "x": 566,
+              "y": 216
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 6,
+          "id": "sword",
+          "count": 3,
+          "tier": 1,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 700,
+            "y": 385
+          },
+          "positions": [
+            {
+              "x": 700,
+              "y": 385
+            },
+            {
+              "x": 678.0702015398808,
+              "y": 400.1609064656752
+            },
+            {
+              "x": 724.8370431757577,
+              "y": 388.4175616326128
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        }
+      ],
+      "nextKey": 7,
+      "unlocks": {
+        "farmer": true,
+        "ballista": false
+      },
+      "coins": 1,
+      "claimed": 4,
+      "records": [
+        {
+          "wave": 1,
+          "total": 3,
+          "bestKills": 3,
+          "cleared": true
+        },
+        {
+          "wave": 2,
+          "total": 4,
+          "bestKills": 4,
+          "cleared": true
+        },
+        {
+          "wave": 3,
+          "total": 6,
+          "bestKills": 6,
+          "cleared": true
+        },
+        {
+          "wave": 4,
+          "total": 10,
+          "bestKills": 10,
+          "cleared": true
+        },
+        {
+          "wave": 5,
+          "total": 14,
+          "bestKills": 14,
+          "cleared": true
+        },
+        {
+          "wave": 6,
+          "total": 18,
+          "bestKills": 18,
+          "cleared": true
+        },
+        {
+          "wave": 7,
+          "total": 22,
+          "bestKills": 22,
+          "cleared": true
+        },
+        {
+          "wave": 8,
+          "total": 28,
+          "bestKills": 28,
+          "cleared": true
+        },
+        {
+          "wave": 9,
+          "total": 37,
+          "bestKills": 37,
+          "cleared": true
+        }
+      ],
+      "trainingBest": 6,
+      "awaitingDecision": false,
+      "awaitingReady": false,
+      "run": 2,
+      "settled": [
+        "1:1",
+        "1:2",
+        "2:1",
+        "2:2",
+        "2:3",
+        "2:4",
+        "2:5",
+        "2:6",
+        "2:7",
+        "2:8",
+        "2:9"
+      ],
+      "lastReceipt": {
+        "run": 1,
+        "award": 4,
+        "balance": 4
+      }
+    },
+    "owned": {
+      "farmer": 3,
+      "ballista": 0,
+      "woodcutter": 1,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 6,
+      "dwarfb": 0,
+      "arch": 12,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "pending": {
+      "farmer": 0,
+      "ballista": 0,
+      "woodcutter": 0,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 0,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "inventory": {
+      "wood": 6,
+      "stone": 2,
+      "food": 9
+    },
+    "skills": {
+      "carry": 2,
+      "hand": 0,
+      "route": 0,
+      "storage": 0
+    },
+    "links": [
+      {
+        "nodeKey": 1,
+        "type": "wood",
+        "kind": "conveyor",
+        "costWood": 3,
+        "points": [
+          {
+            "x": 100,
+            "y": 340
+          },
+          {
+            "x": 162,
+            "y": 328
+          },
+          {
+            "x": 171.33523036759212,
+            "y": 322.5394515687251
+          },
+          {
+            "x": 180.670472407246,
+            "y": 317.0789109188247
+          },
+          {
+            "x": 190.0057144468999,
+            "y": 311.6183410887699
+          },
+          {
+            "x": 199.34094189647658,
+            "y": 306.1578004388695
+          }
+        ],
+        "cost": 0
+      },
+      {
+        "nodeKey": 2,
+        "type": "wood",
+        "kind": "conveyor",
+        "points": [
+          {
+            "x": 100,
+            "y": 340
+          },
+          {
+            "x": 162,
+            "y": 328
+          },
+          {
+            "x": 178.806458735371,
+            "y": 330.1905464081175
+          },
+          {
+            "x": 195.61292914280378,
+            "y": 332.38110059760953
+          },
+          {
+            "x": 212.41939955023653,
+            "y": 334.57159642679284
+          },
+          {
+            "x": 229.22585536759212,
+            "y": 336.7621506162848
+          },
+          {
+            "x": 246.03232577502487,
+            "y": 338.9527048057769
+          },
+          {
+            "x": 262.8387815923805,
+            "y": 341.1432589952689
+          },
+          {
+            "x": 279.6452665898904,
+            "y": 343.33375482445217
+          },
+          {
+            "x": 296.451722407246,
+            "y": 345.5243090139442
+          },
+          {
+            "x": 313.2581782246016,
+            "y": 347.7148632034362
+          },
+          {
+            "x": 330.06466322211156,
+            "y": 349.90541739292826
+          },
+          {
+            "x": 346.8711190394671,
+            "y": 352.0959715824203
+          },
+          {
+            "x": 363.6775748568227,
+            "y": 354.28646741160355
+          },
+          {
+            "x": 380.48405985433266,
+            "y": 356.4770216010956
+          },
+          {
+            "x": 397.29051567168824,
+            "y": 358.66757579058765
+          },
+          {
+            "x": 414.0969714890438,
+            "y": 360.85812998007964
+          },
+          {
+            "x": 430.90345648655375,
+            "y": 363.04862580926294
+          },
+          {
+            "x": 447.70991230390933,
+            "y": 365.23917999875493
+          },
+          {
+            "x": 464.5163681212649,
+            "y": 367.429734188247
+          },
+          {
+            "x": 481.3228531187749,
+            "y": 369.62028837773903
+          },
+          {
+            "x": 498.1292797559761,
+            "y": 371.8107842069223
+          },
+          {
+            "x": 514.9357647534861,
+            "y": 374.0013383964143
+          },
+          {
+            "x": 531.7422497509959,
+            "y": 376.1918925859064
+          },
+          {
+            "x": 548.5486763881972,
+            "y": 378.38244677539836
+          },
+          {
+            "x": 565.3551613857071,
+            "y": 380.5730009648904
+          }
+        ],
+        "costWood": 10
+      }
+    ],
+    "loose": [
+      {
+        "key": 238,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 243,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 248,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 254,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 277,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 307,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 313,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 489,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 490,
+        "type": "food",
+        "x": 713,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 492,
+        "type": "food",
+        "x": 713,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 493,
+        "type": "food",
+        "x": 588,
+        "y": 358,
+        "worker": true,
+        "airborne": false,
+        "belt": false
+      },
+      {
+        "key": 501,
+        "type": "food",
+        "x": 470.6080760639422,
+        "y": 368.22372629052006,
+        "worker": true,
+        "airborne": false,
+        "belt": true
+      }
+    ],
+    "capacity": 12,
+    "paused": true,
+    "mode": "gather"
+  },
+  "errors": []
+}

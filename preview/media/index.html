@@ -3,6 +3,7 @@
 <title>Mythos Slayers II 試遊記録</title>
 <style>body{max-width:1050px;margin:24px auto;padding:16px;background:#15241e;color:#eee5cc;font:16px/1.7 system-ui}a{color:#ecd188}img,video{max-width:100%;height:auto;max-height:720px;border:1px solid #63795a;border-radius:5px}figure{margin:18px 0}figcaption,small{font-size:13px;color:#bfceb7}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}h1{font-size:25px}h2{font-size:20px}summary{cursor:pointer}</style>
 <h1>部隊を組み直し、全9Waveの街道を守る</h1>
+<h2>農家を先に選び、実った食料で増員する</h2><p>食料購入もバリスタ解放も使わず、畑と自作コンベアの食料で弓兵を増員。剣士と連打の援護で全9Wave・3箱を防衛しました。</p><div class="grid"><figure><img src="farmer-first-reinforcements.png" alt="自作コンベアが食料を倉庫へ送り、弓兵の増員へつながる"><figcaption>正規の資材で作った食料搬送と3→6人への増員</figcaption></figure><figure><img src="farmer-output-connected-touch.png" alt="農家の落下先が倉庫へ接続していることを確認"><figcaption>搬送予告の実タッチ確認。こちらは接続状態を用意した機能試験</figcaption></figure></div><p><a href="farmer-first-checks.json">農家先行の全9Waveと進行条件</a> · <a href="farmer-output-checks.json">搬送予告5状態・3言語・PC／実タッチ確認</a></p>
 <p>新部隊制で、正規資材とプレイヤー連打の援護による全9Wave・3箱防衛を確認。3・6Waveの休憩、転生後のWave4・7出発、部隊別の鎧優先を追加しました。</p>
 <div class="grid"><figure><img src="sequel-nine-complete.png" alt="新部隊制で全9Waveを3箱防衛"><figcaption>弓兵12人・バリスタ3人と連打援護で頭領を撃破。資材付与・時間加速なし</figcaption></figure><figure><img src="sequel-route-touch.png" alt="スマホで転生後の出発地点を選択"><figcaption>解放した街道から再出発。これは準備済みセーブでの実タッチ機能確認</figcaption></figure></div>
 <p><a href="sequel-progression-checks.json">正規保存を継続した全9Waveの結果と条件</a> · <a href="sequel-routes-checks.json">3言語・PC／実タッチの機能確認</a></p>
@@ -12,7 +13,7 @@
 <div class="grid"><figure><img src="expedition-loss.png" alt="下道を突破された実際の敗北結果"><figcaption>正規プレイの敗北。突破された道と、次の選択が見える</figcaption></figure><figure><img src="expedition-return.png" alt="残る物と戻る物を示す転生確認画面"><figcaption>転生は自分で確定する。自作の物流と作業スキルは残る</figcaption></figure><figure><img src="expedition-roster.png" alt="生産4枠と防衛4枠の編成画面"><figcaption>1枠は部隊。1→3→6→10人へ増員し、控えと入れ替える</figcaption></figure><figure><img src="expedition-replay.png" alt="バリスタを配置して以前負けた襲撃へ再挑戦"><figcaption>実時間・正規資材で転生後の再挑戦。検証条件は下の記録を参照</figcaption></figure></div>
 <p><a href="expedition-journey-checks.json">正規プレイの再挑戦結果</a> · <a href="expedition-ui-checks.json">3言語・PCと実タッチのUI確認</a></p>
 <h2>畑を育て、収穫物を運ぶ</h2><figure><img src="expedition-farm.png" alt="農家が刈り取り、食料を自作コンベアで倉庫へ送る"><figcaption>専用画像による農家・畑・食料。これは資材と職業解放を用意した機能試験の画面です。新規の正規プレイとは区別します。<a href="expedition-farm-checks.json">試験条件</a></figcaption></figure>
-<p>今回の全9Wave完走は連打援護ありのバリスタ先行ルートです。農家先行・放置防衛・複数転生の長期バランスは引き続き検証します。</p>
+<p>バリスタ先行と農家先行の両方で、連打援護ありの全9Wave完走を確認しました。放置防衛・複数転生の長期バランスは引き続き検証します。</p>
 <details><summary>前版の画面・導入動画・検証記録</summary><h1>連打して採る、倉庫へ運ぶ、強化して楽にする</h1>
 <p><a href="../?lesson=1">最初の流れを体験する（別セーブ）</a> · <a href="../">元の試遊セーブへ</a> · <a href="../OUTPOST_DESIGN.md">現行の遊び</a></p>
 <p>木を1回叩くたびに丸太が落ちます。最初は10個を倉庫へドラッグで納品し、持ち運びを強化。木こりを自分で配置し、落下地点へ自分でコンベアを敷きます。自動納品・次の強化・弓兵の配置を覚えてから、準備完了で初回90秒の襲撃時計が始まります。</p>

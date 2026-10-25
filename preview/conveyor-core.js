@@ -31,5 +31,17 @@
   }
   if(visits>=64)result.blocked=true;return result;
  }
- return {WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
+ // Inspect a hypothetical loose item using the exact same directional transfer rules as live cargo.
+ function deliveryStatus(links,platforms,point,speed=SPEED){
+  if(!Number.isFinite(point?.x)||!Number.isFinite(point?.y)||!contact(links,point)&&!platformAt(platforms,point))return 'manual';
+  if(!Number.isFinite(speed)||speed<=0)return 'unknown';
+  const distance=links.reduce((n,l)=>n+length(oriented(l)),0)+platforms.reduce((n,p)=>n+2*Math.hypot(p.w,p.h),0)+WIDTH*links.length+100;
+  const probe=dt=>{let item={x:point.x,y:point.y};const visited=new Set(),budget=Math.min(20000,Math.ceil(2*distance/(speed*dt))+120);
+   for(let i=0;i<budget;i++){const key=[item.beltId,item.platformKey,Math.round(item.x*1000),Math.round(item.y*1000)].join(':');if(visited.has(key))return 'blocked';visited.add(key);item=step(links,platforms,item,dt,speed);if(item.arrived)return 'warehouse';if(!item.onConveyor)return 'blocked';}
+   return 'unknown';};
+  // Platform pickup can depend on frame size. Never promise delivery when normal frame sizes disagree.
+  const results=[1/60,.05,.1].map(probe);return results.every(r=>r===results[0])?results[0]:'unknown';
+ }
+
+ return {deliveryStatus,WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
 });

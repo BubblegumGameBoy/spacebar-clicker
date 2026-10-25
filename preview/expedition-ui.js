@@ -75,7 +75,7 @@ window.ExpeditionUI=(()=>{
   else if(action==='buy-food'){changed=!!core().buyFood(S);if(changed)message=tr('food')+' ＋5';}
   else if(action==='unlock'){changed=!!core().unlock(S,id);if(changed){message=label(id)+' · '+tr('success');window.SupplyFactory?.ensureFarm?.();}}
   else if(action==='recruit'){changed=!!core().recruit(S,id);if(changed){refresh();Rework.close();window.BattleControl?.beginPlacement();document.getElementById('field')?.scrollIntoView({block:'nearest',behavior:'auto'});return;}}
-  else if(action==='reposition'){const g=groupByKey(key);if(g){Rework.close();if(window.ExpeditionIntegration?.reposition)window.ExpeditionIntegration.reposition(g.key);else window.BattleControl?.selectType(g.id);return;}}
+  else if(action==='reposition'){const g=groupByKey(key);if(g){Rework.close();if(window.ExpeditionIntegration?.reposition)window.ExpeditionIntegration.reposition(g.key);else window.BattleControl?.selectType(g.id);document.getElementById('field')?.scrollIntoView({block:'start',behavior:'auto'});return;}}
   if(changed){window.ForestAudio?.play('place');refresh();}else{message=tr('failed');signature='';sync();}
  }
  function click(e){const group=e.target.closest('[data-expedition-group]'),empty=e.target.closest('[data-expedition-empty]'),action=e.target.closest('[data-expedition-action]');if(group){selected=group.dataset.expeditionGroup;message='';signature='';sync();return;}if(empty){selected=null;selectedBucket=empty.dataset.expeditionEmpty;selectedEmpty=selectedBucket+':'+empty.dataset.expeditionSlot;message='';signature='';sync();return;}if(action)act(action);}

@@ -1,0 +1,680 @@
+{
+  "status": "passed",
+  "fixture": "Prepared routing variants of an earned farmer save. Receiver geometry is edited only for integration tests; not earned progression evidence. Actual visible reposition controls and native touch; canvas text recorded without changing game rules.",
+  "results": [
+    {
+      "lang": "ja",
+      "mobile": false,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください"
+        ],
+        "invalidPlacementHint": "畑の近くに配置してください"
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": false,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": false,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": false,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": false,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください",
+          "ここに落ちる・手運び",
+          "畑の近くに配置してください"
+        ],
+        "invalidPlacementHint": "畑の近くに配置してください"
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください",
+          "受け口あり・倉庫未接続",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください",
+          "倉庫へ搬送可能",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください",
+          "搬送経路を確認してください",
+          "畑の近くに配置してください"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot"
+        ],
+        "invalidPlacementHint": "Place beside the crop plot"
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot",
+          "LANDS HERE · CARRY BY HAND",
+          "Place beside the crop plot"
+        ],
+        "invalidPlacementHint": "Place beside the crop plot"
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot",
+          "RECEIVER · NOT LINKED TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot",
+          "DELIVERS TO STORAGE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot",
+          "CHECK THE DELIVERY ROUTE",
+          "Place beside the crop plot"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁"
+        ],
+        "invalidPlacementHint": "请放置在农田旁"
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "mode": "manual",
+      "expected": "manual",
+      "actual": {
+        "status": "manual",
+        "labels": [
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁",
+          "掉落此处・需手动搬运",
+          "请放置在农田旁"
+        ],
+        "invalidPlacementHint": "请放置在农田旁"
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "mode": "isolated",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "mode": "reverse",
+      "expected": "blocked",
+      "actual": {
+        "status": "blocked",
+        "labels": [
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁",
+          "已有接料口・未连仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "mode": "connected",
+      "expected": "warehouse",
+      "actual": {
+        "status": "warehouse",
+        "labels": [
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁",
+          "可运入仓库",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "mode": "cycle",
+      "expected": "unknown",
+      "actual": {
+        "status": "unknown",
+        "labels": [
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁",
+          "请检查运输路线",
+          "请放置在农田旁"
+        ]
+      },
+      "errors": []
+    }
+  ],
+  "checks": [
+    "Five output conditions: manual, isolated receiver, reversed belt, warehouse connection, uncertain cycle",
+    "Three languages × desktop/native touch",
+    "Invalid farmer placement names the crop plot",
+    "Mobile reposition returns the worksite to view",
+    "No game state mutation from preview probes",
+    "Prepared routing fixtures are separate from earned farmer progression"
+  ]
+}
