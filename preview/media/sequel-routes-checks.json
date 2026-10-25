@@ -1,0 +1,123 @@
+{
+  "fixture": "Prepared chapter-six result, not an earned playthrough. Actual mouse/native touch controls and reload.",
+  "results": [
+    {
+      "lang": "ja",
+      "mobile": false,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "status": "passed",
+      "before": {
+        "coins": 0,
+        "award": 24,
+        "run": 1
+      },
+      "after": {
+        "wave": 4,
+        "cleared": 3,
+        "coins": 24,
+        "run": 2,
+        "ready": true
+      },
+      "errors": []
+    }
+  ],
+  "checks": [
+    "Per-squad target policy projects to actual bodies and survives reload",
+    "Three departure choices; chosen Wave4 and prior clear marker survive reload",
+    "Native touch confirmation settles exactly once",
+    "Ready cannot hire through the dismissed dialog",
+    "Next intentional native touch still hires successfully",
+    "Pending crew disables departure; visible cancel refunds and re-enables it",
+    "Desktop Enter readiness and normal mouse interactions",
+    "No horizontal overflow at 390px or 1280px; no page errors"
+  ]
+}

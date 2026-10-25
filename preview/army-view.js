@@ -80,6 +80,7 @@ window.ArmyView=(()=>{
   sim.stationary=true;bindRaid();layout();
   const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,minRange:stats?.minRange||0,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
+  if(outpost()&&window.ExpeditionCore){const groups=new Map(ExpeditionCore.groups(S).map(g=>[g.key,g])),policies=new Map(ExpeditionCore.assignments(S).map(a=>[a.id+':'+a.index,groups.get(a.groupKey)?.policy||'front']));for(const p of slots)p.policy=policies.get(p.id+':'+p.index)||'front';}
   if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
   if(restore){for(const p of slots)p.enterAt=sim.time-.34;window.BattleControl?.restore();}
   document.getElementById('armyCount').textContent=count().toLocaleString();

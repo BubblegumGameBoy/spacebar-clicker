@@ -1,0 +1,776 @@
+{
+  "status": "passed",
+  "date": "2026-10-25 JST",
+  "baseCommit": "91257c8",
+  "method": "Fresh earned desktop onboarding, then continued saved sessions. Real pointer/UI operations, normal battle time, visible Defend now button, player clicks assist combat. No resource grants, state edits, or time acceleration in the progression run.",
+  "sessions": [
+    "sequel-nine-waves",
+    "sequel-nine-waves-v3",
+    "sequel-nine-waves-final"
+  ],
+  "continuationNotes": [
+    "The runner was restarted from earned saves after development rebuilds.",
+    "QA runner fixes handled an already-active raid and absent food inventory as zero; saved progress was retained."
+  ],
+  "limits": [
+    "This demonstrates click-assisted completion with the ballista-first route.",
+    "It does not establish hands-off defence, the farmer-first route, all 24 work skills, or long-term multiple-rebirth balance."
+  ],
+  "initialResults": [
+    {
+      "stage": "sequel-nine-waves",
+      "wave": 1,
+      "clickAssist": false,
+      "result": {
+        "wave": 1,
+        "win": true,
+        "boxes": 3,
+        "kills": 3,
+        "escaped": 0,
+        "gold": 38,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves",
+      "wave": 2,
+      "clickAssist": false,
+      "result": {
+        "wave": 2,
+        "win": false,
+        "boxes": 0,
+        "kills": 0,
+        "escaped": 4,
+        "gold": 8,
+        "first": false
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        }
+      ]
+    }
+  ],
+  "allNine": [
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 1,
+      "clickAssist": true,
+      "result": {
+        "wave": 1,
+        "win": true,
+        "boxes": 3,
+        "kills": 3,
+        "escaped": 0,
+        "gold": 38,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 1,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 2,
+      "clickAssist": true,
+      "result": {
+        "wave": 2,
+        "win": true,
+        "boxes": 3,
+        "kills": 4,
+        "escaped": 0,
+        "gold": 46,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 1,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 3,
+      "clickAssist": true,
+      "result": {
+        "wave": 3,
+        "win": true,
+        "boxes": 3,
+        "kills": 6,
+        "escaped": 0,
+        "gold": 54,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 1,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 4,
+      "clickAssist": true,
+      "result": {
+        "wave": 4,
+        "win": true,
+        "boxes": 3,
+        "kills": 10,
+        "escaped": 0,
+        "gold": 62,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 5,
+      "clickAssist": true,
+      "result": {
+        "wave": 5,
+        "win": true,
+        "boxes": 3,
+        "kills": 14,
+        "escaped": 0,
+        "gold": 70,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-v3",
+      "wave": 6,
+      "clickAssist": true,
+      "result": {
+        "wave": 6,
+        "win": true,
+        "boxes": 3,
+        "kills": 18,
+        "escaped": 0,
+        "gold": 78,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-final",
+      "wave": 7,
+      "clickAssist": true,
+      "result": {
+        "wave": 7,
+        "win": true,
+        "boxes": 3,
+        "kills": 22,
+        "escaped": 0,
+        "gold": 86,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-final",
+      "wave": 8,
+      "clickAssist": true,
+      "result": {
+        "wave": 8,
+        "win": true,
+        "boxes": 3,
+        "kills": 28,
+        "escaped": 0,
+        "gold": 94,
+        "first": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    },
+    {
+      "stage": "sequel-nine-waves-final",
+      "wave": 9,
+      "clickAssist": true,
+      "result": {
+        "wave": 9,
+        "win": true,
+        "boxes": 3,
+        "kills": 37,
+        "escaped": 0,
+        "gold": 102,
+        "first": true,
+        "chiefDefeated": true
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "policy": "front",
+          "active": true
+        },
+        {
+          "id": "ballista",
+          "count": 3,
+          "policy": "armor",
+          "active": true
+        }
+      ]
+    }
+  ],
+  "checks": [
+    "Initial Wave2 loss on the uncovered lower road",
+    "Banked 4 coins and unlocked ballista",
+    "Paid 1→3 and 3→6 reinforcements with earned wood/stone and food bought with raid gold",
+    "Armour priority applied per squad",
+    "Chapter3/6 pauses preserve time for arranging crews",
+    "All 9 raids defended with 3 crates; captain defeated",
+    "After victory selected Wave7 departure, confirmed once, and reloaded with Wave7 and awaitingReady preserved"
+  ],
+  "final": {
+    "outpost": {
+      "phase": "prep",
+      "wave": 7,
+      "round": 0,
+      "cleared": 6,
+      "result": null,
+      "prepRemaining": 150,
+      "journey": {
+        "seconds": 0.883499999999997,
+        "handWood": 0,
+        "handStone": 0,
+        "crewWood": 0,
+        "crewStone": 0,
+        "handFood": 0,
+        "crewFood": 0
+      }
+    },
+    "expedition": {
+      "version": 1,
+      "initialized": true,
+      "groups": [
+        {
+          "key": 1,
+          "id": "woodcutter",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 223,
+            "y": 282
+          },
+          "positions": [
+            {
+              "x": 223,
+              "y": 282
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 643,
+            "y": 250
+          },
+          "positions": [
+            {
+              "x": 643,
+              "y": 250
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "policy": "front",
+          "pending": 0,
+          "anchor": {
+            "x": 620,
+            "y": 360
+          },
+          "positions": [
+            {
+              "x": 620,
+              "y": 360
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 4,
+          "id": "ballista",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "policy": "armor",
+          "pending": 0,
+          "anchor": {
+            "x": 620,
+            "y": 400
+          },
+          "positions": [
+            {
+              "x": 620,
+              "y": 400
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        }
+      ],
+      "nextKey": 5,
+      "unlocks": {
+        "farmer": false,
+        "ballista": true
+      },
+      "coins": 33,
+      "claimed": 37,
+      "records": [
+        {
+          "wave": 1,
+          "total": 3,
+          "bestKills": 3,
+          "cleared": true
+        },
+        {
+          "wave": 2,
+          "total": 4,
+          "bestKills": 4,
+          "cleared": true
+        },
+        {
+          "wave": 3,
+          "total": 6,
+          "bestKills": 6,
+          "cleared": true
+        },
+        {
+          "wave": 4,
+          "total": 10,
+          "bestKills": 10,
+          "cleared": true
+        },
+        {
+          "wave": 5,
+          "total": 14,
+          "bestKills": 14,
+          "cleared": true
+        },
+        {
+          "wave": 6,
+          "total": 18,
+          "bestKills": 18,
+          "cleared": true
+        },
+        {
+          "wave": 7,
+          "total": 22,
+          "bestKills": 22,
+          "cleared": true
+        },
+        {
+          "wave": 8,
+          "total": 28,
+          "bestKills": 28,
+          "cleared": true
+        },
+        {
+          "wave": 9,
+          "total": 37,
+          "bestKills": 37,
+          "cleared": true
+        }
+      ],
+      "trainingBest": 5,
+      "awaitingDecision": false,
+      "awaitingReady": true,
+      "run": 3,
+      "settled": [
+        "1:1",
+        "1:2",
+        "2:1",
+        "2:2",
+        "2:3",
+        "2:4",
+        "2:5",
+        "2:6",
+        "2:7",
+        "2:8",
+        "2:9"
+      ],
+      "lastReceipt": {
+        "run": 2,
+        "award": 33,
+        "balance": 33
+      }
+    },
+    "owned": {
+      "farmer": 0,
+      "ballista": 1,
+      "woodcutter": 1,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 2,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "pending": {
+      "farmer": 0,
+      "ballista": 0,
+      "woodcutter": 0,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 0,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "inventory": {
+      "wood": 23,
+      "stone": 0,
+      "food": 2
+    },
+    "skills": {
+      "carry": 2,
+      "hand": 0,
+      "route": 0,
+      "storage": 0
+    },
+    "links": [
+      {
+        "nodeKey": 1,
+        "type": "wood",
+        "kind": "conveyor",
+        "costWood": 3,
+        "points": [
+          {
+            "x": 100,
+            "y": 340
+          },
+          {
+            "x": 162,
+            "y": 328
+          },
+          {
+            "x": 171.33523036759212,
+            "y": 322.5394515687251
+          },
+          {
+            "x": 180.670472407246,
+            "y": 317.0789109188247
+          },
+          {
+            "x": 190.0057144468999,
+            "y": 311.6183410887699
+          },
+          {
+            "x": 199.34094189647658,
+            "y": 306.1578004388695
+          }
+        ],
+        "cost": 0
+      }
+    ],
+    "loose": [
+      {
+        "key": 384,
+        "type": "wood",
+        "x": 127.69256902191466,
+        "y": 334.6401479312423,
+        "worker": true,
+        "airborne": false,
+        "belt": true
+      }
+    ],
+    "capacity": 12,
+    "paused": false,
+    "mode": "gather"
+  },
+  "errors": []
+}
