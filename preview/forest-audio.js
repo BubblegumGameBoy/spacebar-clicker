@@ -9,16 +9,17 @@ window.ForestAudio=(()=>{
  const music=new Audio('../assets/audio/'+tracks.camp+'.mp3');music.loop=true;music.preload='metadata';music.volume=0;
  let ctx=null,bus=null,master=null,unlocked=false,fade=0,seed=345671,lastUser=-Infinity,duckTimer=null,duckUntil=0;
  const lastAuto={worker:-Infinity,unit:-Infinity},lastCue=new Map(),counts={played:0,throttled:0,capacity:0};
- const cues=new Set(['hire','victory','evolve','defeat','raidStart','crateLost','complete','build']);
+ const cues=new Set(['hire','victory','evolve','defeat','raidStart','crateLost','complete','build','reinforce','unlock']);
  const buffers=new Map(),voices=[];
  function save(){try{localStorage.setItem('sbr2_preview_outpost_audio_v2',JSON.stringify(settings));}catch(e){}}
  function context(){if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();bus=ctx.createDynamicsCompressor();bus.threshold.value=-16;bus.knee.value=16;bus.ratio.value=3;bus.attack.value=.005;bus.release.value=.12;master=ctx.createGain();master.gain.value=settings.seOn&&!document.hidden?settings.seVol:0;bus.connect(master);master.connect(ctx.destination);}return ctx;}
  function noise(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/2147483648-1;}
  function buffer(kind,variant=0){
   const key=kind+':'+variant;if(buffers.has(key))return buffers.get(key);
-  const c=context(),duration=kind==='complete'?1.05:kind==='victory'||kind==='evolve'?.75:kind==='defeat'?.55:kind==='build'?.6:kind==='hire'||kind==='raidStart'?.42:kind==='crateLost'?.32:kind==='stone'?.26:.2;
+  const c=context(),duration=kind==='reinforce'?.42+Math.max(1,Math.min(3,variant))*.04:kind==='unlock'?.64:kind==='complete'?1.05:kind==='victory'||kind==='evolve'?.75:kind==='defeat'?.55:kind==='build'?.6:kind==='hire'||kind==='raidStart'?.42:kind==='crateLost'?.32:kind==='stone'?.26:.2;
   const b=c.createBuffer(1,Math.ceil(c.sampleRate*duration),c.sampleRate),data=b.getChannelData(0),pitch=1+variant*.035;
   let low=0,body=0,peak=0;
+  const growthNotes=kind==='reinforce'?[261.63,329.63,392,523.25,659.25].slice(0,2+Math.max(1,Math.min(3,variant))):[293.66,440,587.33,739.99];
   for(let i=0;i<data.length;i++){
    const t=i/c.sampleRate,white=noise(),attack=1-Math.exp(-t/.0007);low+=.32*(white-low);body+=.055*(white-body);const bright=white-low;let v=0;
    if(kind==='wood'){
@@ -45,6 +46,10 @@ window.ForestAudio=(()=>{
    }else if(kind==='build'){
     for(const delay of [0,.085]){const q=t-delay;if(q>=0)v+=(low*.4+.18*Math.sin(2*Math.PI*145*q))*Math.exp(-q*48);}
     for(const [delay,note]of [[.15,392],[.22,493.88],[.29,587.33]]){const q=t-delay;if(q>=0)v+=.15*Math.sin(2*Math.PI*note*q)*(1-Math.exp(-q/.004))*Math.exp(-q*22);}
+   }else if(kind==='reinforce'||kind==='unlock'){
+    // Camp-grown success: warm plucks resolve upward; a new profession adds a quiet final chord.
+    for(let n=0;n<growthNotes.length;n++){const q=t-n*.065;if(q>=0)v+=(.16*Math.sin(2*Math.PI*growthNotes[n]*q)+.035*Math.sin(2*Math.PI*growthNotes[n]*2*q))*(1-Math.exp(-q/.002))*Math.exp(-q*20);}
+    if(kind==='unlock'&&t>.26){const q=t-.26;v+=(.07*Math.sin(2*Math.PI*293.66*q)+.055*Math.sin(2*Math.PI*440*q)+.04*Math.sin(2*Math.PI*739.99*q))*(1-Math.exp(-q/.006))*Math.exp(-q*13);}
    }else if(kind==='place'){
     v=low*.8*Math.exp(-t*45)+.25*Math.sin(2*Math.PI*108*t)*Math.exp(-t*35);
    }else if(kind==='victory'||kind==='evolve'||kind==='hire'||kind==='complete'){
@@ -58,10 +63,10 @@ window.ForestAudio=(()=>{
  }
  function fadeMusic(target,duration=180){cancelAnimationFrame(fade);const start=performance.now(),from=music.volume;const tick=now=>{if(!settings.bgmOn||document.hidden||music.paused)return;const t=Math.max(0,Math.min(1,(now-start)/duration));music.volume=from+(target-from)*t;if(t<1)fade=requestAnimationFrame(tick);};fade=requestAnimationFrame(tick);}
  function duckMusic(duration=850){if(!settings.bgmOn||music.paused)return;const now=performance.now();duckUntil=Math.max(duckUntil,now+duration);if(!transitionTimer)fadeMusic(settings.bgmVol*.55,65);clearTimeout(duckTimer);duckTimer=setTimeout(()=>{duckUntil=0;if(settings.bgmOn&&!music.paused&&!document.hidden&&!transitionTimer)fadeMusic(settings.bgmVol,450);},duckUntil-now);}
- function play(kind,{group='user',level=1}={}){
+ function play(kind,{group='user',level=1,stage=1}={}){
   if(!settings.seOn||!unlocked||document.hidden)return false;
   const now=performance.now(),automatic=group==='unit'||group==='worker',cue=cues.has(kind),priority=cue?3:automatic?1:2;
-  if(cue){const gap=kind==='crateLost'?110:kind==='hire'?90:300;if(now-(lastCue.get(kind)??-Infinity)<gap){counts.throttled++;return false;}}
+  if(cue){const gap=kind==='crateLost'?110:kind==='hire'||kind==='reinforce'||kind==='unlock'?90:300;if(now-(lastCue.get(kind)??-Infinity)<gap){counts.throttled++;return false;}}
   else if(automatic){if(now-lastAuto[group]<(group==='worker'?180:110)){counts.throttled++;return false;}}
   else if(now-lastUser<28){counts.throttled++;return false;}
   try{
@@ -69,7 +74,7 @@ window.ForestAudio=(()=>{
    const groupLimit=group==='worker'?2:group==='unit'?3:8;
    const groupVoices=voices.filter(v=>v.group===group),full=voices.length>=8||automatic&&groupVoices.length>=groupLimit;
    if(full){const old=automatic&&groupVoices.length>=groupLimit?groupVoices[0]:voices.find(v=>v.automatic)||voices.find(v=>v.priority<=priority);if(!old){counts.capacity++;return false;}old.g.gain.setTargetAtTime(0,c.currentTime,.008);old.source.stop(c.currentTime+.025);voices.splice(voices.indexOf(old),1);}
-   const source=c.createBufferSource(),g=c.createGain();source.buffer=buffer(kind,kind==='wood'||kind==='stone'?Math.floor((noise()+1)*1.5):0);source.playbackRate.value=kind==='wood'||kind==='stone'?.96+(noise()+1)*.04:1;
+   const source=c.createBufferSource(),g=c.createGain();source.buffer=buffer(kind,kind==='reinforce'?Math.max(1,Math.min(3,Math.floor(Number(stage)||1))):kind==='wood'||kind==='stone'?Math.floor((noise()+1)*1.5):0);source.playbackRate.value=kind==='wood'||kind==='stone'?.96+(noise()+1)*.04:1;
    const gain=cue?.47:group==='worker'?.13:group==='unit'?.18:.52;g.gain.value=Math.min(.6,gain*finite(level,1,2));source.connect(g);g.connect(bus);
    const voice={source,g,automatic,group,priority};voices.push(voice);source.onended=()=>{const i=voices.indexOf(voice);if(i>=0)voices.splice(i,1);source.disconnect();g.disconnect();};source.start();
    if(cue){lastCue.set(kind,now);duckMusic(kind==='complete'?1250:850);}else if(automatic)lastAuto[group]=now;else lastUser=now;counts.played++;return true;
