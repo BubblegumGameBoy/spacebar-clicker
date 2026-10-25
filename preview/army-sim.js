@@ -12,7 +12,7 @@
    this.soldiers=this.soldiers.filter(p=>p.index<(counts.get(p.id)||0));
    for(const u of companies){const existing=this.soldiers.filter(p=>p.id===u.id);for(const p of existing){p.u=u;p.interval=u.interval;p.speed=u.speed||p.speed;}
     for(let i=existing.length;i<u.count;i++){
-     const key=this.nextKey++,a=noise(key),b=noise(key+44),radius=u.id==='giant'?22:u.fly?14:10;
+     const key=this.nextKey++,a=noise(key),b=noise(key+44),radius=(u.id==='giant'||u.id==='ballista')?22:u.fly?14:10;
      const x=50+a*(this.width*.56),y=this.ground+35+b*(this.height-this.ground-85);
      const entering=recruitId===u.id;
      this.soldiers.push({key,index:i,id:u.id,u,x:entering?24+noise(key+12)*70:x,y,r:radius,speed:u.speed||(u.id==='giant'?83:120+noise(key+7)*45),interval:u.interval,cooldown:a*u.interval,windup:0,attackAt:-10,enterAt:this.time+(entering?(i-existing.length)*(.07+noise(key)*.09):0),order:null,stun:0,moving:false});
@@ -20,7 +20,7 @@
    }
   }
   range(p){if(Array.isArray(this.enemies)){const core=outpostCore||globalThis.OutpostCore;return Number.isFinite(p.u.range)?clamp(p.u.range,0,240):(core?.stats(p.id)?.range||0);}return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
-  target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r,{includeEnemyRadius:true})||null;}
+  target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r,{includeEnemyRadius:true,minRange:p.u.minRange||0})||null;}
   round(){return this.outpostState?.round??this.roundToken??this.boss.token;}
   distance(p){return Math.max(0,Math.hypot(p.x-this.boss.x,p.y-this.boss.y)-this.boss.r);}
   canHit(p){if(Array.isArray(this.enemies))return !!this.target(p);return this.boss.alive&&!p.u.healer&&!p.u.worker&&this.distance(p)<=this.range(p)+p.r;}

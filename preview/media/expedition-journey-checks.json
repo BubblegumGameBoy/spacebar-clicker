@@ -1,0 +1,380 @@
+{
+  "status": "passed",
+  "fixture": "Continued genuinely earned checkpoint after a code fix. Prior stage logs preserve first defeat and return. All mutations use visible controls or pointer input; no grants, no time acceleration.",
+  "checks": [
+    "First natural wave won",
+    "Second wave naturally lost on undefended lower road",
+    "Defeat modal close does not restart clock",
+    "Return keeps authored belts and work skills",
+    "Four earnedcoins unlock ballista",
+    "Reserve and swap both directions preserve groups",
+    "Explicitready starts actual90-second countdown",
+    "Ballista crew and changed position overcome same failed wave",
+    "New waveclear earns remainingcoins for farmer",
+    "Farm crop manually harvested and individually dragged to house"
+  ],
+  "elapsedSeconds": 121,
+  "final": {
+    "outpost": {
+      "phase": "prep",
+      "wave": 1,
+      "round": 0,
+      "cleared": 0,
+      "result": null,
+      "prepRemaining": 150,
+      "journey": {
+        "seconds": 1.849899999999994,
+        "handWood": 0,
+        "handStone": 0,
+        "crewWood": 0,
+        "crewStone": 0,
+        "handFood": 1,
+        "crewFood": 0
+      }
+    },
+    "expedition": {
+      "version": 1,
+      "initialized": true,
+      "groups": [
+        {
+          "key": 1,
+          "id": "woodcutter",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 223,
+            "y": 282
+          },
+          "positions": [
+            {
+              "x": 223,
+              "y": 282
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "count": 1,
+          "tier": 0,
+          "active": false,
+          "pending": 0,
+          "anchor": {
+            "x": 620,
+            "y": 260
+          },
+          "positions": [
+            {
+              "x": 620,
+              "y": 260
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 662,
+            "y": 194
+          },
+          "positions": [
+            {
+              "x": 662,
+              "y": 194
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        },
+        {
+          "key": 4,
+          "id": "ballista",
+          "count": 1,
+          "tier": 0,
+          "active": true,
+          "pending": 0,
+          "anchor": {
+            "x": 620,
+            "y": 360
+          },
+          "positions": [
+            {
+              "x": 620,
+              "y": 360
+            }
+          ],
+          "receipt": null,
+          "legacy": false
+        }
+      ],
+      "nextKey": 5,
+      "unlocks": {
+        "farmer": true,
+        "ballista": true
+      },
+      "coins": 1,
+      "claimed": 8,
+      "records": [
+        {
+          "wave": 1,
+          "total": 3,
+          "bestKills": 3,
+          "cleared": true
+        },
+        {
+          "wave": 2,
+          "total": 4,
+          "bestKills": 4,
+          "cleared": true
+        }
+      ],
+      "trainingBest": 0,
+      "awaitingDecision": false,
+      "awaitingReady": true,
+      "run": 3,
+      "settled": [
+        "1:1",
+        "1:2",
+        "2:1",
+        "2:2"
+      ],
+      "lastReceipt": {
+        "run": 2,
+        "award": 4,
+        "balance": 4
+      }
+    },
+    "owned": {
+      "farmer": 0,
+      "ballista": 1,
+      "woodcutter": 1,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 1,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "pending": {
+      "farmer": 0,
+      "ballista": 0,
+      "woodcutter": 0,
+      "miner": 0,
+      "porter": 0,
+      "healer": 0,
+      "sword": 0,
+      "dwarfb": 0,
+      "arch": 0,
+      "heavy": 0,
+      "dwarfw": 0,
+      "mage": 0,
+      "crossbow": 0,
+      "knight": 0,
+      "paladin": 0,
+      "bombardier": 0,
+      "elf": 0,
+      "warlock": 0,
+      "dark": 0,
+      "giant": 0,
+      "dragong": 0,
+      "dragonp": 0,
+      "dragonr": 0,
+      "angel": 0,
+      "dragong2": 0,
+      "dragonr2": 0,
+      "angel2": 0,
+      "darkgod": 0
+    },
+    "inventory": {
+      "wood": 70,
+      "stone": 0,
+      "food": 1
+    },
+    "skills": {
+      "carry": 2,
+      "hand": 0,
+      "route": 0,
+      "storage": 0
+    },
+    "links": [
+      {
+        "nodeKey": 1,
+        "type": "wood",
+        "kind": "conveyor",
+        "costWood": 3,
+        "points": [
+          {
+            "x": 100,
+            "y": 340
+          },
+          {
+            "x": 162,
+            "y": 328
+          },
+          {
+            "x": 171.33523036759212,
+            "y": 322.5394515687251
+          },
+          {
+            "x": 180.670472407246,
+            "y": 317.0789109188247
+          },
+          {
+            "x": 190.0057144468999,
+            "y": 311.6183410887699
+          },
+          {
+            "x": 199.34094189647658,
+            "y": 306.1578004388695
+          }
+        ],
+        "cost": 0
+      }
+    ],
+    "loose": [],
+    "capacity": 12,
+    "paused": false,
+    "mode": "gather"
+  },
+  "errors": [],
+  "provenance": {
+    "initialStage": "Fresh earned onboarding continued through real wave1 victory, wave2 defeat, return and unlock, see first-stage checks.",
+    "resume": "Earned save resumed after correcting group repositioning and a missing UNIT.pos field. No material grants, time acceleration, forced battle starts or simulated battle results."
+  },
+  "firstStageEvents": [
+    {
+      "event": "continued-genuine-new-onboarding",
+      "seconds": 2,
+      "detail": {}
+    },
+    {
+      "event": "observe-prep:1:0:",
+      "seconds": 2,
+      "detail": {}
+    },
+    {
+      "event": "observe-active:1:1:",
+      "seconds": 92,
+      "detail": {}
+    },
+    {
+      "event": "first-wave-victory",
+      "seconds": 113,
+      "detail": {}
+    },
+    {
+      "event": "observe-result:1:1:true",
+      "seconds": 114,
+      "detail": {}
+    },
+    {
+      "event": "observe-active:2:2:",
+      "seconds": 203,
+      "detail": {}
+    },
+    {
+      "event": "first-genuine-wave2-defeat",
+      "seconds": 253,
+      "detail": {}
+    },
+    {
+      "event": "defeat-closed-clock-still-stopped",
+      "seconds": 257,
+      "detail": {}
+    },
+    {
+      "event": "bank-return",
+      "seconds": 259,
+      "detail": {
+        "award": 4
+      }
+    },
+    {
+      "event": "bench-archer-preserves-reserve",
+      "seconds": 260,
+      "detail": {
+        "key": 2
+      }
+    },
+    {
+      "event": "hire-ballista",
+      "seconds": 264,
+      "detail": {
+        "p": {
+          "x": 620,
+          "y": 260
+        }
+      }
+    },
+    {
+      "event": "swapped-archer-ballista-both-ways",
+      "seconds": 267,
+      "detail": {}
+    },
+    {
+      "event": "ready-90seconds",
+      "seconds": 268,
+      "detail": {}
+    },
+    {
+      "event": "observe-prep:1:0:",
+      "seconds": 268,
+      "detail": {}
+    },
+    {
+      "event": "observe-active:1:1:",
+      "seconds": 358,
+      "detail": {}
+    },
+    {
+      "event": "second-run-wave1-victory",
+      "seconds": 377,
+      "detail": {}
+    },
+    {
+      "event": "reposition-lower",
+      "seconds": 378,
+      "detail": {
+        "key": 4,
+        "p": {
+          "x": 620,
+          "y": 360
+        }
+      }
+    },
+    {
+      "event": "observe-result:1:1:true",
+      "seconds": 379,
+      "detail": {}
+    }
+  ]
+}

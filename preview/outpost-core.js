@@ -14,7 +14,7 @@
  const pathLength=lane=>WORLD.entryX-WORLD.turnX+Math.hypot(WORLD.turnX-WORLD.home.x,laneY(lane)-WORLD.home.y);
 
  function fresh(){
-  return {version:1,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:150,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0},result:null};
+  return {version:1,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:150,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0},result:null};
  }
  // The preparation clock is advanced explicitly by the live game, separately from battle simulation.
  function preparationSeconds(state){if(!state||state.round===0)return 150;const next=state.result?.win?Math.min(MAX_WAVE,state.result.wave+1):state.wave;return state.result&&!state.result.win?90:next<=3?90:120;}
@@ -159,7 +159,7 @@
   if(!state||state.phase!=='active'||!Number.isFinite(amount)||amount<=0)return {applied:0,killed:false};
   const enemy=state.enemies.find(e=>e.key===key&&e.alive);
   if(!enemy)return {applied:0,killed:false};
-  const applied=Math.min(enemy.hp,Math.max(0,amount-(role==='sword'?0:enemy.armor||0)));enemy.hp-=applied;
+  const applied=Math.min(enemy.hp,Math.max(0,amount-((role==='sword'||role==='ballista')?0:enemy.armor||0)));enemy.hp-=applied;
   const killed=enemy.hp<=0;
   if(killed){enemy.hp=0;enemy.alive=false;enemy.resolvedAt=state.elapsed;state.kills++;}
   else if(role==='sword')enemy.slowUntil=state.elapsed+1.5;
@@ -171,13 +171,13 @@
   for(const enemy of state.enemies){
    if(!enemy.alive)continue;
    const distance=Math.hypot(point.x-enemy.x,point.y-enemy.y);
-   if(distance>range+(options?.includeEnemyRadius?finite(enemy.r,13,0,100):0))continue;
+   if(distance>range+(options?.includeEnemyRadius?finite(enemy.r,13,0,100):0)||distance<(options?.minRange||0))continue;
    const remaining=pathLength(enemy.lane)-enemy.travel;
    if(!best||remaining<bestRemaining-EPS||(Math.abs(remaining-bestRemaining)<=EPS&&(distance<bestDistance-EPS||(Math.abs(distance-bestDistance)<=EPS&&enemy.key<best.key)))){best=enemy;bestDistance=distance;bestRemaining=remaining;}
   }
   return best;
  }
- const RECIPES={woodcutter:{wood:[6,4],stone:[0,0]},miner:{wood:[8,4],stone:[4,2]},arch:{wood:[12,6],stone:[6,3]},sword:{wood:[10,5],stone:[8,4]}};
+ const RECIPES={woodcutter:{wood:[6,4],stone:[0,0]},miner:{wood:[8,4],stone:[4,2]},arch:{wood:[12,6],stone:[6,3]},sword:{wood:[10,5],stone:[8,4]},farmer:{wood:[16,6],stone:[6,2]},ballista:{wood:[28,8],stone:[16,4]}};
  function recipe(id,owned,n=1){
   if(!Object.hasOwn(RECIPES,id))return null;
   const count=integer(n,0,0,MAX_COUNT),existing=integer(owned,0,0,MAX_COUNT),indices=count*existing+count*(count-1)/2,definition=RECIPES[id];
@@ -186,6 +186,8 @@
  function stats(id,camp){
   const tools=camp?.tools||{},wood=integer(tools.wood,0,0,2),stone=integer(tools.stone,0,0,2);
   if(id==='woodcutter')return {damage:0,interval:[5,2.5,1.5][wood],range:0};
+  if(id==='farmer')return {damage:0,interval:8,range:0};
+  if(id==='ballista')return {damage:20,interval:6,range:160,minRange:60};
   if(id==='miner')return {damage:0,interval:[6,3,2][stone],range:0};
   if(id==='arch')return {damage:5,interval:1.3,range:camp?.beacon===true?110:90};
   if(id==='sword')return {damage:3,interval:1.2,range:28};

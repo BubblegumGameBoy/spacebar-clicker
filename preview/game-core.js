@@ -4,13 +4,14 @@
  const Supply=typeof module==='object'&&module.exports?require('./supply-core.js'):globalThis.SupplyCore;
  const Outpost=typeof module==='object'&&module.exports?require('./outpost-core.js'):null;
  const HarvestSkills=typeof module==='object'&&module.exports?require('./harvest-skill-core.js'):globalThis.HarvestSkillCore;
+ const Expedition=typeof module==='object'&&module.exports?require('./expedition-core.js'):globalThis.ExpeditionCore;
  const VERSION=3, MAX_LEVEL=500;
  const SKILLS={strike:3,critical:3,rhythm:3,storm:1,haste:3,quartermaster:3,awakening:3,camp:3,covenant:1,fortune:3,bounty:3,memory:3,aurora:1};
  const BRANCHES={storm:['strike','critical','rhythm'],covenant:['haste','quartermaster','awakening','camp'],aurora:['fortune','bounty','memory']};
  const num=(v,f=0,max=1e150)=>Number.isFinite(Number(v))?Math.max(0,Math.min(max,Number(v))):f;
  const integer=(v,f=0,max=MAX_LEVEL)=>Math.floor(num(v,f,max));
  const skill=(s,id)=>integer(s.skills?.[id],0,SKILLS[id]||0);
- function fresh(ids=[]){return {version:VERSION,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
+ function fresh(ids=[]){return {version:VERSION,expedition:null,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
  function migrateCamp(raw,factory){
   if(!raw||raw.version!==1||!factory)return null;
   const key=value=>Number.isInteger(value)&&value>=1&&value<=1e12;
@@ -18,13 +19,13 @@
   const route=value=>Array.isArray(value)&&value.length>=2&&value.length<=128&&value.every(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=960&&p.y>=0&&p.y<=540)?value.map(p=>({x:p.x,y:p.y})):null;
   const camp={version:1,links:[],platforms:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true},links=new Set(),cargoKeys=new Set();
   for(const link of (Array.isArray(raw.links)?raw.links:[]).slice(0,500)){
-   if(!link||!key(link.nodeKey)||!['wood','stone'].includes(link.type)||links.has(link.nodeKey))continue;
+   if(!link||!key(link.nodeKey)||!['wood','stone','food'].includes(link.type)||links.has(link.nodeKey))continue;
    if(link.kind!=='conveyor'&&!factory.nodes.some(node=>node.key===link.nodeKey&&node.type===link.type))continue;
    const points=route(link.points);if((link.kind==='conveyor'||link.points!==undefined)&&!points)continue;links.add(link.nodeKey);camp.links.push({nodeKey:link.nodeKey,type:link.type,...(link.kind==='conveyor'?{kind:'conveyor',costWood:integer(link.costWood,0,1e6)}:{}),...(points?{points,cost:integer(link.cost,0,1e6)}:{})});
   }
   const platformKeys=new Set();for(const p of (Array.isArray(raw.platforms)?raw.platforms:[]).slice(0,100)){if(!p||!key(p.key)||platformKeys.has(p.key)||!Number.isFinite(p.x)||!Number.isFinite(p.y))continue;platformKeys.add(p.key);camp.platforms.push({key:p.key,x:Math.max(48,Math.min(912,p.x)),y:Math.max(32,Math.min(508,p.y)),w:96,h:64,dir:integer(p.dir,0,3),costWood:integer(p.costWood,0,1e6),costStone:integer(p.costStone,0,1e6)});}
   for(const item of (Array.isArray(raw.cargo)?raw.cargo:[]).slice(0,10000)){
-   if(!item||!key(item.key)||cargoKeys.has(item.key)||!['wood','stone','gold'].includes(item.type)||!Number.isFinite(item.count)||item.count<=0)continue;
+   if(!item||!key(item.key)||cargoKeys.has(item.key)||!['wood','stone','food','gold'].includes(item.type)||!Number.isFinite(item.count)||item.count<=0)continue;
    const x=coordinate(item.from?.x,960),y=coordinate(item.from?.y,540);
    if(x===null||y===null)continue;
    const duration=Number.isFinite(item.duration)?Math.max(.1,Math.min(30,item.duration)):.6;
@@ -36,6 +37,7 @@
  }
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
+  s.expedition=Expedition?.migrate(r.expedition)||null;
   s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true}:null;
   s.harvestSkills=HarvestSkills?.migrate(r.harvestSkills)||{carry:0,hand:0,route:0};
   s.gold=num(r.gold,150);s.globalWave=integer(r.globalWave,1,1e12)||1;s.bossWave=Math.max(1,integer(r.bossWave,1,40));s.bossCycle=Math.max(1,integer(r.bossCycle,1,100));

@@ -10,9 +10,12 @@ window.ArmyView=(()=>{
  function imageFor(u){
   const evolved=!outpost()&&Core.tier(S.ulvl[u.id]||0)>0;
   const name=evolved&&u.id==='sword'?'unit_sword_veteran.webp':u.anim?.sheet||u.sprite;
-  if(!images.has(name)){
+  const imageKey=u.anim?.atlasFrames?name+':'+u.id:name;
+  if(!images.has(imageKey)){
    const img=new Image();
    img.onload=()=>{
+    if(u.anim?.atlasFrames&&!img.atlasPrepared){const packed=document.createElement('canvas'),cw=img.naturalWidth/4,ch=img.naturalHeight/2;packed.width=cw*u.anim.frames;packed.height=ch;const paint=packed.getContext('2d');u.anim.atlasFrames.forEach((n,i)=>paint.drawImage(img,n%4*cw,Math.floor(n/4)*ch,cw,ch,i*cw,0,cw,ch));img.atlasPrepared=true;img.src=packed.toDataURL();return;}
+
     const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;
     const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);
     const data=x.getImageData(0,0,c.width,c.height).data,frames=u.anim?.frames||1,fw=Math.floor(c.width/frames),boxes=[];
@@ -27,9 +30,9 @@ window.ArmyView=(()=>{
     img.crop=idle;
     const preview=document.createElement('canvas');preview.width=Math.ceil(96*idle.w/idle.h);preview.height=96;preview.getContext('2d').drawImage(img,idle.x,idle.y,idle.w,idle.h,0,0,preview.width,96);img.portrait=preview.toDataURL();cancelAnimationFrame(portraitFrame);portraitFrame=requestAnimationFrame(()=>{if(window.Rework)renderCards();window.CampTraining?.refresh();});
    };
-   img.src='../assets/'+name;images.set(name,img);
+   img.src='../assets/'+name;images.set(imageKey,img);
   }
-  return images.get(name);
+  return images.get(imageKey);
  }
  function layout(){
   const n=count();
@@ -75,7 +78,7 @@ window.ArmyView=(()=>{
   if(!viewport)return;
   const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];accumulator=0;powerClock=0;engagedDps=0;}
   sim.stationary=true;bindRaid();layout();
-  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
+  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,minRange:stats?.minRange||0,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
   if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
   if(restore){for(const p of slots)p.enterAt=sim.time-.34;window.BattleControl?.restore();}
@@ -125,7 +128,7 @@ window.ArmyView=(()=>{
    if(tier&&h*z>17){ctx.fillStyle=['','#6ae2ff','#d2a2ff','#ffdc6c'][tier];ctx.font=Math.max(7,9*z)+'px sans-serif';ctx.textAlign='center';ctx.fillText('◆'.repeat(tier),x,y-h*z-4*z);}
   }
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
-  for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,2*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*.035*z,y-(p.ty-p.y)*.035*z);ctx.stroke();}
+  for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,(p.ballista?4:2)*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*(p.ballista?.075:.035)*z,y-(p.ty-p.y)*(p.ballista?.075:.035)*z);ctx.stroke();}
   if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);window.BattleControl?.draw(ctx,view);
   if(raid)window.OutpostCamp?.drawOver(ctx,view);
  }
@@ -140,13 +143,13 @@ window.ArmyView=(()=>{
    for(const e of events){const p=e.p,u=p.u;
     if(e.kind==='heal'){window.BattleControl?.heal(e.amount);continue;}
     if(e.kind==='damage'){if(raid){const state=raidState();if(!state||e.roundToken!==state.round||e.target!==state.enemies.find(q=>q.key===e.targetKey)||!e.target.alive)continue;const applied=Outpost.hit(e.amount,p.id,e.targetKey);if(applied&&fxClock<=0){fxClock=.12;sndUnitHit(u);}}else damage.set(p.id,(damage.get(p.id)||0)+e.amount);continue;}
-    if(e.kind==='release'&&(u.ranged||u.healer)){const target=e.target||(u.healer?hero:sim.boss);const release=u.healer?0:(u.anim?.release||0)/1000,impact=u.healer?.25:(u.anim?.impact||450)/1000;projectiles.push({source:p,x:p.x,y:p.y-27,tx:target.x,ty:target.y-(raid?18:0),start:sim.time+release,duration:Math.max(.05,impact-release),until:sim.time+impact,heal:u.healer,col:u.proj==='holy'?'#ffdf87':'#d7e3cc',...(raid?{target:e.target,targetKey:e.targetKey,roundToken:e.roundToken}:{})});if(projectiles.length>24)projectiles.shift();}
+    if(e.kind==='release'&&(u.ranged||u.healer)){const target=e.target||(u.healer?hero:sim.boss);const release=u.healer?0:(u.anim?.release||0)/1000,impact=u.healer?.25:(u.anim?.impact||450)/1000;projectiles.push({source:p,x:p.x,y:p.y-27,tx:target.x,ty:target.y-(raid?18:0),start:sim.time+release,duration:Math.max(.05,impact-release),until:sim.time+impact,heal:u.healer,ballista:u.id==='ballista',col:u.proj==='holy'?'#ffdf87':u.id==='ballista'?'#eac78d':'#d7e3cc',...(raid?{target:e.target,targetKey:e.targetKey,roundToken:e.roundToken}:{})});if(projectiles.length>24)projectiles.shift();}
    }
    for(const [id,amount]of damage){if(bossDead)break;const pt=bossHitPt();if(fxClock<=0){fxClock=.12;const u=UNITS.find(u=>u.id===id);sndUnitHit(u);if(u.fx)spawnAtkFx(u.fx,pt.x,pt.y);}dealDamage(amount,pt.x,pt.y,'unit',false,id);}
   }
  }
  function snapshot(){const h=window.BattleControl?.hero;return {width:camera.w,height:camera.h,captain:{x:Math.round(h?.x||150),y:Math.round(h?.y||370)},units:slots.map(p=>[p.id,p.index,Math.round(p.x),Math.round(p.y),p.commanded&&p.order?Math.round(p.order.x):-1,p.commanded&&p.order?Math.round(p.order.y):-1])};}
- function orderUnits(a,b){const order=['woodcutter','miner','arch','sword','heavy','healer','porter'];const rank=u=>order.includes(u.id)?order.indexOf(u.id):7+UNITS.indexOf(u);return rank(a)-rank(b);}
+ function orderUnits(a,b){const order=['woodcutter','miner','farmer','arch','ballista','sword','heavy','healer','porter'];const rank=u=>order.includes(u.id)?order.indexOf(u.id):7+UNITS.indexOf(u);return rank(a)-rank(b);}
  function point(clientX,clientY){const r=world.getBoundingClientRect();return {x:(clientX-r.left)/camera.scale,y:(clientY-r.top)/camera.scale};}
  function zoom(factor){manual=true;camera.target=Math.max(camera.fit*.7,Math.min(2.2,camera.target*factor));}
  function boot(){
@@ -159,5 +162,5 @@ window.ArmyView=(()=>{
   new ResizeObserver(()=>layout()).observe(viewport);
   render();window.BattleControl?.boot();window.SupplyFactory?.boot();camera.scale=camera.target;applyCamera();frame=requestAnimationFrame(draw);
  }
- return {boot,render,focus,fit,layout,tick,point,snapshot,captureFrame:()=>{draw(performance.now(),true);if(!outpost())return canvas.toDataURL();const dpr=canvas.width/viewport.clientWidth,z=camera.scale,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*z)-camera.w*z)/2)-viewport.scrollLeft,oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*z)-camera.h*z)/2)-viewport.scrollTop;const x=Math.max(0,ox+20*z),y=Math.max(0,oy+70*z),w=Math.min(880*z,viewport.clientWidth-x),h=Math.min(450*z,viewport.clientHeight-y);if(w<=0||h<=0)return canvas.toDataURL();const photo=document.createElement('canvas');photo.width=880;photo.height=Math.round(880*h/w);const context=photo.getContext('2d');context.imageSmoothingEnabled=false;context.drawImage(canvas,x*dpr,y*dpr,w*dpr,h*dpr,0,0,photo.width,photo.height);return photo.toDataURL();},orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
+ return {boot,render,reloadFormation:()=>{lastState=null;render();},focus,fit,layout,tick,point,snapshot,captureFrame:()=>{draw(performance.now(),true);if(!outpost())return canvas.toDataURL();const dpr=canvas.width/viewport.clientWidth,z=camera.scale,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*z)-camera.w*z)/2)-viewport.scrollLeft,oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*z)-camera.h*z)/2)-viewport.scrollTop;const x=Math.max(0,ox+20*z),y=Math.max(0,oy+70*z),w=Math.min(880*z,viewport.clientWidth-x),h=Math.min(450*z,viewport.clientHeight-y);if(w<=0||h<=0)return canvas.toDataURL();const photo=document.createElement('canvas');photo.width=880;photo.height=Math.round(880*h/w);const context=photo.getContext('2d');context.imageSmoothingEnabled=false;context.drawImage(canvas,x*dpr,y*dpr,w*dpr,h*dpr,0,0,photo.width,photo.height);return photo.toDataURL();},orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
 })();

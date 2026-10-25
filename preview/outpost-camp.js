@@ -5,7 +5,7 @@ window.OutpostCamp = (() => {
  const COST = {wood:32,stone:40},BELT_PORT={x:162,y:328};
  const words = {
   warehouse:['おうち','Warehouse','仓库'],workshop:['つくる','Workshop','工坊'],close:['とじる','Close','关闭'],
-  wood:['き','Wood','木材'],stone:['いし','Stone','石材'],gold:['おかね','Gold','金币'],
+  food:['食料','Food','粮食'],wood:['き','Wood','木材'],stone:['いし','Stone','石材'],gold:['おかね','Gold','金币'],
   title:['なかまの しごとば','The camp workshop','营地工坊'],
   intro:['コンベアの うえに おくと、おうちへ ながれるよ。おうちから ひっぱって つくろう。','Items on a conveyor move into the house. Drag from the house to build.','放在传送带上的物资会运入房屋。从房屋拖动建造。'],
   rail:['コンベア','Conveyor','传送带'],build:['ここを つなぐ','Connect this route','连接这条路线'],
@@ -55,7 +55,7 @@ window.OutpostCamp = (() => {
  const clamp=(n,min,max)=>Math.max(min,Math.min(Math.max(min,max),n));
  const keyEqual=(a,b)=>String(a)===String(b);
  const skillEffects=()=>window.HarvestSkillCore?.effects?.(current()?.harvestSkills)||{carryCapacity:1,cartSpeed:1};
- const handCapacity=()=>Math.max(1,Math.min(4,Math.floor(skillEffects().carryCapacity||1)));
+ const handCapacity=()=>Math.max(1,Math.min(16,Math.floor(skillEffects().carryCapacity||1)));
  const heldDrop=drop=>drag?.items.some(item=>item.drop===drop)===true;
  const railCargo=cargo=>cargo.mode==='rail'||(!cargo.mode&&cargo.duration>.61);
 
@@ -76,9 +76,9 @@ window.OutpostCamp = (() => {
   return s;
  }
  const linked=(s,node)=>s.camp.links.some(link=>keyEqual(link.nodeKey,node.key));
- const railExists=type=>{const s=state(),id=type==='wood'?'woodcutter':'miner';return (window.ArmyView?.sim?.soldiers||[]).some(p=>{if(p.id!==id)return false;const n=s.factory.nodes.filter(n=>n.type===type).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];if(!n)return false;const out=window.SupplyFactory?.outputForWorker?.(p,n)||{x:p.x+Math.sign(p.x-n.x)*24,y:p.y+24};return !!ConveyorCore.contact(s.camp.links,out)||!!ConveyorCore.platformAt(s.camp.platforms,out);});};
+ const railExists=type=>{const s=state(),id=type==='wood'?'woodcutter':type==='food'?'farmer':'miner';return (window.ArmyView?.sim?.soldiers||[]).some(p=>{if(p.id!==id)return false;const n=s.factory.nodes.filter(n=>n.type===type).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];if(!n)return false;const out=window.SupplyFactory?.outputForWorker?.(p,n)||{x:p.x+Math.sign(p.x-n.x)*24,y:p.y+24};return !!ConveyorCore.contact(s.camp.links,out)||!!ConveyorCore.platformAt(s.camp.platforms,out);});};
  function workersAt(node){
-  const id=node.type==='wood'?'woodcutter':'miner';
+  const id=node.type==='wood'?'woodcutter':node.type==='food'?'farmer':'miner';
   return (window.ArmyView?.sim?.soldiers||[]).filter(p=>p.id===id&&Math.hypot(p.x-node.x,p.y-node.y)<72).length;
  }
  function nextNode(s,type){
@@ -125,7 +125,7 @@ window.OutpostCamp = (() => {
   setText(overlay.querySelector('.camp-workshop-intro'),tr('intro'));
   setText(overlay.querySelector('.camp-workshop-wallet span'),tr('gold'));
   setText(overlay.querySelector('.camp-workshop-wallet strong'),format(s.gold)+' G');
-  const stocks=overlay.querySelector('.camp-stock-wallet');if(stocks){const key=language()+':'+Math.floor(s.factory.inventory.wood)+':'+Math.floor(s.factory.inventory.stone);if(stocks.dataset.value!==key){stocks.dataset.value=key;stocks.innerHTML=['wood','stone'].map(type=>'<span>'+((window.SupplyFactory?.icon(type))||tr(type))+'<b>'+format(Math.floor(s.factory.inventory[type]))+'</b></span>').join('');}}
+  const stocks=overlay.querySelector('.camp-stock-wallet');if(stocks){const key=language()+':'+Math.floor(s.factory.inventory.wood)+':'+Math.floor(s.factory.inventory.stone)+':'+Math.floor(s.factory.inventory.food||0);if(stocks.dataset.value!==key){stocks.dataset.value=key;stocks.innerHTML=['wood','stone',...(Object.hasOwn(s.factory.inventory,'food')?['food']:[])].map(type=>'<span>'+((window.SupplyFactory?.icon(type))||tr(type))+'<b>'+format(Math.floor(s.factory.inventory[type]))+'</b></span>').join('');}}
   setText(overlay.querySelector('.camp-workshop-note'),tr('available'));
   for(const button of overlay.querySelectorAll('[data-camp-tab]')){setText(button,tr(button.dataset.campTab));button.setAttribute('aria-pressed',String(activeTab===button.dataset.campTab));}overlay.querySelector('.camp-rail-options').hidden=activeTab!=='rails';overlay.querySelector('.camp-projects').hidden=activeTab!=='growth';overlay.querySelector('.camp-rail-options').style.display=activeTab==='rails'?'grid':'none';overlay.querySelector('.camp-projects').style.display=activeTab==='growth'?'grid':'none';syncProjects(s);
   for(const type of ['wood','stone']){
@@ -147,7 +147,7 @@ window.OutpostCamp = (() => {
     setText(warehouse.querySelector('.camp-house-label b'),tr('warehouse'));
     setText(warehouse.querySelector('.camp-house-label span'),tr('workshop')+' ›');
     setText(warehouse.querySelector('.camp-gold span'),tr('gold'));
-    for(const type of ['wood','stone'])document.getElementById(type==='wood'?'gatherWood':'gatherStone')?.setAttribute('data-camp-label',tr(type));
+    for(const type of ['wood','stone','food'])document.getElementById('gather'+({wood:'Wood',stone:'Stone',food:'Food'}[type]))?.setAttribute('data-camp-label',tr(type));
    }
    const cap=window.HarvestSkillCore?.effects(S.harvestSkills)?.groundCapacity||12;setText(warehouse.querySelector('#groundStorageStatus'),(language()==='ja'?'地面の資材：':language()==='zh'?'地面材料：':'Ground items: ')+s.factory.drops.length+' / '+cap);setText(goldLabel,format(s.gold)+' G');if(beltButton)setText(beltButton,tr('beltBuild'));if(platformButton)setText(platformButton,tr('platformBuild'));
    const hasCargo=s.camp.cargo.length>0||s.factory.drops.some(d=>!heldDrop(d)&&ConveyorCore.contact(s.camp.links,d));
@@ -335,16 +335,16 @@ window.OutpostCamp = (() => {
 
  function receive(s,arrivals,automatic=false){
   if(!arrivals.length)return;
-  const totals={wood:0,stone:0,gold:0};let first=false;
+  const totals={wood:0,stone:0,food:0,gold:0};let first=false;
   for(const cargo of arrivals){
-   if(!['wood','stone','gold'].includes(cargo.type)||!Number.isFinite(cargo.count)||cargo.count<=0)continue;
+   if(!['wood','stone','food','gold'].includes(cargo.type)||!Number.isFinite(cargo.count)||cargo.count<=0)continue;
    totals[cargo.type]+=cargo.count;window.OutpostTutorial?.delivered?.(cargo.type,cargo.count,automatic,cargo.worker===true);
    if(cargo.type==='gold'){if(typeof earnGold==='function')earnGold(cargo.count);else s.gold+=cargo.count;}
    else s.factory.inventory[cargo.type]=Math.min(1e9,(s.factory.inventory[cargo.type]||0)+cargo.count);
    s.factory.delivered=(s.factory.delivered||0)+cargo.count;
    if(cargo.worker&&cargo.type==='wood'&&!s.firstWorkerPickup){s.firstWorkerPickup=true;first=true;}
   }
-  for(const type of ['wood','stone','gold'])if(totals[type])notices.push({type,count:totals[type],age:0});
+  for(const type of ['wood','stone','food','gold'])if(totals[type])notices.push({type,count:totals[type],age:0});
   notices=notices.slice(-4);houseFlash=.42;warehouse?.classList.add('camp-received');
   statusKey='arrived';statusUntil=visualTime+1.7;audio('pickup');
   if(first){if(typeof renderCards==='function')renderCards();window.Rework?.revealAllies?.('arch');}

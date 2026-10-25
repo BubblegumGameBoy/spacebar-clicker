@@ -2,7 +2,7 @@
 window.PlacementControls=(()=>{
  'use strict';
  const local=a=>a[Math.max(0,['ja','en','zh'].indexOf(typeof LANG==='string'?LANG:'ja'))];
- const names={allies:['仲間','Ally','伙伴'],woodcutter:['木こり','Lumberjack','伐木工'],miner:['採掘師','Miner','矿工'],arch:['弓兵','Archer','弓箭手'],sword:['剣士','Swordsman','剑士'],belt:['コンベア','Conveyor','传送带'],platform:['受け土台','Receiving platform','接收台']};
+ const names={allies:['仲間','Ally','伙伴'],woodcutter:['木こり','Lumberjack','伐木工'],miner:['採掘師','Miner','矿工'],farmer:['農家','Farmer','农夫'],ballista:['バリスタ隊','Ballista crew','弩炮队'],arch:['弓兵','Archer','弓箭手'],sword:['剣士','Swordsman','剑士'],belt:['コンベア','Conveyor','传送带'],platform:['受け土台','Receiving platform','接收台']};
  let bar=null,guide=null,touch=null,lastTouch=null;
  const kind=()=>window.OutpostCamp?.buildingKind||(window.BattleControl?.placement?'allies':'gather');
  function finish(){window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);sync();}

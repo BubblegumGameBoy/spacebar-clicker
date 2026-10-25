@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "fixture": "Prepared farm fixture with injected unlock coins and materials. Not a fresh earned playthrough. Actual pointer actions perform hire, placement, individual manual delivery and physical belt construction.",
+  "checks": [
+    "Farmer can be placed beside a growing plot",
+    "Actual harvest drops individual food at predicted output",
+    "Ground and held food retain wheat art",
+    "Only physical warehouse delivery credits food",
+    "Manual belt catches recurring crop and delivers real food"
+  ],
+  "data": {
+    "drop": {
+      "key": 8,
+      "type": "food",
+      "count": 1,
+      "x": 564.1857693571019,
+      "y": 363.49284076247073,
+      "source": 7,
+      "worker": true,
+      "physical": true,
+      "airUntil": 7.879800000000036
+    },
+    "point": {
+      "x": 564.1857693571019,
+      "y": 355.44901606127553
+    },
+    "regrow": 19.499800000000036,
+    "time": 7.8831000000000415,
+    "output": {
+      "x": 564.1857693571019,
+      "y": 363.49284076247073
+    },
+    "inventory": 0
+  },
+  "after": {
+    "food": 2,
+    "links": 1,
+    "drops": [],
+    "growing": {
+      "key": 7,
+      "type": "food",
+      "x": 650,
+      "y": 350,
+      "stock": 0,
+      "radius": 25,
+      "regrow": 31.8824999999999
+    }
+  },
+  "errors": []
+}

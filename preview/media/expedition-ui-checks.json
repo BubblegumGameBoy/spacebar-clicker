@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "fixture": "Continued genuine prior first-wave earned save, origin remapped only. No material grants or timer acceleration. UI/integration checks, not a fresh expedition full-play claim.",
+  "checks": [
+    "8 squad slots visible",
+    "Return preview and atomic award",
+    "Conveyors and work skills preserved",
+    "Ballista/farmer unlock purchases",
+    "15G buys exactly5food",
+    "Explicit readiness starts90s preparation",
+    "JA EN ZH desktop and native-touch mobile"
+  ],
+  "errors": []
+}
