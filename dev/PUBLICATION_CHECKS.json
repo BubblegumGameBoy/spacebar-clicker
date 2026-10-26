@@ -11,7 +11,13 @@
     "status": "completed",
     "conclusion": "success",
     "durationSeconds": 52,
-    "commitVerified": "8f9999eb6d834f029faf16a37135f8a13871be0a"
+    "commitVerified": "8f9999eb6d834f029faf16a37135f8a13871be0a",
+    "followUpRun": {
+      "run": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/40249812216",
+      "commit": "81b7b72ffa84f30109ce85a4a160a8e6bee56431",
+      "build": "success",
+      "deploy": "success"
+    }
   },
   "publishedSourceBuild": {
     "ruleset": "outpost-9-release-candidate-v6",
@@ -27,7 +33,35 @@
       "actual public save namespace",
       "public browser page errors"
     ],
-    "requiredAction": "Review/save the prepared play.bubblegumgameboy.com network permission and publish the environment, then retry the public smoke test."
+    "requiredAction": "Review/save the prepared play.bubblegumgameboy.com network permission and publish the environment, then retry the public smoke test.",
+    "retries": [
+      {
+        "date": "2026-10-26 JST (new session)",
+        "response": "Proxy CONNECT 403 for play.bubblegumgameboy.com and bubblegumgameboy.github.io; Pages artifact blob download also 403",
+        "result": "still blocked, not verified"
+      }
+    ]
   },
-  "scope": "Only preview/ and dev/ were pushed. Original root game, Worker, packages and existing assets unchanged."
+  "scope": "Only preview/ and dev/ were pushed. Original root game, Worker, packages and existing assets unchanged.",
+  "localMirrorSmoke": {
+    "date": "2026-10-26 JST",
+    "what": "Committed main 81b7b72 served locally under /spacebar-clicker/preview/ (same path layout as the public site). NOT the public URL: no CDN, custom domain, HTTPS or cache behaviour verified.",
+    "node": "191/191 pass (Node 22, node --test test/*.test.cjs after extracting dev/sequel-source.tar.gz)",
+    "configs": [
+      "desktop 1280x720",
+      "?lesson=1",
+      "mobile 390x844 touch"
+    ],
+    "pageErrors": 0,
+    "httpErrors": 0,
+    "note": "assets/audio/forest-camp.mp3 shows one net::ERR_ABORTED followed by a 206 range response: normal Chromium media loading, not a missing asset.",
+    "saveNamespace": {
+      "normal": [
+        "sbr2_preview_outpost_save3",
+        "sbr2_preview_outpost_player_id_v1",
+        "sbr2_preview_outpost_lang"
+      ],
+      "lesson": "same keys prefixed with mythos_lesson:"
+    }
+  }
 }
