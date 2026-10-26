@@ -62,5 +62,11 @@
       ],
       "errors": []
     }
+  ],
+  "checks": [
+    "Three languages, desktop and native touch",
+    "Defeat close leaves preparation stopped",
+    "Visible notice reopens results",
+    "Explicit retry waits for readiness"
   ]
 }

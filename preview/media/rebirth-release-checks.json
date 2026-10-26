@@ -1,0 +1,355 @@
+{
+  "status": "passed",
+  "fixture": "Continuation of genuinely earned completed farmer route. Real materials and visible controls; no grants or time acceleration. The result dialog was reopened via its existing UI method after verifying modal close leaves the clock stopped.",
+  "events": [
+    {
+      "event": "completed-earned-farmer-route",
+      "outpost": {
+        "phase": "result",
+        "wave": 9,
+        "cleared": 9,
+        "result": {
+          "wave": 9,
+          "win": true,
+          "boxes": 3,
+          "kills": 37,
+          "escaped": 0,
+          "gold": 102,
+          "first": true,
+          "chiefDefeated": true
+        },
+        "round": 9,
+        "prepRemaining": 119.05000000000003
+      },
+      "inventory": {
+        "wood": 6,
+        "stone": 2,
+        "food": 9
+      },
+      "expedition": {
+        "coins": 1,
+        "claimed": 4,
+        "run": 2,
+        "unlocks": {
+          "farmer": true,
+          "ballista": false
+        },
+        "awaitingReady": false,
+        "awaitingDecision": false
+      },
+      "crews": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 6,
+          "active": true
+        },
+        {
+          "id": "farmer",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 3,
+          "active": true
+        }
+      ],
+      "conveyorCount": 2,
+      "workSkills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    },
+    {
+      "event": "settled-and-selected-wave-seven",
+      "outpost": {
+        "phase": "prep",
+        "wave": 7,
+        "cleared": 6,
+        "result": null,
+        "round": 0,
+        "prepRemaining": 150
+      },
+      "inventory": {
+        "wood": 6,
+        "stone": 2,
+        "food": 9
+      },
+      "expedition": {
+        "coins": 34,
+        "claimed": 37,
+        "run": 3,
+        "unlocks": {
+          "farmer": true,
+          "ballista": false
+        },
+        "awaitingReady": true,
+        "awaitingDecision": false
+      },
+      "crews": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "farmer",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        }
+      ],
+      "conveyorCount": 2,
+      "workSkills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    },
+    {
+      "event": "paid-training-and-reload-preserved",
+      "outpost": {
+        "phase": "prep",
+        "wave": 7,
+        "cleared": 6,
+        "result": null,
+        "round": 0,
+        "prepRemaining": 150
+      },
+      "inventory": {
+        "wood": 1,
+        "stone": 0,
+        "food": 10
+      },
+      "expedition": {
+        "coins": 34,
+        "claimed": 37,
+        "run": 3,
+        "unlocks": {
+          "farmer": true,
+          "ballista": false
+        },
+        "awaitingReady": true,
+        "awaitingDecision": false
+      },
+      "crews": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "farmer",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        }
+      ],
+      "conveyorCount": 2,
+      "workSkills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    },
+    {
+      "event": "checkpoint-raid-earned-defeat",
+      "outpost": {
+        "phase": "result",
+        "wave": 7,
+        "cleared": 6,
+        "result": {
+          "wave": 7,
+          "win": false,
+          "boxes": 0,
+          "kills": 6,
+          "escaped": 16,
+          "gold": 8,
+          "first": false
+        },
+        "round": 1,
+        "prepRemaining": 90
+      },
+      "inventory": {
+        "wood": 1,
+        "stone": 0,
+        "food": 11
+      },
+      "expedition": {
+        "coins": 34,
+        "claimed": 37,
+        "run": 3,
+        "unlocks": {
+          "farmer": true,
+          "ballista": false
+        },
+        "awaitingReady": false,
+        "awaitingDecision": true
+      },
+      "crews": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "farmer",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        }
+      ],
+      "conveyorCount": 2,
+      "workSkills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    },
+    {
+      "event": "explicit-retry-started-same-wave",
+      "outpost": {
+        "phase": "active",
+        "wave": 7,
+        "cleared": 6,
+        "result": null,
+        "round": 2,
+        "prepRemaining": 89.78320000000001
+      },
+      "inventory": {
+        "wood": 1,
+        "stone": 0,
+        "food": 11
+      },
+      "expedition": {
+        "coins": 34,
+        "claimed": 37,
+        "run": 3,
+        "unlocks": {
+          "farmer": true,
+          "ballista": false
+        },
+        "awaitingReady": false,
+        "awaitingDecision": false
+      },
+      "crews": [
+        {
+          "id": "woodcutter",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "arch",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "farmer",
+          "count": 3,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        },
+        {
+          "id": "sword",
+          "count": 1,
+          "active": true
+        }
+      ],
+      "conveyorCount": 2,
+      "workSkills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    }
+  ],
+  "errors": [],
+  "methodNote": "The progression used real earned materials and visible actions. In this first run only the already-existing result-dialog show method was used to reopen the modal; the visible notice reopening path is independently covered by the six-language/device regression below."
+}

@@ -1,0 +1,373 @@
+{
+  "status": "passed",
+  "fixture": "One preselected legal UI relocation in the same genuinely earned Wave5 save. Only the chosen ballista group world coordinates change; all other crew coordinates and all combat stats, policies, cooldowns, encounter token and equipment match. Fixed 1/30-dt diagnostic and real-time trials are reported separately. No aid, growth, grants, or position search for a winning result.",
+  "targetGroupKey": 4,
+  "positions": {
+    "before": [
+      {
+        "id": "ballista",
+        "index": 0,
+        "groupKey": 4,
+        "x": 620,
+        "y": 400
+      },
+      {
+        "id": "ballista",
+        "index": 1,
+        "groupKey": 4,
+        "x": 646,
+        "y": 440
+      },
+      {
+        "id": "ballista",
+        "index": 2,
+        "groupKey": 4,
+        "x": 574,
+        "y": 388
+      }
+    ],
+    "after": [
+      {
+        "id": "ballista",
+        "index": 0,
+        "groupKey": 4,
+        "x": 759.9999805465636,
+        "y": 255
+      },
+      {
+        "id": "ballista",
+        "index": 1,
+        "groupKey": 4,
+        "x": 785.9999805465636,
+        "y": 295
+      },
+      {
+        "id": "ballista",
+        "index": 2,
+        "groupKey": 4,
+        "x": 713.9999805465636,
+        "y": 243
+      }
+    ]
+  },
+  "live": {
+    "baseline": {
+      "result": {
+        "wave": 5,
+        "win": false,
+        "boxes": 0,
+        "kills": 9,
+        "escaped": 5,
+        "gold": 8,
+        "first": false
+      },
+      "elapsed": 50.61760438365023,
+      "totalApplied": 358,
+      "groups": [
+        {
+          "key": 4,
+          "id": "ballista",
+          "damage": 139,
+          "armouredApplied": 82,
+          "releases": 9,
+          "impacts": 9
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "damage": 144,
+          "armouredApplied": 63,
+          "releases": 39,
+          "impacts": 38
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "damage": 75,
+          "armouredApplied": 2,
+          "releases": 22,
+          "impacts": 18
+        }
+      ],
+      "damageByLane": {
+        "upper": 144,
+        "lower": 214
+      },
+      "survivors": [
+        {
+          "key": 26,
+          "kind": "guard",
+          "lane": "upper",
+          "hp": 21,
+          "maxHp": 42,
+          "alive": false,
+          "escaped": true,
+          "travel": 914.2344832893492
+        },
+        {
+          "key": 30,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 21,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 914.2344832893492
+        },
+        {
+          "key": 32,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 11,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 914.2344832893492
+        },
+        {
+          "key": 34,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 6,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 914.2344832893492
+        },
+        {
+          "key": 36,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 11,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 914.2344832893492
+        }
+      ],
+      "balanced": true
+    },
+    "upper": {
+      "result": {
+        "wave": 5,
+        "win": true,
+        "boxes": 1,
+        "kills": 12,
+        "escaped": 2,
+        "gold": 66,
+        "first": true
+      },
+      "elapsed": 46.63450093132116,
+      "totalApplied": 411,
+      "groups": [
+        {
+          "key": 4,
+          "id": "ballista",
+          "damage": 199,
+          "armouredApplied": 102,
+          "releases": 12,
+          "impacts": 12
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "damage": 103,
+          "armouredApplied": 44,
+          "releases": 34,
+          "impacts": 30
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "damage": 109,
+          "armouredApplied": 22,
+          "releases": 29,
+          "impacts": 27
+        }
+      ],
+      "damageByLane": {
+        "upper": 214,
+        "lower": 197
+      },
+      "survivors": [
+        {
+          "key": 35,
+          "kind": "rat",
+          "lane": "lower",
+          "hp": 11,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 865.862523283024
+        },
+        {
+          "key": 37,
+          "kind": "rat",
+          "lane": "lower",
+          "hp": 6,
+          "maxHp": 26,
+          "alive": false,
+          "escaped": true,
+          "travel": 865.862523283024
+        }
+      ],
+      "balanced": true
+    }
+  },
+  "fixed": {
+    "baseline": {
+      "result": {
+        "wave": 5,
+        "win": false,
+        "boxes": 0,
+        "kills": 9,
+        "escaped": 5,
+        "gold": 8,
+        "first": false
+      },
+      "elapsed": 50.617604383649116,
+      "totalApplied": 356,
+      "groups": [
+        {
+          "key": 4,
+          "id": "ballista",
+          "damage": 139,
+          "armouredApplied": 82,
+          "releases": 9,
+          "impacts": 9
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "damage": 142,
+          "armouredApplied": 66,
+          "releases": 39,
+          "impacts": 38
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "damage": 75,
+          "armouredApplied": 2,
+          "releases": 22,
+          "impacts": 18
+        }
+      ],
+      "damageByLane": {
+        "upper": 142,
+        "lower": 214
+      },
+      "survivors": [
+        {
+          "key": 26,
+          "kind": "guard",
+          "lane": "upper",
+          "hp": 18,
+          "maxHp": 42,
+          "escaped": true
+        },
+        {
+          "key": 30,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 26,
+          "maxHp": 26,
+          "escaped": true
+        },
+        {
+          "key": 32,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 6,
+          "maxHp": 26,
+          "escaped": true
+        },
+        {
+          "key": 34,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 11,
+          "maxHp": 26,
+          "escaped": true
+        },
+        {
+          "key": 36,
+          "kind": "rat",
+          "lane": "upper",
+          "hp": 11,
+          "maxHp": 26,
+          "escaped": true
+        }
+      ],
+      "balanced": true
+    },
+    "upper": {
+      "result": {
+        "wave": 5,
+        "win": true,
+        "boxes": 1,
+        "kills": 12,
+        "escaped": 2,
+        "gold": 66,
+        "first": true
+      },
+      "elapsed": 46.63450093132147,
+      "totalApplied": 411,
+      "groups": [
+        {
+          "key": 4,
+          "id": "ballista",
+          "damage": 199,
+          "armouredApplied": 102,
+          "releases": 12,
+          "impacts": 12
+        },
+        {
+          "key": 2,
+          "id": "arch",
+          "damage": 103,
+          "armouredApplied": 44,
+          "releases": 34,
+          "impacts": 30
+        },
+        {
+          "key": 3,
+          "id": "arch",
+          "damage": 109,
+          "armouredApplied": 22,
+          "releases": 29,
+          "impacts": 27
+        }
+      ],
+      "damageByLane": {
+        "upper": 214,
+        "lower": 197
+      },
+      "survivors": [
+        {
+          "key": 35,
+          "kind": "rat",
+          "lane": "lower",
+          "hp": 6,
+          "maxHp": 26,
+          "escaped": true
+        },
+        {
+          "key": 37,
+          "kind": "rat",
+          "lane": "lower",
+          "hp": 11,
+          "maxHp": 26,
+          "escaped": true
+        }
+      ],
+      "balanced": true
+    }
+  },
+  "limits": [
+    "One earned formation, one preselected placement and one wave, not a general guarantee.",
+    "The upper road can improve while the lower road loses protection; report both.",
+    "Fixed-dt diagnostic does not simulate production/rendering, and live frame timing may change individual damage.",
+    "Production cooldowns can advance during UI preparation and are not combat inputs; world coordinates are checked for every crew."
+  ]
+}
