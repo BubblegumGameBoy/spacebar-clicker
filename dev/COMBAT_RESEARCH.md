@@ -41,7 +41,7 @@ directorは既存の敗北説明だけを修正する判断。『鎧にはバリ
 
 公開用の要約はpreview/media/combat-contribution-checks.jsonとdefence-hint-checks.json。全191件のNodeテストが成功。
 
-次はcopy catのInto the Breach参考案から、同じ保存で1部隊だけ担当路を変えて上路改善と下路への影響を比較する案をdirectorへ進言済み。未実施なので結果は主張しない。
+copy catのInto the Breach参考案から、同じ保存で1部隊だけ担当路を変える対照試験を行う判断へ進んだ。結果は次節へ。
 
 ## 担当路の対照試験も実施
 

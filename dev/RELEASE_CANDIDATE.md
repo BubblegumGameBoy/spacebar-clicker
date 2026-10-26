@@ -29,3 +29,9 @@
 - 先行のfarmer-first-checks.json、sequel-progression-checks.json、growth-feedback-checks.json — 2ルートと成長演出。
 
 今後の調整候補は別途記録し、公開を無限の機能追加で引き延ばさない。
+
+## 公開処理の確認済み結果
+
+2026-10-26 JST、コードコミット8f9999eb6d834f029faf16a37135f8a13871be0aをmainへ通常のfast-forwardで反映。GitHub Pages [run119](https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/40249499277)が52秒でSuccess、同コミットのbuild/deploy完了を確認。GitHub上の公開元build.jsonもruleset outpost-9-release-candidate-v6・全source hashがローカル検証物と一致した。
+
+これは対象URLを実ブラウザで開けたこととは別。実URL起動確認は引き続き通信許可反映待ち。dev/PUBLICATION_CHECKS.jsonへ確認済み/未確認を分けて保存。以後はこの公開smokeだけを解消し、機能追加へ戻らない。

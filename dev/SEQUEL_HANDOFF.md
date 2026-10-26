@@ -31,7 +31,7 @@ copy cat役も置く（2026-10-25の追加指示）。他ゲームの良い仕�
 - 同じ正規Wave5保存でバリスタ1部隊だけを予定した合法位置（上路側760,255付近）へ可視UIで再配置。全員の実座標/人数/職業、戦闘員の能力/方針/cooldown/装備は不変（生産時計の準備中の経過差は戦闘条件に含めない）。援護なしの実時間試験と固定dtとも、箱0/9撃破/上路5突破→箱1/12撃破/下路2突破。上路が改善しても下路の保護は減る。一般的な勝利保証ではない。
 - 正規の農家先行完走保存から、転生→Wave7選択→実資材で弓兵再増員→保存復帰→敗北→明示再挑戦が通過。初回の結果ダイアログだけUIメソッドで再表示し、可視の通知からの再表示/再挑戦は別の3言語PC/実タッチ6構成で確認。証拠JSONの条件を混同しない。
 - tools/qa_route_comparison.cjs、model_route_comparison.cjs、qa_rebirth_release.cjsを追加。モデルは固定dtと実時間を分けて記録し、別の位置を探し続けていない。公開証拠はroute-comparison-checks.json、rebirth-release-checks.json。
-- 公開先play.bubblegumgameboy.comは環境proxyのCONNECT403。ドメインのみ追加する通信許可草案は保存したが、反映には環境設定の保存・公開が必要。公開URL起動確認の前に「公開検証完了」とは報告しない。元ゲーム/Workerを変えず、preview/とdev/だけをmainへ更新して検証する。
+- 公開先play.bubblegumgameboy.comは環境proxyのCONNECT403。ドメインのみ追加する通信許可草案は保存したが、反映には環境設定の保存・公開が必要。公開URL起動確認の前に「公開検証完了」とは報告しない。元ゲーム/Workerを変えず、preview/とdev/だけをmainへ更新した。コードコミット8f9999eのGitHub Pages run119がSuccessで、GitHub公開元build.jsonの全source hashも一致。実URLからのsmokeだけ未確認。dev/PUBLICATION_CHECKS.json参照。
 
 ## 2026-10-26 部隊貢献の計測と敗北説明
 

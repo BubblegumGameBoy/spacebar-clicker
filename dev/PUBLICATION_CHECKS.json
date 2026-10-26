@@ -1,0 +1,33 @@
+{
+  "status": "deployment_confirmed_url_smoke_blocked",
+  "date": "2026-10-26 JST",
+  "codeCommit": "8f9999eb6d834f029faf16a37135f8a13871be0a",
+  "publicUrl": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/",
+  "freshSaveUrl": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?lesson=1",
+  "sourceMainVerified": true,
+  "githubPages": {
+    "run": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/40249499277",
+    "runNumber": 119,
+    "status": "completed",
+    "conclusion": "success",
+    "durationSeconds": 52,
+    "commitVerified": "8f9999eb6d834f029faf16a37135f8a13871be0a"
+  },
+  "publishedSourceBuild": {
+    "ruleset": "outpost-9-release-candidate-v6",
+    "sourceHashesMatchLocal": true,
+    "buildJsonSha256": "f51a4a94ed692bcddaaf2d50e697ece55d12e6648c8ca4466c5d2e6ca3bed79a"
+  },
+  "publicUrlSmoke": {
+    "status": "blocked",
+    "response": "Proxy CONNECT 403 before the destination could be reached",
+    "notVerified": [
+      "HTTPS page startup",
+      "public asset responses",
+      "actual public save namespace",
+      "public browser page errors"
+    ],
+    "requiredAction": "Review/save the prepared play.bubblegumgameboy.com network permission and publish the environment, then retry the public smoke test."
+  },
+  "scope": "Only preview/ and dev/ were pushed. Original root game, Worker, packages and existing assets unchanged."
+}
