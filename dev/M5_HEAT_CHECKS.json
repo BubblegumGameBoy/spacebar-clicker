@@ -1,0 +1,2800 @@
+{
+ "kind": "m5-heat-checks",
+ "date": "2026-10-26",
+ "note": "All rows are PREPARED checks, not earned play. Save = completed camp prepared in-page from the recorded earned completion (sequel-progression-checks.json; raw earned save not available in this environment), reloaded through migration; threat written into the save; raid started with the visible button; real time; no player assistance. Wave4 crew = recorded completion crew (arch 3 + arch 3 + ballista 3 [armour], recorded anchors). Wave9: the recorded crew (6/6/3) only won with click assistance and loses unassisted even at threat 0, so the Wave9 baseline is a full four-slot crew of the same camp (arch 10 + arch 10 + ballista 6 [armour] + sword 6). Flank road/boss seed = wave number (in play it is the run number).",
+ "conditions": {
+  "horde": {
+   "points": 1,
+   "name": [
+    "群れ増加",
+    "Larger packs",
+    "鼠群增多"
+   ],
+   "note": [
+    "ネズミと俊足が1.5倍、間を詰めて来る",
+    "1.5× rats and runners, packed closer",
+    "老鼠和迅捷鼠×1.5，间隔更密"
+   ],
+   "decide": [
+    "弓兵の数と位置",
+    "How many archers, and where",
+    "弓兵的数量与位置"
+   ]
+  },
+  "ironhide": {
+   "points": 1,
+   "name": [
+    "鉄の毛皮",
+    "Iron hide",
+    "铁皮"
+   ],
+   "note": [
+    "鎧ネズミの鎧+2、ネズミにも鎧1",
+    "Armoured rats +2 armour; rats gain armour 1",
+    "铁甲鼠护甲+2，老鼠也有护甲1"
+   ],
+   "decide": [
+    "剣士・バリスタの比率と優先目標",
+    "Swords/ballistas vs archers, and target priority",
+    "剑士·弩炮的比例与优先目标"
+   ]
+  },
+  "rush": {
+   "points": 1,
+   "name": [
+    "急襲",
+    "Rush",
+    "突袭"
+   ],
+   "note": [
+    "準備時間が30秒短い",
+    "30 s less preparation time",
+    "准备时间缩短30秒"
+   ],
+   "decide": [
+    "自動化に先に投資するか",
+    "Whether automation is built first",
+    "是否先投资自动化"
+   ]
+  },
+  "thin": {
+   "points": 2,
+   "name": [
+    "薄い備え",
+    "Thin stores",
+    "物资稀薄"
+   ],
+   "note": [
+    "物資箱2つで始まる",
+    "Start each raid with 2 crates",
+    "每波只有2个物资箱"
+   ],
+   "decide": [
+    "取りこぼしを許さない配置",
+    "Placement that lets nothing through",
+    "不放过任何敌人的布阵"
+   ]
+  },
+  "narrow": {
+   "points": 2,
+   "name": [
+    "狭い陣地",
+    "Cramped camp",
+    "阵地狭窄"
+   ],
+   "note": [
+    "防衛部隊の枠が1つ封鎖（3枠）",
+    "One defence slot is sealed (3 slots)",
+    "封锁1个防守部队位置（3个）"
+   ],
+   "decide": [
+    "どの職を外すか",
+    "Which crew to leave out",
+    "舍弃哪支队伍"
+   ]
+  },
+  "flank": {
+   "points": 1,
+   "name": [
+    "片寄り",
+    "Flanking",
+    "偏路"
+   ],
+   "note": [
+    "俊足が片方の道に集まり、増える（予告あり）",
+    "Runners mass on one road, with extras (forecast)",
+    "迅捷鼠集中到一条路并增加（有预告）"
+   ],
+   "decide": [
+    "道ごとの配置",
+    "Which road gets more cover",
+    "各条道路的布阵"
+   ]
+  },
+  "wings": {
+   "points": 1,
+   "name": [
+    "夜の羽音",
+    "Night wings",
+    "夜翼"
+   ],
+   "note": [
+    "夜コウモリが毎回飛んで来る",
+    "Night bats join every raid",
+    "每波都有夜蝠飞来"
+   ],
+   "decide": [
+    "倉庫寄りに弓兵を残す",
+    "Keep archers near home",
+    "在仓库附近留下弓兵"
+   ]
+  },
+  "shieldwall": {
+   "points": 1,
+   "name": [
+    "盾の列",
+    "Shield wall",
+    "盾阵"
+   ],
+   "note": [
+    "盾持ちネズミが列の先頭に並ぶ",
+    "Shield rats lead every column",
+    "持盾鼠在队伍前排"
+   ],
+   "decide": [
+    "盾を割る剣士・バリスタを前に",
+    "Swords/ballistas up front to break shields",
+    "把能破盾的剑士·弩炮放在前面"
+   ]
+  },
+  "burrow": {
+   "points": 1,
+   "name": [
+    "地中から",
+    "From below",
+    "地底来袭"
+   ],
+   "note": [
+    "穴掘りモグラが道の中ほどを潜って来る",
+    "Burrowing moles tunnel under mid-road",
+    "掘地鼹鼠从道路中段地下穿过"
+   ],
+   "decide": [
+    "曲がり角の近くを守る",
+    "Guard near the bends",
+    "守住拐角附近"
+   ]
+  },
+  "procession": {
+   "points": 2,
+   "name": [
+    "祈祷の行列",
+    "Prayer procession",
+    "祈祷队列"
+   ],
+   "note": [
+    "祈祷ネズミが列の中で味方を回復する",
+    "Rat shamans heal the column as it walks",
+    "鼠巫在队伍中为同伴回复"
+   ],
+   "decide": [
+    "バリスタの方針を回復役に",
+    "Set a ballista to Healers first",
+    "把弩炮方针设为优先治疗者"
+   ]
+  },
+  "siege": {
+   "points": 2,
+   "name": [
+    "攻城",
+    "Siege",
+    "攻城"
+   ],
+   "note": [
+    "攻城荷車と石投げが来る（Wave4から荷車）",
+    "Siege carts and slingers (carts from raid 4)",
+    "攻城车与投石鼠来袭（第4波起有攻城车）"
+   ],
+   "decide": [
+    "前に届く射程と鎧貫通",
+    "Forward reach and armour piercing",
+    "能打到前方的射程与穿甲"
+   ]
+  }
+ },
+ "coinFormula": "entitlement = floor((Σ_wave max_over_threat[(floor(10·bestKills/total) + 10·cleared) × (1 + 0.5·threat)] + min(10, 2·clearedWaves, trainingBest)) / 5); award = entitlement − claimed (claimed only grows).",
+ "browserTrials": [
+  {
+   "id": "W4-0",
+   "wave": 4,
+   "level": 0,
+   "conditions": [],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 10,
+   "potential": 10,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 80,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 91,
+     "kills": 4,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 41,
+     "kills": 1,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9",
+    "forecast": "↑ 5　↓ 5 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:horde",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "horde"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 14,
+   "potential": 14,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 121,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 91,
+     "kills": 4,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 64,
+     "kills": 4,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 5　↓ 9 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:ironhide",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "ironhide"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 1,
+   "startBoxes": 3,
+   "kills": 8,
+   "potential": 10,
+   "escaped": 2,
+   "boss": null,
+   "through": {
+    "guard": 1,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 85,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 69,
+     "kills": 3,
+     "armorBlocked": 84
+    },
+    "arch#3(3)": {
+     "applied": 41,
+     "kills": 1,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 5　↓ 5 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:flank",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "flank"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 5,
+   "potential": 13,
+   "escaped": 8,
+   "boss": null,
+   "through": {
+    "scout": 8
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 57,
+     "kills": 2,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 135,
+     "kills": 3,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 0,
+     "kills": 0,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 12　↓ 1 · 鎧の先頭隊と俊足の追撃 · 俊足が上の道に偏る",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:wings",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "wings"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 14,
+   "potential": 14,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 100,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 105,
+     "kills": 5,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 63,
+     "kills": 4,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 夜コウモリ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:shieldwall",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "shieldwall"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 11,
+   "potential": 14,
+   "escaped": 3,
+   "boss": null,
+   "through": {
+    "guard": 1,
+    "shield": 1,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 129,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 99,
+     "kills": 4,
+     "armorBlocked": 22
+    },
+    "arch#3(3)": {
+     "applied": 57,
+     "kills": 3,
+     "armorBlocked": 6
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 盾持ちネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-1:burrow",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "burrow"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 11,
+   "potential": 14,
+   "escaped": 3,
+   "boss": null,
+   "through": {
+    "mole": 3
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 103,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 91,
+     "kills": 4,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 64,
+     "kills": 3,
+     "armorBlocked": 4
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 穴掘りモグラ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-2:thin",
+   "wave": 4,
+   "level": 2,
+   "conditions": [
+    "thin"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 2,
+   "startBoxes": 2,
+   "kills": 10,
+   "potential": 10,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 80,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 91,
+     "kills": 4,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 41,
+     "kills": 1,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 2",
+    "forecast": "↑ 5　↓ 5 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 2 / 2",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-2:procession",
+   "wave": 4,
+   "level": 2,
+   "conditions": [
+    "procession"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 12,
+   "potential": 12,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 100,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 121,
+     "kills": 5,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 51,
+     "kills": 1,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 2",
+    "forecast": "↑ 6　↓ 6 · 鎧の先頭隊と俊足の追撃 ＋ 祈祷ネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-2:siege",
+   "wave": 4,
+   "level": 2,
+   "conditions": [
+    "siege"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 2,
+   "startBoxes": 3,
+   "kills": 16,
+   "potential": 20,
+   "escaped": 1,
+   "boss": null,
+   "through": {
+    "siegecart": 1
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 180,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 148,
+     "kills": 6,
+     "armorBlocked": 82
+    },
+    "arch#3(3)": {
+     "applied": 106,
+     "kills": 6,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 2",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 攻城荷車・石投げネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-3:ironhide+thin",
+   "wave": 4,
+   "level": 3,
+   "conditions": [
+    "ironhide",
+    "thin"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 2,
+   "kills": 8,
+   "potential": 10,
+   "escaped": 2,
+   "boss": null,
+   "through": {
+    "guard": 1,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 85,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 69,
+     "kills": 3,
+     "armorBlocked": 84
+    },
+    "arch#3(3)": {
+     "applied": 41,
+     "kills": 1,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 3",
+    "forecast": "↑ 5　↓ 5 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 2 / 2",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-3:wings+procession",
+   "wave": 4,
+   "level": 3,
+   "conditions": [
+    "wings",
+    "procession"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 16,
+   "potential": 16,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 118,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 141,
+     "kills": 7,
+     "armorBlocked": 16
+    },
+    "arch#3(3)": {
+     "applied": 69,
+     "kills": 3,
+     "armorBlocked": 0
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 3",
+    "forecast": "↑ 8　↓ 8 · 鎧の先頭隊と俊足の追撃 ＋ 祈祷ネズミ・夜コウモリ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-3:horde+flank+burrow",
+   "wave": 4,
+   "level": 3,
+   "conditions": [
+    "horde",
+    "flank",
+    "burrow"
+   ],
+   "crew": "3×arch@archUp, 3×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 6,
+   "potential": 21,
+   "escaped": 15,
+   "boss": null,
+   "through": {
+    "mole": 3,
+    "scout": 12
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 77,
+     "kills": 2,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 145,
+     "kills": 3,
+     "armorBlocked": 18
+    },
+    "arch#3(3)": {
+     "applied": 30,
+     "kills": 1,
+     "armorBlocked": 10
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 3",
+    "forecast": "↑ 18　↓ 3 · 鎧の先頭隊と俊足の追撃 ＋ 穴掘りモグラ · 俊足が上の道に偏る",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-0",
+   "wave": 9,
+   "level": 0,
+   "conditions": [],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": true,
+   "boxes": 2,
+   "startBoxes": 3,
+   "kills": 36,
+   "potential": 37,
+   "escaped": 1,
+   "boss": "chief",
+   "through": {
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 328,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 23,
+     "kills": 3,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 554,
+     "kills": 15,
+     "armorBlocked": 166
+    },
+    "arch#3(10)": {
+     "applied": 286,
+     "kills": 13,
+     "armorBlocked": 22
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9",
+    "forecast": "↑ 19　↓ 18 · 頭領と大群",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "街道を守り抜いた！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:horde",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "horde"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 37,
+   "potential": 52,
+   "escaped": 15,
+   "boss": "chief",
+   "through": {
+    "rat": 8,
+    "scout": 7
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 322,
+     "kills": 8,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 25,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 575,
+     "kills": 14,
+     "armorBlocked": 178
+    },
+    "arch#3(10)": {
+     "applied": 420,
+     "kills": 10,
+     "armorBlocked": 20
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 19　↓ 33 · 頭領と大群",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:ironhide",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "ironhide"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 33,
+   "potential": 37,
+   "escaped": 4,
+   "boss": "chief",
+   "through": {
+    "guard": 1,
+    "rat": 2,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 279,
+     "kills": 7,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 143,
+     "kills": 7,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 491,
+     "kills": 7,
+     "armorBlocked": 415
+    },
+    "arch#3(10)": {
+     "applied": 265,
+     "kills": 12,
+     "armorBlocked": 170
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 19　↓ 18 · 頭領と大群",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:flank",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "flank"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 34,
+   "potential": 41,
+   "escaped": 7,
+   "boss": "chief",
+   "through": {
+    "rat": 2,
+    "scout": 5
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 332,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 66,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 563,
+     "kills": 13,
+     "armorBlocked": 152
+    },
+    "arch#3(10)": {
+     "applied": 244,
+     "kills": 12,
+     "armorBlocked": 22
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 27　↓ 14 · 頭領と大群 · 俊足が上の道に偏る",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:wings",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "wings"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 39,
+   "potential": 43,
+   "escaped": 4,
+   "boss": "chief",
+   "through": {
+    "rat": 3,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 309,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 89,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 526,
+     "kills": 15,
+     "armorBlocked": 156
+    },
+    "arch#3(10)": {
+     "applied": 320,
+     "kills": 14,
+     "armorBlocked": 20
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 22　↓ 21 · 頭領と大群 ＋ 夜コウモリ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:shieldwall",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "shieldwall"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 38,
+   "potential": 43,
+   "escaped": 5,
+   "boss": "chief",
+   "through": {
+    "guard": 1,
+    "shield": 1,
+    "rat": 2,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 355,
+     "kills": 8,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 87,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 560,
+     "kills": 11,
+     "armorBlocked": 187
+    },
+    "arch#3(10)": {
+     "applied": 332,
+     "kills": 13,
+     "armorBlocked": 26
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 22　↓ 21 · 頭領と大群 ＋ 盾持ちネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-1:burrow",
+   "wave": 9,
+   "level": 1,
+   "conditions": [
+    "burrow"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 37,
+   "potential": 43,
+   "escaped": 6,
+   "boss": "chief",
+   "through": {
+    "mole": 5,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 334,
+     "kills": 7,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 68,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 571,
+     "kills": 12,
+     "armorBlocked": 176
+    },
+    "arch#3(10)": {
+     "applied": 314,
+     "kills": 12,
+     "armorBlocked": 22
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 1",
+    "forecast": "↑ 22　↓ 21 · 頭領と大群 ＋ 穴掘りモグラ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-2:thin",
+   "wave": 9,
+   "level": 2,
+   "conditions": [
+    "thin"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": true,
+   "boxes": 1,
+   "startBoxes": 2,
+   "kills": 36,
+   "potential": 37,
+   "escaped": 1,
+   "boss": "chief",
+   "through": {
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 295,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 29,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 571,
+     "kills": 15,
+     "armorBlocked": 178
+    },
+    "arch#3(10)": {
+     "applied": 296,
+     "kills": 11,
+     "armorBlocked": 20
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 2",
+    "forecast": "↑ 19　↓ 18 · 頭領と大群",
+    "boxes": "物資箱 2 / 2",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "脅威度2で初勝利！"
+   ],
+   "milestoneCue": true,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-2:procession",
+   "wave": 9,
+   "level": 2,
+   "conditions": [
+    "procession"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": true,
+   "boxes": 2,
+   "startBoxes": 3,
+   "kills": 40,
+   "potential": 41,
+   "escaped": 1,
+   "boss": "chief",
+   "through": {
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 364,
+     "kills": 8,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 45,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 603,
+     "kills": 14,
+     "armorBlocked": 160
+    },
+    "arch#3(10)": {
+     "applied": 327,
+     "kills": 13,
+     "armorBlocked": 14
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 2",
+    "forecast": "↑ 21　↓ 20 · 頭領と大群 ＋ 祈祷ネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "脅威度2で初勝利！"
+   ],
+   "milestoneCue": true,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-2:siege",
+   "wave": 9,
+   "level": 2,
+   "conditions": [
+    "siege"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 46,
+   "potential": 49,
+   "escaped": 3,
+   "boss": "chief",
+   "through": {
+    "rat": 2,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 392,
+     "kills": 9,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 143,
+     "kills": 6,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 553,
+     "kills": 18,
+     "armorBlocked": 168
+    },
+    "arch#3(10)": {
+     "applied": 409,
+     "kills": 13,
+     "armorBlocked": 16
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 2",
+    "forecast": "↑ 22　↓ 21 · 頭領と大群 ＋ 攻城荷車・石投げネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-3:ironhide+thin",
+   "wave": 9,
+   "level": 3,
+   "conditions": [
+    "ironhide",
+    "thin"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 2,
+   "kills": 29,
+   "potential": 37,
+   "escaped": 8,
+   "boss": "toad",
+   "through": {
+    "guard": 2,
+    "rat": 4,
+    "toad": 1,
+    "scout": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 257,
+     "kills": 9,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 154,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 416,
+     "kills": 6,
+     "armorBlocked": 319
+    },
+    "arch#3(10)": {
+     "applied": 265,
+     "kills": 10,
+     "armorBlocked": 132
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 3",
+    "forecast": "↑ 19　↓ 18 · 頭領と大群 ＋ 大ガマ",
+    "boxes": "物資箱 2 / 2",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-3:wings+procession",
+   "wave": 9,
+   "level": 3,
+   "conditions": [
+    "wings",
+    "procession"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 41,
+   "potential": 47,
+   "escaped": 6,
+   "boss": "toad",
+   "through": {
+    "rat": 3,
+    "toad": 1,
+    "scout": 2
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 341,
+     "kills": 7,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 150,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 513,
+     "kills": 16,
+     "armorBlocked": 73
+    },
+    "arch#3(10)": {
+     "applied": 367,
+     "kills": 13,
+     "armorBlocked": 8
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 3",
+    "forecast": "↑ 24　↓ 23 · 頭領と大群 ＋ 祈祷ネズミ・夜コウモリ・大ガマ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9-3:horde+flank+burrow",
+   "wave": 9,
+   "level": 3,
+   "conditions": [
+    "horde",
+    "flank",
+    "burrow"
+   ],
+   "crew": "10×arch@archUp, 10×arch@archLow, 6×ballista@ballista[armor], 6×sword@upperSword",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 41,
+   "potential": 62,
+   "escaped": 21,
+   "boss": "toad",
+   "through": {
+    "mole": 5,
+    "rat": 8,
+    "scout": 7,
+    "toad": 1
+   },
+   "contribution": {
+    "ballista#4(6,armor)": {
+     "applied": 326,
+     "kills": 9,
+     "armorBlocked": 0
+    },
+    "sword#5(6)": {
+     "applied": 167,
+     "kills": 10,
+     "armorBlocked": 0
+    },
+    "arch#2(10)": {
+     "applied": 535,
+     "kills": 13,
+     "armorBlocked": 91
+    },
+    "arch#3(10)": {
+     "applied": 442,
+     "kills": 9,
+     "armorBlocked": 12
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9 · 脅威度 3",
+    "forecast": "↑ 34　↓ 28 · 頭領と大群 ＋ 穴掘りモグラ・大ガマ · 俊足が上の道に偏る",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W9rec-0",
+   "wave": 9,
+   "level": 0,
+   "conditions": [],
+   "crew": "6×arch@archUp, 6×arch@archLow, 3×ballista@ballista[armor]",
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 19,
+   "potential": 37,
+   "escaped": 18,
+   "boss": "chief",
+   "through": {
+    "guard": 1,
+    "rat": 9,
+    "scout": 7,
+    "chief": 1
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 219,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(6)": {
+     "applied": 434,
+     "kills": 6,
+     "armorBlocked": 140
+    },
+    "arch#3(6)": {
+     "applied": 237,
+     "kills": 8,
+     "armorBlocked": 6
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 9 / 9",
+    "forecast": "↑ 19　↓ 18 · 頭領と大群",
+    "boxes": "物資箱 3 / 3",
+    "clock": "119秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  }
+ ],
+ "browserFixes": [
+  {
+   "id": "W4-flank-fix",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "flank"
+   ],
+   "change": "下の弓兵3人を上の道側(560,262)へドラッグ",
+   "crewAfter": [
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 643,
+      "y": 250
+     },
+     "policy": "front"
+    },
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 560.0000194534364,
+      "y": 261.9999980546563
+     },
+     "policy": "front"
+    },
+    {
+     "id": "ballista",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 400
+     },
+     "policy": "armor"
+    }
+   ],
+   "win": true,
+   "boxes": 1,
+   "startBoxes": 3,
+   "kills": 11,
+   "potential": 13,
+   "escaped": 2,
+   "boss": null,
+   "through": {
+    "scout": 2
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 42,
+     "kills": 1,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 141,
+     "kills": 6,
+     "armorBlocked": 24
+    },
+    "arch#3(3)": {
+     "applied": 60,
+     "kills": 4,
+     "armorBlocked": 4
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 12　↓ 1 · 鎧の先頭隊と俊足の追撃 · 俊足が上の道に偏る",
+    "boxes": "物資箱 3 / 3",
+    "clock": "118秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-shieldwall-fix",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "shieldwall"
+   ],
+   "change": "剣士を雇い上の角(330,205)に最も近い置ける位置へ配置、3人に増員",
+   "crewAfter": [
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 643,
+      "y": 250
+     },
+     "policy": "front"
+    },
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 360
+     },
+     "policy": "front"
+    },
+    {
+     "id": "ballista",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 400
+     },
+     "policy": "armor"
+    },
+    {
+     "id": "sword",
+     "count": 3,
+     "anchor": {
+      "x": 330,
+      "y": 195
+     }
+    }
+   ],
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 14,
+   "potential": 14,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 109,
+     "kills": 4,
+     "armorBlocked": 0
+    },
+    "sword#5(3)": {
+     "applied": 62,
+     "kills": 3,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 104,
+     "kills": 4,
+     "armorBlocked": 22
+    },
+    "arch#3(3)": {
+     "applied": 57,
+     "kills": 3,
+     "armorBlocked": 6
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 盾持ちネズミ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "116秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-burrow-fix",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "burrow"
+   ],
+   "change": "弓兵2隊を曲がり角の手前（(250,215)(250,405)から最も近い置ける位置）へドラッグ",
+   "crewAfter": [
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 340,
+      "y": 215
+     },
+     "policy": "front"
+    },
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 250.00000972671808,
+      "y": 405
+     },
+     "policy": "front"
+    },
+    {
+     "id": "ballista",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 400
+     },
+     "policy": "armor"
+    }
+   ],
+   "win": false,
+   "boxes": 0,
+   "startBoxes": 3,
+   "kills": 11,
+   "potential": 14,
+   "escaped": 3,
+   "boss": null,
+   "through": {
+    "guard": 1,
+    "mole": 2
+   },
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 146,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 135,
+     "kills": 4,
+     "armorBlocked": 29
+    },
+    "arch#3(3)": {
+     "applied": 28,
+     "kills": 2,
+     "armorBlocked": 8
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 7　↓ 7 · 鎧の先頭隊と俊足の追撃 ＋ 穴掘りモグラ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "116秒"
+   },
+   "toasts": [
+    "つぎは まもろう！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  },
+  {
+   "id": "W4-ironhide-fix",
+   "wave": 4,
+   "level": 1,
+   "conditions": [
+    "ironhide"
+   ],
+   "change": "剣士を雇い上の角(330,205)に最も近い置ける位置へ配置、3人に増員",
+   "crewAfter": [
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 643,
+      "y": 250
+     },
+     "policy": "front"
+    },
+    {
+     "id": "arch",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 360
+     },
+     "policy": "front"
+    },
+    {
+     "id": "ballista",
+     "count": 3,
+     "anchor": {
+      "x": 620,
+      "y": 400
+     },
+     "policy": "armor"
+    },
+    {
+     "id": "sword",
+     "count": 3,
+     "anchor": {
+      "x": 330,
+      "y": 195
+     }
+    }
+   ],
+   "win": true,
+   "boxes": 3,
+   "startBoxes": 3,
+   "kills": 10,
+   "potential": 10,
+   "escaped": 0,
+   "boss": null,
+   "through": {},
+   "contribution": {
+    "ballista#4(3,armor)": {
+     "applied": 90,
+     "kills": 5,
+     "armorBlocked": 0
+    },
+    "sword#5(3)": {
+     "applied": 37,
+     "kills": 2,
+     "armorBlocked": 0
+    },
+    "arch#2(3)": {
+     "applied": 69,
+     "kills": 3,
+     "armorBlocked": 84
+    },
+    "arch#3(3)": {
+     "applied": 16,
+     "kills": 0,
+     "armorBlocked": 4
+    }
+   },
+   "manual": 0,
+   "unattributed": 0,
+   "boardBefore": {
+    "heading": "次の襲撃 4 / 9 · 脅威度 1",
+    "forecast": "↑ 5　↓ 5 · 鎧の先頭隊と俊足の追撃",
+    "boxes": "物資箱 3 / 3",
+    "clock": "116秒"
+   },
+   "toasts": [
+    "防衛成功！"
+   ],
+   "milestoneCue": false,
+   "pageErrors": 0
+  }
+ ],
+ "ui": [
+  {
+   "lang": "ja",
+   "input": "PC mouse",
+   "picked": {
+    "level": "脅威度 3",
+    "summary": "脅威度 3 · 急襲・狭い陣地 · 記録の倍率 ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "拠点へ帰還しました。職業の解放と編成を確認して、次の挑戦に備えましょう。　＋0 転生コイン　この周回の脅威度 3　狭い陣地のため控えに戻した部隊：バリスタ隊",
+    "readyButton": "準備完了・60秒後に襲撃"
+   },
+   "prepAfterReady": 59.4,
+   "boardBefore": {
+    "heading": "次の襲撃 7 / 9 · 脅威度 3",
+    "forecast": "↑ 11　↓ 11 · 鎧ネズミ ＋ 夜コウモリ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "60秒"
+   },
+   "boardActive": {
+    "heading": "襲撃中 7 / 9 · 脅威度 3",
+    "forecast": "あと 22体",
+    "boxes": "物資箱 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "防衛を突破されました\n到達した襲撃 7\n\n脅威度 3 急襲・狭い陣地\n\n5\n倒した敵\n17\n突破した敵\n＋0\n転生コイン\n\n上の道 7 · 下の道 10\n\n鎧の敵が残っています 6\n\n残った敵\n\n夜コウモリ 1体 飛行：道を通らず倉庫へ直進。剣士とバリスタは届かない。倉庫寄りの弓兵で\n\n鎧が残った道に、剣士やバリスタの射程を合わせましょう。弓兵で後続の敵も支えられます。\n\n襲撃時計は停止中。次の行動を選べます。\n\n編成を直して再挑戦\n戦果を確定して転生\n\n同じ戦果を繰り返してもコインは増えません。新しい撃破記録や突破が次の報酬になります。",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 1280,
+    "client": 1280,
+    "dialog": 900,
+    "options": [
+     111,
+     111,
+     111,
+     111,
+     111,
+     111,
+     111,
+     111,
+     97,
+     97,
+     97
+    ]
+   },
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "input": "PC mouse",
+   "picked": {
+    "level": "Threat 3",
+    "summary": "Threat 3 · Rush・Cramped camp · Record multiplier ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "Back at camp. Review crew unlocks and plan your next expedition.　＋0 Rebirth coins　This run’s threat 3　Moved to reserve by Cramped camp：Ballista crew",
+    "readyButton": "Ready · raid in 60 seconds"
+   },
+   "prepAfterReady": 59.8,
+   "boardBefore": {
+    "heading": "NEXT RAID 7 / 9 · Threat 3",
+    "forecast": "↑ 11　↓ 11 · Armored rats ＋ Night Bat",
+    "boxes": "Crates 3 / 3",
+    "clock": "In 60s"
+   },
+   "boardActive": {
+    "heading": "RAID 7 / 9 · Threat 3",
+    "forecast": "22 raiders left",
+    "boxes": "Crates 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "The defence was breached\nRaid reached 7\n\nThreat 3 Rush・Cramped camp\n\n5\nEnemies defeated\n17\nEnemies through\n＋0\nRebirth coins\n\nUpper road 7 · Lower road 10\n\nArmoured enemies survived 6\n\nEnemies left\n\nNight Bat 1 Flies straight to the camp. Swords and ballistas cannot hit it; keep archers near home\n\nCover the road where armoured enemies survived with swordsmen or ballistas. Archers can support them against the following enemies.\n\nThe raid clock is stopped. Choose what to try next.\n\nRevise the crew and retry\nBank results and return\n\nRepeating the same result earns no extra coins. Improve your defeats or clear a new raid for more.",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 1280,
+    "client": 1280,
+    "dialog": 900,
+    "options": [
+     140,
+     140,
+     140,
+     140,
+     111,
+     111,
+     111,
+     111,
+     126,
+     126,
+     126
+    ]
+   },
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "input": "PC mouse",
+   "picked": {
+    "level": "威胁度 3",
+    "summary": "威胁度 3 · 突袭・阵地狭窄 · 记录倍率 ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "已返回营地。查看职业解锁与编队，准备下次挑战。　＋0 转生币　本轮威胁度 3　因阵地狭窄调入待命：弩炮队",
+    "readyButton": "准备完毕·60秒后袭击"
+   },
+   "prepAfterReady": 59.2,
+   "boardBefore": {
+    "heading": "下次袭击 7 / 9 · 威胁度 3",
+    "forecast": "↑ 11　↓ 11 · 铁甲鼠 ＋ 夜蝠",
+    "boxes": "箱子 3 / 3",
+    "clock": "60秒后"
+   },
+   "boardActive": {
+    "heading": "防守 7 / 9 · 威胁度 3",
+    "forecast": "还剩22只",
+    "boxes": "箱子 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "防线被突破了\n到达波次 7\n\n威胁度 3 突袭・阵地狭窄\n\n5\n击败敌人\n17\n突破敌人\n＋0\n转生币\n\n上路 7 · 下路 10\n\n还有重甲敌人存活 6\n\n残余敌人\n\n夜蝠 1只 飞行：直扑仓库。剑士和弩炮打不到，在仓库附近布置弓兵\n\n让剑士或弩炮的射程覆盖重甲敌人突破的道路。弓箭手也能协助拦截后续敌人。\n\n袭击倒计时已暂停，请选择下一步。\n\n调整编队后重试\n结算战果并转生\n\n重复相同战果不会增加转生币。提高击败记录或突破新波次，才能获得新奖励。",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 1280,
+    "client": 1280,
+    "dialog": 900,
+    "options": [
+     97,
+     97,
+     97,
+     97,
+     97,
+     97,
+     97,
+     97,
+     97,
+     97,
+     97
+    ]
+   },
+   "pageErrors": 0
+  },
+  {
+   "lang": "ja",
+   "input": "touch (CDP emulation, not a real device)",
+   "picked": {
+    "level": "脅威度 3",
+    "summary": "脅威度 3 · 急襲・狭い陣地 · 記録の倍率 ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "拠点へ帰還しました。職業の解放と編成を確認して、次の挑戦に備えましょう。　＋0 転生コイン　この周回の脅威度 3　狭い陣地のため控えに戻した部隊：バリスタ隊",
+    "readyButton": "準備完了・60秒後に襲撃"
+   },
+   "prepAfterReady": 59.3,
+   "boardBefore": {
+    "heading": "次の襲撃 7 / 9 · 脅威度 3",
+    "forecast": "↑ 11　↓ 11 · 鎧ネズミ ＋ 夜コウモリ",
+    "boxes": "物資箱 3 / 3",
+    "clock": "60秒"
+   },
+   "boardActive": {
+    "heading": "襲撃中 7 / 9 · 脅威度 3",
+    "forecast": "あと 22体",
+    "boxes": "物資箱 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "防衛を突破されました\n到達した襲撃 7\n\n脅威度 3 急襲・狭い陣地\n\n5\n倒した敵\n17\n突破した敵\n＋0\n転生コイン\n\n上の道 7 · 下の道 10\n\n鎧の敵が残っています 6\n\n残った敵\n\n夜コウモリ 1体 飛行：道を通らず倉庫へ直進。剣士とバリスタは届かない。倉庫寄りの弓兵で\n\n鎧が残った道に、剣士やバリスタの射程を合わせましょう。弓兵で後続の敵も支えられます。\n\n襲撃時計は停止中。次の行動を選べます。\n\n編成を直して再挑戦\n戦果を確定して転生\n\n同じ戦果を繰り返してもコインは増えません。新しい撃破記録や突破が次の報酬になります。",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 390,
+    "client": 390,
+    "dialog": 358,
+    "options": [
+     88,
+     88,
+     75,
+     75,
+     88,
+     88,
+     88,
+     88,
+     88,
+     88,
+     88
+    ]
+   },
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "input": "touch (CDP emulation, not a real device)",
+   "picked": {
+    "level": "Threat 3",
+    "summary": "Threat 3 · Rush・Cramped camp · Record multiplier ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "Back at camp. Review crew unlocks and plan your next expedition.　＋0 Rebirth coins　This run’s threat 3　Moved to reserve by Cramped camp：Ballista crew",
+    "readyButton": "Ready · raid in 60 seconds"
+   },
+   "prepAfterReady": 59.4,
+   "boardBefore": {
+    "heading": "NEXT RAID 7 / 9 · Threat 3",
+    "forecast": "↑ 11　↓ 11 · Armored rats ＋ Night Bat",
+    "boxes": "Crates 3 / 3",
+    "clock": "In 60s"
+   },
+   "boardActive": {
+    "heading": "RAID 7 / 9 · Threat 3",
+    "forecast": "22 raiders left",
+    "boxes": "Crates 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "The defence was breached\nRaid reached 7\n\nThreat 3 Rush・Cramped camp\n\n5\nEnemies defeated\n17\nEnemies through\n＋0\nRebirth coins\n\nUpper road 7 · Lower road 10\n\nArmoured enemies survived 6\n\nEnemies left\n\nNight Bat 1 Flies straight to the camp. Swords and ballistas cannot hit it; keep archers near home\n\nCover the road where armoured enemies survived with swordsmen or ballistas. Archers can support them against the following enemies.\n\nThe raid clock is stopped. Choose what to try next.\n\nRevise the crew and retry\nBank results and return\n\nRepeating the same result earns no extra coins. Improve your defeats or clear a new raid for more.",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 390,
+    "client": 390,
+    "dialog": 358,
+    "options": [
+     101,
+     101,
+     88,
+     88,
+     101,
+     101,
+     88,
+     88,
+     88,
+     88,
+     88
+    ]
+   },
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "input": "touch (CDP emulation, not a real device)",
+   "picked": {
+    "level": "威胁度 3",
+    "summary": "威胁度 3 · 突袭・阵地狭窄 · 记录倍率 ×2.5",
+    "pressed": [
+     "rush",
+     "narrow"
+    ],
+    "award": "＋0"
+   },
+   "departed": {
+    "level": 3,
+    "conditions": [
+     "rush",
+     "narrow"
+    ],
+    "wave": 7,
+    "sealedSlots": 1,
+    "combatHeader": [
+     "1 / 4",
+     "3 / 3"
+    ],
+    "reserve": [
+     "ballista"
+    ],
+    "message": "已返回营地。查看职业解锁与编队，准备下次挑战。　＋0 转生币　本轮威胁度 3　因阵地狭窄调入待命：弩炮队",
+    "readyButton": "准备完毕·60秒后袭击"
+   },
+   "prepAfterReady": 58.7,
+   "boardBefore": {
+    "heading": "下次袭击 7 / 9 · 威胁度 3",
+    "forecast": "↑ 11　↓ 11 · 铁甲鼠 ＋ 夜蝠",
+    "boxes": "箱子 3 / 3",
+    "clock": "59秒后"
+   },
+   "boardActive": {
+    "heading": "防守 7 / 9 · 威胁度 3",
+    "forecast": "还剩22只",
+    "boxes": "箱子 3 / 3",
+    "clock": "70s"
+   },
+   "resultText": "防线被突破了\n到达波次 7\n\n威胁度 3 突袭・阵地狭窄\n\n5\n击败敌人\n17\n突破敌人\n＋0\n转生币\n\n上路 7 · 下路 10\n\n还有重甲敌人存活 6\n\n残余敌人\n\n夜蝠 1只 飞行：直扑仓库。剑士和弩炮打不到，在仓库附近布置弓兵\n\n让剑士或弩炮的射程覆盖重甲敌人突破的道路。弓箭手也能协助拦截后续敌人。\n\n袭击倒计时已暂停，请选择下一步。\n\n调整编队后重试\n结算战果并转生\n\n重复相同战果不会增加转生币。提高击败记录或突破新波次，才能获得新奖励。",
+   "outcome": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 5,
+    "escaped": 17,
+    "gold": 8,
+    "first": false,
+    "startBoxes": 3
+   },
+   "overflow": {
+    "scrollWidth": 390,
+    "client": 390,
+    "dialog": 358,
+    "options": [
+     88,
+     88,
+     75,
+     75,
+     88,
+     88,
+     75,
+     75,
+     75,
+     75,
+     88
+    ]
+   },
+   "pageErrors": 0
+  }
+ ],
+ "modelFixedDt": {
+  "seeds": 4,
+  "rows": [
+   {
+    "wave": 4,
+    "set": "0",
+    "level": 0,
+    "win": true,
+    "boxes": 3,
+    "startBoxes": 3,
+    "kills": 10,
+    "potential": 10,
+    "through": {},
+    "seeds": "W3 W3 W3 W3"
+   },
+   {
+    "wave": 4,
+    "set": "1:horde",
+    "level": 1,
+    "win": true,
+    "boxes": 3,
+    "startBoxes": 3,
+    "kills": 14,
+    "potential": 14,
+    "through": {},
+    "seeds": "W3 W3 W3 W3"
+   },
+   {
+    "wave": 4,
+    "set": "1:ironhide",
+    "level": 1,
+    "win": true,
+    "boxes": 1,
+    "startBoxes": 3,
+    "kills": 8,
+    "potential": 10,
+    "through": {
+     "guard": 1,
+     "scout": 1
+    },
+    "seeds": "W1 W1 W1 W1"
+   },
+   {
+    "wave": 4,
+    "set": "1:flank",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 7,
+    "potential": 13,
+    "through": {
+     "scout": 6
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 4,
+    "set": "1:wings",
+    "level": 1,
+    "win": true,
+    "boxes": 3,
+    "startBoxes": 3,
+    "kills": 14,
+    "potential": 14,
+    "through": {},
+    "seeds": "W3 W3 W3 W3"
+   },
+   {
+    "wave": 4,
+    "set": "1:shieldwall",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 11,
+    "potential": 14,
+    "through": {
+     "guard": 1,
+     "shield": 1,
+     "scout": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 4,
+    "set": "1:burrow",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 11,
+    "potential": 14,
+    "through": {
+     "mole": 3
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 4,
+    "set": "2:thin",
+    "level": 2,
+    "win": true,
+    "boxes": 2,
+    "startBoxes": 2,
+    "kills": 10,
+    "potential": 10,
+    "through": {},
+    "seeds": "W2 W2 W2 W2"
+   },
+   {
+    "wave": 4,
+    "set": "2:procession",
+    "level": 2,
+    "win": true,
+    "boxes": 3,
+    "startBoxes": 3,
+    "kills": 12,
+    "potential": 12,
+    "through": {},
+    "seeds": "W3 W3 W3 W3"
+   },
+   {
+    "wave": 4,
+    "set": "2:siege",
+    "level": 2,
+    "win": true,
+    "boxes": 2,
+    "startBoxes": 3,
+    "kills": 16,
+    "potential": 20,
+    "through": {
+     "siegecart": 1
+    },
+    "seeds": "W2 W2 W2 W2"
+   },
+   {
+    "wave": 4,
+    "set": "3:ironhide+thin",
+    "level": 3,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 2,
+    "kills": 8,
+    "potential": 10,
+    "through": {
+     "guard": 1,
+     "scout": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 4,
+    "set": "3:wings+procession",
+    "level": 3,
+    "win": true,
+    "boxes": 3,
+    "startBoxes": 3,
+    "kills": 16,
+    "potential": 16,
+    "through": {},
+    "seeds": "W3 W3 W3 W3"
+   },
+   {
+    "wave": 4,
+    "set": "3:horde+flank+burrow",
+    "level": 3,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 7,
+    "potential": 21,
+    "through": {
+     "mole": 3,
+     "scout": 11
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "0",
+    "level": 0,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 19,
+    "potential": 37,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:horde",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 16,
+    "potential": 52,
+    "through": {
+     "guard": 2,
+     "rat": 21,
+     "scout": 12,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:ironhide",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 13,
+    "potential": 37,
+    "through": {
+     "guard": 4,
+     "rat": 11,
+     "scout": 8,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:flank",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 20,
+    "potential": 41,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 10,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:wings",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 25,
+    "potential": 43,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:shieldwall",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 16,
+    "potential": 43,
+    "through": {
+     "guard": 3,
+     "shield": 3,
+     "rat": 13,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "1:burrow",
+    "level": 1,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 19,
+    "potential": 43,
+    "through": {
+     "guard": 2,
+     "mole": 5,
+     "rat": 9,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "2:thin",
+    "level": 2,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 2,
+    "kills": 19,
+    "potential": 37,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "2:procession",
+    "level": 2,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 23,
+    "potential": 41,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "2:siege",
+    "level": 2,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 24,
+    "potential": 49,
+    "through": {
+     "guard": 2,
+     "siegecart": 1,
+     "rat": 11,
+     "scout": 7,
+     "chief": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "3:ironhide+thin",
+    "level": 3,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 2,
+    "kills": 13,
+    "potential": 37,
+    "through": {
+     "guard": 4,
+     "rat": 11,
+     "scout": 8,
+     "toad": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "3:wings+procession",
+    "level": 3,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 29,
+    "potential": 47,
+    "through": {
+     "guard": 2,
+     "rat": 8,
+     "scout": 7,
+     "toad": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   },
+   {
+    "wave": 9,
+    "set": "3:horde+flank+burrow",
+    "level": 3,
+    "win": false,
+    "boxes": 0,
+    "startBoxes": 3,
+    "kills": 18,
+    "potential": 62,
+    "through": {
+     "guard": 2,
+     "mole": 5,
+     "rat": 22,
+     "scout": 14,
+     "toad": 1
+    },
+    "seeds": "L0 L0 L0 L0"
+   }
+  ]
+ }
+}
