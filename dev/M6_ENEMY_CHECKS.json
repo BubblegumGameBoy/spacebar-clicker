@@ -1,0 +1,1485 @@
+{
+ "kind": "m6-enemy-checks",
+ "date": "2026-10-26",
+ "note": "All prepared (chosen crews, positions and waves); none is earned progression. Browser = real-time, raid started with the visible button, no player assistance, Core.hit applied = enemy HP loss (observer). Model = fixed dt 1/30 s with the same rules.",
+ "species": [
+  {
+   "kind": "shield",
+   "wave": {
+    "count": 10,
+    "mix": [
+     {
+      "kind": "shield",
+      "lane": "both",
+      "count": 10,
+      "at": 0,
+      "gap": 1.8
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Arrows bounce off the shield; one sword or ballista hit breaks it.",
+   "without": {
+    "crew": "3×arch@upperArch, 3×arch@lowerArch",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 4,
+     "escaped": 6,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "arch#1": {
+       "applied": 96,
+       "kills": 2
+      },
+      "arch#2": {
+       "applied": 96,
+       "kills": 2
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 6,
+     "damage": {
+      "arch#1": {
+       "applied": 100,
+       "kills": 2,
+       "releases": 43
+      },
+      "arch#2": {
+       "applied": 96,
+       "kills": 2,
+       "releases": 41
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "+剣士",
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×sword@upperSword, 3×sword@lowerSword",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 10,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "sword#3": {
+       "applied": 54,
+       "kills": 3
+      },
+      "sword#4": {
+       "applied": 54,
+       "kills": 3
+      },
+      "arch#1": {
+       "applied": 96,
+       "kills": 2
+      },
+      "arch#2": {
+       "applied": 96,
+       "kills": 2
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 100,
+       "kills": 2,
+       "releases": 43
+      },
+      "arch#2": {
+       "applied": 96,
+       "kills": 2,
+       "releases": 41
+      },
+      "sword#3": {
+       "applied": 50,
+       "kills": 3,
+       "releases": 19
+      },
+      "sword#4": {
+       "applied": 54,
+       "kills": 3,
+       "releases": 20
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 30
+    }
+   }
+  },
+  {
+   "kind": "bat",
+   "wave": {
+    "count": 8,
+    "mix": [
+     {
+      "kind": "bat",
+      "lane": "both",
+      "count": 8,
+      "at": 0,
+      "gap": 3
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Flies straight to the camp; swords and ballistas cannot hit it.",
+   "without": {
+    "crew": "3×sword@homeUpper, 3×sword@homeLower, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 0,
+     "escaped": 8,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "ballista#3": {
+       "applied": 0,
+       "kills": 0
+      },
+      "sword#1": {
+       "applied": 0,
+       "kills": 0
+      },
+      "sword#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 8,
+     "damage": {
+      "sword#1": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "sword#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "ballista#3": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "剣士1隊→弓兵",
+    "crew": "3×sword@homeUpper, 3×arch@homeLower, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 8,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "ballista#3": {
+       "applied": 0,
+       "kills": 0
+      },
+      "sword#1": {
+       "applied": 0,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 112,
+       "kills": 8
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "sword#1": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "arch#2": {
+       "applied": 112,
+       "kills": 8,
+       "releases": 36
+      },
+      "ballista#3": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "ooze",
+   "wave": {
+    "count": 8,
+    "mix": [
+     {
+      "kind": "ooze",
+      "lane": "both",
+      "count": 8,
+      "at": 0,
+      "gap": 3
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Splits into two oozelets on death.",
+   "without": {
+    "crew": "3×ballista@ballista, 3×sword@upperSword, 3×sword@lowerSword",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 19,
+     "escaped": 3,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "ballista#1": {
+       "applied": 164,
+       "kills": 8
+      },
+      "sword#2": {
+       "applied": 92,
+       "kills": 6
+      },
+      "sword#3": {
+       "applied": 66,
+       "kills": 5
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 3,
+     "damage": {
+      "ballista#1": {
+       "applied": 168,
+       "kills": 6,
+       "releases": 15
+      },
+      "sword#2": {
+       "applied": 85,
+       "kills": 7,
+       "releases": 33
+      },
+      "sword#3": {
+       "applied": 74,
+       "kills": 6,
+       "releases": 28
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "剣士→弓兵",
+    "crew": "3×ballista@ballista, 3×arch@upperArch, 3×arch@lowerArch",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 24,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "ballista#1": {
+       "applied": 116,
+       "kills": 7
+      },
+      "arch#2": {
+       "applied": 140,
+       "kills": 10
+      },
+      "arch#3": {
+       "applied": 96,
+       "kills": 7
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "ballista#1": {
+       "applied": 102,
+       "kills": 4,
+       "releases": 15
+      },
+      "arch#2": {
+       "applied": 130,
+       "kills": 10,
+       "releases": 42
+      },
+      "arch#3": {
+       "applied": 120,
+       "kills": 10,
+       "releases": 37
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "mole",
+   "wave": {
+    "count": 8,
+    "mix": [
+     {
+      "kind": "mole",
+      "lane": "both",
+      "count": 8,
+      "at": 0,
+      "gap": 3
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Untargetable mid-road; surfaces before the bend.",
+   "without": {
+    "crew": "3×arch@upperArch, 3×arch@lowerArch",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 0,
+     "escaped": 8,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "arch#1": {
+       "applied": 16,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 8,
+     "damage": {
+      "arch#1": {
+       "applied": 16,
+       "kills": 0,
+       "releases": 8
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 4
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "弓兵を角へ",
+    "crew": "3×arch@bendUpper, 3×arch@bendLower",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 8,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "arch#1": {
+       "applied": 136,
+       "kills": 4
+      },
+      "arch#2": {
+       "applied": 136,
+       "kills": 4
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 136,
+       "kills": 4,
+       "releases": 36
+      },
+      "arch#2": {
+       "applied": 136,
+       "kills": 4,
+       "releases": 36
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "shaman",
+   "wave": {
+    "count": 10,
+    "mix": [
+     {
+      "kind": "guard",
+      "lane": "both",
+      "count": 6,
+      "at": 0,
+      "gap": 2.5
+     },
+     {
+      "kind": "shaman",
+      "lane": "both",
+      "count": 4,
+      "at": 3,
+      "gap": 2.5
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Heals nearby raiders from the back of the column.",
+   "without": {
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 7,
+     "escaped": 3,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "ballista#3": {
+       "applied": 142,
+       "kills": 3
+      },
+      "arch#1": {
+       "applied": 149,
+       "kills": 2
+      },
+      "arch#2": {
+       "applied": 88,
+       "kills": 2
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 3,
+     "damage": {
+      "arch#1": {
+       "applied": 152,
+       "kills": 1,
+       "releases": 47
+      },
+      "arch#2": {
+       "applied": 50,
+       "kills": 3,
+       "releases": 17
+      },
+      "ballista#3": {
+       "applied": 162,
+       "kills": 3,
+       "releases": 12
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "バリスタ方針=回復役",
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×ballista@ballista[healer]",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 2,
+     "kills": 9,
+     "escaped": 1,
+     "gold": 68,
+     "first": true,
+     "damage": {
+      "ballista#3": {
+       "applied": 204,
+       "kills": 4
+      },
+      "arch#1": {
+       "applied": 105,
+       "kills": 2
+      },
+      "arch#2": {
+       "applied": 86,
+       "kills": 3
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 2,
+     "escaped": 1,
+     "damage": {
+      "arch#1": {
+       "applied": 123,
+       "kills": 3,
+       "releases": 42
+      },
+      "arch#2": {
+       "applied": 84,
+       "kills": 2,
+       "releases": 29
+      },
+      "ballista#3": {
+       "applied": 164,
+       "kills": 4,
+       "releases": 12
+      }
+     },
+     "healed": 20,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "beetle",
+   "wave": {
+    "count": 8,
+    "mix": [
+     {
+      "kind": "beetle",
+      "lane": "both",
+      "count": 8,
+      "at": 0,
+      "gap": 3.5
+     }
+    ],
+    "duration": 90
+   },
+   "why": "Slow; deflects arrows from the front.",
+   "without": {
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×arch@farUpper, 3×arch@farLower",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 4,
+     "escaped": 4,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "arch#1": {
+       "applied": 151,
+       "kills": 1
+      },
+      "arch#2": {
+       "applied": 146,
+       "kills": 1
+      },
+      "arch#3": {
+       "applied": 137,
+       "kills": 1
+      },
+      "arch#4": {
+       "applied": 133,
+       "kills": 1
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 4,
+     "damage": {
+      "arch#1": {
+       "applied": 158,
+       "kills": 1,
+       "releases": 69
+      },
+      "arch#2": {
+       "applied": 152,
+       "kills": 1,
+       "releases": 67
+      },
+      "arch#3": {
+       "applied": 139,
+       "kills": 1,
+       "releases": 61
+      },
+      "arch#4": {
+       "applied": 136,
+       "kills": 1,
+       "releases": 56
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "弓兵2隊→バリスタ+剣士",
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×ballista@ballista, 3×sword@upperSword",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 8,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "ballista#3": {
+       "applied": 375,
+       "kills": 4
+      },
+      "sword#4": {
+       "applied": 129,
+       "kills": 3
+      },
+      "arch#1": {
+       "applied": 144,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 72,
+       "kills": 1
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 149,
+       "kills": 0,
+       "releases": 69
+      },
+      "arch#2": {
+       "applied": 75,
+       "kills": 1,
+       "releases": 44
+      },
+      "ballista#3": {
+       "applied": 372,
+       "kills": 4,
+       "releases": 21
+      },
+      "sword#4": {
+       "applied": 124,
+       "kills": 3,
+       "releases": 42
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "swarm",
+   "wave": {
+    "count": 6,
+    "mix": [
+     {
+      "kind": "swarm",
+      "lane": "both",
+      "count": 6,
+      "at": 0,
+      "gap": 4
+     }
+    ],
+    "duration": 60
+   },
+   "why": "A pack of 10: each hit fells one mouse.",
+   "without": {
+    "crew": "3×ballista@ballista, 3×sword@upperSword, 3×sword@lowerSword",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 3,
+     "escaped": 3,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "ballista#1": {
+       "applied": 45,
+       "kills": 0
+      },
+      "sword#2": {
+       "applied": 100,
+       "kills": 1
+      },
+      "sword#3": {
+       "applied": 63,
+       "kills": 2
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 4,
+     "damage": {
+      "ballista#1": {
+       "applied": 45,
+       "kills": 0,
+       "releases": 9
+      },
+      "sword#2": {
+       "applied": 100,
+       "kills": 1,
+       "releases": 41
+      },
+      "sword#3": {
+       "applied": 68,
+       "kills": 1,
+       "releases": 27
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "剣士→弓兵",
+    "crew": "3×ballista@ballista, 3×arch@upperArch, 3×arch@lowerArch",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 6,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "ballista#1": {
+       "applied": 40,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 140,
+       "kills": 3
+      },
+      "arch#3": {
+       "applied": 120,
+       "kills": 3
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "ballista#1": {
+       "applied": 35,
+       "kills": 2,
+       "releases": 9
+      },
+      "arch#2": {
+       "applied": 145,
+       "kills": 2,
+       "releases": 33
+      },
+      "arch#3": {
+       "applied": 120,
+       "kills": 2,
+       "releases": 28
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "wisp",
+   "wave": {
+    "count": 8,
+    "mix": [
+     {
+      "kind": "wisp",
+      "lane": "both",
+      "count": 8,
+      "at": 0,
+      "gap": 2.5
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Only visible close to an ally.",
+   "without": {
+    "crew": "3×arch@farUpper, 3×arch@farLower, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 4,
+     "escaped": 4,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "ballista#3": {
+       "applied": 21,
+       "kills": 2
+      },
+      "arch#1": {
+       "applied": 51,
+       "kills": 2
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 4,
+     "damage": {
+      "arch#1": {
+       "applied": 51,
+       "kills": 2,
+       "releases": 21
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "ballista#3": {
+       "applied": 21,
+       "kills": 2,
+       "releases": 6
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "バリスタ→道の剣士",
+    "crew": "3×arch@farUpper, 3×arch@farLower, 3×sword@upperSword, 3×sword@lowerSword",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 8,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "sword#3": {
+       "applied": 0,
+       "kills": 0
+      },
+      "sword#4": {
+       "applied": 72,
+       "kills": 4
+      },
+      "arch#1": {
+       "applied": 72,
+       "kills": 4
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 72,
+       "kills": 4,
+       "releases": 24
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "sword#3": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "sword#4": {
+       "applied": 72,
+       "kills": 4,
+       "releases": 25
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "siegecart",
+   "wave": {
+    "count": 4,
+    "mix": [
+     {
+      "kind": "siegecart",
+      "lane": "both",
+      "count": 4,
+      "at": 0,
+      "gap": 6
+     }
+    ],
+    "duration": 90
+   },
+   "why": "Armour 3; releases 3 rats when broken.",
+   "without": {
+    "crew": "3×arch@upperArch, 3×arch@lowerArch",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 2,
+     "escaped": 8,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "arch#1": {
+       "applied": 106,
+       "kills": 1
+      },
+      "arch#2": {
+       "applied": 108,
+       "kills": 1
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 8,
+     "damage": {
+      "arch#1": {
+       "applied": 110,
+       "kills": 1,
+       "releases": 57
+      },
+      "arch#2": {
+       "applied": 113,
+       "kills": 1,
+       "releases": 55
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "+バリスタ",
+    "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 2,
+     "kills": 15,
+     "escaped": 1,
+     "gold": 68,
+     "first": true,
+     "damage": {
+      "ballista#3": {
+       "applied": 290,
+       "kills": 8
+      },
+      "arch#1": {
+       "applied": 115,
+       "kills": 4
+      },
+      "arch#2": {
+       "applied": 74,
+       "kills": 3
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 130,
+       "kills": 7,
+       "releases": 51
+      },
+      "arch#2": {
+       "applied": 90,
+       "kills": 4,
+       "releases": 31
+      },
+      "ballista#3": {
+       "applied": 268,
+       "kills": 5,
+       "releases": 18
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  },
+  {
+   "kind": "slinger",
+   "wave": {
+    "count": 6,
+    "mix": [
+     {
+      "kind": "slinger",
+      "lane": "both",
+      "count": 6,
+      "at": 0,
+      "gap": 3
+     }
+    ],
+    "duration": 60
+   },
+   "why": "Stops mid-road and stones the crates.",
+   "without": {
+    "crew": "3×arch@homeUpper, 3×arch@homeLower",
+    "browser": {
+     "wave": 5,
+     "win": false,
+     "boxes": 0,
+     "kills": 0,
+     "escaped": 6,
+     "gold": 8,
+     "first": false,
+     "damage": {
+      "arch#1": {
+       "applied": 0,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": false,
+     "boxes": 0,
+     "escaped": 6,
+     "damage": {
+      "arch#1": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      }
+     }
+    }
+   },
+   "with": {
+    "change": "+バリスタ",
+    "crew": "3×arch@homeUpper, 3×arch@homeLower, 3×ballista@ballista",
+    "browser": {
+     "wave": 5,
+     "win": true,
+     "boxes": 3,
+     "kills": 6,
+     "escaped": 0,
+     "gold": 70,
+     "first": true,
+     "damage": {
+      "ballista#3": {
+       "applied": 108,
+       "kills": 6
+      },
+      "arch#1": {
+       "applied": 0,
+       "kills": 0
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0
+      }
+     },
+     "unattributed": 0,
+     "pageErrors": 0
+    },
+    "model": {
+     "win": true,
+     "boxes": 3,
+     "escaped": 0,
+     "damage": {
+      "arch#1": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "arch#2": {
+       "applied": 0,
+       "kills": 0,
+       "releases": 0
+      },
+      "ballista#3": {
+       "applied": 108,
+       "kills": 6,
+       "releases": 9
+      }
+     },
+     "healed": 0,
+     "shieldBlocks": 0
+    }
+   }
+  }
+ ],
+ "waves": [
+  {
+   "wave": 5,
+   "crew": "standard",
+   "planVersion": 3,
+   "crewDetail": "3×arch@upperArch, 3×arch@lowerArch, 3×sword@upperSword, 3×ballista@ballista",
+   "result": {
+    "wave": 5,
+    "win": true,
+    "boxes": 3,
+    "kills": 14,
+    "escaped": 0,
+    "gold": 70,
+    "first": true
+   },
+   "escaped": [],
+   "newKinds": [
+    {
+     "kind": "shield",
+     "lane": "upper",
+     "hp": 0,
+     "escaped": false
+    },
+    {
+     "kind": "shield",
+     "lane": "lower",
+     "hp": 0,
+     "escaped": false
+    }
+   ],
+   "damage": {
+    "ballista#4": {
+     "applied": 144,
+     "kills": 3
+    },
+    "sword#3": {
+     "applied": 54,
+     "kills": 4
+    },
+    "arch#1": {
+     "applied": 128,
+     "kills": 3
+    },
+    "arch#2": {
+     "applied": 78,
+     "kills": 4
+    }
+   },
+   "pageErrors": 0
+  },
+  {
+   "wave": 7,
+   "crew": "standard",
+   "planVersion": 3,
+   "crewDetail": "3×arch@upperArch, 3×arch@lowerArch, 3×sword@upperSword, 3×ballista@ballista",
+   "result": {
+    "wave": 7,
+    "win": false,
+    "boxes": 0,
+    "kills": 16,
+    "escaped": 6,
+    "gold": 8,
+    "first": false
+   },
+   "escaped": [
+    "guard:upper",
+    "guard:lower",
+    "guard:upper",
+    "rat:lower",
+    "rat:upper",
+    "rat:lower"
+   ],
+   "newKinds": [
+    {
+     "kind": "bat",
+     "lane": "upper",
+     "hp": 0,
+     "escaped": false
+    },
+    {
+     "kind": "bat",
+     "lane": "lower",
+     "hp": 0,
+     "escaped": false
+    }
+   ],
+   "damage": {
+    "ballista#4": {
+     "applied": 159,
+     "kills": 4
+    },
+    "sword#3": {
+     "applied": 64,
+     "kills": 3
+    },
+    "arch#1": {
+     "applied": 131,
+     "kills": 4
+    },
+    "arch#2": {
+     "applied": 115,
+     "kills": 5
+    }
+   },
+   "pageErrors": 0
+  },
+  {
+   "wave": 7,
+   "crew": "revised",
+   "planVersion": 3,
+   "crewDetail": "6×arch@upperArch, 6×arch@lowerArch, 3×sword@upperSword, 3×ballista@ballista[armor]",
+   "result": {
+    "wave": 7,
+    "win": true,
+    "boxes": 3,
+    "kills": 22,
+    "escaped": 0,
+    "gold": 86,
+    "first": true
+   },
+   "escaped": [],
+   "newKinds": [
+    {
+     "kind": "bat",
+     "lane": "upper",
+     "hp": 0,
+     "escaped": false
+    },
+    {
+     "kind": "bat",
+     "lane": "lower",
+     "hp": 0,
+     "escaped": false
+    }
+   ],
+   "damage": {
+    "ballista#4": {
+     "applied": 165,
+     "kills": 3
+    },
+    "sword#3": {
+     "applied": 0,
+     "kills": 0
+    },
+    "arch#1": {
+     "applied": 232,
+     "kills": 11
+    },
+    "arch#2": {
+     "applied": 187,
+     "kills": 8
+    }
+   },
+   "pageErrors": 0
+  }
+ ],
+ "display": [
+  {
+   "lang": "ja",
+   "touch": false,
+   "scale": 1.0458333333333334,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · 特別な襲撃 ＋ 盾持ちネズミ・夜コウモリ・分裂粘菌 ほか11種",
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "touch": false,
+   "scale": 1.0458333333333334,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · Special raid ＋ Shield Rat・Night Bat・Splitting Ooze +11 more",
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "touch": false,
+   "scale": 1.0458333333333334,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · 特殊袭击 ＋ 持盾鼠・夜蝠・分裂黏菌 等11种",
+   "pageErrors": 0
+  },
+  {
+   "lang": "ja",
+   "touch": true,
+   "scale": 0.40625,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · 特別な襲撃 ＋ 盾持ちネズミ・夜コウモリ・分裂粘菌 ほか11種",
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "touch": true,
+   "scale": 0.40625,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · Special raid ＋ Shield Rat・Night Bat・Splitting Ooze +11 more",
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "touch": true,
+   "scale": 0.40625,
+   "card": "shield",
+   "forecast": "↑ 9　↓ 8 · 特殊袭击 ＋ 持盾鼠・夜蝠・分裂黏菌 等11种",
+   "pageErrors": 0
+  }
+ ],
+ "ui": [
+  {
+   "lang": "ja",
+   "touch": false,
+   "buttons": [
+    "突破阻止",
+    "鎧を優先",
+    "回復役を優先"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "touch": false,
+   "buttons": [
+    "Stop breakthroughs",
+    "Armour first",
+    "Healers first"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "touch": false,
+   "buttons": [
+    "阻止突破",
+    "重甲优先",
+    "优先治疗者"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  },
+  {
+   "lang": "ja",
+   "touch": true,
+   "buttons": [
+    "突破阻止",
+    "鎧を優先",
+    "回復役を優先"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  },
+  {
+   "lang": "en",
+   "touch": true,
+   "buttons": [
+    "Stop breakthroughs",
+    "Armour first",
+    "Healers first"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  },
+  {
+   "lang": "zh",
+   "touch": true,
+   "buttons": [
+    "阻止突破",
+    "重甲优先",
+    "优先治疗者"
+   ],
+   "policy": "healer",
+   "reloaded": "healer",
+   "pageErrors": 0
+  }
+ ]
+}
