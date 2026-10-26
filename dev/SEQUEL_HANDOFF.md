@@ -20,6 +20,9 @@
 - **M1完了**（盤面でのベルト・受け土台の選択と撤去、配置の印を楕円＋薄い肖像へ、道の射程区間の塗り、カードの「×1」→「1人」）。**M2完了**（スキル購入の音の階層 skill/skillMilestone/mastery/skillReady、進行ゲージの背骨、大きな数字、ノード上の習得、連打での二重購入防止、拾う音の音程の階段と満杯）。どちらも別エージェントのコードレビュー→修正済み。Node 225件。
 - 範囲円は配置の可否判定と同じ「射程+23」。実際の攻撃判定は射程＋仲間の半径＋敵の半径なので、バリスタは表示より12広く届く（既知）。
 - **M3準備**：`2/ground-physics.js`（純関数、まだindex.htmlに未接続）と `dev/M3_PHYSICS_NOTES.md`（数値・組み込み手順・決定事項）。
+- **M3公開**：地面の物理（`2/ground-physics.js`）、送風機（タップで強風）・誘導柵、コンベアと受け土台は章1クリアまで鍵（既存のベルトは保持のみ）、導入は木こり→送風機→柵→弓兵。風の納品の専用音・輪、惜しい丸太の矢印、予告と実際の一致（QAで全件一致）。記録は `dev/M3_PHYSICS_NOTES.md`。
+- **M6公開**：`ENEMIES` 定義表、新種10（shield, bat, ooze/oozelet, mole, shaman, beetle, swarm, wisp, siegecart, slinger）＋頭領3（toad, boar, envoy）、codexの絵（768×512・非可逆WebP、合計約1.5MB）。通常の9Waveは plan v3（Wave5に盾2、Wave7にコウモリ2）。残りは `Outpost.setNextModifiers(m)` で脅威度・周回（M5/M11）から出す。対策の試験は `dev/M6_ENEMY_CHECKS.json`。標準編成のWave7負けは旧計画でも同じ（既知）。
+- 次：M4（章1で木製コンベア解放・集積口・予告の高速化）とM5（脅威度）を並行。
 - 環境の注意：QAスクリプトは /usr/bin/chromium 決め打ち。Playwrightのchromeへsymlinkを張る。Node 22では `--test-isolation=none` が無いので `node --test test/*.test.cjs`。`2/`・新規テスト・toolsはgit管理外（.git/info/excludeに追加）で、`dev/sequel-source.tar.gz` に詰め直す。公開するたびに `2/index.html` の `?v=` を上げる。
 
 ## ユーザーの判断軸

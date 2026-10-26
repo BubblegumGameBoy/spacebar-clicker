@@ -17,7 +17,7 @@
   const key=value=>Number.isInteger(value)&&value>=1&&value<=1e12;
   const coordinate=(value,max)=>Number.isFinite(value)?Math.max(0,Math.min(max,value)):null;
   const route=value=>Array.isArray(value)&&value.length>=2&&value.length<=128&&value.every(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=960&&p.y>=0&&p.y<=540)?value.map(p=>({x:p.x,y:p.y})):null;
-  const camp={version:1,links:[],platforms:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true,removeLearned:raw.removeLearned===true},links=new Set(),cargoKeys=new Set();
+  const camp={version:1,links:[],platforms:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true,removeLearned:raw.removeLearned===true,blowers:[],fences:[]},links=new Set(),cargoKeys=new Set();
   for(const link of (Array.isArray(raw.links)?raw.links:[]).slice(0,500)){
    if(!link||!key(link.nodeKey)||!['wood','stone','food'].includes(link.type)||links.has(link.nodeKey))continue;
    if(link.kind!=='conveyor'&&!factory.nodes.some(node=>node.key===link.nodeKey&&node.type===link.type))continue;
@@ -32,13 +32,18 @@
    const mode=['manual','rail'].includes(item.mode)?item.mode:duration>.61?'rail':'manual';
    cargoKeys.add(item.key);camp.cargo.push({key:item.key,type:item.type,count:Math.min(1e9,item.count),from:{x,y},progress:Number.isFinite(item.progress)?Math.max(0,Math.min(1,item.progress)):0,duration,worker:item.worker===true,source:key(item.source)?item.source:null,mode,...(route(item.path)?{path:route(item.path)}:{})});
   }
+  // M3 ground tools. Only shape is saved; strong-wind timers and item speeds start fresh.
+  const blowerKeys=new Set();for(const b of (Array.isArray(raw.blowers)?raw.blowers:[]).slice(0,200)){const x=coordinate(b?.x,960),y=coordinate(b?.y,540);if(!b||!key(b.key)||blowerKeys.has(b.key)||x===null||y===null)continue;blowerKeys.add(b.key);camp.blowers.push({key:b.key,x,y,dir:integer(b.dir,0,7),costWood:integer(b.costWood,0,1e6)});}
+  const fenceKeys=new Set();for(const f of (Array.isArray(raw.fences)?raw.fences:[]).slice(0,400)){const ax=coordinate(f?.a?.x,960),ay=coordinate(f?.a?.y,540),bx=coordinate(f?.b?.x,960),by=coordinate(f?.b?.y,540);if(!f||!key(f.key)||fenceKeys.has(f.key)||[ax,ay,bx,by].includes(null))continue;const length=Math.hypot(bx-ax,by-ay);if(length<23.5||length>120.5)continue;fenceKeys.add(f.key);camp.fences.push({key:f.key,a:{x:ax,y:ay},b:{x:bx,y:by},costWood:integer(f.costWood,0,1e6)});}
+  // logisticsVersion 2: belts from version 1 stay as wooden conveyors even before chapter 1.
+  camp.logisticsVersion=2;camp.legacyBelts=raw.legacyBelts===true||(raw.logisticsVersion!==2&&camp.links.length>0);camp.newToolsSeen=raw.newToolsSeen===true;
   camp.nextKey=Math.max(key(raw.nextKey)?raw.nextKey:1,...camp.cargo.map(item=>item.key+1));
   return camp;
  }
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
   s.expedition=Expedition?.migrate(r.expedition)||null;
-  s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true}:null;
+  s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),blownWood:integer(r.tutorial.blownWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true}:null;
   s.harvestSkills=HarvestSkills?.migrate(r.harvestSkills)||{carry:0,hand:0,route:0};
   s.gold=num(r.gold,150);s.globalWave=integer(r.globalWave,1,1e12)||1;s.bossWave=Math.max(1,integer(r.bossWave,1,40));s.bossCycle=Math.max(1,integer(r.bossCycle,1,100));
   s.clearedBossWave=integer(r.clearedBossWave,0,40);s.runBest=Math.max(s.clearedBossWave,integer(r.runBest,0,40));s.prestige=integer(r.prestige,0,1e6);s.gameCleared=r.gameCleared===true;
@@ -59,7 +64,7 @@
   for(const [key,value]of Object.entries(r.bossKills||{}))if(/^(?:[1-9]|[1-3][0-9]|40)$/.test(key))s.bossKills[key]=integer(value,0,1e9);
   s.codex=[...new Set((Array.isArray(r.codex)?r.codex:legacy?Array.from({length:s.gameCleared?40:s.clearedBossWave},(_,i)=>i+1):[]).filter(n=>Number.isInteger(n)&&n>=1&&n<=40))];
   for(const sec of [5,10,30]){const entry=r.measureBests?.[sec];if(entry&&Number.isInteger(entry.count)&&entry.count>=0&&entry.count<=sec*100)s.measureBests[sec]={count:entry.count,at:num(entry.at,now,now)};}
-  s.respecUsed=r.respecUsed===true;s.measureGift=legacy||r.measureGift===true;s.lastSeen=num(r.lastSeen,now,now);s.bossHp=num(r.bossHp);s.bossHpMax=num(r.bossHpMax);
+  s.enemySeen=[...new Set((Array.isArray(r.enemySeen)?r.enemySeen:[]).filter(k=>typeof k==='string'&&/^[a-z]{2,16}$/.test(k)))].slice(0,64);s.respecUsed=r.respecUsed===true;s.measureGift=legacy||r.measureGift===true;s.lastSeen=num(r.lastSeen,now,now);s.bossHp=num(r.bossHp);s.bossHpMax=num(r.bossHpMax);
   if(r.battle&&Number.isFinite(r.battle.width)&&Number.isFinite(r.battle.height)){
    const known=new Set(ids),rows=Array.isArray(r.battle.units)?r.battle.units:[];
    s.battle={width:Math.max(1,num(r.battle.width,1100,1e6)),height:Math.max(1,num(r.battle.height,500,1e6)),captain:{x:num(r.battle.captain?.x,150,1e6),y:num(r.battle.captain?.y,370,1e6)},units:rows.filter(a=>Array.isArray(a)&&a.length===6&&known.has(a[0])&&a.slice(1).every(Number.isFinite)).map(a=>[a[0],integer(a[1],0,100000),num(a[2],0,1e6),num(a[3],0,1e6),a[4]>=0?num(a[4],0,1e6):-1,a[5]>=0?num(a[5],0,1e6):-1])};

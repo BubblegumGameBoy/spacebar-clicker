@@ -2,18 +2,18 @@
 window.PlacementControls=(()=>{
  'use strict';
  const local=a=>a[Math.max(0,['ja','en','zh'].indexOf(typeof LANG==='string'?LANG:'ja'))];
- const names={allies:['仲間','Ally','伙伴'],woodcutter:['木こり','Lumberjack','伐木工'],miner:['採掘師','Miner','矿工'],farmer:['農家','Farmer','农夫'],ballista:['バリスタ隊','Ballista crew','弩炮队'],arch:['弓兵','Archer','弓箭手'],sword:['剣士','Swordsman','剑士'],belt:['コンベア','Conveyor','传送带'],platform:['受け土台','Receiving platform','接收台']};
+ const names={allies:['仲間','Ally','伙伴'],woodcutter:['木こり','Lumberjack','伐木工'],miner:['採掘師','Miner','矿工'],farmer:['農家','Farmer','农夫'],ballista:['バリスタ隊','Ballista crew','弩炮队'],arch:['弓兵','Archer','弓箭手'],sword:['剣士','Swordsman','剑士'],belt:['コンベア','Conveyor','传送带'],platform:['受け土台','Receiving platform','接收台'],blower:['送風機','Blower','鼓风机'],fence:['誘導柵','Guide fence','导流栅栏']};
  let bar=null,guide=null,touch=null,lastTouch=null;
  const kind=()=>window.OutpostCamp?.buildingKind||(window.BattleControl?.placement?'allies':'gather');
  function finish(){window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);sync();}
- function choose(id){if(id==='gather'){finish();return true;}if(id==='allies'){const ok=window.BattleControl?.beginPlacement();sync();return ok;}if(id==='belt')window.OutpostCamp?.beginRail();else if(id==='platform')window.OutpostCamp?.buildPlatform();else return false;sync();return true;}
+ function choose(id){if(id==='gather'){finish();return true;}if(id==='allies'){const ok=window.BattleControl?.beginPlacement();sync();return ok;}let ok;if(id==='belt')ok=window.OutpostCamp?.beginRail();else if(id==='platform')ok=window.OutpostCamp?.buildPlatform();else if(id==='blower'||id==='fence')ok=window.OutpostCamp?.buildDevice(id);else return false;sync();return ok!==false;}
  function setText(el,value){if(el&&el.textContent!==value)el.textContent=value;}
  function sync(){
   if(!bar)return;const mode=kind(),pending=Object.values(S.pending||{}).reduce((a,b)=>a+b,0),raid=S.outpost?.phase==='active',active=window.BattleControl?.activeUnit;
   const rail=document.getElementById('railEditor');if(rail&&rail.parentElement!==bar)bar.append(rail);
   setText(document.querySelector('.catalog-heading>b'),local(['仲間・設備','Crew & equipment','伙伴与设备']));setText(document.querySelector('.catalog-scroll-hint'),local(['← スワイプ →','← Swipe →','← 左右滑动 →']));document.getElementById('panels').setAttribute('aria-label',local(['仲間と設備の購入一覧','Crew and equipment catalogue','伙伴与设备列表']));bar.setAttribute('aria-label',local(['配置する対象','Selected object','放置对象']));document.getElementById('field').dataset.tool=mode;bar.hidden=mode==='gather';bar.dataset.mode=mode;
   setText(bar.querySelector('.placement-current'),local(names[mode==='allies'?(active||'allies'):mode]||names.allies));
-  setText(bar.querySelector('.placement-hint'),local(['押したまま確認 → 離して配置','Hold to preview → release to place','按住预览 → 松开放置']));
+  setText(bar.querySelector('.placement-hint'),mode==='fence'?local(['ドラッグで線 → 離して設置','Drag a line → release','拖动画线 → 松开建造']):local(['押したまま確認 → 離して配置','Hold to preview → release to place','按住预览 → 松开放置']));
   const cancel=bar.querySelector('[data-placement-finish]');setText(cancel,mode==='allies'&&pending?local(['取消・返金','Cancel / refund','取消并退款']):local(['キャンセル','Cancel','取消']));
   const resume=document.getElementById('pendingPlacement');resume.hidden=!pending||mode==='allies';resume.disabled=raid;setText(resume,local(['未配置 '+pending+(raid?'（襲撃後）':' · 配置する →'),pending+' waiting'+(raid?' (after raid)':' · Place →'),'待放置 '+pending+(raid?'（袭击后）':' · 放置 →')]));
   const undo=document.getElementById('quickBuildUndo');undo.hidden=!window.OutpostCamp?.canUndo;setText(undo,local(['↶ 取り消す','↶ Undo','↶ 撤销']));undo.title=local(['直前の設備を取り消す','Undo last equipment','撤销上次设备']);

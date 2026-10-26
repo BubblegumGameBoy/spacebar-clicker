@@ -1,7 +1,8 @@
 {
  "kind": "m6-enemy-checks",
  "date": "2026-10-26",
- "note": "All prepared (chosen crews, positions and waves); none is earned progression. Browser = real-time, raid started with the visible button, no player assistance, Core.hit applied = enemy HP loss (observer). Model = fixed dt 1/30 s with the same rules.",
+ "revision": "review round: trial waves not recorded, per-round modifiers, half-res lossy art (1.47 MB), ooze/shaman test waves retuned for margin",
+ "note": "All prepared (chosen crews, positions and waves); none is earned progression. Browser = real-time, raid started with the visible button, no player assistance, Core.hit applied = enemy HP loss (observer). Model = fixed dt 1/30 s with the same rules; seedRuns repeats it with 8 different cooldown seeds (W/L + crates left).",
  "species": [
   {
    "kind": "shield",
@@ -19,6 +20,10 @@
     "duration": 60
    },
    "why": "Arrows bounce off the shield; one sword or ballista hit breaks it.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@upperArch, 3×arch@lowerArch",
     "browser": {
@@ -27,15 +32,16 @@
      "boxes": 0,
      "kills": 4,
      "escaped": 6,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
        "applied": 96,
        "kills": 2
       },
       "arch#2": {
-       "applied": 96,
+       "applied": 92,
        "kills": 2
       }
      },
@@ -69,15 +75,16 @@
      "boxes": 3,
      "kills": 10,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "sword#3": {
        "applied": 54,
        "kills": 3
       },
       "sword#4": {
-       "applied": 54,
+       "applied": 58,
        "kills": 3
       },
       "arch#1": {
@@ -85,7 +92,7 @@
        "kills": 2
       },
       "arch#2": {
-       "applied": 96,
+       "applied": 92,
        "kills": 2
       }
      },
@@ -139,6 +146,10 @@
     "duration": 60
    },
    "why": "Flies straight to the camp; swords and ballistas cannot hit it.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×sword@homeUpper, 3×sword@homeLower, 3×ballista@ballista",
     "browser": {
@@ -147,8 +158,9 @@
      "boxes": 0,
      "kills": 0,
      "escaped": 8,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
        "applied": 0,
@@ -198,8 +210,9 @@
      "boxes": 3,
      "kills": 8,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
        "applied": 0,
@@ -253,34 +266,39 @@
       "lane": "both",
       "count": 8,
       "at": 0,
-      "gap": 3
+      "gap": 2.7
      }
     ],
     "duration": 60
    },
    "why": "Splits into two oozelets on death.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W2 W3 W3"
+   },
    "without": {
     "crew": "3×ballista@ballista, 3×sword@upperSword, 3×sword@lowerSword",
     "browser": {
      "wave": 5,
      "win": false,
      "boxes": 0,
-     "kills": 19,
-     "escaped": 3,
-     "gold": 8,
+     "kills": 20,
+     "escaped": 4,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "ballista#1": {
-       "applied": 164,
-       "kills": 8
+       "applied": 176,
+       "kills": 7
       },
       "sword#2": {
-       "applied": 92,
-       "kills": 6
+       "applied": 76,
+       "kills": 7
       },
       "sword#3": {
-       "applied": 66,
-       "kills": 5
+       "applied": 74,
+       "kills": 6
       }
      },
      "unattributed": 0,
@@ -289,7 +307,7 @@
     "model": {
      "win": false,
      "boxes": 0,
-     "escaped": 3,
+     "escaped": 5,
      "damage": {
       "ballista#1": {
        "applied": 168,
@@ -297,9 +315,9 @@
        "releases": 15
       },
       "sword#2": {
-       "applied": 85,
+       "applied": 88,
        "kills": 7,
-       "releases": 33
+       "releases": 34
       },
       "sword#3": {
        "applied": 74,
@@ -318,20 +336,21 @@
      "boxes": 3,
      "kills": 24,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#1": {
-       "applied": 116,
-       "kills": 7
+       "applied": 120,
+       "kills": 5
       },
       "arch#2": {
-       "applied": 140,
+       "applied": 120,
        "kills": 10
       },
       "arch#3": {
-       "applied": 96,
-       "kills": 7
+       "applied": 112,
+       "kills": 9
       }
      },
      "unattributed": 0,
@@ -343,12 +362,12 @@
      "escaped": 0,
      "damage": {
       "ballista#1": {
-       "applied": 102,
+       "applied": 97,
        "kills": 4,
        "releases": 15
       },
       "arch#2": {
-       "applied": 130,
+       "applied": 135,
        "kills": 10,
        "releases": 42
       },
@@ -379,6 +398,10 @@
     "duration": 60
    },
    "why": "Untargetable mid-road; surfaces before the bend.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@upperArch, 3×arch@lowerArch",
     "browser": {
@@ -387,8 +410,9 @@
      "boxes": 0,
      "kills": 0,
      "escaped": 8,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
        "applied": 16,
@@ -429,8 +453,9 @@
      "boxes": 3,
      "kills": 8,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
        "applied": 136,
@@ -468,7 +493,7 @@
   {
    "kind": "shaman",
    "wave": {
-    "count": 10,
+    "count": 12,
     "mix": [
      {
       "kind": "guard",
@@ -480,7 +505,7 @@
      {
       "kind": "shaman",
       "lane": "both",
-      "count": 4,
+      "count": 6,
       "at": 3,
       "gap": 2.5
      }
@@ -488,27 +513,32 @@
     "duration": 60
    },
    "why": "Heals nearby raiders from the back of the column.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W2 W3 W2 W2 W2 W2 W2 W2"
+   },
    "without": {
     "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×ballista@ballista",
     "browser": {
      "wave": 5,
      "win": false,
      "boxes": 0,
-     "kills": 7,
+     "kills": 9,
      "escaped": 3,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
-       "applied": 142,
-       "kills": 3
+       "applied": 200,
+       "kills": 4
       },
       "arch#1": {
-       "applied": 149,
-       "kills": 2
+       "applied": 162,
+       "kills": 3
       },
       "arch#2": {
-       "applied": 88,
+       "applied": 96,
        "kills": 2
       }
      },
@@ -526,14 +556,14 @@
        "releases": 47
       },
       "arch#2": {
-       "applied": 50,
-       "kills": 3,
-       "releases": 17
+       "applied": 84,
+       "kills": 4,
+       "releases": 23
       },
       "ballista#3": {
-       "applied": 162,
-       "kills": 3,
-       "releases": 12
+       "applied": 196,
+       "kills": 4,
+       "releases": 14
       }
      }
     }
@@ -545,18 +575,19 @@
      "wave": 5,
      "win": true,
      "boxes": 2,
-     "kills": 9,
+     "kills": 11,
      "escaped": 1,
-     "gold": 68,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
-       "applied": 204,
+       "applied": 240,
        "kills": 4
       },
       "arch#1": {
-       "applied": 105,
-       "kills": 2
+       "applied": 129,
+       "kills": 4
       },
       "arch#2": {
        "applied": 86,
@@ -572,22 +603,22 @@
      "escaped": 1,
      "damage": {
       "arch#1": {
-       "applied": 123,
+       "applied": 143,
        "kills": 3,
-       "releases": 42
+       "releases": 47
       },
       "arch#2": {
-       "applied": 84,
-       "kills": 2,
-       "releases": 29
+       "applied": 94,
+       "kills": 3,
+       "releases": 32
       },
       "ballista#3": {
-       "applied": 164,
-       "kills": 4,
-       "releases": 12
+       "applied": 206,
+       "kills": 5,
+       "releases": 15
       }
      },
-     "healed": 20,
+     "healed": 32,
      "shieldBlocks": 0
     }
    }
@@ -608,6 +639,10 @@
     "duration": 90
    },
    "why": "Slow; deflects arrows from the front.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@upperArch, 3×arch@lowerArch, 3×arch@farUpper, 3×arch@farLower",
     "browser": {
@@ -616,11 +651,12 @@
      "boxes": 0,
      "kills": 4,
      "escaped": 4,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
-       "applied": 151,
+       "applied": 149,
        "kills": 1
       },
       "arch#2": {
@@ -628,7 +664,7 @@
        "kills": 1
       },
       "arch#3": {
-       "applied": 137,
+       "applied": 139,
        "kills": 1
       },
       "arch#4": {
@@ -676,19 +712,20 @@
      "boxes": 3,
      "kills": 8,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
        "applied": 375,
        "kills": 4
       },
       "sword#4": {
-       "applied": 129,
+       "applied": 130,
        "kills": 3
       },
       "arch#1": {
-       "applied": 144,
+       "applied": 143,
        "kills": 0
       },
       "arch#2": {
@@ -746,6 +783,10 @@
     "duration": 60
    },
    "why": "A pack of 10: each hit fells one mouse.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×ballista@ballista, 3×sword@upperSword, 3×sword@lowerSword",
     "browser": {
@@ -754,8 +795,9 @@
      "boxes": 0,
      "kills": 3,
      "escaped": 3,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "ballista#1": {
        "applied": 45,
@@ -766,7 +808,7 @@
        "kills": 1
       },
       "sword#3": {
-       "applied": 63,
+       "applied": 75,
        "kills": 2
       }
      },
@@ -805,8 +847,9 @@
      "boxes": 3,
      "kills": 6,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#1": {
        "applied": 40,
@@ -866,6 +909,10 @@
     "duration": 60
    },
    "why": "Only visible close to an ally.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@farUpper, 3×arch@farLower, 3×ballista@ballista",
     "browser": {
@@ -874,8 +921,9 @@
      "boxes": 0,
      "kills": 4,
      "escaped": 4,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
        "applied": 21,
@@ -925,8 +973,9 @@
      "boxes": 3,
      "kills": 8,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "sword#3": {
        "applied": 0,
@@ -995,6 +1044,10 @@
     "duration": 90
    },
    "why": "Armour 3; releases 3 rats when broken.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W2 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@upperArch, 3×arch@lowerArch",
     "browser": {
@@ -1003,8 +1056,9 @@
      "boxes": 0,
      "kills": 2,
      "escaped": 8,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
        "applied": 106,
@@ -1045,15 +1099,16 @@
      "boxes": 2,
      "kills": 15,
      "escaped": 1,
-     "gold": 68,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
-       "applied": 290,
+       "applied": 288,
        "kills": 8
       },
       "arch#1": {
-       "applied": 115,
+       "applied": 122,
        "kills": 4
       },
       "arch#2": {
@@ -1106,6 +1161,10 @@
     "duration": 60
    },
    "why": "Stops mid-road and stones the crates.",
+   "seedRuns": {
+    "without": "L0 L0 L0 L0 L0 L0 L0 L0",
+    "with": "W3 W3 W3 W3 W3 W3 W3 W3"
+   },
    "without": {
     "crew": "3×arch@homeUpper, 3×arch@homeLower",
     "browser": {
@@ -1114,8 +1173,9 @@
      "boxes": 0,
      "kills": 0,
      "escaped": 6,
-     "gold": 8,
+     "gold": 0,
      "first": false,
+     "trial": true,
      "damage": {
       "arch#1": {
        "applied": 0,
@@ -1156,8 +1216,9 @@
      "boxes": 3,
      "kills": 6,
      "escaped": 0,
-     "gold": 70,
-     "first": true,
+     "gold": 0,
+     "first": false,
+     "trial": true,
      "damage": {
       "ballista#3": {
        "applied": 108,
@@ -1234,7 +1295,7 @@
    ],
    "damage": {
     "ballista#4": {
-     "applied": 144,
+     "applied": 139,
      "kills": 3
     },
     "sword#3": {
@@ -1246,7 +1307,7 @@
      "kills": 3
     },
     "arch#2": {
-     "applied": 78,
+     "applied": 83,
      "kills": 4
     }
    },
@@ -1261,8 +1322,8 @@
     "wave": 7,
     "win": false,
     "boxes": 0,
-    "kills": 16,
-    "escaped": 6,
+    "kills": 15,
+    "escaped": 7,
     "gold": 8,
     "first": false
    },
@@ -1270,6 +1331,7 @@
     "guard:upper",
     "guard:lower",
     "guard:upper",
+    "rat:upper",
     "rat:lower",
     "rat:upper",
     "rat:lower"
@@ -1294,15 +1356,15 @@
      "kills": 4
     },
     "sword#3": {
-     "applied": 64,
-     "kills": 3
+     "applied": 72,
+     "kills": 2
     },
     "arch#1": {
-     "applied": 131,
+     "applied": 126,
      "kills": 4
     },
     "arch#2": {
-     "applied": 115,
+     "applied": 118,
      "kills": 5
     }
    },
@@ -1339,8 +1401,8 @@
    ],
    "damage": {
     "ballista#4": {
-     "applied": 165,
-     "kills": 3
+     "applied": 184,
+     "kills": 2
     },
     "sword#3": {
      "applied": 0,
@@ -1351,8 +1413,8 @@
      "kills": 11
     },
     "arch#2": {
-     "applied": 187,
-     "kills": 8
+     "applied": 168,
+     "kills": 9
     }
    },
    "pageErrors": 0
@@ -1419,6 +1481,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   },
   {
@@ -1431,6 +1503,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   },
   {
@@ -1443,6 +1525,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   },
   {
@@ -1455,6 +1547,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   },
   {
@@ -1467,6 +1569,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   },
   {
@@ -1479,6 +1591,16 @@
    ],
    "policy": "healer",
    "reloaded": "healer",
+   "outcome": {
+    "wave": 5,
+    "win": false,
+    "boxes": 0,
+    "kills": 1,
+    "escaped": 3,
+    "gold": 0,
+    "first": false,
+    "trial": true
+   },
    "pageErrors": 0
   }
  ]

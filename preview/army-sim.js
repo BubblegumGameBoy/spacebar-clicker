@@ -20,7 +20,7 @@
    }
   }
   range(p){if(Array.isArray(this.enemies)){const core=outpostCore||globalThis.OutpostCore;return Number.isFinite(p.u.range)?clamp(p.u.range,0,240):(core?.stats(p.id)?.range||0);}return p.u.healer?240:p.u.ranged?(p.id==='giant'?650:360):28;}
-  target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r,{includeEnemyRadius:true,minRange:p.u.minRange||0,priority:p.policy})||null;}
+  target(p){if(p.u.worker||p.u.healer||!Array.isArray(this.enemies))return null;const core=outpostCore||globalThis.OutpostCore,state=this.outpostState||{phase:'active',enemies:this.enemies};return core?.target(state,p,this.range(p)+p.r,{includeEnemyRadius:true,minRange:p.u.minRange||0,priority:p.policy,role:p.id})||null;}
   round(){return this.outpostState?.round??this.roundToken??this.boss.token;}
   distance(p){return Math.max(0,Math.hypot(p.x-this.boss.x,p.y-this.boss.y)-this.boss.r);}
   canHit(p){if(Array.isArray(this.enemies))return !!this.target(p);return this.boss.alive&&!p.u.healer&&!p.u.worker&&this.distance(p)<=this.range(p)+p.r;}
@@ -49,6 +49,7 @@
    if(!Number.isFinite(dt)||dt<0)return [];
    dt=Math.min(.1,dt);this.time+=dt;const events=[],boss=this.boss,multi=Array.isArray(this.enemies);
    const remaining=[];for(const hit of this.pending){if(hit.token!==boss.token||(hit.targetKey!==undefined&&(!multi||hit.roundToken!==this.round())))continue;if(hit.due>this.time){remaining.push(hit);continue;}const p=hit.p;if(hit.targetKey!==undefined){const target=this.enemies.find(e=>e.key===hit.targetKey);if(!p.stun&&target===hit.target&&target.alive)events.push({...hit,kind:'damage'});}else if(!p.stun&&(hit.heal?Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p)+20:this.canHit(p)))events.push({...hit,kind:hit.heal?'heal':'damage'});}this.pending=remaining;
+   if(multi){const core=outpostCore||globalThis.OutpostCore;core?.reveal?.(this.outpostState||{enemies:this.enemies},this.soldiers.filter(p=>!p.u.worker&&!p.u.healer&&p.enterAt<=this.time));}
    for(const p of this.soldiers){
     if(p.enterAt>this.time){p.moving=false;continue;}
     p.stun=Math.max(0,p.stun-dt);p.cooldown-=dt;if(p.stun){p.moving=false;continue;}

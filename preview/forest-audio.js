@@ -9,14 +9,14 @@ window.ForestAudio=(()=>{
  const music=new Audio('../assets/audio/'+tracks.camp+'.mp3');music.loop=true;music.preload='metadata';music.volume=0;
  let ctx=null,bus=null,master=null,unlocked=false,fade=0,seed=345671,lastUser=-Infinity,duckTimer=null,duckUntil=0;
  const lastAuto={worker:-Infinity,unit:-Infinity},lastCue=new Map(),lastPlayed=new Map(),counts={played:0,throttled:0,capacity:0};
- const cues=new Set(['hire','victory','evolve','defeat','raidStart','crateLost','complete','build','reinforce','unlock','skill','skillMilestone','mastery']);
+ const cues=new Set(['windFirst','hire','victory','evolve','defeat','raidStart','crateLost','complete','build','reinforce','unlock','skill','skillMilestone','mastery']);
  const buffers=new Map(),voices=[];
  function save(){try{localStorage.setItem('sbr2_preview_outpost_audio_v2',JSON.stringify(settings));}catch(e){}}
  function context(){if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();bus=ctx.createDynamicsCompressor();bus.threshold.value=-16;bus.knee.value=16;bus.ratio.value=3;bus.attack.value=.005;bus.release.value=.12;master=ctx.createGain();master.gain.value=settings.seOn&&!document.hidden?settings.seVol:0;bus.connect(master);master.connect(ctx.destination);}return ctx;}
  function noise(){seed=(Math.imul(seed,1664525)+1013904223)|0;return (seed>>>0)/2147483648-1;}
  function buffer(kind,variant=0){
   const key=kind+':'+variant;if(buffers.has(key))return buffers.get(key);
-  const c=context(),duration=kind==='skill'?.36:kind==='skillMilestone'?.5:kind==='mastery'?.6:kind==='skillReady'?.18:kind==='treeOpen'?.14:kind==='handFull'?.15:kind==='reinforce'?.42+Math.max(1,Math.min(3,variant))*.04:kind==='unlock'?.64:kind==='complete'?1.05:kind==='victory'||kind==='evolve'?.75:kind==='defeat'?.55:kind==='build'?.6:kind==='hire'||kind==='raidStart'?.42:kind==='crateLost'?.32:kind==='stone'?.26:.2;
+  const c=context(),duration=kind==='windDeliver'?.22:kind==='windFirst'?.5:kind==='gust'?.25:kind==='gustFull'?.3:kind==='gustMiss'?.22:kind==='previewTick'?.03:kind==='skill'?.36:kind==='skillMilestone'?.5:kind==='mastery'?.6:kind==='skillReady'?.18:kind==='treeOpen'?.14:kind==='handFull'?.15:kind==='reinforce'?.42+Math.max(1,Math.min(3,variant))*.04:kind==='unlock'?.64:kind==='complete'?1.05:kind==='victory'||kind==='evolve'?.75:kind==='defeat'?.55:kind==='build'?.6:kind==='hire'||kind==='raidStart'?.42:kind==='crateLost'?.32:kind==='stone'?.26:.2;
   const b=c.createBuffer(1,Math.ceil(c.sampleRate*duration),c.sampleRate),data=b.getChannelData(0),pitch=1+variant*.035;
   let low=0,body=0,peak=0;
   const growthNotes=kind==='reinforce'?[261.63,329.63,392,523.25,659.25].slice(0,2+Math.max(1,Math.min(3,variant))):[293.66,440,587.33,739.99];
@@ -62,6 +62,25 @@ window.ForestAudio=(()=>{
    }else if(kind==='handFull'){
     // Hands full: a short wooden knock with a high glint.
     v=body*.5*Math.exp(-t*40)+.12*Math.sin(2*Math.PI*1318.5*t)*(1-Math.exp(-t/.002))*Math.exp(-t*30)+.1*Math.sin(2*Math.PI*523.25*t)*Math.exp(-t*35);
+   }else if(kind==='windDeliver'){
+    // Wind delivery: a narrow band of breath (mid noise, swelling then fading) and a light pluck at the end.
+    const band=low-body,swell=Math.sin(Math.PI*Math.min(1,t/.2));v=band*1.1*swell*swell;
+    const q=t-.12;if(q>=0)v+=.13*(Math.sin(2*Math.PI*784*q)+.25*Math.sin(2*Math.PI*1568*q))*(1-Math.exp(-q/.0015))*Math.exp(-q*38);
+   }else if(kind==='windFirst'){
+    // First wind delivery: the breath plus a small rising three-note call (0.5 s).
+    const band=low-body;v=band*.8*Math.sin(Math.PI*Math.min(1,t/.3))**2;
+    for(const [delay,freq] of [[.08,587.33],[.17,783.99],[.26,1174.66]]){const q=t-delay;if(q>=0)v+=.12*Math.sin(2*Math.PI*freq*q)*(1-Math.exp(-q/.002))*Math.exp(-q*12);}
+   }else if(kind==='gust'){
+    // Strong wind press: a short rushing whoosh whose band rises.
+    const band=low-body,env=Math.sin(Math.PI*Math.min(1,t/.25));v=(band*1.2+bright*.15)*env*env*(.6+.4*t/.25);
+   }else if(kind==='gustFull'){
+    // Wind at its limit: the whoosh plus one clear high note.
+    const band=low-body;v=band*.8*Math.sin(Math.PI*Math.min(1,t/.3))**2+.14*Math.sin(2*Math.PI*1046.5*t)*(1-Math.exp(-t/.002))*Math.exp(-t*14);
+   }else if(kind==='gustMiss'){
+    // Nothing in the fan: a dull low puff.
+    v=body*.9*Math.sin(Math.PI*Math.min(1,t/.22))**2+.12*Math.sin(2*Math.PI*92*t)*Math.exp(-t*20);
+   }else if(kind==='previewTick'){
+    v=.16*Math.sin(2*Math.PI*1318.5*t)*(1-Math.exp(-t/.0008))*Math.exp(-t*120);
    }else if(kind==='place'){
     v=low*.8*Math.exp(-t*45)+.25*Math.sin(2*Math.PI*108*t)*Math.exp(-t*35);
    }else if(kind==='victory'||kind==='evolve'||kind==='hire'||kind==='complete'){

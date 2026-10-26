@@ -1,0 +1,6 @@
+/* M3 ground tools in the catalogue: real art, and the conveyor lock before chapter 1. */
+.equipment-art{display:block;width:72px;height:46px;background-repeat:no-repeat}.blower-art{width:58px;height:47px;background-image:url(../assets/tool-blower.webp);background-size:200% 100%;background-position:0 0}.fence-art{width:76px;height:29px;background-image:url(../assets/tool-fence.webp);background-size:100% 100%}
+body.outpost-game .equipment-card.is-locked{opacity:.72}
+body.outpost-game .equipment-card.is-locked button,body.outpost-game .equipment-card button:disabled{background:#2a3a2e;border-color:#5f6b55;color:#c9c3a6;cursor:not-allowed}
+/* Placement bar: blower/fence modes show their hint once (in the rail panel), not squeezed into a one-character column. */
+.compact-play #placementControls[data-mode=blower]>.placement-hint,.compact-play #placementControls[data-mode=fence]>.placement-hint{display:none}
