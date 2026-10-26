@@ -1,6 +1,6 @@
 # SPACEBAR Mythos Slayers II — 引き継ぎ
 
-更新：2026-10-25 JST。まずこのファイルだけを読み、必要な実装箇所へ進む。古いチャットや設計履歴の全読は不要。
+更新：2026-10-26 JST。まずこのファイルだけを読み、必要な実装箇所へ進む。古いチャットや設計履歴の全読は不要。
 
 ## 開発を再開する
 
@@ -10,7 +10,7 @@
 - 画面・動画・検証: /preview/media/。旧版の素材と新機能の証拠を区別する。
 - 開発ソースの保存: `dev/sequel-source.tar.gz`。新環境で `2/` がなければ、repo rootで `tar -xzf dev/sequel-source.tar.gz`。公開ファイルから逆算して作り直さない。
 - 依存: npm ci、Node、Python3、Playwright、Chromium。ブラウザスクリプトの既定パスは /usr/bin/chromium。
-- 検証: `node --test --test-isolation=none test/*.test.cjs`（今回182件）。
+- 検証: `node --test --test-isolation=none test/*.test.cjs`（今回191件）。
 - 試遊ビルド: `python tools/build_playtest.py /tmp/mythos-test`。`python3 -m http.server 4397 --directory /tmp/mythos-test`。GAME_URL=http://127.0.0.1:4397/preview/ を各QAに渡す（ハードコードのスクリプトは確認）。
 
 ## ユーザーの判断軸
@@ -24,6 +24,15 @@ copy cat役も置く（2026-10-25の追加指示）。他ゲームの良い仕�
 確認質問を重ねず実作業を進める。序盤だけの検証や見せかけの増量を嫌う。クリックの手応え、増えた仲間の見た目、自分で作る自動化、前の苦労が楽になる成長、編成の選択が中心。日本語を過剰にかなへ変えない。英語・中国語も揃える。
 
 禁止している方向：味方の勝手な歩き回り、常時画面揺れ、主人公HP、コンベア経路の自動建設、個別資材を「×32」の束に統合すること。基本操作は連打。落ちた資材は同じ絵のままドラッグで倉庫へ納品。スキルで持てる数を増やす。木こりの配置と落下先・コンベアの接続は自分で決める。
+
+## 2026-10-26 部隊貢献の計測と敗北説明
+
+- dev/COMBAT_RESEARCH.mdを参照。正規Wave5直前保存の同人数/位置/能力/cooldownから対象バリスタのfront/armorだけ変更。実時間では両方とも箱0・9撃破/5突破。固定dtでは実攻撃先/ダメージまで完全一致（バリスタ139、上路弓142、下路弓75）。残敵は上路だけ。バリスタの方針による選択差機会は9発中0。
+- director指定の追加Wave4診断も一度だけ実施し、両方針とも箱1・8撃破/2突破、バリスタ選択差7発中0。正規Wave4再走ではない。他職の選択差機会は存在するため、方針が全般に無効とは結論しない。
+- 検証用observerはCore.hitの実appliedを集計し、手動入力のローカルhit経路も記録。同職の別部隊・失効弾・過剰分を区別。部隊＋手動＋未帰属＝Core.applied＝敵HP減少、撃破も一致、未帰属0。別の手動1入力監査で鎧への2.02実ダメージを確認。詳細traceと選択機会counterを分離し、dt統計もWave単位。
+- directorは新パネルや数値強化を足さず、既存guardHintだけ3言語で『鎧が残った道に剣士/バリスタの射程を合わせる』説明へ変更。3言語PC/実タッチ6件とNode191件成功。証拠: preview/media/combat-contribution-checks.json、defence-hint-checks.json。
+- tools/qa_combat_baseline.cjs→qa_combat_contribution.cjs→model_combat_contribution.cjs（通常とQA_WAVE=4）→summarize_combat_research.cjs。研究ツールは公開ゲームへ組み込まない。raw正規保存はscratchにのみ保持しarchiveへ含めない。
+- 次候補はcopy cat提案の『1部隊だけ担当路を変える同条件比較』。上路を直して下路を空けすぎないか確認する。まだ未実施。既存9Waveで優先設定の適用機会を調べる案は次点。
 
 ## 2026-10-26 参考作研究と成長の成功演出
 

@@ -1,0 +1,66 @@
+{
+  "status": "passed",
+  "fixture": "UI state reconstructed from the measured earned Wave5 defeat; baseline camp/materials preserved. It checks text, route counts and controls, not another battle.",
+  "results": [
+    {
+      "lang": "ja",
+      "mobile": false,
+      "paragraphs": [
+        "上の道 5 · 下の道 0",
+        "鎧の敵が残っています 1",
+        "鎧が残った道に、剣士やバリスタの射程を合わせましょう。弓兵で後続の敵も支えられます。"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": false,
+      "paragraphs": [
+        "Upper road 5 · Lower road 0",
+        "Armoured enemies survived 1",
+        "Cover the road where armoured enemies survived with swordsmen or ballistas. Archers can support them against the following enemies."
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": false,
+      "paragraphs": [
+        "上路 5 · 下路 0",
+        "还有重甲敌人存活 1",
+        "让剑士或弩炮的射程覆盖重甲敌人突破的道路。弓箭手也能协助拦截后续敌人。"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mobile": true,
+      "paragraphs": [
+        "上の道 5 · 下の道 0",
+        "鎧の敵が残っています 1",
+        "鎧が残った道に、剣士やバリスタの射程を合わせましょう。弓兵で後続の敵も支えられます。"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mobile": true,
+      "paragraphs": [
+        "Upper road 5 · Lower road 0",
+        "Armoured enemies survived 1",
+        "Cover the road where armoured enemies survived with swordsmen or ballistas. Archers can support them against the following enemies."
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mobile": true,
+      "paragraphs": [
+        "上路 5 · 下路 0",
+        "还有重甲敌人存活 1",
+        "让剑士或弩炮的射程覆盖重甲敌人突破的道路。弓箭手也能协助拦截后续敌人。"
+      ],
+      "errors": []
+    }
+  ]
+}

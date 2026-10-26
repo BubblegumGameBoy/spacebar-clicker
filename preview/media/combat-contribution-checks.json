@@ -1,0 +1,2198 @@
+{
+  "status": "passed",
+  "date": "2026-10-26 JST",
+  "baselineSha256": "8a81e1d0f8b9a3ae5856f40f039c41885f8672722738d473fad303dd8e2d54a6",
+  "baseline": "Genuinely earned saved run continued through Wave4 with visible controls, earned recruitment and material costs; source save is not redistributed.",
+  "live": {
+    "method": "Fresh browser contexts from the same saved state; only ballista policy changed through visible controls. Real-time frames, no grants, no manual aid in the comparison. Separate one-input audit validates the local manual-hit path.",
+    "equalCombatStartingConditions": true,
+    "conditions": {
+      "state": {
+        "phase": "active",
+        "wave": 5,
+        "round": 5,
+        "planVersion": 2,
+        "elapsed": 0,
+        "boxes": 3,
+        "spawned": 0,
+        "nextKey": 24,
+        "kills": 0,
+        "escaped": 0,
+        "gateSeconds": 1
+      },
+      "camp": {
+        "tools": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gate": false,
+        "beacon": false,
+        "cart": false
+      },
+      "encounter": 2,
+      "actors": [
+        {
+          "id": "ballista",
+          "index": 0,
+          "key": 1,
+          "groupKey": 4,
+          "member": 0,
+          "worker": null,
+          "x": 620,
+          "y": 400,
+          "r": 22,
+          "damage": 20,
+          "interval": 6,
+          "range": 160,
+          "minRange": 60,
+          "impact": 650,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 3.778213048251928,
+          "windup": 0
+        },
+        {
+          "id": "ballista",
+          "index": 1,
+          "key": 2,
+          "groupKey": 4,
+          "member": 1,
+          "worker": null,
+          "x": 646,
+          "y": 440,
+          "r": 22,
+          "damage": 20,
+          "interval": 6,
+          "range": 160,
+          "minRange": 60,
+          "impact": 650,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 4.671016971888093,
+          "windup": 0
+        },
+        {
+          "id": "ballista",
+          "index": 2,
+          "key": 3,
+          "groupKey": 4,
+          "member": 2,
+          "worker": null,
+          "x": 574,
+          "y": 388,
+          "r": 22,
+          "damage": 20,
+          "interval": 6,
+          "range": 160,
+          "minRange": 60,
+          "impact": 650,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 3.3742874090530677,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 0,
+          "key": 5,
+          "groupKey": 2,
+          "member": 0,
+          "worker": null,
+          "x": 643,
+          "y": 250,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 1.193211491893453,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 1,
+          "key": 6,
+          "groupKey": 2,
+          "member": 1,
+          "worker": null,
+          "x": 620,
+          "y": 255,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 1.0690022193928599,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 2,
+          "key": 7,
+          "groupKey": 2,
+          "member": 2,
+          "worker": null,
+          "x": 656,
+          "y": 220,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 1.2333924193801067,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 3,
+          "key": 8,
+          "groupKey": 3,
+          "member": 0,
+          "worker": null,
+          "x": 620,
+          "y": 360,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 0.9745790031021898,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 4,
+          "key": 9,
+          "groupKey": 3,
+          "member": 1,
+          "worker": null,
+          "x": 605,
+          "y": 337,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 0.8443909017831175,
+          "windup": 0
+        },
+        {
+          "id": "arch",
+          "index": 5,
+          "key": 10,
+          "groupKey": 3,
+          "member": 2,
+          "worker": null,
+          "x": 638,
+          "y": 333,
+          "r": 10,
+          "damage": 5,
+          "interval": 1.3,
+          "range": 90,
+          "minRange": 0,
+          "impact": 680,
+          "ranged": true,
+          "healer": false,
+          "cooldown": 0.26742592922455516,
+          "windup": 0
+        }
+      ]
+    },
+    "results": [
+      {
+        "policy": "front",
+        "result": {
+          "wave": 5,
+          "win": false,
+          "boxes": 0,
+          "kills": 9,
+          "escaped": 5,
+          "gold": 8,
+          "first": false
+        },
+        "elapsed": 50.61760438365021,
+        "totalApplied": 358,
+        "groups": [
+          {
+            "groupKey": 4,
+            "id": "ballista",
+            "policy": "front",
+            "count": 3,
+            "releases": 9,
+            "impacts": 9,
+            "applied": 148,
+            "armouredApplied": 82,
+            "armorBlocked": 0,
+            "overkill": 32,
+            "kills": 2,
+            "members": {
+              "0": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 60,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 60,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 28,
+                "armouredApplied": 2,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 32,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 5,
+              "rat": 4
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 2,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 39,
+            "impacts": 38,
+            "applied": 144,
+            "armouredApplied": 63,
+            "armorBlocked": 42,
+            "overkill": 4,
+            "kills": 2,
+            "members": {
+              "0": {
+                "releases": 13,
+                "impacts": 13,
+                "positiveHits": 13,
+                "applied": 51,
+                "armouredApplied": 21,
+                "requested": 65,
+                "armorBlocked": 14,
+                "overkill": 0,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 12,
+                "impacts": 11,
+                "positiveHits": 11,
+                "applied": 39,
+                "armouredApplied": 18,
+                "requested": 55,
+                "armorBlocked": 12,
+                "overkill": 4,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 14,
+                "impacts": 14,
+                "positiveHits": 14,
+                "applied": 54,
+                "armouredApplied": 24,
+                "requested": 70,
+                "armorBlocked": 16,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 22,
+              "rat": 17
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 3,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 23,
+            "impacts": 17,
+            "applied": 66,
+            "armouredApplied": 2,
+            "armorBlocked": 2,
+            "overkill": 17,
+            "kills": 5,
+            "members": {
+              "3": {
+                "releases": 9,
+                "impacts": 8,
+                "positiveHits": 8,
+                "applied": 33,
+                "armouredApplied": 2,
+                "requested": 40,
+                "armorBlocked": 2,
+                "overkill": 5,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              },
+              "4": {
+                "releases": 6,
+                "impacts": 4,
+                "positiveHits": 4,
+                "applied": 12,
+                "armouredApplied": 0,
+                "requested": 20,
+                "armorBlocked": 0,
+                "overkill": 8,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              },
+              "5": {
+                "releases": 8,
+                "impacts": 5,
+                "positiveHits": 5,
+                "applied": 21,
+                "armouredApplied": 0,
+                "requested": 25,
+                "armorBlocked": 0,
+                "overkill": 4,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 1,
+              "rat": 22
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          }
+        ],
+        "manual": {
+          "id": "manual",
+          "attempts": 0,
+          "accepted": 0,
+          "releases": 0,
+          "impacts": 0,
+          "positiveHits": 0,
+          "applied": 0,
+          "armouredApplied": 0,
+          "requested": 0,
+          "armorBlocked": 0,
+          "overkill": 0,
+          "kills": 0,
+          "targets": {},
+          "members": {}
+        },
+        "unattributed": 0,
+        "balanced": true,
+        "enemiesRemaining": [
+          {
+            "kind": "guard",
+            "lane": "upper",
+            "hp": 21
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 26
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 11
+          }
+        ],
+        "positions": [
+          {
+            "id": "ballista",
+            "index": 0,
+            "x": 620,
+            "y": 400
+          },
+          {
+            "id": "ballista",
+            "index": 1,
+            "x": 646,
+            "y": 440
+          },
+          {
+            "id": "ballista",
+            "index": 2,
+            "x": 574,
+            "y": 388
+          },
+          {
+            "id": "woodcutter",
+            "index": 0,
+            "x": 223,
+            "y": 282
+          },
+          {
+            "id": "arch",
+            "index": 0,
+            "x": 643,
+            "y": 250
+          },
+          {
+            "id": "arch",
+            "index": 1,
+            "x": 620,
+            "y": 255
+          },
+          {
+            "id": "arch",
+            "index": 2,
+            "x": 656,
+            "y": 220
+          },
+          {
+            "id": "arch",
+            "index": 3,
+            "x": 620,
+            "y": 360
+          },
+          {
+            "id": "arch",
+            "index": 4,
+            "x": 605,
+            "y": 337
+          },
+          {
+            "id": "arch",
+            "index": 5,
+            "x": 638,
+            "y": 333
+          }
+        ],
+        "timesteps": {
+          "count": 1119,
+          "min": 0.03339999999999418,
+          "max": 0.05010000000000582,
+          "mean": 0.04523208221626388
+        }
+      },
+      {
+        "policy": "armor",
+        "result": {
+          "wave": 5,
+          "win": false,
+          "boxes": 0,
+          "kills": 9,
+          "escaped": 5,
+          "gold": 8,
+          "first": false
+        },
+        "elapsed": 50.617604383650196,
+        "totalApplied": 358,
+        "groups": [
+          {
+            "groupKey": 4,
+            "id": "ballista",
+            "policy": "armor",
+            "count": 3,
+            "releases": 9,
+            "impacts": 9,
+            "applied": 139,
+            "armouredApplied": 82,
+            "armorBlocked": 0,
+            "overkill": 41,
+            "kills": 3,
+            "members": {
+              "0": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 46,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 14,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 60,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 33,
+                "armouredApplied": 2,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 27,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 5,
+              "rat": 4
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 2,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 39,
+            "impacts": 38,
+            "applied": 144,
+            "armouredApplied": 63,
+            "armorBlocked": 42,
+            "overkill": 4,
+            "kills": 2,
+            "members": {
+              "0": {
+                "releases": 13,
+                "impacts": 13,
+                "positiveHits": 13,
+                "applied": 51,
+                "armouredApplied": 21,
+                "requested": 65,
+                "armorBlocked": 14,
+                "overkill": 0,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 12,
+                "impacts": 11,
+                "positiveHits": 11,
+                "applied": 39,
+                "armouredApplied": 18,
+                "requested": 55,
+                "armorBlocked": 12,
+                "overkill": 4,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 14,
+                "impacts": 14,
+                "positiveHits": 14,
+                "applied": 54,
+                "armouredApplied": 24,
+                "requested": 70,
+                "armorBlocked": 16,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 22,
+              "rat": 17
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 3,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 22,
+            "impacts": 18,
+            "applied": 75,
+            "armouredApplied": 2,
+            "armorBlocked": 2,
+            "overkill": 13,
+            "kills": 4,
+            "members": {
+              "3": {
+                "releases": 9,
+                "impacts": 8,
+                "positiveHits": 8,
+                "applied": 29,
+                "armouredApplied": 2,
+                "requested": 40,
+                "armorBlocked": 2,
+                "overkill": 9,
+                "kills": 3,
+                "targets": {},
+                "members": {}
+              },
+              "4": {
+                "releases": 5,
+                "impacts": 4,
+                "positiveHits": 4,
+                "applied": 20,
+                "armouredApplied": 0,
+                "requested": 20,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "5": {
+                "releases": 8,
+                "impacts": 6,
+                "positiveHits": 6,
+                "applied": 26,
+                "armouredApplied": 0,
+                "requested": 30,
+                "armorBlocked": 0,
+                "overkill": 4,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 1,
+              "rat": 21
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          }
+        ],
+        "manual": {
+          "id": "manual",
+          "attempts": 0,
+          "accepted": 0,
+          "releases": 0,
+          "impacts": 0,
+          "positiveHits": 0,
+          "applied": 0,
+          "armouredApplied": 0,
+          "requested": 0,
+          "armorBlocked": 0,
+          "overkill": 0,
+          "kills": 0,
+          "targets": {},
+          "members": {}
+        },
+        "unattributed": 0,
+        "balanced": true,
+        "enemiesRemaining": [
+          {
+            "kind": "guard",
+            "lane": "upper",
+            "hp": 21
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 26
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 11
+          }
+        ],
+        "positions": [
+          {
+            "id": "ballista",
+            "index": 0,
+            "x": 620,
+            "y": 400
+          },
+          {
+            "id": "ballista",
+            "index": 1,
+            "x": 646,
+            "y": 440
+          },
+          {
+            "id": "ballista",
+            "index": 2,
+            "x": 574,
+            "y": 388
+          },
+          {
+            "id": "woodcutter",
+            "index": 0,
+            "x": 223,
+            "y": 282
+          },
+          {
+            "id": "arch",
+            "index": 0,
+            "x": 643,
+            "y": 250
+          },
+          {
+            "id": "arch",
+            "index": 1,
+            "x": 620,
+            "y": 255
+          },
+          {
+            "id": "arch",
+            "index": 2,
+            "x": 656,
+            "y": 220
+          },
+          {
+            "id": "arch",
+            "index": 3,
+            "x": 620,
+            "y": 360
+          },
+          {
+            "id": "arch",
+            "index": 4,
+            "x": 605,
+            "y": 337
+          },
+          {
+            "id": "arch",
+            "index": 5,
+            "x": 638,
+            "y": 333
+          }
+        ],
+        "timesteps": {
+          "count": 1128,
+          "min": 0.03339999999999418,
+          "max": 0.05010000000000582,
+          "mean": 0.04487109929077951
+        }
+      },
+      {
+        "policy": "front",
+        "result": {
+          "wave": 5,
+          "win": false,
+          "boxes": 0,
+          "kills": 9,
+          "escaped": 5,
+          "gold": 8,
+          "first": false
+        },
+        "elapsed": 50.61760438365019,
+        "totalApplied": 358,
+        "groups": [
+          {
+            "groupKey": 4,
+            "id": "ballista",
+            "policy": "front",
+            "count": 3,
+            "releases": 10,
+            "impacts": 8,
+            "applied": 142,
+            "armouredApplied": 82,
+            "armorBlocked": 0,
+            "overkill": 18,
+            "kills": 1,
+            "members": {
+              "0": {
+                "releases": 3,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 60,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 4,
+                "impacts": 3,
+                "positiveHits": 3,
+                "applied": 60,
+                "armouredApplied": 40,
+                "requested": 60,
+                "armorBlocked": 0,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 3,
+                "impacts": 2,
+                "positiveHits": 2,
+                "applied": 22,
+                "armouredApplied": 2,
+                "requested": 40,
+                "armorBlocked": 0,
+                "overkill": 18,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 5,
+              "rat": 5
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 2,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 39,
+            "impacts": 38,
+            "applied": 141.98000000000002,
+            "armouredApplied": 60.980000000000004,
+            "armorBlocked": 42,
+            "overkill": 6.019999999999996,
+            "kills": 2,
+            "members": {
+              "0": {
+                "releases": 13,
+                "impacts": 13,
+                "positiveHits": 13,
+                "applied": 48.980000000000004,
+                "armouredApplied": 18.980000000000004,
+                "requested": 65,
+                "armorBlocked": 14,
+                "overkill": 2.019999999999996,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "1": {
+                "releases": 12,
+                "impacts": 11,
+                "positiveHits": 11,
+                "applied": 39,
+                "armouredApplied": 18,
+                "requested": 55,
+                "armorBlocked": 12,
+                "overkill": 4,
+                "kills": 1,
+                "targets": {},
+                "members": {}
+              },
+              "2": {
+                "releases": 14,
+                "impacts": 14,
+                "positiveHits": 14,
+                "applied": 54,
+                "armouredApplied": 24,
+                "requested": 70,
+                "armorBlocked": 16,
+                "overkill": 0,
+                "kills": 0,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 22,
+              "rat": 17
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          },
+          {
+            "groupKey": 3,
+            "id": "arch",
+            "policy": "front",
+            "count": 3,
+            "releases": 23,
+            "impacts": 19,
+            "applied": 72,
+            "armouredApplied": 2,
+            "armorBlocked": 2,
+            "overkill": 21,
+            "kills": 6,
+            "members": {
+              "3": {
+                "releases": 9,
+                "impacts": 9,
+                "positiveHits": 9,
+                "applied": 38,
+                "armouredApplied": 2,
+                "requested": 45,
+                "armorBlocked": 2,
+                "overkill": 5,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              },
+              "4": {
+                "releases": 6,
+                "impacts": 5,
+                "positiveHits": 5,
+                "applied": 17,
+                "armouredApplied": 0,
+                "requested": 25,
+                "armorBlocked": 0,
+                "overkill": 8,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              },
+              "5": {
+                "releases": 8,
+                "impacts": 5,
+                "positiveHits": 5,
+                "applied": 17,
+                "armouredApplied": 0,
+                "requested": 25,
+                "armorBlocked": 0,
+                "overkill": 8,
+                "kills": 2,
+                "targets": {},
+                "members": {}
+              }
+            },
+            "targets": {
+              "guard": 1,
+              "rat": 22
+            },
+            "policyChoiceOpportunities": null,
+            "choiceSamples": null,
+            "releasesWithBoth": null
+          }
+        ],
+        "manual": {
+          "id": "manual",
+          "attempts": 1,
+          "accepted": 1,
+          "releases": 0,
+          "impacts": 1,
+          "positiveHits": 1,
+          "applied": 2.0199999999999996,
+          "armouredApplied": 2.0199999999999996,
+          "requested": 4.02,
+          "armorBlocked": 2,
+          "overkill": 0,
+          "kills": 0,
+          "targets": {},
+          "members": {
+            "none": {
+              "releases": 0,
+              "impacts": 1,
+              "positiveHits": 1,
+              "applied": 2.0199999999999996,
+              "armouredApplied": 2.0199999999999996,
+              "requested": 4.02,
+              "armorBlocked": 2,
+              "overkill": 0,
+              "kills": 0,
+              "targets": {},
+              "members": {}
+            }
+          }
+        },
+        "unattributed": 0,
+        "balanced": true,
+        "enemiesRemaining": [
+          {
+            "kind": "guard",
+            "lane": "upper",
+            "hp": 21
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 26
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 6
+          },
+          {
+            "kind": "rat",
+            "lane": "upper",
+            "hp": 11
+          }
+        ],
+        "positions": [
+          {
+            "id": "ballista",
+            "index": 0,
+            "x": 620,
+            "y": 400
+          },
+          {
+            "id": "ballista",
+            "index": 1,
+            "x": 646,
+            "y": 440
+          },
+          {
+            "id": "ballista",
+            "index": 2,
+            "x": 574,
+            "y": 388
+          },
+          {
+            "id": "woodcutter",
+            "index": 0,
+            "x": 223,
+            "y": 282
+          },
+          {
+            "id": "arch",
+            "index": 0,
+            "x": 643,
+            "y": 250
+          },
+          {
+            "id": "arch",
+            "index": 1,
+            "x": 620,
+            "y": 255
+          },
+          {
+            "id": "arch",
+            "index": 2,
+            "x": 656,
+            "y": 220
+          },
+          {
+            "id": "arch",
+            "index": 3,
+            "x": 620,
+            "y": 360
+          },
+          {
+            "id": "arch",
+            "index": 4,
+            "x": 605,
+            "y": 337
+          },
+          {
+            "id": "arch",
+            "index": 5,
+            "x": 638,
+            "y": 333
+          }
+        ],
+        "timesteps": {
+          "count": 1118,
+          "min": 0.03339999999999418,
+          "max": 0.05010000000000582,
+          "mean": 0.04524257602862193
+        }
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "selectedWave": 5,
+      "preparedAlternateWave": false,
+      "method": "Diagnostic replay of the combat starting conditions observed from a genuinely earned Wave5 save. Same units, keys, positions, stats, encounter token, cooldowns, camp and fixed 1/30 dt. Only ballista policy differs. No manual aid. This is not a new earned playthrough.",
+      "results": [
+        {
+          "policy": "front",
+          "result": {
+            "wave": 5,
+            "win": false,
+            "boxes": 0,
+            "kills": 9,
+            "escaped": 5,
+            "gold": 8,
+            "first": false
+          },
+          "elapsed": 50.617604383649116,
+          "totalApplied": 356,
+          "groups": [
+            {
+              "groupKey": 4,
+              "id": "ballista",
+              "policy": "front",
+              "count": 3,
+              "releases": 9,
+              "impacts": 9,
+              "applied": 139,
+              "armouredApplied": 82,
+              "armorBlocked": 0,
+              "overkill": 41,
+              "kills": 3,
+              "members": {
+                "0": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 46,
+                  "armouredApplied": 40,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 14,
+                  "kills": 1,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 60,
+                  "armouredApplied": 40,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 33,
+                  "armouredApplied": 2,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 27,
+                  "kills": 2,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 5,
+                "rat": 4
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 9,
+              "releasesWithBoth": 2
+            },
+            {
+              "groupKey": 2,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 39,
+              "impacts": 38,
+              "applied": 142,
+              "armouredApplied": 66,
+              "armorBlocked": 44,
+              "overkill": 4,
+              "kills": 2,
+              "members": {
+                "0": {
+                  "releases": 13,
+                  "impacts": 13,
+                  "positiveHits": 13,
+                  "applied": 51,
+                  "armouredApplied": 21,
+                  "requested": 65,
+                  "armorBlocked": 14,
+                  "overkill": 0,
+                  "kills": 1,
+                  "choiceSamples": 13,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 6,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 12,
+                  "impacts": 11,
+                  "positiveHits": 11,
+                  "applied": 39,
+                  "armouredApplied": 18,
+                  "requested": 55,
+                  "armorBlocked": 12,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 12,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 14,
+                  "impacts": 14,
+                  "positiveHits": 14,
+                  "applied": 52,
+                  "armouredApplied": 27,
+                  "requested": 70,
+                  "armorBlocked": 18,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 14,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 8,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 23,
+                "rat": 16
+              },
+              "policyChoiceOpportunities": 6,
+              "choiceSamples": 39,
+              "releasesWithBoth": 21
+            },
+            {
+              "groupKey": 3,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 22,
+              "impacts": 18,
+              "applied": 75,
+              "armouredApplied": 2,
+              "armorBlocked": 2,
+              "overkill": 13,
+              "kills": 4,
+              "members": {
+                "3": {
+                  "releases": 9,
+                  "impacts": 8,
+                  "positiveHits": 8,
+                  "applied": 29,
+                  "armouredApplied": 2,
+                  "requested": 40,
+                  "armorBlocked": 2,
+                  "overkill": 9,
+                  "kills": 3,
+                  "choiceSamples": 9,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "4": {
+                  "releases": 5,
+                  "impacts": 4,
+                  "positiveHits": 4,
+                  "applied": 20,
+                  "armouredApplied": 0,
+                  "requested": 20,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 5,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "5": {
+                  "releases": 8,
+                  "impacts": 6,
+                  "positiveHits": 6,
+                  "applied": 26,
+                  "armouredApplied": 0,
+                  "requested": 30,
+                  "armorBlocked": 0,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 8,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 1,
+                "rat": 21
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 22,
+              "releasesWithBoth": 0
+            }
+          ],
+          "manual": {
+            "id": "manual",
+            "attempts": 0,
+            "accepted": 0,
+            "releases": 0,
+            "impacts": 0,
+            "positiveHits": 0,
+            "applied": 0,
+            "armouredApplied": 0,
+            "requested": 0,
+            "armorBlocked": 0,
+            "overkill": 0,
+            "kills": 0,
+            "choiceSamples": 0,
+            "policyOpportunities": 0,
+            "releasesWithBoth": 0,
+            "targets": {},
+            "members": {}
+          },
+          "unattributed": 0,
+          "balanced": true,
+          "enemiesRemaining": [
+            {
+              "kind": "guard",
+              "lane": "upper",
+              "hp": 18
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 26
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 6
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 11
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 11
+            }
+          ]
+        },
+        {
+          "policy": "armor",
+          "result": {
+            "wave": 5,
+            "win": false,
+            "boxes": 0,
+            "kills": 9,
+            "escaped": 5,
+            "gold": 8,
+            "first": false
+          },
+          "elapsed": 50.617604383649116,
+          "totalApplied": 356,
+          "groups": [
+            {
+              "groupKey": 4,
+              "id": "ballista",
+              "policy": "armor",
+              "count": 3,
+              "releases": 9,
+              "impacts": 9,
+              "applied": 139,
+              "armouredApplied": 82,
+              "armorBlocked": 0,
+              "overkill": 41,
+              "kills": 3,
+              "members": {
+                "0": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 46,
+                  "armouredApplied": 40,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 14,
+                  "kills": 1,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 60,
+                  "armouredApplied": 40,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 33,
+                  "armouredApplied": 2,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 27,
+                  "kills": 2,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 5,
+                "rat": 4
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 9,
+              "releasesWithBoth": 2
+            },
+            {
+              "groupKey": 2,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 39,
+              "impacts": 38,
+              "applied": 142,
+              "armouredApplied": 66,
+              "armorBlocked": 44,
+              "overkill": 4,
+              "kills": 2,
+              "members": {
+                "0": {
+                  "releases": 13,
+                  "impacts": 13,
+                  "positiveHits": 13,
+                  "applied": 51,
+                  "armouredApplied": 21,
+                  "requested": 65,
+                  "armorBlocked": 14,
+                  "overkill": 0,
+                  "kills": 1,
+                  "choiceSamples": 13,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 6,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 12,
+                  "impacts": 11,
+                  "positiveHits": 11,
+                  "applied": 39,
+                  "armouredApplied": 18,
+                  "requested": 55,
+                  "armorBlocked": 12,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 12,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 14,
+                  "impacts": 14,
+                  "positiveHits": 14,
+                  "applied": 52,
+                  "armouredApplied": 27,
+                  "requested": 70,
+                  "armorBlocked": 18,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 14,
+                  "policyOpportunities": 2,
+                  "releasesWithBoth": 8,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 23,
+                "rat": 16
+              },
+              "policyChoiceOpportunities": 6,
+              "choiceSamples": 39,
+              "releasesWithBoth": 21
+            },
+            {
+              "groupKey": 3,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 22,
+              "impacts": 18,
+              "applied": 75,
+              "armouredApplied": 2,
+              "armorBlocked": 2,
+              "overkill": 13,
+              "kills": 4,
+              "members": {
+                "3": {
+                  "releases": 9,
+                  "impacts": 8,
+                  "positiveHits": 8,
+                  "applied": 29,
+                  "armouredApplied": 2,
+                  "requested": 40,
+                  "armorBlocked": 2,
+                  "overkill": 9,
+                  "kills": 3,
+                  "choiceSamples": 9,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "4": {
+                  "releases": 5,
+                  "impacts": 4,
+                  "positiveHits": 4,
+                  "applied": 20,
+                  "armouredApplied": 0,
+                  "requested": 20,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 5,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "5": {
+                  "releases": 8,
+                  "impacts": 6,
+                  "positiveHits": 6,
+                  "applied": 26,
+                  "armouredApplied": 0,
+                  "requested": 30,
+                  "armorBlocked": 0,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 8,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 1,
+                "rat": 21
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 22,
+              "releasesWithBoth": 0
+            }
+          ],
+          "manual": {
+            "id": "manual",
+            "attempts": 0,
+            "accepted": 0,
+            "releases": 0,
+            "impacts": 0,
+            "positiveHits": 0,
+            "applied": 0,
+            "armouredApplied": 0,
+            "requested": 0,
+            "armorBlocked": 0,
+            "overkill": 0,
+            "kills": 0,
+            "choiceSamples": 0,
+            "policyOpportunities": 0,
+            "releasesWithBoth": 0,
+            "targets": {},
+            "members": {}
+          },
+          "unattributed": 0,
+          "balanced": true,
+          "enemiesRemaining": [
+            {
+              "kind": "guard",
+              "lane": "upper",
+              "hp": 18
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 26
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 6
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 11
+            },
+            {
+              "kind": "rat",
+              "lane": "upper",
+              "hp": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "selectedWave": 4,
+      "preparedAlternateWave": true,
+      "method": "Diagnostic replay of the combat starting conditions observed from a genuinely earned Wave5 save. Same units, keys, positions, stats, encounter token, cooldowns, camp and fixed 1/30 dt. Only ballista policy differs. No manual aid. This is not a new earned playthrough.",
+      "results": [
+        {
+          "policy": "front",
+          "result": {
+            "wave": 4,
+            "win": true,
+            "boxes": 1,
+            "kills": 8,
+            "escaped": 2,
+            "gold": 14,
+            "first": false
+          },
+          "elapsed": 37.88924950851026,
+          "totalApplied": 210,
+          "groups": [
+            {
+              "groupKey": 4,
+              "id": "ballista",
+              "policy": "front",
+              "count": 3,
+              "releases": 7,
+              "impacts": 7,
+              "applied": 106,
+              "armouredApplied": 42,
+              "armorBlocked": 0,
+              "overkill": 34,
+              "kills": 5,
+              "members": {
+                "0": {
+                  "releases": 2,
+                  "impacts": 2,
+                  "positiveHits": 2,
+                  "applied": 36,
+                  "armouredApplied": 20,
+                  "requested": 40,
+                  "armorBlocked": 0,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 2,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 38,
+                  "armouredApplied": 22,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 22,
+                  "kills": 2,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 2,
+                  "impacts": 2,
+                  "positiveHits": 2,
+                  "applied": 32,
+                  "armouredApplied": 0,
+                  "requested": 40,
+                  "armorBlocked": 0,
+                  "overkill": 8,
+                  "kills": 2,
+                  "choiceSamples": 2,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 3,
+                "scout": 4
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 7,
+              "releasesWithBoth": 1
+            },
+            {
+              "groupKey": 2,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 33,
+              "impacts": 28,
+              "applied": 104,
+              "armouredApplied": 42,
+              "armorBlocked": 28,
+              "overkill": 8,
+              "kills": 3,
+              "members": {
+                "0": {
+                  "releases": 11,
+                  "impacts": 9,
+                  "positiveHits": 9,
+                  "applied": 35,
+                  "armouredApplied": 15,
+                  "requested": 45,
+                  "armorBlocked": 10,
+                  "overkill": 0,
+                  "kills": 1,
+                  "choiceSamples": 11,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 10,
+                  "impacts": 7,
+                  "positiveHits": 7,
+                  "applied": 29,
+                  "armouredApplied": 9,
+                  "requested": 35,
+                  "armorBlocked": 6,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 10,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 6,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 12,
+                  "impacts": 12,
+                  "positiveHits": 12,
+                  "applied": 40,
+                  "armouredApplied": 18,
+                  "requested": 60,
+                  "armorBlocked": 12,
+                  "overkill": 8,
+                  "kills": 2,
+                  "choiceSamples": 12,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 15,
+                "scout": 18
+              },
+              "policyChoiceOpportunities": 9,
+              "choiceSamples": 33,
+              "releasesWithBoth": 20
+            },
+            {
+              "groupKey": 3,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 1,
+              "impacts": 0,
+              "applied": 0,
+              "armouredApplied": 0,
+              "armorBlocked": 0,
+              "overkill": 0,
+              "kills": 0,
+              "members": {
+                "3": {
+                  "releases": 1,
+                  "impacts": 0,
+                  "positiveHits": 0,
+                  "applied": 0,
+                  "armouredApplied": 0,
+                  "requested": 0,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 1,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "scout": 1
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 1,
+              "releasesWithBoth": 0
+            }
+          ],
+          "manual": {
+            "id": "manual",
+            "attempts": 0,
+            "accepted": 0,
+            "releases": 0,
+            "impacts": 0,
+            "positiveHits": 0,
+            "applied": 0,
+            "armouredApplied": 0,
+            "requested": 0,
+            "armorBlocked": 0,
+            "overkill": 0,
+            "kills": 0,
+            "choiceSamples": 0,
+            "policyOpportunities": 0,
+            "releasesWithBoth": 0,
+            "targets": {},
+            "members": {}
+          },
+          "unattributed": 0,
+          "balanced": true,
+          "enemiesRemaining": [
+            {
+              "kind": "scout",
+              "lane": "upper",
+              "hp": 1
+            },
+            {
+              "kind": "scout",
+              "lane": "upper",
+              "hp": 1
+            }
+          ]
+        },
+        {
+          "policy": "armor",
+          "result": {
+            "wave": 4,
+            "win": true,
+            "boxes": 1,
+            "kills": 8,
+            "escaped": 2,
+            "gold": 14,
+            "first": false
+          },
+          "elapsed": 37.88924950851026,
+          "totalApplied": 210,
+          "groups": [
+            {
+              "groupKey": 4,
+              "id": "ballista",
+              "policy": "armor",
+              "count": 3,
+              "releases": 7,
+              "impacts": 7,
+              "applied": 106,
+              "armouredApplied": 42,
+              "armorBlocked": 0,
+              "overkill": 34,
+              "kills": 5,
+              "members": {
+                "0": {
+                  "releases": 2,
+                  "impacts": 2,
+                  "positiveHits": 2,
+                  "applied": 36,
+                  "armouredApplied": 20,
+                  "requested": 40,
+                  "armorBlocked": 0,
+                  "overkill": 4,
+                  "kills": 1,
+                  "choiceSamples": 2,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 3,
+                  "impacts": 3,
+                  "positiveHits": 3,
+                  "applied": 38,
+                  "armouredApplied": 22,
+                  "requested": 60,
+                  "armorBlocked": 0,
+                  "overkill": 22,
+                  "kills": 2,
+                  "choiceSamples": 3,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 1,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 2,
+                  "impacts": 2,
+                  "positiveHits": 2,
+                  "applied": 32,
+                  "armouredApplied": 0,
+                  "requested": 40,
+                  "armorBlocked": 0,
+                  "overkill": 8,
+                  "kills": 2,
+                  "choiceSamples": 2,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 3,
+                "scout": 4
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 7,
+              "releasesWithBoth": 1
+            },
+            {
+              "groupKey": 2,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 33,
+              "impacts": 28,
+              "applied": 104,
+              "armouredApplied": 42,
+              "armorBlocked": 28,
+              "overkill": 8,
+              "kills": 3,
+              "members": {
+                "0": {
+                  "releases": 11,
+                  "impacts": 9,
+                  "positiveHits": 9,
+                  "applied": 35,
+                  "armouredApplied": 15,
+                  "requested": 45,
+                  "armorBlocked": 10,
+                  "overkill": 0,
+                  "kills": 1,
+                  "choiceSamples": 11,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                },
+                "1": {
+                  "releases": 10,
+                  "impacts": 7,
+                  "positiveHits": 7,
+                  "applied": 29,
+                  "armouredApplied": 9,
+                  "requested": 35,
+                  "armorBlocked": 6,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 10,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 6,
+                  "targets": {},
+                  "members": {}
+                },
+                "2": {
+                  "releases": 12,
+                  "impacts": 12,
+                  "positiveHits": 12,
+                  "applied": 40,
+                  "armouredApplied": 18,
+                  "requested": 60,
+                  "armorBlocked": 12,
+                  "overkill": 8,
+                  "kills": 2,
+                  "choiceSamples": 12,
+                  "policyOpportunities": 3,
+                  "releasesWithBoth": 7,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "guard": 15,
+                "scout": 18
+              },
+              "policyChoiceOpportunities": 9,
+              "choiceSamples": 33,
+              "releasesWithBoth": 20
+            },
+            {
+              "groupKey": 3,
+              "id": "arch",
+              "policy": "front",
+              "count": 3,
+              "releases": 1,
+              "impacts": 0,
+              "applied": 0,
+              "armouredApplied": 0,
+              "armorBlocked": 0,
+              "overkill": 0,
+              "kills": 0,
+              "members": {
+                "3": {
+                  "releases": 1,
+                  "impacts": 0,
+                  "positiveHits": 0,
+                  "applied": 0,
+                  "armouredApplied": 0,
+                  "requested": 0,
+                  "armorBlocked": 0,
+                  "overkill": 0,
+                  "kills": 0,
+                  "choiceSamples": 1,
+                  "policyOpportunities": 0,
+                  "releasesWithBoth": 0,
+                  "targets": {},
+                  "members": {}
+                }
+              },
+              "targets": {
+                "scout": 1
+              },
+              "policyChoiceOpportunities": 0,
+              "choiceSamples": 1,
+              "releasesWithBoth": 0
+            }
+          ],
+          "manual": {
+            "id": "manual",
+            "attempts": 0,
+            "accepted": 0,
+            "releases": 0,
+            "impacts": 0,
+            "positiveHits": 0,
+            "applied": 0,
+            "armouredApplied": 0,
+            "requested": 0,
+            "armorBlocked": 0,
+            "overkill": 0,
+            "kills": 0,
+            "choiceSamples": 0,
+            "policyOpportunities": 0,
+            "releasesWithBoth": 0,
+            "targets": {},
+            "members": {}
+          },
+          "unattributed": 0,
+          "balanced": true,
+          "enemiesRemaining": [
+            {
+              "kind": "scout",
+              "lane": "upper",
+              "hp": 1
+            },
+            {
+              "kind": "scout",
+              "lane": "upper",
+              "hp": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusions": [
+    "In this Wave5 lineup, changing only ballista policy does not change the fixed-dt attacks or outcome. Both live policies also lose with nine kills and five escapes.",
+    "All five survivors in the fixed-dt Wave5 diagnostic are on the upper road; the lower road is cleared.",
+    "The single preselected alternate Wave4 diagnostic also has no ballista policy-choice opportunities and the same result under both policies. It is not an earned Wave4 replay.",
+    "An exposed manual-input audit records one attempt and the real applied HP loss, without double-crediting it to a squad.",
+    "Policy choice is conditional on eligible in-range targets; this result does not establish that the priority is globally useful or useless."
+  ],
+  "limitations": [
+    "Only this earned formation and one preselected alternate wave were evaluated.",
+    "Live frame intervals differ; fixed-dt comparisons isolate policy while browser trials validate actual code and UI.",
+    "Preparation clocks, journey timers, production cooldowns and inactive entry timestamps are excluded from equality checks because they are not combat inputs; a first overly broad equality check was corrected after it flagged these expected wall-clock differences.",
+    "Killed-target projectiles and overkill are not credited as applied contribution. No new visible statistics, rewards, balance multipliers or automatic placement are added."
+  ]
+}

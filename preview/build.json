@@ -1,12 +1,12 @@
 {
   "kind": "mythos-slayers-2-playtest",
-  "ruleset": "outpost-9-growth-feedback-v4",
+  "ruleset": "outpost-9-combat-observation-v5",
   "source_sha256": {
-    "index.html": "dd17d6a7bab09c2d66020eb174cb3d4d084dca5bd8204115a956e069ca2e6f23",
+    "index.html": "69e86b31d9850da0c3d2a3a3d8aaba195332a8abd7a55b29881caf65967d24da",
     "ranking.html": "80bcf321e69d9678f9fe3a3f80845a12870935cfd5cb4ed74ae7c3f7dd3dd66a",
     "game-core.js": "6a31fce1a29846e21ee9ca77c16770676df4cd2d0de10fc57a838ca30c16554a",
     "expedition-core.js": "0fa2201a969e8b2463143cad963b8475d13f5c2d6e0df500897e6a86ff18503e",
-    "expedition-ui.js": "045ba3ede873ef20b1b54acd3677215c4a54f7fc2bc817fbfb431729913e430c",
+    "expedition-ui.js": "4f493d58e0f75ec6cc788121ade3cc2588b4ad4d398f9007952f7b900750c3d8",
     "expedition-ui.css": "cd08a82b7b11df68a51d26c6bb4a5313e6c57ed50614bb3b7412b4ab6b5bc1fc",
     "expedition-integration.js": "6a34aeb52cfd4f8846d7f37eee376929ae6198355886c0f2602194ab250f39aa",
     "EXPEDITION_DESIGN.md": "d10ec0db7194defae4af78ce729eb44e58b348ed13f245c95aa81b400ad32b71",
@@ -38,10 +38,10 @@
     "FOREST_LOOP.md": "ece3b3011093f56998b1820b5740aa23d9657c029ef8905707ff3bd4dcc1026d",
     "OUTPOST_DESIGN.md": "80a284999c68022a0f638995fb49f88cbc5940855c8780604fbb3a6562f0f554",
     "REVIEW_EXPERIMENT.md": "9f0cc89612e80be91e96efeca3dbe64a293fcf34e05f74105420cc38c57cda27",
-    "PLAYTEST_REVIEWS.md": "5554074e89ed85e4b11b0b749a8782b240a788ebafcb5d66897c7fb5f02bc236",
+    "PLAYTEST_REVIEWS.md": "462d0caa01d27f48f3beb8456622fa9ffa0e5c2f459a1e342de6125401c133e6",
     "workshop.html": "434b02d71ab6279d34ac8f00bfaf7109ac84e98492785e84fff9bedb73183e3e",
     "workshop.js": "410f57d24784cd782f36c4a4643de3788fa1a24510428fb89526d7fcaa406af6",
-    "media/index.html": "f3cd822cfea319e497fef607f6a8f76c01aea43b09b1ad1657d1257454b5209b"
+    "media/index.html": "d88b15365b6f177babcceb8fd477b759362b800693c9af044e5852411fc5ed51"
   },
   "playtest_assets": [
     "assets/audio/camp-finale.mp3",
