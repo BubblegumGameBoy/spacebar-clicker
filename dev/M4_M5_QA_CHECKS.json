@@ -1,0 +1,1410 @@
+{
+  "version": "20261026-m4m5-r1",
+  "startup": [
+    {
+      "name": "pc",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "lesson",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "touch",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": true
+    }
+  ],
+  "earnedChapter1": {
+    "fixture": "Fresh ?lesson=1 save, visible PC inputs only, no grants or time acceleration",
+    "waves": [
+      {
+        "wave": 1,
+        "cleared": 1,
+        "win": true,
+        "at": 80
+      },
+      {
+        "wave": 2,
+        "cleared": 2,
+        "win": true,
+        "at": 132.7
+      },
+      {
+        "wave": 3,
+        "cleared": 3,
+        "win": true,
+        "at": 177.8
+      }
+    ],
+    "catalogueStart": [
+      [
+        "blower",
+        false
+      ],
+      [
+        "fence",
+        false
+      ],
+      [
+        "belt",
+        true
+      ],
+      [
+        "hopper",
+        true
+      ],
+      [
+        "platform",
+        true
+      ]
+    ],
+    "lessonDoneAt": 57,
+    "unlock": {
+      "at": 178.5,
+      "banner": true,
+      "cues": 1,
+      "glow": 3,
+      "cards": [
+        [
+          "blower",
+          false
+        ],
+        [
+          "fence",
+          false
+        ],
+        [
+          "belt",
+          false
+        ],
+        [
+          "hopper",
+          false
+        ],
+        [
+          "platform",
+          false
+        ]
+      ],
+      "note": "倉庫に納品しました",
+      "shake": "none|none"
+    },
+    "state": {
+      "wood": 12,
+      "stone": 2,
+      "ground": 3,
+      "delivered": 192,
+      "phase": "result",
+      "wave": 3,
+      "cleared": 3,
+      "win": true,
+      "paused": false,
+      "arch": 4,
+      "woodcutter": 1,
+      "pending": false,
+      "lesson": "gather60",
+      "blowers": 1,
+      "fences": 1,
+      "hoppers": 0,
+      "links": 0
+    },
+    "camp": {
+      "blowers": [
+        {
+          "key": 1,
+          "x": 408,
+          "y": 334,
+          "dir": 4,
+          "costWood": 4
+        }
+      ],
+      "fences": [
+        {
+          "key": 1,
+          "a": {
+            "x": 344,
+            "y": 289.9
+          },
+          "b": {
+            "x": 299.7,
+            "y": 308.3
+          },
+          "costWood": 2
+        }
+      ],
+      "links": 0,
+      "owned": {
+        "farmer": 0,
+        "ballista": 0,
+        "woodcutter": 1,
+        "miner": 0,
+        "porter": 0,
+        "healer": 0,
+        "sword": 0,
+        "dwarfb": 0,
+        "arch": 4,
+        "heavy": 0,
+        "dwarfw": 0,
+        "mage": 0,
+        "crossbow": 0,
+        "knight": 0,
+        "paladin": 0,
+        "bombardier": 0,
+        "elf": 0,
+        "warlock": 0,
+        "dark": 0,
+        "giant": 0,
+        "dragong": 0,
+        "dragonp": 0,
+        "dragonr": 0,
+        "angel": 0,
+        "dragong2": 0,
+        "dragonr2": 0,
+        "angel2": 0,
+        "darkgod": 0
+      },
+      "skills": {
+        "carry": 2,
+        "hand": 0,
+        "route": 0,
+        "storage": 0
+      }
+    },
+    "status": "passed",
+    "seconds": 179.7,
+    "inputs": 293,
+    "carries": 81,
+    "errors": [],
+    "log": [
+      {
+        "t": 3.6,
+        "event": "catalogue at start",
+        "cards": [
+          [
+            "blower",
+            false
+          ],
+          [
+            "fence",
+            false
+          ],
+          [
+            "belt",
+            true
+          ],
+          [
+            "hopper",
+            true
+          ],
+          [
+            "platform",
+            true
+          ]
+        ]
+      },
+      {
+        "t": 11.1,
+        "event": "carry1 learned"
+      },
+      {
+        "t": 14.3,
+        "event": "woodcutter placed",
+        "spot": {
+          "x": 340.4852755166021,
+          "y": 307.9076826998014
+        },
+        "landing": {
+          "x": 364.4852755166021,
+          "y": 331.9076826998014
+        }
+      },
+      {
+        "t": 18.9,
+        "event": "blower placed",
+        "x": 408,
+        "y": 334,
+        "dir": 4,
+        "home": 5
+      },
+      {
+        "t": 32,
+        "event": "fence placed",
+        "a": {
+          "x": 344,
+          "y": 289.9076826998014
+        },
+        "b": {
+          "x": 299.65378243945827,
+          "y": 308.27648745332573
+        },
+        "home": 7,
+        "len": 48,
+        "base": 5
+      },
+      {
+        "t": 42.7,
+        "event": "carry2 learned"
+      },
+      {
+        "t": 48.8,
+        "event": "archer placed",
+        "n": 1
+      },
+      {
+        "t": 56.8,
+        "event": "archer placed",
+        "n": 2
+      },
+      {
+        "t": 57,
+        "event": "ready pressed"
+      },
+      {
+        "t": 80,
+        "event": "raid finished",
+        "cleared": 1,
+        "win": true
+      },
+      {
+        "t": 88.6,
+        "event": "archer hired",
+        "n": 3
+      },
+      {
+        "t": 132.7,
+        "event": "raid finished",
+        "cleared": 2,
+        "win": true
+      },
+      {
+        "t": 144.8,
+        "event": "archer hired",
+        "n": 4
+      },
+      {
+        "t": 177.8,
+        "event": "raid finished",
+        "cleared": 3,
+        "win": true
+      },
+      {
+        "t": 178.5,
+        "event": "unlock milestone",
+        "at": 178.5,
+        "banner": true,
+        "cues": 1,
+        "glow": 3,
+        "cards": [
+          [
+            "blower",
+            false
+          ],
+          [
+            "fence",
+            false
+          ],
+          [
+            "belt",
+            false
+          ],
+          [
+            "hopper",
+            false
+          ],
+          [
+            "platform",
+            false
+          ]
+        ],
+        "note": "倉庫に納品しました",
+        "shake": "none|none"
+      }
+    ]
+  },
+  "m4TouchLines": {
+    "fixture": "Save earned by qa_m4_journey (fresh ?lesson=1, visible play to Chapter 1); each condition from that save; CDP touch (not a real device), pace bot",
+    "results": [
+      {
+        "condition": "conveyor",
+        "mode": "touch",
+        "start": {
+          "wood": 7,
+          "stone": 2,
+          "ground": 4,
+          "delivered": 187,
+          "phase": "result",
+          "wave": 3,
+          "cleared": 3,
+          "win": true,
+          "paused": false,
+          "arch": 4,
+          "woodcutter": 1,
+          "pending": false,
+          "lesson": "gather60",
+          "blowers": 1,
+          "fences": 1,
+          "hoppers": 0,
+          "links": 0
+        },
+        "landing": {
+          "one": {
+            "x": 364,
+            "y": 332
+          },
+          "two": {
+            "x": 552.9497886662053,
+            "y": 339.68191366542146
+          }
+        },
+        "lines": [
+          {
+            "line": "A",
+            "hopper": {
+              "x": 338,
+              "y": 320,
+              "dir": 4,
+              "caught": 8,
+              "out": {
+                "x": 314,
+                "y": 320
+              },
+              "score": 778.5067452441469
+            },
+            "predicted": 8
+          },
+          {
+            "line": "B",
+            "hopper": {
+              "x": 527,
+              "y": 320,
+              "dir": 4,
+              "caught": 8,
+              "out": {
+                "x": 503,
+                "y": 320
+              },
+              "score": 759.650402728156
+            },
+            "predicted": 8
+          }
+        ],
+        "layout": {
+          "belts": [
+            {
+              "key": 1,
+              "len": 215,
+              "cost": 5
+            },
+            {
+              "key": 2,
+              "len": 240,
+              "cost": 5
+            },
+            {
+              "key": 3,
+              "len": 41,
+              "cost": 1
+            }
+          ],
+          "hoppers": [
+            {
+              "key": 1,
+              "x": 338,
+              "y": 320,
+              "dir": 4,
+              "costWood": 10,
+              "costStone": 4
+            },
+            {
+              "key": 2,
+              "x": 527,
+              "y": 320,
+              "dir": 4,
+              "costWood": 10,
+              "costStone": 4
+            }
+          ],
+          "blowers": 1,
+          "fences": 1
+        },
+        "handSpots": "4 / 4",
+        "setup": {
+          "wood": 7,
+          "stone": 1,
+          "ground": 5,
+          "delivered": 235,
+          "phase": "result",
+          "wave": 3,
+          "cleared": 3,
+          "win": true,
+          "paused": false,
+          "arch": 4,
+          "woodcutter": 2,
+          "pending": false,
+          "lesson": "gather60",
+          "blowers": 1,
+          "fences": 1,
+          "hoppers": 2,
+          "links": 3
+        },
+        "setupAt": 53.9,
+        "status": "passed",
+        "errors": [],
+        "log": [
+          {
+            "t": 6.9,
+            "event": "second lumberjack",
+            "spot2": {
+              "x": 528.9497886662053,
+              "y": 315.68191366542146
+            },
+            "landing1": {
+              "x": 364,
+              "y": 332
+            },
+            "landing2": {
+              "x": 552.9497886662053,
+              "y": 339.68191366542146
+            }
+          },
+          {
+            "t": 6.9,
+            "event": "hopper A plan",
+            "x": 338,
+            "y": 320,
+            "dir": 4,
+            "caught": 8,
+            "out": {
+              "x": 314,
+              "y": 320
+            },
+            "score": 778.5067452441469
+          },
+          {
+            "t": 38.5,
+            "event": "belt A1",
+            "added": 1,
+            "belts": [
+              {
+                "key": 1,
+                "len": 215,
+                "head": {
+                  "x": 100,
+                  "y": 340
+                },
+                "tail": {
+                  "x": 314,
+                  "y": 320
+                }
+              }
+            ]
+          },
+          {
+            "t": 42,
+            "event": "hopper B plan",
+            "x": 527,
+            "y": 320,
+            "dir": 4,
+            "caught": 8,
+            "out": {
+              "x": 503,
+              "y": 320
+            },
+            "score": 759.650402728156
+          },
+          {
+            "t": 45.4,
+            "event": "belt B",
+            "added": 1,
+            "belts": [
+              {
+                "key": 1,
+                "len": 215,
+                "head": {
+                  "x": 100,
+                  "y": 340
+                },
+                "tail": {
+                  "x": 314,
+                  "y": 320
+                }
+              },
+              {
+                "key": 2,
+                "len": 240,
+                "head": {
+                  "x": 217.22151147496757,
+                  "y": 325.09361510956666
+                },
+                "tail": {
+                  "x": 457.18339862621053,
+                  "y": 320.816616768355
+                }
+              }
+            ]
+          },
+          {
+            "t": 48.8,
+            "event": "belt B2",
+            "added": 1,
+            "belts": [
+              {
+                "key": 1,
+                "len": 215,
+                "head": {
+                  "x": 100,
+                  "y": 340
+                },
+                "tail": {
+                  "x": 314,
+                  "y": 320
+                }
+              },
+              {
+                "key": 2,
+                "len": 240,
+                "head": {
+                  "x": 217.22151147496757,
+                  "y": 325.09361510956666
+                },
+                "tail": {
+                  "x": 457.18339862621053,
+                  "y": 320.816616768355
+                }
+              },
+              {
+                "key": 3,
+                "len": 41,
+                "head": {
+                  "x": 457.18339862621053,
+                  "y": 320.816616768355
+                },
+                "tail": {
+                  "x": 497.9092548076923,
+                  "y": 320.0907451923077
+                }
+              }
+            ]
+          },
+          {
+            "t": 52,
+            "event": "lines built",
+            "belts": [
+              {
+                "key": 1,
+                "len": 215,
+                "cost": 5
+              },
+              {
+                "key": 2,
+                "len": 240,
+                "cost": 5
+              },
+              {
+                "key": 3,
+                "len": 41,
+                "cost": 1
+              }
+            ],
+            "hoppers": [
+              {
+                "key": 1,
+                "x": 338,
+                "y": 320,
+                "dir": 4,
+                "costWood": 10,
+                "costStone": 4
+              },
+              {
+                "key": 2,
+                "x": 527,
+                "y": 320,
+                "dir": 4,
+                "costWood": 10,
+                "costStone": 4
+              }
+            ],
+            "blowers": 1,
+            "fences": 1
+          }
+        ]
+      }
+    ]
+  },
+  "m4I18nPC": {
+    "mode": "pc",
+    "status": "passed",
+    "rows": [
+      {
+        "lang": "ja",
+        "hopperCard": "集積口",
+        "beltCard": "木製コンベア",
+        "overflow": false,
+        "bar": {
+          "hint": "押して位置を確認 → 離して設置。↻で出口の向き（8方向）",
+          "price": "木材10 ＋ 石材4 · 所持 33 / 14",
+          "turn": "むき ↻ ←",
+          "current": "集積口"
+        },
+        "pick": {
+          "title": "集積口1",
+          "remove": "撤去（木材 +5・石材 +2）",
+          "turn": true
+        },
+        "beltLimit": "1本の長さは240まで。続きは端からもう1本つなごう | 木材 29 · 長さ 240 / 240",
+        "removed": true
+      },
+      {
+        "lang": "en",
+        "hopperCard": "Hopper",
+        "beltCard": "Wooden conveyor",
+        "overflow": false,
+        "bar": {
+          "hint": "Press to preview, release to place. ↻ turns the outlet (8 ways).",
+          "price": "10 wood + 4 stone · have 29 / 12",
+          "turn": "Turn ↻ ←",
+          "current": "Hopper"
+        },
+        "pick": {
+          "title": "Hopper 1",
+          "remove": "Remove (+5 wood, +2 stone back)",
+          "turn": true
+        },
+        "beltLimit": "One belt is at most 240 long. Start another from its end to go farther. | Wood 25 · Length 240 / 240",
+        "removed": true
+      },
+      {
+        "lang": "zh",
+        "hopperCard": "集料斗",
+        "beltCard": "木制传送带",
+        "overflow": false,
+        "bar": {
+          "hint": "按住预览，松开放置。↻转动出口（8个方向）。",
+          "price": "10木材 ＋ 4石材 · 持有 25 / 10",
+          "turn": "转向 ↻ ←",
+          "current": "集料斗"
+        },
+        "pick": {
+          "title": "集料斗1",
+          "remove": "拆除（返还 木材 +5・石材 +2）",
+          "turn": true
+        },
+        "beltLimit": "每条最长240。从末端再接一条即可延伸。 | 木材 22 · 长度 240 / 240",
+        "removed": true
+      }
+    ]
+  },
+  "m4I18nTouch": {
+    "mode": "touch",
+    "status": "passed",
+    "rows": [
+      {
+        "lang": "ja",
+        "hopperCard": "集積口",
+        "beltCard": "木製コンベア",
+        "overflow": false,
+        "bar": {
+          "hint": "押して位置を確認 → 離して設置。↻で出口の向き（8方向）",
+          "price": "木材10 ＋ 石材4 · 所持 31 / 13",
+          "turn": "むき ↻ ←",
+          "current": "集積口"
+        },
+        "pick": {
+          "title": "集積口1",
+          "remove": "撤去（木材 +5・石材 +2）",
+          "turn": true
+        },
+        "beltLimit": "1本の長さは240まで。続きは端からもう1本つなごう | 木材 27 · 長さ 240 / 240",
+        "removed": true
+      },
+      {
+        "lang": "en",
+        "hopperCard": "Hopper",
+        "beltCard": "Wooden conveyor",
+        "overflow": false,
+        "bar": {
+          "hint": "Press to preview, release to place. ↻ turns the outlet (8 ways).",
+          "price": "10 wood + 4 stone · have 27 / 11",
+          "turn": "Turn ↻ ←",
+          "current": "Hopper"
+        },
+        "pick": {
+          "title": "Hopper 1",
+          "remove": "Remove (+5 wood, +2 stone back)",
+          "turn": true
+        },
+        "beltLimit": "One belt is at most 240 long. Start another from its end to go farther. | Wood 22 · Length 240 / 240",
+        "removed": true
+      },
+      {
+        "lang": "zh",
+        "hopperCard": "集料斗",
+        "beltCard": "木制传送带",
+        "overflow": false,
+        "bar": {
+          "hint": "按住预览，松开放置。↻转动出口（8个方向）。",
+          "price": "10木材 ＋ 4石材 · 持有 22 / 9",
+          "turn": "转向 ↻ ←",
+          "current": "集料斗"
+        },
+        "pick": {
+          "title": "集料斗1",
+          "remove": "拆除（返还 木材 +5・石材 +2）",
+          "turn": true
+        },
+        "beltLimit": "每条最长240。从末端再接一条即可延伸。 | 木材 18 · 长度 240 / 240",
+        "removed": true
+      }
+    ]
+  },
+  "manualRails": {
+    "fixture": "Fresh ?lesson=1 save, visible inputs only; touch is CDP touch, not a real device",
+    "results": [
+      {
+        "mode": "pc",
+        "status": "passed",
+        "checks": [
+          "Conveyor card is locked before chapter 1",
+          "A blower placed by hand in the wrong place",
+          "Tapping the tree still harvests and selects nothing",
+          "Dragging a log next to the blower never selects it",
+          "Tapping the blower body gives strong wind (until +2.8s), not selection",
+          "Board removal: 2 clicks (right, left), 3.22s, wood 4 -> 6, no workshop dialog",
+          "Re-placed blower behind the landing point (5 / 8 in the preview) blows a log home by itself",
+          "A fence is selected with one tap and removed from the card"
+        ]
+      },
+      {
+        "mode": "touch",
+        "status": "passed",
+        "checks": [
+          "Conveyor card is locked before chapter 1",
+          "A blower placed by hand in the wrong place",
+          "Tapping the tree still harvests and selects nothing",
+          "Dragging a log next to the blower never selects it",
+          "Tapping the blower body gives strong wind (until +2.8s), not selection",
+          "Board removal: 2 inputs (hold, tap), 2.19s, wood 4 -> 6, no workshop dialog",
+          "Re-placed blower behind the landing point (5 / 8 in the preview) blows a log home by itself",
+          "A fence is selected with one tap and removed from the card"
+        ]
+      }
+    ]
+  },
+  "nodeTests": {
+    "files": 27,
+    "pass": 27,
+    "fail": 0,
+    "restoredArchivePass": 27
+  },
+  "publicVerification": "Proxy CONNECT 403; GitHub Actions API Forbidden; delivery unconfirmed.",
+  "groundJourney": {
+    "fixture": "Fresh ?lesson=1 save, visible inputs only; touch is CDP touch, not a real device; spot tree1-right",
+    "results": [
+      {
+        "mode": "pc",
+        "sixTaps": {
+          "left": 4.87,
+          "full": true,
+          "step": 2,
+          "selection": null
+        },
+        "blowerOnly": {
+          "seconds": 60,
+          "devices": {
+            "blowers": [
+              [
+                408,
+                334,
+                4
+              ]
+            ],
+            "fences": [],
+            "nodes": [
+              [
+                280,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                470,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                330,
+                395,
+                19,
+                "stone"
+              ],
+              [
+                490,
+                395,
+                19,
+                "stone"
+              ]
+            ],
+            "depot": {
+              "x": 100,
+              "y": 340
+            }
+          },
+          "directEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "stopped",
+              290,
+              328
+            ],
+            [
+              "stopped",
+              301,
+              306
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "predictedEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "stopped",
+              290,
+              328
+            ],
+            [
+              "stopped",
+              301,
+              306
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "blown": 7,
+          "predicted": "5 / 8",
+          "logs": 12,
+          "home": 7,
+          "matchesPreview": "12 / 12",
+          "mismatches": [],
+          "leftOnGround": 5
+        },
+        "fences": 1,
+        "withFences": {
+          "seconds": 60,
+          "devices": {
+            "blowers": [
+              [
+                408,
+                334,
+                4
+              ]
+            ],
+            "fences": [
+              [
+                344,
+                289.9,
+                299.7,
+                308.3
+              ]
+            ],
+            "nodes": [
+              [
+                280,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                470,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                330,
+                395,
+                19,
+                "stone"
+              ],
+              [
+                490,
+                395,
+                19,
+                "stone"
+              ]
+            ],
+            "depot": {
+              "x": 100,
+              "y": 340
+            }
+          },
+          "directEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "warehouse",
+              212,
+              353
+            ],
+            [
+              "warehouse",
+              212,
+              354
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "predictedEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "warehouse",
+              212,
+              353
+            ],
+            [
+              "warehouse",
+              212,
+              354
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "blown": 11,
+          "predicted": "7 / 8",
+          "logs": 12,
+          "home": 11,
+          "matchesPreview": "12 / 12",
+          "mismatches": [],
+          "leftOnGround": 1
+        },
+        "readyAt": 203.6,
+        "raidAt": 293.8,
+        "raidResult": {
+          "phase": "result",
+          "cleared": 1,
+          "win": true
+        },
+        "status": "passed",
+        "seconds": 316.5,
+        "manualCarries": 54,
+        "inputs": 145,
+        "blowers": 1,
+        "errors": []
+      },
+      {
+        "mode": "touch",
+        "sixTaps": {
+          "left": 4.93,
+          "full": true,
+          "step": 3,
+          "selection": null
+        },
+        "blowerOnly": {
+          "seconds": 60,
+          "devices": {
+            "blowers": [
+              [
+                408,
+                334,
+                4
+              ]
+            ],
+            "fences": [],
+            "nodes": [
+              [
+                280,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                470,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                330,
+                395,
+                19,
+                "stone"
+              ],
+              [
+                490,
+                395,
+                19,
+                "stone"
+              ]
+            ],
+            "depot": {
+              "x": 100,
+              "y": 340
+            }
+          },
+          "directEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "stopped",
+              290,
+              328
+            ],
+            [
+              "stopped",
+              301,
+              306
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "predictedEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "stopped",
+              290,
+              328
+            ],
+            [
+              "stopped",
+              301,
+              306
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "blown": 7,
+          "predicted": "5 / 8",
+          "logs": 11,
+          "home": 6,
+          "matchesPreview": "11 / 11",
+          "mismatches": [],
+          "leftOnGround": 5
+        },
+        "fences": 1,
+        "withFences": {
+          "seconds": 60,
+          "devices": {
+            "blowers": [
+              [
+                408,
+                334,
+                4
+              ]
+            ],
+            "fences": [
+              [
+                344,
+                289.9,
+                299.7,
+                308.3
+              ]
+            ],
+            "nodes": [
+              [
+                280,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                470,
+                300,
+                16,
+                "wood"
+              ],
+              [
+                330,
+                395,
+                19,
+                "stone"
+              ],
+              [
+                490,
+                395,
+                19,
+                "stone"
+              ]
+            ],
+            "depot": {
+              "x": 100,
+              "y": 340
+            }
+          },
+          "directEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "warehouse",
+              212,
+              353
+            ],
+            [
+              "warehouse",
+              212,
+              354
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "predictedEnds": [
+            [
+              "warehouse",
+              157,
+              322
+            ],
+            [
+              "warehouse",
+              210,
+              358
+            ],
+            [
+              "warehouse",
+              212,
+              353
+            ],
+            [
+              "warehouse",
+              212,
+              354
+            ],
+            [
+              "warehouse",
+              210,
+              351
+            ],
+            [
+              "warehouse",
+              211,
+              329
+            ],
+            [
+              "warehouse",
+              144,
+              380
+            ],
+            [
+              "stopped",
+              366,
+              358
+            ]
+          ],
+          "blown": 10,
+          "predicted": "7 / 8",
+          "logs": 12,
+          "home": 10,
+          "matchesPreview": "12 / 12",
+          "mismatches": [],
+          "leftOnGround": 2
+        },
+        "readyAt": 210.1,
+        "raidAt": 300.2,
+        "raidResult": {
+          "phase": "result",
+          "cleared": 1,
+          "win": true
+        },
+        "status": "passed",
+        "seconds": 323,
+        "manualCarries": 45,
+        "inputs": 130,
+        "blowers": 1,
+        "errors": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "fixture": "Save made by visible play on the pre-M1 build (http://127.0.0.1:4423/preview/?lesson=1), loaded into the M4 build; one prepared step (Chapter 1 set by state edit) is marked; touch is CDP touch",
+  "results": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "checks": [
+        "belts kept exactly (1, length 278)",
+        "items on belts: 1 before, 2 after load",
+        "work skills and inventory unchanged {\"carry\":1,\"hand\":0,\"route\":0,\"storage\":0}",
+        "conveyor, hopper and platform locked before chapter 1",
+        "the kept belt still delivers",
+        "removal card: {\"ja\":\"撤去（+3） · 解放前のため敷き直せません（章1クリアで解放）\",\"en\":\"Remove (+3) · Cannot be rebuilt until unlocked (clear Chapter 1).\",\"zh\":\"拆除（+3） · 解锁前无法重建（第1章通关后解锁）\"}",
+        "removed with the card: wood 8 -> 11 (half of 6)",
+        "still locked after removal",
+        "prepared: chapter 1 -> milestone once ({\"banner\":true,\"cues\":1}), cards open",
+        "after reload: no second milestone"
+      ]
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "checks": [
+        "belts kept exactly (1, length 278)",
+        "items on belts: 1 before, 2 after load",
+        "work skills and inventory unchanged {\"carry\":1,\"hand\":0,\"route\":0,\"storage\":0}",
+        "conveyor, hopper and platform locked before chapter 1",
+        "the kept belt still delivers",
+        "removal card: {\"ja\":\"撤去（+3） · 解放前のため敷き直せません（章1クリアで解放）\",\"en\":\"Remove (+3) · Cannot be rebuilt until unlocked (clear Chapter 1).\",\"zh\":\"拆除（+3） · 解锁前无法重建（第1章通关后解锁）\"}",
+        "removed with the card: wood 9 -> 12 (half of 6)",
+        "still locked after removal",
+        "prepared: chapter 1 -> milestone once ({\"banner\":true,\"cues\":1}), cards open",
+        "after reload: no second milestone"
+      ]
+    }
+  ]
+}

@@ -3,6 +3,7 @@
 <head>
 <script src="playtest-boot.js"></script>
 <meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%273%27 y=%2712%27 width=%2726%27 height=%2712%27 rx=%273%27 fill=%27%23c4ae76%27/%3E%3C/svg%3E">
 <!-- Google tag (gtag.js) -->
 
 <script>
@@ -564,13 +565,13 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261026-m3m6">
-<link rel="stylesheet" href="harvest-skills.css?v=20261026-m3m6">
-<link rel="stylesheet" href="outpost.css?v=20261026-m3m6">
-<link rel="stylesheet" href="ground-tools.css?v=20261026-m3m6">
-<link rel="stylesheet" href="compact-ui.css?v=20261026-m3m6">
-<link rel="stylesheet" href="outpost-tutorial.css?v=20261026-m3m6">
-<link rel="stylesheet" href="expedition-ui.css?v=20261026-m3m6">
+<link rel="stylesheet" href="rework.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="outpost.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="ground-tools.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="compact-ui.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="outpost-tutorial.css?v=20261026-m4m5-r1">
+<link rel="stylesheet" href="expedition-ui.css?v=20261026-m4m5-r1">
 </head>
 <body>
 <div id="titleScreen">
@@ -694,12 +695,12 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261026-m3m6"></script>
-<script src="outpost-core.js?v=20261026-m3m6"></script>
-<script src="supply-core.js?v=20261026-m3m6"></script>
-<script src="expedition-core.js?v=20261026-m3m6"></script>
-<script src="game-core.js?v=20261026-m3m6"></script>
-<script src="forest-audio.js?v=20261026-m3m6"></script>
+<script src="harvest-skill-core.js?v=20261026-m4m5-r1"></script>
+<script src="outpost-core.js?v=20261026-m4m5-r1"></script>
+<script src="supply-core.js?v=20261026-m4m5-r1"></script>
+<script src="expedition-core.js?v=20261026-m4m5-r1"></script>
+<script src="game-core.js?v=20261026-m4m5-r1"></script>
+<script src="forest-audio.js?v=20261026-m4m5-r1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -1511,6 +1512,8 @@ function weaponEvolveFx(w){
 function heroAttack(){
  if(!$("#titleScreen").classList.contains("hidden")||window.Rework?.paused||window.BattleControl?.defeated||document.hidden)return;
  if(window.BattleControl?.placement)return;
+ // During a raid Space always assists, even while a resource remains selected.
+ if(window.Outpost?.ready&&S.outpost?.phase==="active"){Outpost.manual();return;}
  if(window.SupplyFactory?.resourceTarget){SupplyFactory.harvestSelected();return;}
  if(window.Outpost?.ready){Outpost.manual();return;}
  if(bossDead) return;
@@ -2092,23 +2095,23 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261026-m3m6"></script>
-<script src="army-view.js?v=20261026-m3m6"></script>
+<script src="army-sim.js?v=20261026-m4m5-r1"></script>
+<script src="army-view.js?v=20261026-m4m5-r1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261026-m3m6"></script>
-<script src="ground-physics.js?v=20261026-m3m6"></script>
-<script src="supply-factory.js?v=20261026-m3m6"></script>
-<script src="camp-training.js?v=20261026-m3m6"></script>
-<script src="rail-core.js?v=20261026-m3m6"></script>
-<script src="conveyor-core.js?v=20261026-m3m6"></script>
-<script src="outpost-camp.js?v=20261026-m3m6"></script>
-<script src="outpost-tutorial-core.js?v=20261026-m3m6"></script>
-<script src="outpost-tutorial.js?v=20261026-m3m6"></script>
-<script src="outpost.js?v=20261026-m3m6"></script>
-<script src="rework.js?v=20261026-m3m6"></script>
-<script src="harvest-skills.js?v=20261026-m3m6"></script>
-<script src="placement-controls.js?v=20261026-m3m6"></script>
-<script src="expedition-ui.js?v=20261026-m3m6"></script>
-<script src="expedition-integration.js?v=20261026-m3m6"></script>
+<script src="battle-control.js?v=20261026-m4m5-r1"></script>
+<script src="ground-physics.js?v=20261026-m4m5-r1"></script>
+<script src="supply-factory.js?v=20261026-m4m5-r1"></script>
+<script src="camp-training.js?v=20261026-m4m5-r1"></script>
+<script src="rail-core.js?v=20261026-m4m5-r1"></script>
+<script src="conveyor-core.js?v=20261026-m4m5-r1"></script>
+<script src="outpost-camp.js?v=20261026-m4m5-r1"></script>
+<script src="outpost-tutorial-core.js?v=20261026-m4m5-r1"></script>
+<script src="outpost-tutorial.js?v=20261026-m4m5-r1"></script>
+<script src="outpost.js?v=20261026-m4m5-r1"></script>
+<script src="rework.js?v=20261026-m4m5-r1"></script>
+<script src="harvest-skills.js?v=20261026-m4m5-r1"></script>
+<script src="placement-controls.js?v=20261026-m4m5-r1"></script>
+<script src="expedition-ui.js?v=20261026-m4m5-r1"></script>
+<script src="expedition-integration.js?v=20261026-m4m5-r1"></script>
 </body>
 </html>

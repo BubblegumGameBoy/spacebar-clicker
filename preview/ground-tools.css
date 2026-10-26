@@ -3,4 +3,10 @@
 body.outpost-game .equipment-card.is-locked{opacity:.72}
 body.outpost-game .equipment-card.is-locked button,body.outpost-game .equipment-card button:disabled{background:#2a3a2e;border-color:#5f6b55;color:#c9c3a6;cursor:not-allowed}
 /* Placement bar: blower/fence modes show their hint once (in the rail panel), not squeezed into a one-character column. */
-.compact-play #placementControls[data-mode=blower]>.placement-hint,.compact-play #placementControls[data-mode=fence]>.placement-hint{display:none}
+.compact-play #placementControls[data-mode=blower]>.placement-hint,.compact-play #placementControls[data-mode=fence]>.placement-hint,.compact-play #placementControls[data-mode=hopper]>.placement-hint{display:none}
+
+/* M4: hopper card art, and the chapter 1 unlock: the newly opened cards glow a few times (no motion of the page). */
+.hopper-art{width:58px;height:57px;background-image:url(../assets/tool-hopper.webp);background-size:200% 100%;background-position:0 0}
+@keyframes unlockGlow{0%,100%{box-shadow:0 0 0 2px #f3d98a66}50%{box-shadow:0 0 0 3px #ffe7a0,0 0 18px 4px #f3d98a88}}
+body.outpost-game .equipment-card.just-unlocked{animation:unlockGlow 1.2s ease-in-out 4;border-color:#f3d98a}
+@media (prefers-reduced-motion:reduce){body.outpost-game .equipment-card.just-unlocked{animation:none;box-shadow:0 0 0 3px #ffe7a0}}
