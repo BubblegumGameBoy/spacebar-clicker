@@ -195,5 +195,17 @@
   if(id==='sword')return {damage:3,interval:1.2,range:28};
   return null;
  }
- return {WORLD,MAX_WAVE,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ // Road geometry for placement previews: the parts of each road an ally at `center` can reach.
+ function roadPath(lane){const y=laneY(lane);return [{x:WORLD.entryX,y},{x:WORLD.turnX,y},{x:WORLD.home.x,y:WORLD.home.y}];}
+ function circleSpan(a,b,c,r){const dx=b.x-a.x,dy=b.y-a.y,fx=a.x-c.x,fy=a.y-c.y,A=dx*dx+dy*dy,B=2*(fx*dx+fy*dy),C=fx*fx+fy*fy-r*r;if(!(r>0)||!A)return null;const disc=B*B-4*A*C;if(disc<0)return null;const q=Math.sqrt(disc),t0=Math.max(0,(-B-q)/(2*A)),t1=Math.min(1,(-B+q)/(2*A));return t1>t0?[t0,t1]:null;}
+ function coveredSpans(points,center,radius,minRadius=0){
+  const spans=[];if(!Array.isArray(points)||!Number.isFinite(center?.x)||!Number.isFinite(center?.y)||!Number.isFinite(radius))return spans;
+  const lerp=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
+  for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],outer=circleSpan(a,b,center,radius);if(!outer)continue;const inner=minRadius>0?circleSpan(a,b,center,minRadius):null;
+   const parts=inner?[[outer[0],Math.min(outer[1],inner[0])],[Math.max(outer[0],inner[1]),outer[1]]]:[outer];
+   for(const [t0,t1] of parts){if(t1-t0<=1e-9)continue;const from=lerp(a,b,t0),to=lerp(a,b,t1),last=spans.at(-1),tail=last?.points.at(-1);if(last&&last.segment===i-1&&t0<=1e-9&&Math.hypot(tail.x-from.x,tail.y-from.y)<1e-6){last.points.push(to);last.segment=i;}else spans.push({points:[from,to],segment:i});}}
+  return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
+ }
+ function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane),center,radius,minRadius).map(span=>({lane,...span})));}
+ return {roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });

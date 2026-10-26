@@ -17,7 +17,7 @@
   const key=value=>Number.isInteger(value)&&value>=1&&value<=1e12;
   const coordinate=(value,max)=>Number.isFinite(value)?Math.max(0,Math.min(max,value)):null;
   const route=value=>Array.isArray(value)&&value.length>=2&&value.length<=128&&value.every(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=960&&p.y>=0&&p.y<=540)?value.map(p=>({x:p.x,y:p.y})):null;
-  const camp={version:1,links:[],platforms:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true},links=new Set(),cargoKeys=new Set();
+  const camp={version:1,links:[],platforms:[],cargo:[],nextKey:1,tools:{wood:integer(raw.tools?.wood,0,2),stone:integer(raw.tools?.stone,0,2)},gate:raw.gate===true,beacon:raw.beacon===true,cart:raw.cart===true,endingSeen:raw.endingSeen===true,removeLearned:raw.removeLearned===true},links=new Set(),cargoKeys=new Set();
   for(const link of (Array.isArray(raw.links)?raw.links:[]).slice(0,500)){
    if(!link||!key(link.nodeKey)||!['wood','stone','food'].includes(link.type)||links.has(link.nodeKey))continue;
    if(link.kind!=='conveyor'&&!factory.nodes.some(node=>node.key===link.nodeKey&&node.type===link.type))continue;

@@ -13,6 +13,15 @@
 - 検証: `node --test --test-isolation=none test/*.test.cjs`（今回191件）。
 - 試遊ビルド: `python tools/build_playtest.py /tmp/mythos-test`。`python3 -m http.server 4397 --directory /tmp/mythos-test`。GAME_URL=http://127.0.0.1:4397/preview/ を各QAに渡す（ハードコードのスクリプトは確認）。
 
+## 2026-10-26 方針転換：ゴリゴリ制作モード（最新）
+
+- ユーザーは目の手術直後で画面を見にくい。**判断はすべてメイン担当に一任**（細部の確認はしない方針）。報告は短く、結論から。ただし実装→別視点レビュー→実プレイ→修正は必ず通す。
+- 計画は `dev/DIRECTOR_PLAN.md`（M1〜M15）。画像の依頼は `dev/ART_REQUESTS.md`（表）と `dev/ART_PROMPTS.md`（codexへ貼る文）。第1便28点はcodexが生成済みで `assets/_incoming/`（原本PNG、未加工）、寸法の違いは `dev/ART_GENERATION_STATUS.md`。WebP化と切り出しはこちらで行う。
+- **M1完了**（盤面でのベルト・受け土台の選択と撤去、配置の印を楕円＋薄い肖像へ、道の射程区間の塗り、カードの「×1」→「1人」）。**M2完了**（スキル購入の音の階層 skill/skillMilestone/mastery/skillReady、進行ゲージの背骨、大きな数字、ノード上の習得、連打での二重購入防止、拾う音の音程の階段と満杯）。どちらも別エージェントのコードレビュー→修正済み。Node 225件。
+- 範囲円は配置の可否判定と同じ「射程+23」。実際の攻撃判定は射程＋仲間の半径＋敵の半径なので、バリスタは表示より12広く届く（既知）。
+- **M3準備**：`2/ground-physics.js`（純関数、まだindex.htmlに未接続）と `dev/M3_PHYSICS_NOTES.md`（数値・組み込み手順・決定事項）。
+- 環境の注意：QAスクリプトは /usr/bin/chromium 決め打ち。Playwrightのchromeへsymlinkを張る。Node 22では `--test-isolation=none` が無いので `node --test test/*.test.cjs`。`2/`・新規テスト・toolsはgit管理外（.git/info/excludeに追加）で、`dev/sequel-source.tar.gz` に詰め直す。公開するたびに `2/index.html` の `?v=` を上げる。
+
 ## ユーザーの判断軸
 
 演出専門家「ドパガキ」役も置く（2026-10-25）。参考作 https://dopa-drill.tanosix.com/ の実操作・効果音・エフェクト・報酬の強弱を観測して構造を学び、directorへ具体的フィードバックを渡す。copy catは幅広い作品から設計原理を探し、ドパガキは操作と音・絵の応答の細部を重点評価する。未観測の参考作を調査済みとせず、通常入力・成功・連続成功・節目を分け、常時画面揺れを足さない。本番サイトへの初回接続はproxy CONNECT403だったが、その後GitHub公開ソースのローカル実操作から分析を完了。観測と採用結果はdev/DOPAGAKI_REVIEW.mdを参照。

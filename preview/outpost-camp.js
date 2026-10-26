@@ -29,6 +29,7 @@ window.OutpostCamp = (() => {
  const beltWords={platformBlocked:['ここには おけないよ。べつの ばしょに おこう。','Choose another clear place for the platform.','这里不能放置，请选择其他空地。'],platformBuild:['▦ うけとるだい','▦ Receiving platform','▦ 接料平台'],platformHint:['だいを おこう。やじるしの さきに ベルトを つなごう。','Place a platform. Connect a belt at its output arrow.','放置平台，并把传送带连接到箭头出口。'],platformCost:['き8・いし4','8 wood · 4 stone','8木材·4石材'],rotate:['むき ↻','Turn ↻','转向 ↻'],freeBeltHint:['とどけたい ばしょから ひっぱろう！ やじるしは はじめの ばしょへ。','Drag from the destination toward the incoming items. Arrows point back to your starting point.','从接收处向来料方向拖动，箭头指向起点。'],beltCollect:['まず きを おうちへ はこぼう（き 2〜）','First deliver wood to the house (from 1 wood).','先把木材送入房屋（木材1起）。'],beltBuild:['▰ コンベア','▰ Conveyor','▰ 传送带'],beltHint:['とどけたい ところから ひっぱって のばそう！','Drag from the destination toward incoming items!','从接收处向来料方向拖动延伸！'],beltRelease:['はなすと つくれるよ。き ','Release to build. Wood ','松开建造。木材 '],beltWood:['きが たりないよ。みじかく ひこう。','Not enough wood. Draw a shorter belt.','木材不足，请缩短传送带。'],beltPlaced:['できた！ うえに き・いしを のせよう！','Built! Drop wood or stone onto the belt!','建好了！把木石放到传送带上！'],beltFeed:['コンベアか おうちへ はなそう！','Release on a conveyor or the house!','在传送带或房屋上松开！']};
  const railWords={chooseSource:['どこから はこぶ？ き・いしの ○ を おそう。','Choose a worksite: click its loading circle.','选择采集点，点击装货圆圈。'],layRoute:['ちかくの じめんを おして レールを のばそう。おうちまで つなごう。','Click nearby ground to extend the rails. Reach the house.','点击附近地面延伸轨道，直到房屋。'],confirmRoute:['おうちに つながった！ ねだんを みて つくろう。','Connected to the house. Check the price and build.','已连接房屋，确认费用后建造。'],undo:['ひとつ もどす','Undo point','撤销一点'],cancelRail:['やめる','Cancel','取消'],layRail:['この みちを つくる','Build this route','修建此路线'],gap:['とおすぎるよ。ちかくに ひとつずつ おこう。','Too far. Place one short section at a time.','太远了，请逐段铺设。'],object:['き・いわを よけて おこう。','Go around trees and rocks.','请绕开树木和岩石。'],bounds:['じめんの なかに おこう。','Keep the rails on the field.','请在场地内铺设。'],short:['もうすこし はなれた ところへ。','Choose a point farther away.','请选择稍远一点的位置。'],long:['みちが ながすぎるよ。もどして みじかくしよう。','Route too long. Undo some points.','路线过长，请撤销部分节点。'],remove:['こわす・はんぶん もどる','Remove / half refund','拆除·退还一半'],railPrice:['8G ＋ ながさ32ごとに2G','8G station + 2G per 32 distance','站点8G＋每32距离2G'],draw:['じぶんで レールを しく','Lay rails yourself','手动铺设轨道']};
  const projectWords={rails:['コンベア','Conveyors','传送带'],growth:['どうぐ・おうち','Tools / home','工具·营地'],woodTool:['きこりの どうぐ','Lumberjack tools','伐木工具'],stoneTool:['いしほりの どうぐ','Mining tools','采矿工具'],cart:['コンベアの モーター','Conveyor motor','传送带马达'],gate:['みはりの もん','Watch gate','守望门'],beacon:['まちへの あかり','Town beacon','城镇灯塔'],made:['できた！','Built!','已建成！'],make:['つくる','Build','建造'],locked:['まずは ここまで まもろう','Defend up to this raid first','先守住这一波'],rank:['だんかい','Level','阶段'],materials:['つかうもの','Materials','材料'],faster:['ひとりで はやく はたらける！','Each worker gathers faster.','每位工人采集更快。'],cartEffect:['ベルトの はやさ ×1.25！','Belt speed ×1.25!','传送带速度×1.25！'],gateEffect:['おうちの まえで 2.5びょう まにあう！','A 2.5-second rescue window at the house.','房屋前有2.5秒的救援时间。'],beaconEffect:['まちへの みちを ひらく あかり。さいごの むれを まもろう！','Light the way to town, then defend the final raid.','点亮通往城镇的道路，守住最终袭击。'],projectDone:['できた！ なかまの しごとを みてみよう。','Built! Watch your camp work.','建好了！看看营地的变化。']};
+ const pickWords={turn:['向きを変える ↻','Turn ↻','转向 ↻'],removeHint:['タップで撤去','Tap to remove','点击可拆除'],length:['長さ','length ','长度']};
  // Short, ordinary language; concrete quantities remain visible in all locales.
  const japanese={beltCollect:'木材を倉庫へ納品すると設置できます（木材1〜）。',warehouse:'倉庫',workshop:'工房',close:'閉じる',wood:'木材',stone:'石材',gold:'所持金',title:'作業場の設備',intro:'コンベアに載った資材だけが運ばれます。倉庫から伸ばすか、受け土台とつないで経路を作りましょう。',available:'倉庫に届いた資材で建設できます。',worker:'作業中の仲間',people:'人',inTransit:'資材を搬送中',arrived:'倉庫に納品しました',tapHome:'倉庫を押すと工房を開きます',clickPile:'資材をつかんで倉庫へ運ぶ',dragging:'倉庫かコンベアの上で離す',returned:'地面に戻しました',firstRail:'コンベアを選び、倉庫から伸ばして敷設',stoneNext:'石材の落下先も倉庫につなごう',bothRails:'ベルトに載った資材が倉庫へ届く',platformBuild:'▦ 受け土台',platformHint:'地面を押して仮置き。向きを選び、離して建設。',platformCost:'木材8 ＋ 石材4',beltHint:'届け先から、資材を受け取る場所へ引き伸ばす',beltRelease:'離すと建設。木材 ',beltWood:'木材が足りません。短く敷設してください。',beltPlaced:'建設完了。上に資材を載せると動きます。',beltFeed:'コンベアか倉庫の上で離す',undo:'直前の建設を戻す',cancelRail:'建設を終了',growth:'工具・拠点',woodTool:'木こりの工具',stoneTool:'採掘の工具',cart:'コンベアのモーター',gate:'見張り門',beacon:'街への灯火',made:'建設済み',make:'建設する',locked:'指定の襲撃を防ぐと解放',rank:'段階',materials:'必要資材',faster:'各作業員の採集速度が上がる',cartEffect:'コンベアの搬送速度 ×1.25',gateEffect:'倉庫の前で敵を2.5秒足止めする',beaconEffect:'弓兵の射程が90から110へ拡大。最後の襲撃に備える任意の強化。',projectDone:'建設完了。作業場の変化を確認しよう。'};
  for(const [key,text]of Object.entries(japanese)){const entry=words[key]||projectWords[key]||railWords[key]||beltWords[key];if(entry)entry[0]=text;}
@@ -42,11 +43,12 @@ window.OutpostCamp = (() => {
  let drag=null,dragGhost=null,dragInstalled=false;
  let railDraft=null,railPanel=null,railHover=null,railError='',beltPointer=null,beltButton=null,beltHistory=[],platformButton=null,platformMode=false,platformPreview=null,platformDir=0;
  let activeTab='rails',workshopMessage='';
+ let pulse=null,picked=null,pickCard=null,pickPress=null,pickHighlight=null,folding=[],removeHint=null,removeHintShown=false;
  let booted=false,activeCamp=null,railClock=0,uiClock=0,houseFlash=0;
  let warehouse=null,overlay=null,goldLabel=null,deliveryLabel=null,workshopStatus=null;
  let statusKey='clickPile',statusUntil=0,visualTime=0,positionKey='',languageKey='',notices=[];
  const language=()=>typeof LANG==='string'?LANG:'ja';
- const tr=key=>(words[key]||projectWords[key]||railWords[key]||beltWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
+ const tr=key=>(words[key]||projectWords[key]||railWords[key]||beltWords[key]||pickWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
  const format=n=>typeof fmt==='function'?fmt(n):String(Math.floor(n));
  const current=()=>typeof S==='undefined'?null:S;
  const setText=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value;};
@@ -68,7 +70,7 @@ window.OutpostCamp = (() => {
    s.factory.nodes=[{key:1,type:'wood',x:280,y:300},{key:2,type:'wood',x:470,y:300},{key:3,type:'stone',x:330,y:395},{key:4,type:'stone',x:490,y:395}].map(n=>({...n,stock:300,radius:n.type==='wood'?16:19,regrow:0}));
    s.factory.next=Math.max(5,s.factory.next||1,...s.factory.drops.map(d=>(Number(d.key)||0)+1));
   }
-  s.camp.platforms??=[];s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen'])s.camp[flag]=s.camp[flag]===true;
+  s.camp.platforms??=[];s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen','removeLearned'])s.camp[flag]=s.camp[flag]===true;
   if(activeCamp!==s.camp){
    activeCamp=s.camp;railClock=0;uiClock=0;houseFlash=0;notices=[];railDraft=null;railHover=null;
    statusKey='clickPile';statusUntil=0;languageKey='';
@@ -100,6 +102,7 @@ window.OutpostCamp = (() => {
    warehouse.insertBefore(inventory,warehouse.querySelector('#campDeliveryNote'));
    goldLabel=warehouse.querySelector('#campGold');deliveryLabel=warehouse.querySelector('#campDeliveryNote');
   }else if(inventory.parentElement!==warehouse)warehouse.insertBefore(inventory,deliveryLabel);
+  if(!pickCard){pickCard=document.createElement('div');pickCard.id='beltActions';pickCard.hidden=true;pickCard.setAttribute('role','group');pickCard.innerHTML='<b class="belt-actions-title"></b><div class="belt-actions-buttons"><button type="button" data-pick-action="turn"></button><button type="button" data-pick-action="remove"></button></div>';field.append(pickCard);pickCard.addEventListener('pointerdown',e=>e.stopPropagation());pickCard.addEventListener('click',e=>{const action=e.target.closest('[data-pick-action]')?.dataset.pickAction;if(!action||!picked||window.Rework?.paused)return;if(action==='remove')removePiece(picked.kind,picked.key);else turnPlatform(picked.key);});}
   const toolbar=document.getElementById('rxToolbar'),tools=document.getElementById('hudTools');
   if(toolbar&&tools&&tools.parentElement!==toolbar)toolbar.append(tools);
  }
@@ -110,10 +113,13 @@ window.OutpostCamp = (() => {
   overlay.innerHTML='<section class="rx-dialog camp-workshop" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="campWorkshopTitle"><button type="button" class="rx-close"></button><span class="rx-kicker">CAMP WORKSHOP</span><h2 id="campWorkshopTitle"></h2><p class="camp-workshop-intro"></p><p class="camp-workshop-wallet"><span></span> <strong></strong></p><p class="camp-stock-wallet"></p><div class="camp-workshop-tabs"><button type="button" data-camp-tab="rails"></button><button type="button" data-camp-tab="growth"></button></div><div class="camp-rail-options">'+['wood','stone'].map(type=>'<section class="camp-rail-option" data-camp-option="'+type+'"><div class="camp-rail-heading"><h3></h3><span class="camp-rail-count"></span></div><div class="camp-route"><b class="camp-route-origin"></b><span class="camp-route-track" aria-hidden="true"></span><b class="camp-route-home"></b></div><p class="camp-rail-rate"></p><p class="camp-rail-workers"></p><button type="button" data-camp-build="'+type+'"><span></span><strong></strong></button><small class="camp-rail-afford"></small></section>').join('')+'</div><div class="camp-projects" hidden></div><p class="camp-workshop-status" role="status" aria-live="polite"></p><p class="camp-workshop-note"></p></section>';
   document.body.append(overlay);workshopStatus=overlay.querySelector('.camp-workshop-status');
   overlay.querySelector('.rx-close').onclick=()=>window.Rework?.close();
+  const rowPiece=e=>{const b=e.target.closest?.('[data-camp-remove],[data-platform-turn],[data-platform-remove]');return b?(b.dataset.campRemove!==undefined?{kind:'belt',key:b.dataset.campRemove}:{kind:'platform',key:b.dataset.platformTurn??b.dataset.platformRemove}):null;};
+  // The board is paused under the dialog, so redraw once whenever the highlighted row changes.
+  const highlight=p=>{if(JSON.stringify(p)===JSON.stringify(pickHighlight))return;pickHighlight=p;window.ArmyView?.redraw?.();};for(const type of ['pointerover','focusin'])overlay.addEventListener(type,e=>highlight(rowPiece(e)));for(const type of ['pointerout','focusout'])overlay.addEventListener(type,e=>{if(rowPiece(e))highlight(null);});
   overlay.addEventListener('click',e=>{
    if(e.target===overlay){window.Rework?.close();return;}
    const tab=e.target.closest('[data-camp-tab]');if(tab){activeTab=tab.dataset.campTab;syncWorkshop(state());return;}const project=e.target.closest('[data-camp-project]');if(project&&!project.disabled){build(project.dataset.campProject);return;}
-   const turn=e.target.closest('[data-platform-turn]');if(turn){const p=state().camp.platforms.find(p=>p.key===Number(turn.dataset.platformTurn));if(p){p.dir=(p.dir+1)%4;persist();syncWorkshop(state());}return;}const platformRemove=e.target.closest('[data-platform-remove]');if(platformRemove){const i=state().camp.platforms.findIndex(p=>p.key===Number(platformRemove.dataset.platformRemove));if(i>=0){state().camp.platforms.splice(i,1);state().factory.inventory.wood+=4;state().factory.inventory.stone+=2;persist();syncWorkshop(state());}return;}const remove=e.target.closest('[data-camp-remove]');if(remove){removeRail(remove.dataset.campRemove);return;}const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
+   const turn=e.target.closest('[data-platform-turn]');if(turn){const p=state().camp.platforms.find(p=>p.key===Number(turn.dataset.platformTurn));if(p)turnPlatform(p.key);return;}const platformRemove=e.target.closest('[data-platform-remove]');if(platformRemove){const i=state().camp.platforms.findIndex(p=>p.key===Number(platformRemove.dataset.platformRemove));if(i>=0)removePiece('platform',state().camp.platforms[i].key);return;}const remove=e.target.closest('[data-camp-remove]');if(remove){removeRail(remove.dataset.campRemove);return;}const button=e.target.closest('[data-camp-build]');if(button&&!button.disabled)buildRail(button.dataset.campBuild);
   });
  }
 
@@ -135,7 +141,7 @@ window.OutpostCamp = (() => {
    setText(card.querySelector('.camp-rail-rate'),tr('intro'));setText(card.querySelector('.camp-rail-workers'),tr('beltHint'));
    const button=card.querySelector('[data-camp-build]');setText(button.querySelector('span'),tr('beltBuild'));setText(button.querySelector('strong'),language()==='ja'?'木材1〜':language()==='zh'?'木材1起':'Wood: 1+');button.disabled=s.factory.inventory.wood<1;
    setText(card.querySelector('.camp-rail-afford'),s.factory.inventory.wood<1?tr('beltWood'):'');
-   let routes=card.querySelector('.camp-existing-routes');if(!routes){routes=document.createElement('div');routes.className='camp-existing-routes';card.append(routes);}routes.replaceChildren(...s.camp.links.map(l=>{const b=document.createElement('button');b.type='button';b.dataset.campRemove=l.nodeKey;b.textContent=tr('rail')+' '+l.nodeKey+' ×';return b;}),...s.camp.platforms.flatMap(p=>{const turn=document.createElement('button'),remove=document.createElement('button');turn.type=remove.type='button';turn.dataset.platformTurn=p.key;remove.dataset.platformRemove=p.key;turn.textContent=tr('platformBuild')+' '+p.key+' ↻';remove.textContent=tr('platformBuild')+' '+p.key+' ×';return[turn,remove];}));
+   let routes=card.querySelector('.camp-existing-routes');if(!routes){routes=document.createElement('div');routes.className='camp-existing-routes';card.append(routes);}routes.replaceChildren(...s.camp.links.map(l=>{const b=document.createElement('button');b.type='button';b.dataset.campRemove=l.nodeKey;b.textContent=pieceName({kind:'belt',key:l.nodeKey})+' · '+local(['建設 木材'+(l.costWood||0),'built for '+(l.costWood||0)+' wood','建造 木材'+(l.costWood||0)])+' · '+removeLabel({kind:'belt',link:l},true);return b;}),...s.camp.platforms.flatMap(p=>{const turn=document.createElement('button'),remove=document.createElement('button');turn.type=remove.type='button';turn.dataset.platformTurn=p.key;remove.dataset.platformRemove=p.key;turn.textContent=pieceName({kind:'platform',key:p.key})+' · '+tr('turn');remove.textContent=pieceName({kind:'platform',key:p.key})+' · '+removeLabel({kind:'platform',platform:p},true);return[turn,remove];}));
   }
  }
 
@@ -153,7 +159,7 @@ window.OutpostCamp = (() => {
    const hasCargo=s.camp.cargo.length>0||s.factory.drops.some(d=>!heldDrop(d)&&ConveyorCore.contact(s.camp.links,d));
    setText(deliveryLabel,statusUntil>visualTime?tr(statusKey):tr(hasCargo?'inTransit':'tapHome'));
   }
-  if(overlay?.classList.contains('on'))syncWorkshop(s);if(railDraft)syncRailPanel();
+  if(overlay?.classList.contains('on'))syncWorkshop(s);if(railDraft)syncRailPanel();syncPick();
  }
 
  function cleared(s=state()){return Math.max(0,s?.outpost?.cleared||0,s?.clearedBossWave||0);}
@@ -230,14 +236,44 @@ window.OutpostCamp = (() => {
   setText(railPanel.querySelector('[data-rail-action="undo"]'),tr('undo'));setText(railPanel.querySelector('[data-rail-action="cancel"]'),tr('cancelRail'));railPanel.querySelector('[data-rail-action="undo"]').disabled=!beltHistory.length;
  }
  function commitRails(){
-  const s=state(),d=railDraft;if(Rework.paused||!d||d.owner!==s||d.points.length<2)return false;if(ConveyorCore.length(d.points)-(d.startLength||0)<10)return false;const price=beltPrice(d);if(s.factory.inventory.wood<price){railError='wood';syncRailPanel();return false;}
+  const s=state(),d=railDraft;if(Rework.paused||!d||d.owner!==s||d.points.length<2)return false;if(d.link&&!s.camp.links.includes(d.link)){cancelBeltGesture();return false;}if(ConveyorCore.length(d.points)-(d.startLength||0)<10)return false;const price=beltPrice(d);if(s.factory.inventory.wood<price){railError='wood';syncRailPanel();return false;}
   const old=d.link?{...d.link,points:d.link.points.map(p=>({...p}))}:null;s.factory.inventory.wood-=price;
   if(d.link){d.link.points=d.points.map(p=>({...p}));d.link.costWood=(d.link.costWood||d.oldCost||0)+price;d.link.kind='conveyor';}
   else{const nodeKey=Math.max(0,...s.camp.links.map(l=>Number(l.nodeKey)||0))+1;s.camp.links.push({nodeKey,type:'wood',kind:'conveyor',points:d.points.map(p=>({...p})),costWood:price});}
-  beltHistory.push({nodeKey:d.link?.nodeKey||s.camp.links.at(-1).nodeKey,old,price});railDraft={points:[],owner:s};railError='';statusKey='beltPlaced';statusUntil=visualTime+4;audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();if(document.body.classList.contains('compact-play'))stopRails();return true;
+  beltHistory.push({nodeKey:d.link?.nodeKey||s.camp.links.at(-1).nodeKey,old,price});if(!s.camp.removeLearned&&!removeHintShown){removeHintShown=true;removeHint={key:beltHistory.at(-1).nodeKey,until:visualTime+10};}railDraft={points:[],owner:s};railError='';statusKey='beltPlaced';statusUntil=visualTime+4;audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();if(document.body.classList.contains('compact-play'))stopRails();return true;
  }
  function undoBelt(){const h=beltHistory.pop(),s=state();if(!h)return;if(h.platform){const j=s.camp.platforms.findIndex(p=>p.key===h.platform);if(j>=0){s.camp.platforms.splice(j,1);s.factory.inventory.wood+=8;s.factory.inventory.stone+=4;}persist();window.SupplyFactory?.translate();syncRailPanel();return;}const i=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,h.nodeKey));if(i<0)return;if(h.old)s.camp.links[i]=h.old;else s.camp.links.splice(i,1);s.factory.inventory.wood+=h.price;persist();window.SupplyFactory?.translate();syncRailPanel();}
- function removeRail(key){const s=state(),i=s.camp.links.findIndex(l=>keyEqual(l.nodeKey,key));if(i<0)return false;const link=s.camp.links[i];s.camp.links.splice(i,1);s.factory.inventory.wood+=Math.floor((link.costWood||0)*.5);persist();syncDOM();syncWorkshop(s);return true;}
+ function removeRail(key){return removePiece('belt',key);}
+ // Board selection: the second action (the card button or Delete) removes; no extra confirmation dialog.
+ const local=a=>a[Math.max(0,['ja','en','zh'].indexOf(language()))];
+ function pieceOf(s,p){if(!s||!p)return null;if(p.kind==='platform'){const platform=s.camp.platforms.find(a=>keyEqual(a.key,p.key));return platform?{kind:'platform',key:platform.key,platform}:null;}const link=s.camp.links.find(l=>keyEqual(l.nodeKey,p.key));return link?{kind:'belt',key:link.nodeKey,link}:null;}
+ function pieceName(p){return local(p.kind==='platform'?['受け土台','Platform ','接收平台']:['コンベア','Conveyor ','传送带'])+p.key;}
+ function removeLabel(piece,short=false){const r=ConveyorCore.removalRefund(piece);if(short)return local(['撤去（','Remove (','拆除（'])+'+'+r.wood+(r.stone?'・+'+r.stone:'')+local(['）',')','）']);return r.stone?local(['撤去（木材 +'+r.wood+'・石材 +'+r.stone+'）','Remove (+'+r.wood+' wood, +'+r.stone+' stone back)','拆除（返还 木材 +'+r.wood+'・石材 +'+r.stone+'）']):local(['撤去（木材 +'+r.wood+' 返却）','Remove (+'+r.wood+' wood back)','拆除（返还 木材 +'+r.wood+'）']);}
+ function pickAt(point){
+  const s=state(),z=ArmyView.camera.scale;if(!s||!point||houseContains(point)||window.SupplyFactory?.pileAt?.(point)||window.Outpost?.enemyAt?.(point))return null;
+  // Same footprint as the gather input: tapping a tree or rock always harvests, never selects a belt.
+  if(s.factory.nodes.some(n=>{const half=Math.max((n.type==='wood'?85:66)/2,23/z);return Math.abs(point.x-n.x)<=half&&point.y>=n.y-(n.type==='wood'?100:n.type==='food'?72:54)-5&&point.y<=n.y+9;}))return null;
+  return ConveyorCore.hitLink(s.camp.links,s.camp.platforms,point,Math.max(10,22/z));
+ }
+ function select(hit){if(hit&&window.BattleControl?.placement)hit=null;picked=hit?{kind:hit.kind,key:hit.key,anchor:{x:hit.x,y:hit.y}}:null;if(picked){removeHint=null;audio('place');}syncPick();return !!picked;}
+ function syncPick(){
+  if(!pickCard)return;const s=state(),piece=pieceOf(s,picked);if(picked&&!piece)picked=null;pickCard.hidden=!piece;if(!piece)return;
+  setText(pickCard.querySelector('.belt-actions-title'),pieceName(piece));const turn=pickCard.querySelector('[data-pick-action="turn"]');turn.hidden=piece.kind!=='platform';setText(turn,tr('turn'));setText(pickCard.querySelector('[data-pick-action="remove"]'),removeLabel(piece));
+ }
+ function turnPlatform(key){const p=state()?.camp.platforms.find(p=>keyEqual(p.key,key));if(!p)return false;p.dir=(p.dir+1)%4;audio('place');persist();window.SupplyFactory?.translate();syncWorkshop(state());return true;}
+ function removePiece(kind,key){
+  const s=state(),piece=pieceOf(s,{kind,key});if(!piece)return false;
+  // A belt being stretched (possibly this one) must not be charged after its link is gone.
+  if(beltPointer!==null||railDraft?.link===piece.link)cancelBeltGesture();
+  if(kind==='platform')s.camp.platforms.splice(s.camp.platforms.indexOf(piece.platform),1);else s.camp.links.splice(s.camp.links.indexOf(piece.link),1);
+  const refund=ConveyorCore.removalRefund(piece);s.factory.inventory.wood+=refund.wood;s.factory.inventory.stone+=refund.stone;
+  ConveyorCore.releaseItems(s.factory.drops,piece,s.camp.links,s.camp.platforms); // held items too: their release re-tags any belt they land on
+  beltHistory=beltHistory.filter(h=>kind==='platform'?!keyEqual(h.platform,piece.key):!keyEqual(h.nodeKey,piece.key));
+  if(!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)folding.push(kind==='platform'?{platform:{...piece.platform},age:0}:{points:ConveyorCore.oriented(piece.link).map(p=>({...p})),age:0});
+  for(const type of ['wood','stone'])if(refund[type])notices.push({type,count:refund[type],age:0});notices=notices.slice(-4);
+  if(picked&&picked.kind===kind&&keyEqual(picked.key,key))picked=null;if(pickHighlight&&keyEqual(pickHighlight.key,key))pickHighlight=null;removeHint=null;s.camp.removeLearned=true;
+  audio('pickup');persist();window.SupplyFactory?.translate();syncDOM();syncWorkshop(s);syncPick();if(railDraft)syncRailPanel();else window.PlacementControls?.sync?.();return true;
+ }
  function buildPlatform(){buildRail();platformMode=true;platformPreview=null;railError='';syncRailPanel();return true;}
  function platformFits(point){const s=state();return point.x>=50&&point.x<=910&&point.y>=170&&point.y<=500&&Math.hypot(point.x-HOME.x,point.y-HOME.y)>=75&&!s.camp.platforms.some(p=>Math.abs(p.x-point.x)<96&&Math.abs(p.y-point.y)<64);}
  function placePlatform(point){if(Rework.paused||!railDraft||!platformMode)return false;const s=state();if(s.factory.inventory.wood<8||s.factory.inventory.stone<4){railError='materials';syncRailPanel();return false;}if(!platformFits(point)){railError='area';syncRailPanel();return false;}
@@ -259,13 +295,22 @@ window.OutpostCamp = (() => {
   panels.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=equipmentTouch,b=e.target.closest('[data-equipment]');equipmentTouch=null;if(!t||!b||b.dataset.equipment!==t.id||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();lastEquipmentTouch={id:t.id,at:performance.now()};chooseEquipment(t.id);});
   panels.addEventListener('click',e=>{const b=e.target.closest('[data-equipment]');if(!b)return;e.preventDefault();if(lastEquipmentTouch?.id===b.dataset.equipment&&performance.now()-lastEquipmentTouch.at<700)return;chooseEquipment(b.dataset.equipment);});
   const field=document.getElementById('field');beltButton=document.createElement('button');beltButton.id='conveyorBuild';beltButton.type='button';beltButton.textContent=tr('beltBuild');beltButton.onclick=()=>railDraft&&!platformMode?stopRails():buildRail();document.getElementById('rxToolbar').prepend(beltButton);platformButton=document.createElement('button');platformButton.id='conveyorPlatformBuild';platformButton.type='button';platformButton.textContent=tr('platformBuild');platformButton.onclick=()=>platformMode?stopRails():buildPlatform();beltButton.after(platformButton);
-  field.addEventListener('pointerdown',e=>{if(!railDraft||Rework.paused||e.target.closest('button,input,select'))return;e.preventDefault();e.stopImmediatePropagation();if(e.button!==0||e.isPrimary===false)return;if(platformMode){platformPreview=ArmyView.point(e.clientX,e.clientY);}else if(!beltStart(ArmyView.point(e.clientX,e.clientY)))return;beltPointer=e.pointerId;try{field.setPointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
+  field.addEventListener('pointerdown',e=>{if(!railDraft||Rework.paused||e.target.closest('button,input,select'))return;e.preventDefault();e.stopImmediatePropagation();if(e.button!==0||e.isPrimary===false)return;if(platformMode){platformPreview=ArmyView.point(e.clientX,e.clientY);}else if(!beltStart(ArmyView.point(e.clientX,e.clientY)))return;pickPress=platformMode?null:{pointerId:e.pointerId,x:e.clientX,y:e.clientY,point:ArmyView.point(e.clientX,e.clientY)};beltPointer=e.pointerId;try{field.setPointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
   field.addEventListener('pointermove',e=>{if(platformMode&&railDraft){platformPreview=ArmyView.point(e.clientX,e.clientY);if(beltPointer!==e.pointerId)return;}if(!railDraft||beltPointer!==e.pointerId)return;e.preventDefault();e.stopImmediatePropagation();const p=ArmyView.point(e.clientX,e.clientY);p.x=clamp(p.x,14,946);p.y=clamp(p.y,140,520);if(platformMode)platformPreview=p;else railDraft.points=ConveyorCore.stretch(railDraft.points,p);railHover=p;syncRailPanel();},true);
-  field.addEventListener('pointerup',e=>{if(beltPointer!==e.pointerId)return;e.preventDefault();e.stopImmediatePropagation();beltPointer=null;if(platformMode){placePlatform(ArmyView.point(e.clientX,e.clientY));}else commitRails();if(railDraft){railDraft.points=[];railDraft.link=null;railDraft.oldCost=0;}try{field.releasePointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
+  field.addEventListener('pointerup',e=>{if(beltPointer!==e.pointerId)return;e.preventDefault();e.stopImmediatePropagation();beltPointer=null;const tap=pickPress?.pointerId===e.pointerId&&Math.hypot(e.clientX-pickPress.x,e.clientY-pickPress.y)<8?pickPress:null;pickPress=null;if(platformMode){placePlatform(ArmyView.point(e.clientX,e.clientY));}else if(tap){const s=state();select(ConveyorCore.hitLink(s.camp.links,s.camp.platforms,tap.point,Math.max(10,22/ArmyView.camera.scale)));}else commitRails();if(railDraft){railDraft.points=[];railDraft.link=null;railDraft.oldCost=0;}try{field.releasePointerCapture(e.pointerId);}catch(_){}syncRailPanel();},true);
   field.addEventListener('pointercancel',e=>{if(beltPointer!==e.pointerId)return;cancelBeltGesture();syncRailPanel();},true);
-  window.addEventListener('keydown',e=>{if(!railDraft||e.defaultPrevented||window.Rework?.paused)return;if(e.key==='Escape')stopRails();if(e.key==='Backspace'){e.preventDefault();undoBelt();}});window.addEventListener('blur',()=>{cancelBeltGesture();syncRailPanel();});window.addEventListener('pagehide',stopRails);
+  window.addEventListener('keydown',e=>{if(picked&&!e.defaultPrevented&&!window.Rework?.paused&&!e.target?.closest?.('input,textarea,select')){if(beltPointer!==null||drag)return;if(e.key==='Escape'){select(null);return;}if(e.key==='Delete'||e.key==='Backspace'&&!railDraft){e.preventDefault();removePiece(picked.kind,picked.key);return;}}if(!railDraft||e.defaultPrevented||window.Rework?.paused)return;if(e.key==='Escape')stopRails();if(e.key==='Backspace'){e.preventDefault();undoBelt();}});window.addEventListener('blur',()=>{cancelBeltGesture();syncRailPanel();});window.addEventListener('pagehide',stopRails);
  }
 
+ function installPick(){
+  const field=document.getElementById('field'),moved=(e,p)=>Math.hypot(e.clientX-p.x,e.clientY-p.y)>=8;
+  // Capture only records a candidate; trees, piles, allies, enemies and the house keep their own handlers.
+  field.addEventListener('pointerdown',e=>{if(railDraft)return;pickPress=null;if(!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse,#beltActions')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;const point=ArmyView.point(e.clientX,e.clientY),hit=pickAt(point);if(!hit){if(picked)select(null);return;}pickPress={pointerId:e.pointerId,x:e.clientX,y:e.clientY,hit};},true);
+  document.addEventListener('pointerdown',e=>{if(pickPress?.hit&&pickPress.pointerId===e.pointerId&&(drag||window.SupplyFactory?.holding||window.BattleControl?.placement||window.Rework?.paused))pickPress=null;});
+  field.addEventListener('pointermove',e=>{if(pickPress?.hit&&pickPress.pointerId===e.pointerId&&moved(e,pickPress))pickPress=null;},true);
+  window.addEventListener('pointerup',e=>{const p=pickPress;if(!p?.hit||p.pointerId!==e.pointerId)return;pickPress=null;if(moved(e,p)||drag||railDraft||window.BattleControl?.placement||window.Rework?.paused)return;select(p.hit);},true);
+  window.addEventListener('pointercancel',()=>{if(pickPress?.hit)pickPress=null;},true);
+ }
  function openWorkshop(tab){if(tab==='rails'||tab==='growth')activeTab=tab;
 
   if(!booted)boot();const s=state();if(!s)return false;
@@ -288,9 +333,10 @@ window.OutpostCamp = (() => {
   // Accept the pictured building, not the inventory panel or another UI control.
   const target=document.elementFromPoint(e.clientX,e.clientY);return !target?.closest?.('button,input,select,#campWarehouse,#raidBoard,#campaignGoal')&&houseContains(ArmyView.point(e.clientX,e.clientY));
  }
- function refreshDrag(e){
+ function refreshDrag(e,initial=false){
   if(!drag)return;drag.x=e.clientX;drag.y=e.clientY;drag.over=dragTarget(e);
-  if(!drag.over){let added=0;while(drag.items.length<handCapacity()){const extra=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!extra||heldDrop(extra))break;drag.items.push({drop:extra,count:1});added++;}if(added)audio('pickup');}
+  let added=initial?1:0;if(!drag.over){let extra=0;while(drag.items.length<handCapacity()){const more=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!more||heldDrop(more))break;drag.items.push({drop:more,count:1});extra++;}if(extra)audio('pickup');added+=extra;}
+  if(added)window.dispatchEvent(new CustomEvent('camp:handpickup',{detail:{held:drag.items.length,capacity:handCapacity(),added}}));
   dragGhost.innerHTML='<b>'+drag.items.length+' / '+handCapacity()+'</b>';
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
   dragGhost.classList.toggle('can-deliver',drag.over);document.getElementById('field').classList.toggle('delivery-ready',drag.over);
@@ -314,7 +360,7 @@ window.OutpostCamp = (() => {
    const view=document.getElementById('battleWorld').getBoundingClientRect(),z=ArmyView.camera.scale;drag={drop,count:1,items:[{drop,count:1}],state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,offset:{x:view.left+drop.x*z-e.clientX,y:view.top+drop.y*z-e.clientY},over:false};
    dragGhost=document.createElement('div');dragGhost.id='campDragGhost';dragGhost.setAttribute('aria-hidden','true');dragGhost.innerHTML='<b>1 / '+handCapacity()+'</b>';document.body.append(dragGhost);
    field.classList.add('dragging-supplies');try{field.setPointerCapture(e.pointerId);}catch(_){}
-   refreshDrag(e);statusKey='dragging';statusUntil=visualTime+3600;syncDOM();
+   refreshDrag(e,true);statusKey='dragging';statusUntil=visualTime+3600;syncDOM();
   },true);
   field.addEventListener('pointermove',e=>{if(drag&&e.pointerId===drag.pointerId){e.preventDefault();e.stopImmediatePropagation();refreshDrag(e);}},true);
   field.addEventListener('pointerup',e=>{if(drag&&e.pointerId===drag.pointerId){e.preventDefault();e.stopImmediatePropagation();endDrag(e);}},true);
@@ -353,7 +399,7 @@ window.OutpostCamp = (() => {
  function tick(dt){
   if(!booted||!Number.isFinite(dt)||dt<=0)return;
   const s=state();if(!s)return;if(railDraft&&railDraft.owner!==s)stopRails();visualTime+=dt;
-  notices.forEach(n=>n.age+=dt);notices=notices.filter(n=>n.age<1.1);
+  notices.forEach(n=>n.age+=dt);notices=notices.filter(n=>n.age<1.1);if(pulse){pulse.age+=dt;if(pulse.age>=pulse.arrive)arrivePulse();if(pulse.age>pulse.end+.15)pulse=null;}folding.forEach(f=>f.age+=dt);folding=folding.filter(f=>f.age<FOLD);if(removeHint&&(removeHint.until<visualTime||s.camp.removeLearned))removeHint=null;
   houseFlash=Math.max(0,houseFlash-dt);if(!houseFlash)warehouse?.classList.remove('camp-received');
   const arrivals=[],remaining=[];
   for(const cargo of s.camp.cargo){
@@ -365,6 +411,22 @@ window.OutpostCamp = (() => {
   uiClock+=dt;if(uiClock>=.25){uiClock=0;syncDOM();}
  }
 
+ const FOLD=.13,PULSE_COLOR='#93cbdc',beltSpeed=s=>ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(s.camp.cart?1.25:1);
+ // A learned route skill sends one light streak along every player-built belt, from its far end toward the warehouse.
+ function startPulse(){const s=state();if(!s)return;const reduced=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,speed=beltSpeed(s);
+  const paths=s.camp.links.filter(l=>l.points?.length>1).map(l=>{const points=ConveyorCore.oriented(l).slice().reverse(),length=ConveyorCore.length(points);return {points,length,dur:Math.min(1.2,length/speed),home:ConveyorCore.distance(points.at(-1),HOME)<60};}).filter(p=>p.length>1);
+  if(!paths.length){pulse=null;window.dispatchEvent(new CustomEvent('harvestskill:beltpulse-arrived',{detail:{route:false}}));return;}
+  const arrive=reduced?0:Math.max(...paths.filter(p=>p.home).map(p=>p.dur),0)||Math.max(...paths.map(p=>p.dur));pulse={age:0,reduced,paths,arrive,end:reduced?.6:Math.max(...paths.map(p=>p.dur)),arrived:false};if(reduced)arrivePulse();}
+ function arrivePulse(){if(!pulse||pulse.arrived)return;pulse.arrived=true;window.dispatchEvent(new CustomEvent('harvestskill:beltpulse-arrived',{detail:{route:true}}));}
+ function slicePath(points,from,to){const out=[ConveyorCore.at(points,from)];let run=0;for(let i=1;i<points.length;i++){const d=ConveyorCore.distance(points[i-1],points[i]);if(run+d>from&&run+d<to)out.push(points[i]);run+=d;}out.push(ConveyorCore.at(points,to));return out;}
+ function drawPulse(ctx){if(!pulse)return;ctx.save();ctx.lineCap='butt';ctx.lineJoin='round';ctx.strokeStyle=PULSE_COLOR;ctx.lineWidth=31;
+  if(pulse.reduced){ctx.globalAlpha=.55;for(const p of pulse.paths)strokePath(ctx,p.points);ctx.restore();return;}
+  for(const p of pulse.paths){const head=Math.min(1,pulse.age/Math.max(.05,p.dur))*p.length,tail=Math.max(0,head-Math.min(70,p.length*.35));if(head<=tail||pulse.age>p.dur+.12)continue;ctx.globalAlpha=pulse.age>p.dur?Math.max(0,1-(pulse.age-p.dur)/.12)*.8:.8;strokePath(ctx,slicePath(p.points,tail,head));}
+  ctx.restore();}
+ const marked=(kind,key)=>[picked,pickHighlight].some(p=>p&&p.kind===kind&&keyEqual(p.key,key));
+ function strokePath(ctx,points){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();}
+ function partPath(points,share){const total=ConveyorCore.length(points)*Math.max(0,Math.min(1,share)),out=[points[0]];let run=0;for(let i=1;i<points.length;i++){const d=ConveyorCore.distance(points[i-1],points[i]);if(run+d>=total){out.push(ConveyorCore.at([points[i-1],points[i]],total-run));return out;}run+=d;out.push(points[i]);}return out;}
+ function midpoint(points){return ConveyorCore.at(points,ConveyorCore.length(points)/2);}
  function railSegment(ctx,a,b){
   const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);if(len<1)return;const nx=-dy/len,ny=dx/len;ctx.lineCap='butt';ctx.strokeStyle='#252e2c';ctx.lineWidth=29;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.strokeStyle='#778b80';ctx.lineWidth=25;ctx.stroke();ctx.strokeStyle='#344c40';ctx.lineWidth=19;ctx.stroke();
   const phase=(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%10;ctx.strokeStyle='#849879';ctx.lineWidth=2;for(let t=-phase;t<len;t+=10){if(t<0)continue;const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.beginPath();ctx.moveTo(x-nx*9,y-ny*9);ctx.lineTo(x+nx*9,y+ny*9);ctx.stroke();}
@@ -373,8 +435,10 @@ window.OutpostCamp = (() => {
  function drawPlatform(ctx,p,preview=false){ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle=preview?(p.invalid?'#995d4b99':'#62775299'):'#61775c';ctx.strokeStyle='#b9c69e';ctx.lineWidth=3;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeStyle='#40583f';ctx.lineWidth=4;const horizontal=(p.dir||0)%2===0,phase=((p.dir||0)>=2?-1:1)*(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%12;for(let t=-48-phase;t<48;t+=12){ctx.beginPath();if(horizontal){ctx.moveTo(t,-p.h/2+3);ctx.lineTo(t,p.h/2-3);}else{ctx.moveTo(-p.w/2+3,t);ctx.lineTo(p.w/2-3,t);}ctx.stroke();}ctx.rotate((p.dir||0)*Math.PI/2);ctx.fillStyle='#ffe295';ctx.beginPath();ctx.moveTo(-22,0);ctx.lineTo(-7,-12);ctx.lineTo(-7,-5);ctx.lineTo(17,-5);ctx.lineTo(17,5);ctx.lineTo(-7,5);ctx.lineTo(-7,12);ctx.closePath();ctx.fill();ctx.restore();const out=ConveyorCore.outlet(p);const ready=ConveyorCore.downstream(state().camp.links,out,null,ConveyorCore.WIDTH/2+1);ctx.strokeStyle=ready?'#bfe69b':'#e8a76b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(out.x,out.y,7,0,Math.PI*2);ctx.stroke();if(!ready){ctx.fillStyle='#e8a76b';ctx.fillRect(out.x-4,out.y-5,3,10);ctx.fillRect(out.x+2,out.y-5,3,10);}}
  function drawUnder(ctx,{ox,oy,z}){
   if(!booted)return;const s=state();if(!s)return;ctx.save();ctx.translate(ox,oy);ctx.scale(z,z);
-  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey)),points=link.points?.length>1?ConveyorCore.oriented(link):node?[HOME,{x:node.x,y:node.y+12}]:null;if(!points)continue;if(!link.points)link.points=points;for(let i=1;i<points.length;i++)railSegment(ctx,points[i-1],points[i]);const end=points[0],connected=ConveyorCore.distance(end,HOME)<60||!!ConveyorCore.downstream(s.camp.links,end,link)||!!ConveyorCore.platformAt(s.camp.platforms,end);if(!connected){ctx.fillStyle='#dc9c64';ctx.strokeStyle='#3b302a';ctx.lineWidth=2;ctx.fillRect(end.x-7,end.y-7,14,14);ctx.strokeRect(end.x-7,end.y-7,14,14);ctx.fillStyle='#513a2b';ctx.fillRect(end.x-3,end.y-4,2,8);ctx.fillRect(end.x+2,end.y-4,2,8);}}
-  for(const platform of s.camp.platforms)drawPlatform(ctx,platform);if(platformMode&&platformPreview)drawPlatform(ctx,{...platformPreview,w:96,h:64,dir:platformDir,invalid:s.factory.inventory.wood<8||s.factory.inventory.stone<4||!platformFits(platformPreview)},true);drawProjects(ctx,s);if(railDraft){if(railDraft.points.length>1){ctx.globalAlpha=.7;for(let i=1;i<railDraft.points.length;i++)railSegment(ctx,railDraft.points[i-1],railDraft.points[i]);ctx.globalAlpha=1;if(beltPrice()>s.factory.inventory.wood){ctx.strokeStyle='#ec9b80';ctx.lineWidth=5;ctx.setLineDash([6,5]);ctx.beginPath();railDraft.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);}}}
+  for(const link of s.camp.links){const node=s.factory.nodes.find(n=>keyEqual(n.key,link.nodeKey)),points=link.points?.length>1?ConveyorCore.oriented(link):node?[HOME,{x:node.x,y:node.y+12}]:null;if(!points)continue;if(!link.points)link.points=points;if(marked('belt',link.nodeKey)){ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#ffd866';ctx.lineWidth=37;strokePath(ctx,points);ctx.lineCap='butt';ctx.lineJoin='miter';}for(let i=1;i<points.length;i++)railSegment(ctx,points[i-1],points[i]);const end=points[0],connected=ConveyorCore.distance(end,HOME)<60||!!ConveyorCore.downstream(s.camp.links,end,link)||!!ConveyorCore.platformAt(s.camp.platforms,end);if(!connected){ctx.fillStyle='#dc9c64';ctx.strokeStyle='#3b302a';ctx.lineWidth=2;ctx.fillRect(end.x-7,end.y-7,14,14);ctx.strokeRect(end.x-7,end.y-7,14,14);ctx.fillStyle='#513a2b';ctx.fillRect(end.x-3,end.y-4,2,8);ctx.fillRect(end.x+2,end.y-4,2,8);}}
+  drawPulse(ctx);
+  for(const f of folding){const t=f.age/FOLD;ctx.globalAlpha=1-t*.6;if(f.points){const part=partPath(f.points,1-t);for(let i=1;i<part.length;i++)railSegment(ctx,part[i-1],part[i]);}else{ctx.save();ctx.translate(f.platform.x,f.platform.y);ctx.scale(1-t,1-t);ctx.translate(-f.platform.x,-f.platform.y);drawPlatform(ctx,f.platform);ctx.restore();}ctx.globalAlpha=1;}
+  for(const platform of s.camp.platforms){if(marked('platform',platform.key)){ctx.fillStyle='#ffd866';ctx.fillRect(platform.x-platform.w/2-5,platform.y-platform.h/2-5,platform.w+10,platform.h+10);}drawPlatform(ctx,platform);}if(platformMode&&platformPreview)drawPlatform(ctx,{...platformPreview,w:96,h:64,dir:platformDir,invalid:s.factory.inventory.wood<8||s.factory.inventory.stone<4||!platformFits(platformPreview)},true);drawProjects(ctx,s);if(railDraft){if(railDraft.points.length>1){ctx.globalAlpha=.7;for(let i=1;i<railDraft.points.length;i++)railSegment(ctx,railDraft.points[i-1],railDraft.points[i]);ctx.globalAlpha=1;if(beltPrice()>s.factory.inventory.wood){ctx.strokeStyle='#ec9b80';ctx.lineWidth=5;ctx.setLineDash([6,5]);ctx.beginPath();railDraft.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);}}}
   ctx.restore();
  }
 
@@ -397,7 +461,7 @@ window.OutpostCamp = (() => {
    cargoArt(ctx,cargo,ox+x*z,oy+y*z-(onRail||reduced?0:Math.sin(t*Math.PI)*14*z),z);
   }
   if(railDraft&&!platformMode){const handles=[BELT_PORT,...s.camp.links.filter(l=>l.points?.length).map(l=>ConveyorCore.oriented(l).at(-1))];for(const p of handles){const x=ox+p.x*z,y=oy+p.y*z,r=Math.max(15,24*z);ctx.fillStyle='#45623bea';ctx.strokeStyle='#ffe9a2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff1b0';ctx.font='bold '+Math.max(19,23*z)+'px system-ui';ctx.textAlign='center';ctx.fillText('↔',x,y+7);}}
-  if(drag){const rect=document.getElementById('armyCanvas').getBoundingClientRect();for(let i=0;i<drag.items.length;i++){const item=drag.items[i],geometry=window.SupplyFactory?.itemGeometry?.(item.drop),h=geometry?.h||Math.max(20*z,10);window.SupplyFactory?.drawItem?.(ctx,item.drop.type,drag.x-rect.left+(drag.offset?.x||0)+i*(h+3),drag.y-rect.top+(drag.offset?.y||0),h);}}
+  if(drag){const rect=document.getElementById('armyCanvas').getBoundingClientRect();for(let i=0;i<drag.items.length;i++){const item=drag.items[i],geometry=window.SupplyFactory?.itemGeometry?.(item.drop),h=geometry?.h||Math.max(20*z,10);const full=drag.items.length>=handCapacity(),x=drag.x-rect.left+(drag.offset?.x||0)+i*(h+3),y=drag.y-rect.top+(drag.offset?.y||0);if(full){ctx.save();ctx.shadowColor='#ffd866';ctx.shadowBlur=5;for(let k=0;k<3;k++)window.SupplyFactory?.drawItem?.(ctx,item.drop.type,x,y,h);ctx.restore();}else window.SupplyFactory?.drawItem?.(ctx,item.drop.type,x,y,h);}}
   if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0b0';ctx.fillText(tr('beltFeed'),ox+HOME.x*z,oy+(HOME.y-104)*z);}
   if(houseFlash){ctx.fillStyle='#f8d77a'+Math.round(houseFlash/.42*100).toString(16).padStart(2,'0');ctx.beginPath();ctx.ellipse(ox+HOME.x*z,oy+(HOME.y-4)*z,26*z,10*z,0,0,Math.PI*2);ctx.fill();}
   notices.forEach((n,i)=>{
@@ -405,7 +469,17 @@ window.OutpostCamp = (() => {
    const text='+'+format(n.count)+' '+(n.type==='gold'?'G':tr(n.type)),x=ox+HOME.x*z,y=oy+(HOME.y-95)*z-(reduced?0:n.age*17)-i*18;
    ctx.strokeText(text,x,y);ctx.fillText(text,x,y);
   });
-  ctx.restore();positionWarehouse(view);
+  if(picked||pickHighlight){ctx.font='800 '+Math.max(11,13*z)+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';for(const [kind,list] of [['belt',s.camp.links],['platform',s.camp.platforms]])for(const item of list){const key=kind==='belt'?item.nodeKey:item.key,p=kind==='belt'?(item.points?.length>1?midpoint(ConveyorCore.oriented(item)):null):{x:item.x-item.w/2+12,y:item.y-item.h/2+12};if(!p)continue;const x=ox+p.x*z,y=oy+p.y*z,on=marked(kind,key),r=Math.max(9,11*z);ctx.fillStyle=on?'#ffd866':'#1f3a2bdd';ctx.strokeStyle=on?'#4a3818':'#d9b866';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle=on?'#2b2412':'#ffedb6';ctx.fillText(String(key),x,y+1);}ctx.textBaseline='alphabetic';}
+  const hinted=removeHint&&!picked&&s.camp.links.find(l=>keyEqual(l.nodeKey,removeHint.key));if(hinted?.points?.length>1){const p=midpoint(ConveyorCore.oriented(hinted)),text=tr('removeHint'),x=ox+p.x*z,y=oy+p.y*z-Math.max(20,24*z);ctx.font='700 12px system-ui';const w=ctx.measureText(text).width+14;ctx.globalAlpha=Math.min(1,(removeHint.until-visualTime)*2);ctx.fillStyle='#1f3a2bee';ctx.strokeStyle='#d9b866';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(x-w/2,y-10,w,20,6);ctx.fill();ctx.stroke();ctx.fillStyle='#ffedb6';ctx.textAlign='center';ctx.fillText(text,x,y+4);ctx.globalAlpha=1;}
+  ctx.restore();positionWarehouse(view);positionPick(view);
+ }
+ function positionPick({ox,oy,z}){
+  if(pickHighlight&&!overlay?.classList.contains('on'))pickHighlight=null;if(!pickCard)return;if(picked&&(window.BattleControl?.placement||!pieceOf(state(),picked))){picked=null;syncPick();}if(!picked||pickCard.hidden)return;
+  const field=document.getElementById('field'),canvas=document.getElementById('armyCanvas');if(!field||!canvas)return;const rect=field.getBoundingClientRect(),view=canvas.getBoundingClientRect(),w=pickCard.offsetWidth,h=pickCard.offsetHeight;
+  const ax=view.left-rect.left+ox+picked.anchor.x*z,ay=view.top-rect.top+oy+picked.anchor.y*z,gap=Math.max(30,22*z);
+  // Above the finger first; flip below only when the card would leave the field.
+  const x=clamp(ax-w/2,8,rect.width-w-8),y=ay-gap-h>=8?ay-gap-h:clamp(ay+gap,8,rect.height-h-8);
+  pickCard.style.transform='translate('+Math.round(x)+'px,'+Math.round(y)+'px)';
  }
  function hitHouse(point){
   if(railDraft)return true;
@@ -414,7 +488,7 @@ window.OutpostCamp = (() => {
   if(hit)openWorkshop();return hit;
  }
  function boot(){
-  const s=state();if(!s)return false;booted=true;document.body.classList.add('outpost-game');makeDOM();makeWorkshop();installDrag();installRails();syncDOM();return true;
+  const s=state();if(!s)return false;booted=true;document.body.classList.add('outpost-game');makeDOM();makeWorkshop();installDrag();installRails();installPick();window.addEventListener('harvestskill:beltpulse',startPulse);syncDOM();return true;
  }
  function guide(){
   const s=state();if(!s)return '';
@@ -424,5 +498,5 @@ window.OutpostCamp = (() => {
   if(railExists('wood')&&railExists('stone'))return tr('bothRails');
   return drag?tr('beltFeed'):s.camp.cargo.length?tr('inTransit'):tr('clickPile');
  }
- return {undoBuild:undoBelt,get canUndo(){return beltHistory.length>0;},cancelCarry:()=>endDrag(null,true),cancelGesture:cancelBeltGesture,get buildingKind(){return railDraft?(platformMode?'platform':'belt'):null;},catalogHTML,boot,tick,quote,build,isTransported:d=>d.onConveyor===true||!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),onBelt:d=>!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),beltAt:p=>ConveyorCore.contact(state().camp.links,p),platformAt:p=>ConveyorCore.platformAt(state().camp.platforms,p),prepareForRaid:()=>{stopRails();endDrag(null,true);},beginRail:buildRail,buildPlatform,commitRails,cancelRails:stopRails,removeRail,get layingRails(){return !!railDraft;},get draftRoute(){return railDraft?{points:railDraft.points.map(p=>({...p})),cost:beltPrice()}:null;},get dragging(){return !!drag;},isHeld:heldDrop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
+ return {undoBuild:undoBelt,get selection(){return picked?{kind:picked.kind,key:picked.key}:null;},selectAt:point=>select(pickAt(point)),clearSelection:()=>select(null),removePiece,get canUndo(){return beltHistory.length>0;},cancelCarry:()=>endDrag(null,true),cancelGesture:cancelBeltGesture,get buildingKind(){return railDraft?(platformMode?'platform':'belt'):null;},catalogHTML,boot,tick,quote,build,isTransported:d=>d.onConveyor===true||!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),onBelt:d=>!!ConveyorCore.contact(state().camp.links,d)||!!ConveyorCore.platformAt(state().camp.platforms,d),beltAt:p=>ConveyorCore.contact(state().camp.links,p),platformAt:p=>ConveyorCore.platformAt(state().camp.platforms,p),prepareForRaid:()=>{stopRails();endDrag(null,true);},beginRail:buildRail,buildPlatform,commitRails,cancelRails:stopRails,removeRail,get layingRails(){return !!railDraft;},get draftRoute(){return railDraft?{points:railDraft.points.map(p=>({...p})),cost:beltPrice()}:null;},get dragging(){return !!drag;},isHeld:heldDrop,canBuild,canStartWave,get tools(){return {...state().camp.tools};},get campaignReadyWave(){const c=state().camp;return !c.tools.wood&&!c.tools.stone?3:!c.gate?6:!c.beacon?8:9;},get nextProject(){return nextProject();},drawUnder,drawOver,pickup,openWorkshop,hitHouse,get ready(){return booted;},get hasWoodRail(){return railExists('wood');},get hasStoneRail(){return railExists('stone');},get guide(){return guide();}};
 })();

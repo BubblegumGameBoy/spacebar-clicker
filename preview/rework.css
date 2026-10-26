@@ -223,3 +223,5 @@ body:not(.has-army) #hud .row:has(#hUnits){display:none}
 
 #field:focus-visible{outline:2px solid #edcf88;outline-offset:-3px}
 #langBtn:focus-visible{outline:2px solid #edcf88;outline-offset:3px}
+.army-card .ally-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 8px}.army-card .ally-heading .company-size{margin:0}
+.army-card .company-pending{align-self:flex-start;display:inline-block;margin:2px 0;padding:1px 7px;border-radius:4px;background:#d9b866;color:#2a2312;font:800 11px/1.5 system-ui}

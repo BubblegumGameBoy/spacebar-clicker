@@ -126,7 +126,7 @@ window.SupplyFactory=(()=>{
   const current=state(),node=current.nodes.find(n=>n.key===targetKey);if(!node||!node.stock){feedback=tr(node?.type==='food'?'growing':'empty');translate();return false;}
   const amount=outpostMode()?Math.max(1,Math.min(8,window.HarvestSkillCore?.effects(S.harvestSkills)?.manualYield||1)):1;
   let made=0;for(let i=0;i<amount;i++){if(!take(node))break;made++;}
-  if(!made){translate();return false;}lastManualAt=current.time;feedback=tr('fallen');document.getElementById('field').classList.remove('target-boss');translate();save();dirty=false;return true;
+  if(!made){translate();return false;}if(outpostMode())window.HarvestSkills?.noteHarvest?.({node,made});lastManualAt=current.time;feedback=tr('fallen');document.getElementById('field').classList.remove('target-boss');translate();save();dirty=false;return true;
  }
  function stopHold(source){if(!hold||source&&source!==hold.source)return;const previous=hold;hold=null;cancelAnimationFrame(holdGuard);holdGuard=0;const field=document.getElementById('field');if(previous.source==='pointer')try{if(field.hasPointerCapture(previous.pointerId))field.releasePointerCapture(previous.pointerId);}catch(_){} }
  // A press is one gathering action. Automation comes from placed workers, not holding input.

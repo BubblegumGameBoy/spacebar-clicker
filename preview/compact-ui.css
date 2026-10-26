@@ -127,3 +127,13 @@ body.compact-play #placementControls{position:static;left:auto;right:auto;top:au
 body.compact-play #campaignEnding .ending-town{height:200px;min-height:160px;display:grid;place-items:center}
 body.compact-play #campaignEnding .ending-town img{width:100%;height:100%;max-height:200px;object-fit:contain}
 @media(max-width:680px){body.compact-play #campaignEnding .ending-town{height:160px;min-height:160px}body.compact-play #campaignEnding .ending-town img{max-height:160px}}
+/* The workshop label keeps its small look; its hit area grows to 44px upward over the house picture (which also opens the workshop). */
+body.compact-play #campWarehouse .camp-house-label{position:relative}
+body.compact-play #campWarehouse .camp-house-label::before{content:'';position:absolute;left:-6px;right:-4px;top:-20px;bottom:-2px}
+/* Count sits beside the name, never on the portrait; waiting allies get their own gold band. */
+body.compact-play .army-card .ally-heading{display:flex;align-items:baseline;justify-content:space-between;gap:4px;margin:3px 0 0}
+body.compact-play .army-card .ally-heading .nm{margin:0;min-width:0}
+body.compact-play .army-card .company-size{position:static;flex:none;margin:0;font:600 10px system-ui;color:#c6d8bc;white-space:nowrap}
+body.compact-play .army-card .company-size b{font-size:12px;color:#f2dc9a;margin-right:1px}
+body.compact-play .army-card .company-pending{align-self:flex-start;margin:1px 0 0;padding:1px 6px;border-radius:4px;background:#d9b866;color:#2a2312;font:800 10px/1.5 system-ui;white-space:nowrap}
+.compact-play .catalog-heading #quickBuildUndo{min-height:32px;padding:3px 10px;font:700 12px system-ui;white-space:nowrap}

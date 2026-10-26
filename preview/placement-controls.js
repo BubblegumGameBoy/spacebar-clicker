@@ -16,7 +16,7 @@ window.PlacementControls=(()=>{
   setText(bar.querySelector('.placement-hint'),local(['押したまま確認 → 離して配置','Hold to preview → release to place','按住预览 → 松开放置']));
   const cancel=bar.querySelector('[data-placement-finish]');setText(cancel,mode==='allies'&&pending?local(['取消・返金','Cancel / refund','取消并退款']):local(['キャンセル','Cancel','取消']));
   const resume=document.getElementById('pendingPlacement');resume.hidden=!pending||mode==='allies';resume.disabled=raid;setText(resume,local(['未配置 '+pending+(raid?'（襲撃後）':' · 配置する →'),pending+' waiting'+(raid?' (after raid)':' · Place →'),'待放置 '+pending+(raid?'（袭击后）':' · 放置 →')]));
-  const undo=document.getElementById('quickBuildUndo');undo.hidden=!window.OutpostCamp?.canUndo;undo.title=local(['直前の設備を取り消す','Undo last equipment','撤销上次设备']);
+  const undo=document.getElementById('quickBuildUndo');undo.hidden=!window.OutpostCamp?.canUndo;setText(undo,local(['↶ 取り消す','↶ Undo','↶ 撤销']));undo.title=local(['直前の設備を取り消す','Undo last equipment','撤销上次设备']);
   const source=document.getElementById('playGuide');setText(guide,source?.textContent||'');guide.hidden=mode!=='gather';
  }
  function boot(){if(bar||!window.__OUTPOST_BUILD__)return;
@@ -34,11 +34,12 @@ window.PlacementControls=(()=>{
   bar.addEventListener('pointercancel',()=>touch=null,true);
   bar.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=touch,b=e.target.closest('button');touch=null;if(!t||!b||b.disabled||key(b)!==t.key||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();lastTouch={key:t.key,at:performance.now()};b.click();},true);
   bar.addEventListener('click',e=>{const b=e.target.closest('button');if(b&&e.isTrusted&&e.detail>0&&lastTouch?.key===key(b)&&performance.now()-lastTouch.at<700){e.preventDefault();e.stopImmediatePropagation();}},true);
-  let extraTouch=null,extraLast=null;const extraSelector='#pendingPlacement,#quickBuildUndo,.camp-house-label,#harvestSkillsButton,#onboardingAction';
+  let extraTouch=null,extraLast=null;const extraSelector='#pendingPlacement,#quickBuildUndo,.camp-house-label,#beltActions button,#harvestSkillsButton,#onboardingAction';
   layout.addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;const b=e.target.closest(extraSelector);extraTouch=b&&!b.disabled?{b,x:e.clientX,y:e.clientY,at:performance.now()}:null;},true);
   layout.addEventListener('pointercancel',()=>extraTouch=null,true);
-  layout.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=extraTouch,b=e.target.closest(extraSelector);extraTouch=null;if(!t||b!==t.b||b.disabled||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();extraLast={b,at:performance.now()};b.click();},true);
-  layout.addEventListener('click',e=>{const b=e.target.closest(extraSelector);if(b&&e.isTrusted&&e.detail>0&&extraLast?.b===b&&performance.now()-extraLast.at<700){e.preventDefault();e.stopImmediatePropagation();}},true);
+  layout.addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const t=extraTouch,b=e.target.closest(extraSelector);extraTouch=null;if(!t||b!==t.b||b.disabled||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12||performance.now()-t.at>1000)return;e.preventDefault();extraLast={b,at:performance.now(),x:e.clientX,y:e.clientY};b.click();},true);
+  // The browser's follow-up click lands on whatever the tap just opened (e.g. the workshop backdrop), so swallow it by position, not by target.
+  document.addEventListener('click',e=>{if(extraLast&&e.isTrusted&&e.detail>0&&performance.now()-extraLast.at<700&&(e.target.closest?.(extraSelector)===extraLast.b||Math.hypot(e.clientX-extraLast.x,e.clientY-extraLast.y)<30)){extraLast=null;e.preventDefault();e.stopImmediatePropagation();}},true);
   window.addEventListener('keydown',e=>{if(e.key==='Escape'&&!e.defaultPrevented&&!window.Rework?.paused)finish();});
   new ResizeObserver(()=>window.ArmyView?.layout?.()).observe(field);sync();setInterval(sync,150);
  }

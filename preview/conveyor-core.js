@@ -43,5 +43,22 @@
   const results=[1/60,.05,.1].map(probe);return results.every(r=>r===results[0])?results[0]:'unknown';
  }
 
- return {deliveryStatus,WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
+ // Board selection. Callers give gather/drag/ally/enemy targets priority before asking.
+ // Platforms are drawn above belts; among belts touched directly, the newest (drawn last) wins.
+ function hitLink(links,platforms,point,tolerance=10){
+  if(!Number.isFinite(point?.x)||!Number.isFinite(point?.y))return null;const list=platforms||[];
+  for(let i=list.length-1;i>=0;i--){const a=list[i];if(Math.abs(point.x-a.x)<=a.w/2&&Math.abs(point.y-a.y)<=a.h/2)return {kind:'platform',key:a.key,platform:a,distance:0,x:point.x,y:point.y};}
+  let best=null,top=null;(links||[]).forEach((link,index)=>{if(!link?.points||link.points.length<2)return;const q=nearest(link.points,point);if(!q||q.distance>Math.max(0,tolerance))return;const hit={kind:'belt',key:link.nodeKey,link,index,distance:q.distance,x:q.x,y:q.y};if(q.distance<=WIDTH/2)top=hit;if(!best||q.distance<best.distance)best=hit;});
+  return top||best;
+ }
+ // Removal keeps the half-price rule of the workshop list.
+ function removalRefund(piece){if(!piece)return {wood:0,stone:0};if(piece.kind==='platform'){const p=piece.platform||piece;return {wood:Math.max(4,Math.floor((p.costWood||0)*.5)),stone:Math.max(2,Math.floor((p.costStone||0)*.5))}; /* never below the old fixed +4/+2, even when a save lost the stored cost */}const l=piece.link||piece;return {wood:Math.floor((l.costWood||0)*.5),stone:0};}
+ // Items riding a removed piece stay where they are as separate ground items (never merged or deleted).
+ function releaseItems(drops,piece,links,platforms){const released=[];if(!piece)return released;
+  for(const d of drops||[]){const on=piece.kind==='platform'?String(d.platformKey)===String(piece.key)||!!platformAt([piece.platform],d):String(d.beltId)===String(piece.key)||!!contact([piece.link],d);if(!on)continue;
+   delete d.beltId;delete d.platformKey;delete d.conveyorBlocked;if(contact(links||[],d)||platformAt(platforms,d))continue;delete d.onConveyor;d.physical=true;released.push(d);}
+  return released;
+ }
+
+ return {hitLink,removalRefund,releaseItems,deliveryStatus,WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
 });
