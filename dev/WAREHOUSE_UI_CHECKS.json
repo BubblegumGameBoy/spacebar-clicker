@@ -1,0 +1,251 @@
+{
+  "fixture": "Prepared supplies; no earned progression claimed.",
+  "rows": [
+    {
+      "mode": "PC",
+      "lang": "ja",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 1005,
+          "y": 0,
+          "w": 275,
+          "h": 128
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 1004,
+          "h": 900
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "木材",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "石材",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "食料",
+            "width": 78,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    },
+    {
+      "mode": "PC",
+      "lang": "en",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 1005,
+          "y": 0,
+          "w": 275,
+          "h": 126
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 1004,
+          "h": 900
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "Wood",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "Stone",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "Food",
+            "width": 78,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    },
+    {
+      "mode": "PC",
+      "lang": "zh",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 1005,
+          "y": 0,
+          "w": 275,
+          "h": 128
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 1004,
+          "h": 900
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "木材",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "石材",
+            "width": 78,
+            "overflow": false
+          },
+          {
+            "label": "粮食",
+            "width": 78,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    },
+    {
+      "mode": "CDP touch (not physical device)",
+      "lang": "ja",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 0,
+          "y": 456.75,
+          "w": 390,
+          "h": 110
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 390,
+          "h": 455.75
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "木材",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "石材",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "食料",
+            "width": 117,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    },
+    {
+      "mode": "CDP touch (not physical device)",
+      "lang": "en",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 0,
+          "y": 456.75,
+          "w": 390,
+          "h": 110
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 390,
+          "h": 455.75
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "Wood",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "Stone",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "Food",
+            "width": 117,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    },
+    {
+      "mode": "CDP touch (not physical device)",
+      "lang": "zh",
+      "layout": {
+        "parent": "deckMain",
+        "dock": {
+          "x": 0,
+          "y": 456.75,
+          "w": 390,
+          "h": 110
+        },
+        "field": {
+          "x": 0,
+          "y": 0,
+          "w": 390,
+          "h": 455.75
+        },
+        "overlap": false,
+        "overflow": false,
+        "foodVisible": true,
+        "text": [
+          {
+            "label": "木材",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "石材",
+            "width": 117,
+            "overflow": false
+          },
+          {
+            "label": "粮食",
+            "width": 117,
+            "overflow": false
+          }
+        ]
+      },
+      "grabAndDeliver": true,
+      "pageErrors": []
+    }
+  ]
+}

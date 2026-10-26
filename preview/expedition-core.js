@@ -91,6 +91,6 @@
   const over=[...(sealed?[sealed]:[]),...e.groups.filter(g=>g.active&&bucket(g.id)==='combat').sort((a,b)=>b.key-a.key).slice(0,Math.max(0,e.groups.filter(g=>g.active&&bucket(g.id)==='combat').length-limit(S,'combat')))];for(const g of over)g.active=false;if(over.length)receipt.benched=over.map(g=>g.key);project(S);return receipt;
  }
  function retry(S){const e=ensure(S);if(!canEdit(S)||S.outpost?.phase!=='result'||S.outpost.result?.win)return false;e.awaitingDecision=false;e.awaitingReady=true;return true;}
- function beginPreparation(S){const e=ensure(S);if(!canEdit(S)||!e.awaitingReady||e.groups.some(g=>g.active&&g.pending))return false;e.awaitingReady=false;e.awaitingDecision=false;S.outpost.prepRemaining=90-Outpost.preparationCut(S.outpost);S.outpost.prepScheduledRound=S.outpost.round;return true;}
+ function beginPreparation(S,{automatic=false}={}){const e=ensure(S);if(!canEdit(S)||!e.awaitingReady||!automatic&&e.groups.some(g=>g.active&&g.pending))return false;e.awaitingReady=false;e.awaitingDecision=false;S.outpost.prepRemaining=90-Outpost.preparationCut(S.outpost);S.outpost.prepScheduledRound=S.outpost.round;return true;}
  return {MAX_HEAT,sealedKey,limit,heatQuote,heatOf,wavePoints,IDS,COUNTS,LIMIT,UNLOCKS,bucket,migrate,ensure,groups,available,canEdit,assignments,groupFor,project,slotQuote,recruit,setAnchor,cancelPending,bench,resume,swap,trainQuote,train,setPolicy,buyFoodQuote,buyFood,unlockQuote,unlock,record,entitlement,departures,quoteReturn,returnHome,retry,beginPreparation};
 });

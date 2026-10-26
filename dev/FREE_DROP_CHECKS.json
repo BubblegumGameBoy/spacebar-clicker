@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "PC",
+    "freeDrop": true,
+    "reload": true,
+    "cancelReturns": true,
+    "uiReleaseReturns": true,
+    "multipleIndividualItems": true,
+    "blowerMovesPlacedLog": true,
+    "pageerrors": []
+  },
+  {
+    "mode": "CDP touch (not real device)",
+    "freeDrop": true,
+    "reload": true,
+    "cancelReturns": true,
+    "uiReleaseReturns": true,
+    "multipleIndividualItems": true,
+    "blowerMovesPlacedLog": true,
+    "pageerrors": []
+  }
+]

@@ -254,3 +254,27 @@ body.outpost-game .camp-existing-routes button:hover,body.outpost-game .camp-exi
 @media (max-width:700px){.enemy-card{top:6px;left:6px;right:6px;width:auto;max-width:none;transform:none;font-size:11px;padding:5px 32px 5px 6px;animation:none}.enemy-card b{font-size:13px}.enemy-card canvas{width:52px;height:39px}}
 @media (prefers-reduced-motion:reduce){.enemy-card{animation:none}}
 .dmg.enemy-blocked{color:#e8d6a0;font-size:12px;text-shadow:0 1px 0 #2a1d10,0 0 3px #000}
+
+/* Inventory is a dock beside/below the world, never an object over its receiving path. */
+body.outpost-game #deckMain>#campWarehouse{position:relative!important;inset:auto!important;transform:none!important;width:auto!important;margin:0;padding:10px 11px 8px!important;z-index:auto;flex:none;align-self:stretch;border:0;border-bottom:1px solid #657653;border-radius:0;background:#20372a;box-shadow:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;min-width:0}
+body.outpost-game #deckMain>#campWarehouse::before,body.outpost-game #deckMain>#campWarehouse::after{display:none}
+body.outpost-game #deckMain>#campWarehouse .camp-house-label{width:auto;min-height:28px;padding:0;border:0;justify-content:flex-start;gap:10px;font:750 13px system-ui;overflow:visible}
+body.outpost-game #deckMain>#campWarehouse .camp-house-label b{display:inline}
+body.outpost-game #deckMain>#campWarehouse .camp-house-label span{font:600 11px system-ui;color:#d0dbb9}
+body.outpost-game #deckMain>#campWarehouse .camp-house-label::before{display:none}
+body.outpost-game #deckMain>#campWarehouse .camp-gold{position:static;align-self:center;padding:0;gap:4px}
+body.outpost-game #deckMain>#campWarehouse .camp-gold span{display:none}
+body.outpost-game #deckMain>#campWarehouse .camp-gold strong{font:750 13px system-ui}
+body.outpost-game #deckMain>#campWarehouse #supplyInventory{grid-column:1/-1}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons:has(#gatherFood:not([hidden])){grid-template-columns:repeat(3,minmax(0,1fr))}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons button{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:3px;min-height:51px;padding:5px 8px;border:1px solid #657756;border-radius:7px;background:#304b36;pointer-events:none}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons button::before{font:600 11px system-ui;max-width:none;overflow:visible;color:#c9d7b8}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons button>span{display:flex;align-items:center;justify-content:space-between;gap:5px}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons button b{font:800 22px/1 system-ui;white-space:nowrap}
+body.outpost-game #deckMain>#campWarehouse .material-icon{display:inline-block;width:23px;height:23px;object-fit:contain}
+body.outpost-game #deckMain>#campWarehouse .resource-buttons button small{display:none}
+body.outpost-game #deckMain>#campWarehouse #groundStorageStatus{grid-column:1/-1;font:10px system-ui;color:#adbf9c;margin:0;text-align:right}
+body.outpost-game #deckMain>#campWarehouse #campDeliveryNote{position:absolute!important;width:1px;height:1px;min-height:0;overflow:hidden;clip-path:inset(50%);margin:0}
+body.outpost-game #deckMain>#campWarehouse.camp-received{background:#294330;box-shadow:inset 0 -2px #d4cd79}
+@media(max-width:980px){body.outpost-game #deckMain>#campWarehouse{padding:7px 10px!important;gap:4px 10px}body.outpost-game #deckMain>#campWarehouse .resource-buttons button{min-height:46px;flex-direction:row;align-items:center;gap:8px}body.outpost-game #deckMain>#campWarehouse .resource-buttons button>span{flex:1}body.outpost-game #deckMain>#campWarehouse .resource-buttons button b{font-size:20px}body.outpost-game #deckMain>#campWarehouse .resource-buttons button::before{font-size:10px}body.outpost-game #deckMain>#campWarehouse #groundStorageStatus{font-size:9px}}

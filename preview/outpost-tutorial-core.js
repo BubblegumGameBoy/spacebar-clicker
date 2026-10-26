@@ -8,17 +8,14 @@
  function step(s,facts={}){const t=state(s),wood=number(s.factory?.inventory?.wood),carry=number(s.harvestSkills?.carry),workers=number(s.owned?.woodcutter),pending=number(s.pending?.woodcutter);
   if(wood>=10)t.first10=true;if(wood>=30)t.stock30=true;
   if(t.started)return carry<3?{id:wood<60?'gather60':'carry3',progress:Math.min(60,wood),goal:60,skill:'carry3'}:{id:'complete',progress:1,goal:1};
-  if(carry<1)return {id:wood<10?'gather10':'carry1',progress:Math.min(10,wood),goal:10,skill:'carry1'};
   if(!workers)return {id:'worker',progress:Math.min(6,wood),goal:6};
   if(pending>=workers||facts.workerPlaced===false)return {id:'workerPlace',progress:0,goal:1};
   if(!t.workerDelivered)return {id:'workerDrop',progress:0,goal:1};
-  // Saves that already passed the old conveyor lesson keep it; they are not sent back through blowers.
-  if(!legacyBelts(s)){
-   if(!(s.camp?.blowers?.length>0))return {id:'blower',progress:0,goal:1};
+  const defenceSoon=s.outpost?.prepRemaining<=90;
+  if(!defenceSoon&&!legacyBelts(s)){
+   if(!(s.camp?.blowers?.length>0))return {id:'blower',progress:Math.min(4,wood),goal:4};
    if(!number(t.blownWood))return {id:'blowerDeliver',progress:0,goal:1};
-   if(!(s.camp?.fences?.length>0))return {id:'fence',progress:0,goal:1};
   }
-  if(carry<2)return {id:wood<30?'gather30':'carry2',progress:Math.min(30,wood),goal:30,skill:'carry2'};
   if(!facts.defendersReady)return {id:'defenders',progress:Math.min(2,number(facts.defenders)),goal:2};
   return {id:'ready',progress:1,goal:1};
  }

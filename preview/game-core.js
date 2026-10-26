@@ -45,7 +45,7 @@
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
   s.expedition=Expedition?.migrate(r.expedition)||null;
-  s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),blownWood:integer(r.tutorial.blownWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true}:null;
+  s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),blownWood:integer(r.tutorial.blownWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true,visibleOptions:Object.fromEntries(['worker','blower','defence','upgrade'].map(k=>[k,r.tutorial.visibleOptions?.[k]===true]))}:null;
   s.harvestSkills=HarvestSkills?.migrate(r.harvestSkills)||{carry:0,hand:0,route:0};
   s.gold=num(r.gold,150);s.globalWave=integer(r.globalWave,1,1e12)||1;s.bossWave=Math.max(1,integer(r.bossWave,1,40));s.bossCycle=Math.max(1,integer(r.bossCycle,1,100));
   s.clearedBossWave=integer(r.clearedBossWave,0,40);s.runBest=Math.max(s.clearedBossWave,integer(r.runBest,0,40));s.prestige=integer(r.prestige,0,1e6);s.gameCleared=r.gameCleared===true;

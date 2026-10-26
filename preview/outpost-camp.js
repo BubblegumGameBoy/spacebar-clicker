@@ -132,7 +132,7 @@ window.OutpostCamp = (() => {
   if(!warehouse){
    warehouse=document.createElement('aside');warehouse.id='campWarehouse';
    warehouse.innerHTML='<button type="button" class="camp-house-label"><b></b><span></span></button><div class="camp-gold"><span></span><strong id="campGold"></strong></div><small id="groundStorageStatus"></small><small id="campDeliveryNote" role="status" aria-live="polite"></small>';
-   field.append(warehouse);warehouse.querySelector('.camp-house-label').onclick=openWorkshop;
+   document.getElementById('deckMain').prepend(warehouse);warehouse.querySelector('.camp-house-label').onclick=openWorkshop;
    warehouse.addEventListener('pointerdown',e=>e.stopPropagation());
    warehouse.insertBefore(inventory,warehouse.querySelector('#campDeliveryNote'));
    goldLabel=warehouse.querySelector('#campGold');deliveryLabel=warehouse.querySelector('#campDeliveryNote');
@@ -442,14 +442,28 @@ window.OutpostCamp = (() => {
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
   dragGhost.classList.toggle('can-deliver',drag.over);document.getElementById('field').classList.toggle('delivery-ready',drag.over);
  }
+ // Ground release uses the pictured world only. A captured pointer can finish over UI or outside it.
+ function groundRelease(e,point){
+  if(!e||!point||!Number.isFinite(point.x)||!Number.isFinite(point.y))return false;
+  const target=document.elementFromPoint(e.clientX,e.clientY);
+  return !!target?.closest?.('#field')&&!target.closest('button,a,input,select,textarea,#campWarehouse,#raidBoard,#campaignGoal,#placementControls,#beltActions,#onboardingGuide')&&point.x>=8&&point.x<=WORLD.width-8&&point.y>=96&&point.y<=WORLD.height-8;
+ }
  function endDrag(e,cancel=false){
   if(!drag||e&&e.pointerId!==drag.pointerId)return;
-  const held=drag,s=state(),allowed=!cancel&&!window.Rework?.paused&&s===held.state,ok=allowed&&dragTarget(e),point=allowed?ArmyView.point(e.clientX,e.clientY):null,belt=point?ConveyorCore.contact(s.camp.links,point,ConveyorCore.WIDTH):null,platform=point?ConveyorCore.platformAt(s.camp.platforms,point):null;
+  const held=drag,s=state(),allowed=!cancel&&!window.Rework?.paused&&s===held.state,ok=allowed&&dragTarget(e),point=allowed?ArmyView.point(e.clientX,e.clientY):null,onGround=allowed&&groundRelease(e,point),belt=onGround?ConveyorCore.contact(s.camp.links,point,ConveyorCore.WIDTH):null,platform=onGround?ConveyorCore.platformAt(s.camp.platforms,point):null;
   drag=null;for(const item of held.items){item.drop.vx=0;item.drop.vy=0;}dragGhost?.remove();dragGhost=null;const field=document.getElementById('field');field?.classList.remove('dragging-supplies','delivery-ready');
   try{if(field?.hasPointerCapture(held.pointerId))field.releasePointerCapture(held.pointerId);}catch(_){}
   if(ok){
    const arrivals=[];for(const item of held.items){const drop=item.drop,count=Math.min(item.count,drop.count),index=s.factory.drops.indexOf(drop);if(count>0&&index>=0){if(count===drop.count)s.factory.drops.splice(index,1);else drop.count-=count;arrivals.push({type:drop.type,count,worker:drop.worker===true});}}receive(s,arrivals);
-  }else if(allowed&&platform&&!belt){for(let i=0;i<held.items.length;i++){const d=held.items[i].drop;d.x=clamp(point.x+i*16,platform.x-platform.w/2+4,platform.x+platform.w/2-4);d.y=clamp(point.y,platform.y-platform.h/2+4,platform.y+platform.h/2-4);d.onConveyor=true;}persist();syncDOM();}else if(allowed&&belt){for(let i=0;i<held.items.length;i++){const drop=held.items[i].drop,p=ConveyorCore.at(belt.points,Math.max(0,belt.along+i*18));drop.x=p.x;drop.y=p.y;drop.onConveyor=true;}statusKey='inTransit';statusUntil=visualTime+2;persist();syncDOM();}else{statusKey='returned';statusUntil=visualTime+1.7;syncDOM();}
+  }else if(allowed&&platform&&!belt){for(let i=0;i<held.items.length;i++){const d=held.items[i].drop;d.x=clamp(point.x+i*16,platform.x-platform.w/2+4,platform.x+platform.w/2-4);d.y=clamp(point.y,platform.y-platform.h/2+4,platform.y+platform.h/2-4);d.onConveyor=true;}persist();syncDOM();}else if(allowed&&belt){for(let i=0;i<held.items.length;i++){const drop=held.items[i].drop,p=ConveyorCore.at(belt.points,Math.max(0,belt.along+i*18));drop.x=p.x;drop.y=p.y;drop.onConveyor=true;}statusKey='inTransit';statusUntil=visualTime+2;persist();syncDOM();}else if(onGround){
+   // Keep the grabbed piece under the hand; other held pieces settle in a small visible row.
+   const z=ArmyView.camera.scale||1,cx=point.x+held.offset.x/z,cy=point.y+held.offset.y/z;
+   for(let i=0;i<held.items.length;i++){const d=held.items[i].drop;if(!s.factory.drops.includes(d))continue;
+    d.x=clamp(cx+i*12,8,WORLD.width-8);d.y=clamp(cy+(i%2)*5,96,WORLD.height-8);d.physical=true;
+    for(const key of ['onConveyor','beltId','platformKey','conveyorBlocked','hopperKey','airUntil','spot'])delete d[key];
+   }
+   statusKey='';statusUntil=0;persist();syncDOM();
+  }else{statusKey='returned';statusUntil=visualTime+1.7;syncDOM();}
   window.SupplyFactory?.translate();
  }
  function installDrag(){
@@ -598,13 +612,6 @@ window.OutpostCamp = (() => {
 
  function cargoArt(ctx,cargo,x,y,z){window.SupplyFactory?.drawItem?.(ctx,cargo.type,x,y,Math.max(20*z,10));}
 
- function positionWarehouse({ox,oy,z}){
-  if(!warehouse)return;const field=document.getElementById('field'),canvas=document.getElementById('armyCanvas');if(!field||!canvas)return;
-  const rect=field.getBoundingClientRect(),view=canvas.getBoundingClientRect(),w=warehouse.offsetWidth,h=warehouse.offsetHeight;
-  const x=clamp(view.left-rect.left+ox+HOME.x*z-w*.5,8,rect.width-w-8);
-  const y=clamp(view.top-rect.top+oy+HOME.y*z+12,8,rect.height-h-8);
-  const value=Math.round(x)+'px,'+Math.round(y)+'px';if(value!==positionKey){positionKey=value;warehouse.style.transform='translate('+value+')';}
- }
  function chip(ctx,text,x,y,color='#fff0bb',size=12){ctx.font='800 '+size+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';const w=ctx.measureText(text).width+14;ctx.fillStyle='#17362cee';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x-w/2,y-size*.8,w,size*1.6,6);else ctx.rect(x-w/2,y-size*.8,w,size*1.6);ctx.fill();ctx.fillStyle=color;ctx.fillText(text,x,y+1);ctx.textBaseline='alphabetic';}
  function drawGroundFx(ctx,{ox,oy,z},s){
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,X=x=>ox+x*z,Y=y=>oy+y*z;
@@ -624,9 +631,7 @@ window.OutpostCamp = (() => {
   // The promise, then the record: "Preview 4/8" for 3 s after placing, then "3/4 delivered" for about a minute.
   const tally=window.SupplyFactory?.groundTally,b=tally&&s.camp.blowers.find(b=>keyEqual(b.key,tally.blowerKey)),now=s.factory.time;
   if(b&&tally.total&&now<tally.until){const x=X(b.x),y=Y(b.y)+Math.max(26,30*z);if(now-tally.start<3)chip(ctx,tr('predicted')+tally.predicted+' / '+tally.total,x,y,'#bcf2a5',11);else if(tally.produced)chip(ctx,tally.delivered+' / '+tally.produced+tr('tally'),x,y,'#d6f0ff',11);}
-  // Logs hidden under the warehouse card: a count on the card's edge.
-  // (counted 4 times a second: reading the card's box forces layout)
-  if(warehouse&&!warehouse.hidden){if(visualTime-hiddenUnderCard.at>.25||visualTime<hiddenUnderCard.at){hiddenUnderCard={at:visualTime,n:0};const r=warehouse.getBoundingClientRect(),view=document.getElementById('armyCanvas')?.getBoundingClientRect();if(r.width&&view){let y=0;for(const d of s.factory.drops){if(heldDrop(d)||d.onConveyor)continue;const sx=view.left+X(d.x),sy=view.top+Y(d.y)-6*z;if(sx>=r.left&&sx<=r.right&&sy>=r.top&&sy<=r.bottom){hiddenUnderCard.n++;y=sy;}}hiddenUnderCard.x=r.right-view.left+14;hiddenUnderCard.y=Math.max(r.top-view.top+12,Math.min(r.bottom-view.top-12,y-view.top));}}if(hiddenUnderCard.n)chip(ctx,'→'+hiddenUnderCard.n,hiddenUnderCard.x,hiddenUnderCard.y,'#ffd84a',12);}
+
  }
  function drawOver(ctx,view){
   if(!booted)return;const s=state();if(!s)return;const {ox,oy,z}=view;
@@ -642,7 +647,7 @@ window.OutpostCamp = (() => {
   }
   if(railDraft&&!platformMode&&!deviceMode){const handles=[BELT_PORT,...s.camp.links.filter(l=>l.points?.length).map(l=>ConveyorCore.oriented(l).at(-1))];for(const p of handles){const x=ox+p.x*z,y=oy+p.y*z,r=Math.max(15,24*z);ctx.fillStyle='#45623bea';ctx.strokeStyle='#ffe9a2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff1b0';ctx.font='bold '+Math.max(19,23*z)+'px system-ui';ctx.textAlign='center';ctx.fillText('↔',x,y+7);}}
   if(drag){const rect=document.getElementById('armyCanvas').getBoundingClientRect();for(let i=0;i<drag.items.length;i++){const item=drag.items[i],geometry=window.SupplyFactory?.itemGeometry?.(item.drop),h=geometry?.h||Math.max(20*z,10);const full=drag.items.length>=handCapacity(),x=drag.x-rect.left+(drag.offset?.x||0)+i*(h+3),y=drag.y-rect.top+(drag.offset?.y||0);if(full){ctx.save();ctx.shadowColor='#ffd866';ctx.shadowBlur=5;for(let k=0;k<3;k++)window.SupplyFactory?.drawItem?.(ctx,item.drop.type,x,y,h);ctx.restore();}else window.SupplyFactory?.drawItem?.(ctx,item.drop.type,x,y,h);}}
-  if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff0b0';ctx.fillText(tr('beltFeed'),ox+HOME.x*z,oy+(HOME.y-104)*z);}
+  if(drag){ctx.strokeStyle=drag.over?'#fff2a6':'#e6ce82';ctx.fillStyle=drag.over?'#efd77b35':'#efd77b12';ctx.lineWidth=3;ctx.setLineDash([7,5]);ctx.beginPath();ctx.roundRect(ox+(HOME.x-57)*z,oy+(HOME.y-94)*z,114*z,109*z,8);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle=drag.over?'#e8ffad':'#ffe4a0';ctx.lineWidth=3;const ix=ox+(HOME.x+43)*z,iy=oy+(HOME.y-12)*z;for(const n of [0,12]){ctx.beginPath();ctx.moveTo(ix+n+6,iy-6);ctx.lineTo(ix+n,iy);ctx.lineTo(ix+n+6,iy+6);ctx.stroke();}}
   if(houseFlash){ctx.fillStyle='#f8d77a'+Math.round(houseFlash/.42*100).toString(16).padStart(2,'0');ctx.beginPath();ctx.ellipse(ox+HOME.x*z,oy+(HOME.y-4)*z,26*z,10*z,0,0,Math.PI*2);ctx.fill();}
   notices.forEach((n,i)=>{
    ctx.globalAlpha=Math.min(1,(1.1-n.age)*3);ctx.font='800 '+Math.max(12,14*z)+'px system-ui';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#25362b';ctx.fillStyle='#ffe7a0';
@@ -651,7 +656,7 @@ window.OutpostCamp = (() => {
   });
   if(picked||pickHighlight){ctx.font='800 '+Math.max(11,13*z)+'px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';for(const [kind,list] of [['belt',s.camp.links],['platform',s.camp.platforms]])for(const item of list){const key=kind==='belt'?item.nodeKey:item.key,p=kind==='belt'?(item.points?.length>1?midpoint(ConveyorCore.oriented(item)):null):{x:item.x-item.w/2+12,y:item.y-item.h/2+12};if(!p)continue;const x=ox+p.x*z,y=oy+p.y*z,on=marked(kind,key),r=Math.max(9,11*z);ctx.fillStyle=on?'#ffd866':'#1f3a2bdd';ctx.strokeStyle=on?'#4a3818':'#d9b866';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle=on?'#2b2412':'#ffedb6';ctx.fillText(String(key),x,y+1);}ctx.textBaseline='alphabetic';}
   const hinted=removeHint&&!picked&&s.camp.links.find(l=>keyEqual(l.nodeKey,removeHint.key));if(hinted?.points?.length>1){const p=midpoint(ConveyorCore.oriented(hinted)),text=tr('removeHint'),x=ox+p.x*z,y=oy+p.y*z-Math.max(20,24*z);ctx.font='700 12px system-ui';const w=ctx.measureText(text).width+14;ctx.globalAlpha=Math.min(1,(removeHint.until-visualTime)*2);ctx.fillStyle='#1f3a2bee';ctx.strokeStyle='#d9b866';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(x-w/2,y-10,w,20,6);ctx.fill();ctx.stroke();ctx.fillStyle='#ffedb6';ctx.textAlign='center';ctx.fillText(text,x,y+4);ctx.globalAlpha=1;}
-  drawGroundFx(ctx,view,s);drawUnlockBanner(ctx,view);ctx.restore();positionWarehouse(view);positionPick(view);
+  drawGroundFx(ctx,view,s);drawUnlockBanner(ctx,view);ctx.restore();positionPick(view);
  }
  function positionPick({ox,oy,z}){
   if(pickHighlight&&!overlay?.classList.contains('on'))pickHighlight=null;if(!pickCard)return;if(picked&&(window.BattleControl?.placement||!pieceOf(state(),picked))){picked=null;syncPick();}if(!picked||pickCard.hidden)return;
