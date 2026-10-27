@@ -52,10 +52,10 @@ window.OutpostTutorial=(()=>{
  }
  const goals={
   worker:[['木こりを雇う','Hire a lumberjack','雇佣伐木工'],['木を切る作業を仲間に任せる','Let an ally gather wood','让伙伴自动伐木']],
-  workerPlace:[['木こりの作業場所を選ぶ','Choose a worksite','选择工作位置'],['木の近くに置くと自動で採集','Place near a tree to gather automatically','放在树旁即可自动采集']],
+  workerPlace:[['木こりの作業場所を選ぶ','Choose a worksite','选择工作位置'],['範囲に木があれば伐採、なければ待機','Chops trees in range; waits if none are nearby','范围内有树则伐木，否则待机']],
   carry1:[['両手で運ぶ','Both hands','双手搬运'],['持てる資材 1 → 2個','Carry 1 → 2 items','携带量 1 → 2个']],
   carry2:[['大きなかご','Large basket','大篮子'],['持てる資材 2 → 4個','Carry 2 → 4 items','携带量 2 → 4个']],
-  hand1:[['両刃の斧','Double-edged tools','双刃工具'],['1回の採集 1 → 2個','Items per tap 1 → 2','每次采集 1 → 2个']],
+  hand1:[['鋭い刃先','Sharpened tools','锋利刃口'],['採集力 1 → 2：木3打 → 2打','Gathering power 1 → 2: wood 3 hits → 2','采集力1 → 2：木材3次 → 2次']],
   storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 12 → 24個','Ground items 12 → 24','地面物资上限 12 → 24个']],
   blower:[['送風機で運ぶ','Transport with wind','用风力搬运'],['落下先に風を当て、矢印を倉庫へ向ける','Cover the drop point with wind; aim toward the warehouse','让风覆盖掉落点，箭头朝向仓库']],
   defenders:[['弓兵を2人配置','Place two archers','放置两名弓箭手'],['上の道に射程を重ねて迎え撃つ','Cover the upper road with their range','让射程覆盖上路']],

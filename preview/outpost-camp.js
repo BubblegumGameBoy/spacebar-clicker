@@ -30,12 +30,12 @@ window.OutpostCamp = (() => {
  const railWords={chooseSource:['どこから はこぶ？ き・いしの ○ を おそう。','Choose a worksite: click its loading circle.','选择采集点，点击装货圆圈。'],layRoute:['ちかくの じめんを おして レールを のばそう。おうちまで つなごう。','Click nearby ground to extend the rails. Reach the house.','点击附近地面延伸轨道，直到房屋。'],confirmRoute:['おうちに つながった！ ねだんを みて つくろう。','Connected to the house. Check the price and build.','已连接房屋，确认费用后建造。'],undo:['ひとつ もどす','Undo point','撤销一点'],cancelRail:['やめる','Cancel','取消'],layRail:['この みちを つくる','Build this route','修建此路线'],gap:['とおすぎるよ。ちかくに ひとつずつ おこう。','Too far. Place one short section at a time.','太远了，请逐段铺设。'],object:['き・いわを よけて おこう。','Go around trees and rocks.','请绕开树木和岩石。'],bounds:['じめんの なかに おこう。','Keep the rails on the field.','请在场地内铺设。'],short:['もうすこし はなれた ところへ。','Choose a point farther away.','请选择稍远一点的位置。'],long:['みちが ながすぎるよ。もどして みじかくしよう。','Route too long. Undo some points.','路线过长，请撤销部分节点。'],remove:['こわす・はんぶん もどる','Remove / half refund','拆除·退还一半'],railPrice:['8G ＋ ながさ32ごとに2G','8G station + 2G per 32 distance','站点8G＋每32距离2G'],draw:['じぶんで レールを しく','Lay rails yourself','手动铺设轨道']};
  const projectWords={rails:['コンベア','Conveyors','传送带'],growth:['どうぐ・おうち','Tools / home','工具·营地'],woodTool:['きこりの どうぐ','Lumberjack tools','伐木工具'],stoneTool:['いしほりの どうぐ','Mining tools','采矿工具'],cart:['コンベアの モーター','Conveyor motor','传送带马达'],gate:['みはりの もん','Watch gate','守望门'],beacon:['まちへの あかり','Town beacon','城镇灯塔'],made:['できた！','Built!','已建成！'],make:['つくる','Build','建造'],locked:['まずは ここまで まもろう','Defend up to this raid first','先守住这一波'],rank:['だんかい','Level','阶段'],materials:['つかうもの','Materials','材料'],faster:['ひとりで はやく はたらける！','Each worker gathers faster.','每位工人采集更快。'],cartEffect:['ベルトの はやさ ×1.25！','Belt speed ×1.25!','传送带速度×1.25！'],gateEffect:['おうちの まえで 2.5びょう まにあう！','A 2.5-second rescue window at the house.','房屋前有2.5秒的救援时间。'],beaconEffect:['まちへの みちを ひらく あかり。さいごの むれを まもろう！','Light the way to town, then defend the final raid.','点亮通往城镇的道路，守住最终袭击。'],projectDone:['できた！ なかまの しごとを みてみよう。','Built! Watch your camp work.','建好了！看看营地的变化。']};
  const toolWords={blowerLimit:['送風機は40台までです。撤去してから置きましょう。','Up to 40 blowers. Remove one first.','鼓风机最多40台，请先拆除。'],fenceLimit:['誘導柵は80本までです。撤去してから置きましょう。','Up to 80 fences. Remove one first.','导流栅栏最多80条，请先拆除。'],windBy:['送風機が届けた！','The blower delivered it!','鼓风机送到了！'],windChain:['風の納品 ×','Wind delivery ×','风力入库 ×'],predicted:['予告 ','Preview ','预告 '],tally:[' 届いた',' delivered',' 已送达'],beltLocked:['コンベアは章1クリア（Wave3撃退）で解放されます。','Conveyors unlock after Chapter 1 (clear Wave 3).','传送带在第1章通关（击退第3波）后解锁。'],
-  blowerHint:['丸太の落下先を風の中へ。矢印が風向き・↻で回転','Put falling logs inside the wind. Arrow = airflow; ↻ rotates.','将木材落点放在风内。箭头为风向，↻旋转。'],blowerCost:['木材4','4 wood','4木材'],
+  blowerHint:['落下先に風を当てる。設置後は本体をドラッグして風向き調整','Cover the drop point with wind. After placing, drag the body to aim.','让风覆盖掉落点。放置后拖动本体调整风向。'],blowerCost:['木材4','4 wood','4木材'],
   blowerBlocked:['ここには置けません。木・岩・倉庫・仲間・設備から少し離してください。','Cannot place here. Keep clear of trees, rocks, the house, allies and equipment.','这里不能放置，请远离树木、岩石、房屋、伙伴和设备。'],
   fenceHint:['ドラッグで柵を引く（長さ24〜120）','Drag to draw a fence (length 24–120).','拖动画出栅栏（长度24–120）。'],fenceRelease:['離すと設置。木材 ','Release to build. Wood ','松开建造。木材 '],
   fenceShort:['もう少し長く引いてください（24以上）','Draw a little longer (24 or more).','请再拉长一点（24以上）。'],fenceBlocked:['柵は畑の中、倉庫にかからない場所へ','Keep the fence on the field and off the house.','栅栏需在场地内，且不能压住房屋。'],
   toolWood:['木材が足りません。','Not enough wood.','木材不足。'],
-  blowerPlaced:['送風機を設置。本体を連打で強風、長押しで向き・撤去。','Blower placed. Tap it for strong wind; hold it to turn or remove.','已放置鼓风机。连点本体可强风，长按可转向或拆除。'],
+  blowerPlaced:['送風機を設置。本体をドラッグで風向き、タップで強風。','Blower placed. Drag its body to aim; tap for strong wind.','已放置鼓风机。拖动本体调整风向，点击可强风。'],
   fencePlaced:['柵を設置。資材は柵に沿って滑ります。','Fence built. Items slide along it.','栅栏已建成，物资会沿栅栏滑动。'],
   gust:['強風！','Strong wind!','强风！'],
   newTools:['新しい道具：送風機・誘導柵（仲間・設備の一覧）','New tools: Blower and Guide fence (crew & equipment list).','新工具：鼓风机与导流栅栏（伙伴与设备列表）。'],
@@ -76,7 +76,7 @@ window.OutpostCamp = (() => {
  // Ground-tool feedback (wind deliveries, near misses, gust streaks), drawn over the field: {kind,t0,dur,...}.
  let fx=[],windChain=0,lastWindAt=-Infinity,hiddenUnderCard={at:-Infinity,n:0};
  let activeTab='rails',workshopMessage='';
- let pulse=null,picked=null,pickCard=null,pickPress=null,pickHighlight=null,folding=[],removeHint=null,removeHintShown=false;
+ let pulse=null,picked=null,pickCard=null,pickPress=null,pickHighlight=null,folding=[],removeHint=null,removeHintShown=false,windGesture=null;
  let booted=false,activeCamp=null,railClock=0,uiClock=0,houseFlash=0;
  let warehouse=null,overlay=null,goldLabel=null,deliveryLabel=null,workshopStatus=null;
  let statusKey='clickPile',statusUntil=0,visualTime=0,positionKey='',languageKey='',notices=[];
@@ -100,7 +100,8 @@ window.OutpostCamp = (() => {
   if(!s.camp){
    s.camp={version:1,links:[],cargo:[],nextKey:1,tools:{wood:0,stone:0},gate:false,beacon:false,cart:false,endingSeen:false};
    s.factory.width=WORLD.width;s.factory.height=WORLD.height;s.factory.depot={...HOME};
-   s.factory.nodes=[{key:1,type:'wood',x:280,y:300},{key:2,type:'wood',x:470,y:300},{key:3,type:'stone',x:330,y:395},{key:4,type:'stone',x:490,y:395}].map(n=>({...n,stock:300,radius:n.type==='wood'?16:19,regrow:0}));
+   // New camps have room to design a route. Existing sites and player-built factories never move.
+   s.factory.nodes=[{key:1,type:'wood',x:340,y:300},{key:2,type:'wood',x:620,y:300},{key:3,type:'stone',x:430,y:425},{key:4,type:'stone',x:750,y:425}].map(n=>({...n,stock:300,radius:n.type==='wood'?16:19,regrow:0}));
    s.factory.next=Math.max(5,s.factory.next||1,...s.factory.drops.map(d=>(Number(d.key)||0)+1));
   }
   s.camp.platforms??=[];s.camp.blowers??=[];s.camp.fences??=[];s.camp.hoppers??=[];s.camp.logisticsVersion??=2;s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen','removeLearned'])s.camp[flag]=s.camp[flag]===true;
@@ -137,7 +138,7 @@ window.OutpostCamp = (() => {
    warehouse.insertBefore(inventory,warehouse.querySelector('#campDeliveryNote'));
    goldLabel=warehouse.querySelector('#campGold');deliveryLabel=warehouse.querySelector('#campDeliveryNote');
   }else if(inventory.parentElement!==warehouse)warehouse.insertBefore(inventory,deliveryLabel);
-  if(!pickCard){pickCard=document.createElement('div');pickCard.id='beltActions';pickCard.hidden=true;pickCard.setAttribute('role','group');pickCard.innerHTML='<b class="belt-actions-title"></b><div class="belt-actions-buttons"><button type="button" data-pick-action="turn"></button><button type="button" data-pick-action="remove"></button></div>';field.append(pickCard);pickCard.addEventListener('pointerdown',e=>e.stopPropagation());pickCard.addEventListener('click',e=>{const action=e.target.closest('[data-pick-action]')?.dataset.pickAction;if(!action||!picked||window.Rework?.paused)return;if(action==='remove')removePiece(picked.kind,picked.key);else turnPiece(picked.kind,picked.key);});}
+  if(!pickCard){pickCard=document.createElement('div');pickCard.id='beltActions';pickCard.hidden=true;pickCard.setAttribute('role','group');pickCard.innerHTML='<b class="belt-actions-title"></b><small class="fan-aim-hint" hidden></small><div class="belt-actions-buttons"><button type="button" data-pick-action="turn"></button><button type="button" data-pick-action="remove"></button></div>';field.append(pickCard);pickCard.addEventListener('pointerdown',e=>e.stopPropagation());pickCard.addEventListener('click',e=>{const action=e.target.closest('[data-pick-action]')?.dataset.pickAction;if(!action||!picked||window.Rework?.paused)return;if(action==='remove')removePiece(picked.kind,picked.key);else turnPiece(picked.kind,picked.key);});}
   const toolbar=document.getElementById('rxToolbar'),tools=document.getElementById('hudTools');
   if(toolbar&&tools&&tools.parentElement!==toolbar)toolbar.append(tools);
  }
@@ -190,7 +191,8 @@ window.OutpostCamp = (() => {
     setText(warehouse.querySelector('.camp-gold span'),tr('gold'));
     for(const type of ['wood','stone','food'])document.getElementById('gather'+({wood:'Wood',stone:'Stone',food:'Food'}[type]))?.setAttribute('data-camp-label',tr(type));
    }
-   const cap=window.HarvestSkillCore?.effects(S.harvestSkills)?.groundCapacity||12;setText(warehouse.querySelector('#groundStorageStatus'),(language()==='ja'?'地面の資材：':language()==='zh'?'地面材料：':'Ground items: ')+s.factory.drops.length+' / '+cap);setText(goldLabel,format(s.gold)+' G');if(beltButton)setText(beltButton,tr('beltBuild'));if(platformButton)setText(platformButton,tr('platformBuild'));
+   const cap=window.HarvestSkillCore?.effects(S.harvestSkills)?.groundCapacity||12,used=s.factory.drops.length,full=used>=cap,meter=warehouse.querySelector('#groundStorageStatus');
+   setText(meter,(language()==='ja'?'地面の資材：':language()==='zh'?'地面材料：':'Ground items: ')+used+' / '+cap+(full?local([' 満杯：倉庫へ運ぶ',' FULL: deliver to storage',' 已满：搬进仓库']):''));if(meter){meter.classList.toggle('is-full',full);meter.style?.setProperty?.('--ground-fill',Math.min(100,used/cap*100)+'%');meter.dataset.used=String(used);meter.dataset.limit=String(cap);meter.setAttribute('role','status');}document.body.classList.toggle('ground-full',full);setText(goldLabel,format(s.gold)+' G');if(beltButton)setText(beltButton,tr('beltBuild'));if(platformButton)setText(platformButton,tr('platformBuild'));
    const hasCargo=s.camp.cargo.length>0||s.factory.drops.some(d=>!heldDrop(d)&&ConveyorCore.contact(s.camp.links,d));
    setText(deliveryLabel,statusUntil>visualTime?tr(statusKey):tr(hasCargo?'inTransit':'tapHome'));
   }
@@ -264,7 +266,7 @@ window.OutpostCamp = (() => {
   cancelBeltGesture();platformMode=false;platformPreview=null;deviceMode=null;devicePreview=null;const s=state();if(!s)return false;endDrag(null,true);window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);window.Rework?.close();
   railDraft={points:[],owner:s};railHover=null;railError='';document.getElementById('field').classList.add('laying-rails');syncRailPanel();return true;
  }
- function cancelBeltGesture(){const pointer=beltPointer;beltPointer=null;const field=document.getElementById('field');try{if(pointer!==null&&field?.hasPointerCapture?.(pointer))field.releasePointerCapture(pointer);}catch(_){}if(railDraft){railDraft.points=[];railDraft.link=null;railDraft.oldCost=0;}platformPreview=null;if(deviceMode==='fence')devicePreview=null;}
+ function cancelBeltGesture(){finishWind(true);const pointer=beltPointer;beltPointer=null;const field=document.getElementById('field');try{if(pointer!==null&&field?.hasPointerCapture?.(pointer))field.releasePointerCapture(pointer);}catch(_){}if(railDraft){railDraft.points=[];railDraft.link=null;railDraft.oldCost=0;}platformPreview=null;if(deviceMode==='fence')devicePreview=null;}
  function stopRails(){cancelBeltGesture();deviceMode=null;devicePreview=null;platformMode=false;platformPreview=null;railDraft=null;railHover=null;railError='';beltPointer=null;document.getElementById('field')?.classList.remove('laying-rails');if(railPanel)railPanel.hidden=true;window.PlacementControls?.sync?.();}
  function beltPrice(d=railDraft){return d&&d.points.length>1?Math.max(1,ConveyorCore.cost(d.points)-(d.oldCost||0)):0;}
  function syncRailPanel(){
@@ -289,11 +291,11 @@ window.OutpostCamp = (() => {
  // A fan must not be put through somebody's feet or through an existing hopper/house.
  function deviceGroundClear(p,r){
   const s=state(),nearRect=b=>Math.hypot(p.x-clamp(p.x,b.left,b.right),p.y-clamp(p.y,b.top,b.bottom))<r;
-  return !GroundPhysics.HOUSE.some(nearRect)&&!(window.ArmyView?.sim?.soldiers||[]).some(q=>Math.hypot(p.x-q.x,p.y-q.y)<r+(q.r||10)+3)&&!s.camp.hoppers.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<r+GroundPhysics.PARAMS.hopperBody+4);
+  return !houseContains(p)&&!GroundPhysics.HOUSE.some(nearRect)&&!(window.ArmyView?.sim?.soldiers||[]).some(q=>Math.hypot(p.x-q.x,p.y-q.y)<r+(q.r||10)+2)&&!s.camp.hoppers.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<r+GroundPhysics.PARAMS.hopperBody+2);
  }
- function blowerFits(p){const s=state();return Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=24&&p.x<=936&&p.y>=110&&p.y<=525&&Math.hypot(p.x-HOME.x,p.y-HOME.y)>=70&&deviceGroundClear(p,GroundPhysics.PARAMS.blowerBody)&&!s.factory.nodes.some(n=>Math.hypot(p.x-n.x,p.y-n.y)<(n.radius||16)+18||nodeTapArea(n,p,12))&&!s.camp.blowers.some(b=>Math.hypot(p.x-b.x,p.y-b.y)<30);}
+ function blowerFits(p){const s=state();return Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=24&&p.x<=936&&p.y>=110&&p.y<=525&&deviceGroundClear(p,GroundPhysics.PARAMS.blowerBody)&&!s.factory.nodes.some(n=>Math.hypot(p.x-n.x,p.y-n.y)<(n.radius||16)+GroundPhysics.PARAMS.blowerBody+2)&&!s.camp.blowers.some(b=>Math.hypot(p.x-b.x,p.y-b.y)<GroundPhysics.PARAMS.blowerBody*2+2);}
  function placeBlower(point){if(Rework.paused||deviceMode!=='blower')return false;const s=state(),p={x:clamp(point.x,24,936),y:clamp(point.y,110,525)};if(s.camp.blowers.length>=MAX_BLOWERS){railError='blowerLimit';syncRailPanel();return false;}if(s.factory.inventory.wood<BLOWER_COST){railError='toolWood';syncRailPanel();return false;}if(!blowerFits(p)){railError='blowerBlocked';syncRailPanel();return false;}
-  const key=fenceKey(s.camp.blowers);s.factory.inventory.wood-=BLOWER_COST;const blower={key,x:Math.round(p.x),y:Math.round(p.y),dir:blowerDir,costWood:BLOWER_COST};s.camp.blowers.push(blower);startTally(blower);beltHistory.push({blower:key,price:BLOWER_COST});railError='';statusKey='blowerPlaced';statusUntil=visualTime+5;audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();if(document.body.classList.contains('compact-play'))stopRails();return true;}
+  const key=fenceKey(s.camp.blowers);s.factory.inventory.wood-=BLOWER_COST;const blower={key,x:Math.round(p.x),y:Math.round(p.y),dir:blowerDir,costWood:BLOWER_COST};s.camp.blowers.push(blower);startTally(blower);beltHistory.push({blower:key,price:BLOWER_COST});railError='';statusKey='blowerPlaced';statusUntil=visualTime+5;audio('build');persist();window.SupplyFactory?.translate();syncRailPanel();if(document.body.classList.contains('compact-play'))stopRails();select({kind:'blower',key,x:blower.x,y:blower.y});return true;}
  // ---- M4 hopper ----
  const HOPPER_COST={wood:10,stone:4},MAX_HOPPERS=20;
  function hopperFits(p){const s=state();return p.x>=24&&p.x<=936&&p.y>=110&&p.y<=525&&Math.hypot(p.x-HOME.x,p.y-HOME.y)>=70&&!s.factory.nodes.some(n=>Math.hypot(p.x-n.x,p.y-n.y)<(n.radius||16)+20||nodeTapArea(n,p,12))&&!s.camp.blowers.some(b=>Math.hypot(p.x-b.x,p.y-b.y)<32)&&!s.camp.hoppers.some(h=>Math.hypot(p.x-h.x,p.y-h.y)<36);}
@@ -356,9 +358,12 @@ window.OutpostCamp = (() => {
  function select(hit){if(hit&&window.BattleControl?.placement)hit=null;picked=hit?{kind:hit.kind,key:hit.key,anchor:{x:hit.x,y:hit.y}}:null;if(picked){removeHint=null;audio('place');}syncPick();return !!picked;}
  function syncPick(){
   if(!pickCard)return;const s=state(),piece=pieceOf(s,picked);if(picked&&!piece)picked=null;pickCard.hidden=!piece;if(!piece)return;
-  setText(pickCard.querySelector('.belt-actions-title'),pieceName(piece));const turn=pickCard.querySelector('[data-pick-action="turn"]');turn.hidden=piece.kind!=='platform'&&piece.kind!=='blower'&&piece.kind!=='hopper';setText(turn,tr('turn'));setText(pickCard.querySelector('[data-pick-action="remove"]'),removeLabel(piece));
+  setText(pickCard.querySelector('.belt-actions-title'),pieceName(piece));const turn=pickCard.querySelector('[data-pick-action="turn"]');turn.hidden=piece.kind!=='platform'&&piece.kind!=='blower'&&piece.kind!=='hopper';setText(turn,tr('turn'));setText(pickCard.querySelector('[data-pick-action="remove"]'),removeLabel(piece));const aimHint=pickCard.querySelector('.fan-aim-hint');if(aimHint){aimHint.hidden=piece.kind!=='blower';setText(aimHint,local(['本体をドラッグして風向き調整','Drag the body to aim the wind','拖动本体调整风向']));}
  }
  function turnPiece(kind,key){if(kind!=='blower'&&kind!=='hopper')return turnPlatform(key);const b=deviceList(state(),kind).find(b=>keyEqual(b.key,key));if(!b)return false;b.dir=(b.dir+1)%8;audio('place');persist();window.SupplyFactory?.translate();syncWorkshop(state());return true;}
+ // Drag the real fan in the direction of the desired wind. Position stays fixed; no repeated rotation clicks.
+ function aimWind(e){const g=windGesture,b=g&&state()?.camp.blowers.find(b=>keyEqual(b.key,g.key));if(!b)return;const p=ArmyView.point(e.clientX,e.clientY),dx=p.x-b.x,dy=p.y-b.y;if(Math.hypot(dx,dy)<10)return;b.dir=((Math.round(Math.atan2(dy,dx)/(Math.PI/4))%8)+8)%8;syncPick();}
+ function finishWind(cancel=false){const g=windGesture;if(!g)return;windGesture=null;const b=state()?.camp.blowers.find(b=>keyEqual(b.key,g.key));if(b&&cancel)b.dir=g.dir;else if(b&&b.dir!==g.dir){audio('place');persist();}try{document.getElementById('field').releasePointerCapture(g.pointerId);}catch(_){}syncPick();}
  function turnPlatform(key){const p=state()?.camp.platforms.find(p=>keyEqual(p.key,key));if(!p)return false;p.dir=(p.dir+1)%4;audio('place');persist();window.SupplyFactory?.translate();syncWorkshop(state());return true;}
  function removePiece(kind,key){
   const s=state(),piece=pieceOf(s,{kind,key});if(!piece)return false;
@@ -414,7 +419,15 @@ window.OutpostCamp = (() => {
   field.addEventListener('pointerdown',e=>{if(railDraft)return;pickPress=null;if(!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse,#beltActions')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;const point=ArmyView.point(e.clientX,e.clientY),hit=pickAt(point);if(!hit){if(picked)select(null);return;}pickPress={pointerId:e.pointerId,x:e.clientX,y:e.clientY,hit};clearTimeout(longPress);if(hit.kind==='hopper')e.stopImmediatePropagation();if(hit.kind==='blower'){e.stopImmediatePropagation();const press=pickPress;longPress=setTimeout(()=>{if(pickPress!==press)return;press.long=true;select(press.hit);},450);}},true);
   field.addEventListener('contextmenu',e=>{if(!booted||railDraft||window.Rework?.paused||window.BattleControl?.placement)return;const hit=pickAt(ArmyView.point(e.clientX,e.clientY));if(!hit)return;e.preventDefault();clearTimeout(longPress);pickPress=null;select(hit);});
   document.addEventListener('pointerdown',e=>{if(pickPress?.hit&&pickPress.pointerId===e.pointerId&&(drag||window.SupplyFactory?.holding||window.BattleControl?.placement||window.Rework?.paused))pickPress=null;});
-  field.addEventListener('pointermove',e=>{if(pickPress?.hit&&pickPress.pointerId===e.pointerId&&moved(e,pickPress)){pickPress=null;clearTimeout(longPress);}},true);
+  field.addEventListener('pointermove',e=>{
+   if(windGesture?.pointerId===e.pointerId){e.preventDefault();e.stopImmediatePropagation();aimWind(e);return;}
+   const p=pickPress;if(!p?.hit||p.pointerId!==e.pointerId||!moved(e,p))return;
+   if(p.hit.kind==='blower'&&!drag&&!railDraft&&!window.Rework?.paused&&!window.BattleControl?.placement){const b=state().camp.blowers.find(b=>keyEqual(b.key,p.hit.key));if(b){pickPress=null;clearTimeout(longPress);windGesture={pointerId:e.pointerId,key:b.key,dir:b.dir};select(p.hit);try{field.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();e.stopImmediatePropagation();aimWind(e);return;}}
+   pickPress=null;clearTimeout(longPress);
+  },true);
+  window.addEventListener('pointerup',e=>{if(windGesture?.pointerId!==e.pointerId)return;e.preventDefault();aimWind(e);finishWind();},true);
+  window.addEventListener('pointercancel',e=>{if(windGesture?.pointerId===e.pointerId)finishWind(true);},true);
+  window.addEventListener('blur',()=>finishWind(true));
   window.addEventListener('pointerup',e=>{const p=pickPress;if(!p?.hit||p.pointerId!==e.pointerId)return;pickPress=null;clearTimeout(longPress);if(p.long||moved(e,p)||drag||railDraft||window.BattleControl?.placement||window.Rework?.paused)return;if(p.hit.kind==='blower')boostBlower(p.hit.key);else select(p.hit);},true);
   window.addEventListener('pointercancel',()=>{if(pickPress?.hit)pickPress=null;clearTimeout(longPress);},true);
  }
@@ -647,6 +660,8 @@ window.OutpostCamp = (() => {
   if(!booted)return;const s=state();if(!s)return;const {ox,oy,z}=view;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   ctx.save();
+  // Keep selectable fans legible through foliage. Freedom under a canopy must not make the tool disappear.
+  for(const b of s.camp.blowers){const occluded=s.factory.nodes.some(n=>nodeTapArea(n,b)&&b.y<n.y),chosen=picked?.kind==='blower'&&keyEqual(picked.key,b.key);if(!occluded&&!chosen)continue;ctx.save();ctx.translate(ox,oy);ctx.scale(z,z);ctx.globalAlpha=occluded&&!chosen ? .75 : 1;drawBlower(ctx,b,GroundPhysics.boostFactor(b,s.factory.time)>1);ctx.strokeStyle='#ffe59a';ctx.lineWidth=Math.max(1.5,1.5/z);ctx.beginPath();ctx.ellipse(b.x,b.y,16,9,0,0,Math.PI*2);ctx.stroke();ctx.restore();}
   // Selection affordances stay in front of allies even when the hopper sprite is behind a lumberjack.
   const selectedHopper=picked?.kind==='hopper'?s.camp.hoppers.find(h=>keyEqual(h.key,picked.key)):null;
   if(selectedHopper){const h=selectedHopper,o=GroundPhysics.DIRS[h.dir],x=ox+h.x*z,y=oy+h.y*z,m=Math.max(17,32*z);ctx.save();ctx.strokeStyle='#ffe295';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.arc(x,y,Math.max(13,24*z),0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(x+o.x*(m-8),y+o.y*(m-8));ctx.lineTo(x+o.x*m,y+o.y*m);ctx.lineTo(x+o.x*(m-5)-o.y*4,y+o.y*(m-5)+o.x*4);ctx.moveTo(x+o.x*m,y+o.y*m);ctx.lineTo(x+o.x*(m-5)+o.y*4,y+o.y*(m-5)-o.x*4);ctx.stroke();ctx.restore();}

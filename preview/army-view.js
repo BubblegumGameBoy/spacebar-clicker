@@ -128,6 +128,9 @@ window.ArmyView=(()=>{
    ctx.globalAlpha=p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
    const atlas=spriteAtlas(img,u,h*z,dpr);if(!atlas)continue;const aw=atlas.w/dpr,ah=atlas.h/dpr,ax=atlas.anchorX/dpr,ay=atlas.anchorY/dpr;
    if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
+   // Free placement is legal even when no resource is in reach. Keep the idle state visible after release.
+   if(raid&&u.worker&&h*z>10){if(p.workStatusAt==null||sim.time-p.workStatusAt>.3){p.workStatusAt=sim.time;p.workIdle=!window.SupplyFactory?.nearby?.(p,SupplyFactory.resourceTypeForWorker(u.worker));}
+    if(p.workIdle){ctx.save();ctx.font='700 '+Math.max(9,10*z)+'px system-ui';ctx.textAlign='center';const label=LANG==='en'?'Idle':LANG==='zh'?'待机':'待機',w=ctx.measureText(label).width+10,by=y-h*z-7;ctx.fillStyle='#4c3d21ee';ctx.strokeStyle='#dfbf75';ctx.lineWidth=1;ctx.beginPath();ctx.rect(x-w/2,by-11,w,15);ctx.fill();ctx.stroke();ctx.fillStyle='#ffe4a3';ctx.fillText(label,x,by);ctx.restore();}}
    if(tier&&h*z>17){ctx.fillStyle=['','#6ae2ff','#d2a2ff','#ffdc6c'][tier];ctx.font=Math.max(7,9*z)+'px sans-serif';ctx.textAlign='center';ctx.fillText('◆'.repeat(tier),x,y-h*z-4*z);}
   }
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));

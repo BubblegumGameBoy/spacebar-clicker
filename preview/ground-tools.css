@@ -10,3 +10,13 @@ body.outpost-game .equipment-card.is-locked button,body.outpost-game .equipment-
 @keyframes unlockGlow{0%,100%{box-shadow:0 0 0 2px #f3d98a66}50%{box-shadow:0 0 0 3px #ffe7a0,0 0 18px 4px #f3d98a88}}
 body.outpost-game .equipment-card.just-unlocked{animation:unlockGlow 1.2s ease-in-out 4;border-color:#f3d98a}
 @media (prefers-reduced-motion:reduce){body.outpost-game .equipment-card.just-unlocked{animation:none;box-shadow:0 0 0 3px #ffe7a0}}
+
+/* Capacity is physical loose material space, not a troop-placement limit. */
+body.outpost-game #deckMain>#campWarehouse #groundStorageStatus{display:block;position:relative;padding:4px 6px 8px;min-height:18px;color:#d4dfbb;font-size:11px;line-height:1.4;text-align:left;box-sizing:border-box;border-radius:4px;background-color:#172b22}
+body.outpost-game #groundStorageStatus{background-image:linear-gradient(90deg,#6d8656 var(--ground-fill,0%),transparent var(--ground-fill,0%));background-size:100% 3px;background-position:left bottom;background-repeat:no-repeat}
+body.outpost-game #deckMain>#campWarehouse #groundStorageStatus.is-full{background-color:#644226;color:#ffe9a2;border:1px solid #e1b86b;font-weight:800}
+body.outpost-game.ground-full #campWarehouse{border-color:#e6be71!important;box-shadow:inset 0 0 0 1px #e6be7166}
+body.outpost-game #beltActions .fan-aim-hint{display:block;font:11px/1.4 system-ui;color:#d4e6be;max-width:210px;margin:3px 0 5px}
+body.outpost-game #beltActions .fan-aim-hint[hidden]{display:none}
+body.outpost-game #campWarehouse #groundCapacityWarning{position:static!important;left:auto!important;bottom:auto!important;transform:none!important;z-index:auto!important;grid-column:1/-1;width:100%;max-width:100%!important;margin:3px 0 0;padding:7px 8px!important;font-size:11px!important;box-sizing:border-box}
+body.outpost-game #campWarehouse #groundCapacityWarning[hidden]{display:none!important}

@@ -1,0 +1,836 @@
+{
+  "version": "20261027-gather-power-r3",
+  "nodeTests": {
+    "passed": 296,
+    "failed": 0
+  },
+  "freshHarvest": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "fixture": "Fresh strikes and manual delivery only; reload preserves work; no state grants or acceleration",
+      "full": {
+        "ground": 12,
+        "cap": 12
+      },
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "fixture": "Fresh strikes and manual delivery only; reload preserves work; no state grants or acceleration",
+      "full": {
+        "ground": 12,
+        "cap": 12
+      },
+      "errors": []
+    }
+  ],
+  "noviceEarnedPC": {
+    "mode": "pc",
+    "status": "passed",
+    "fixture": "Fresh real taps and drag deliveries only; no grants, state edits, time acceleration; CDP touch emulation, no audio audition",
+    "firstHit": {
+      "key": 1,
+      "work": 1,
+      "stock": 300,
+      "drops": 0
+    },
+    "two": {
+      "cue": {
+        "kind": "hire",
+        "button": false,
+        "unit": "woodcutter",
+        "step": "worker"
+      },
+      "wood": 2,
+      "title": "木こりを雇う",
+      "cost": "2 / 6"
+    },
+    "fullBefore": {
+      "ground": 12,
+      "work": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "meter": "地面の資材：12 / 12 満杯：倉庫へ運ぶ",
+      "warning": "置き場が満杯 12 / 12：倉庫へ運ぶ ／ 上限を強化",
+      "visible": true
+    },
+    "fullAfter": {
+      "ground": 12,
+      "work": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "guide": "資材置き場が満杯（12 / 12）。納品するか、強化で上限を増やしましょう。"
+    },
+    "capacityTree": {
+      "open": true,
+      "selected": "storage1",
+      "detail": "地面の置き場 · 段階 1 / 6\n置き場を広げる\n習得すると\n地面に最大 12個 → 地面に最大 24個\n\n地面と搬送中の資材の合計上限。満杯になると採集が止まり、倉庫に納品すると再開します。仲間の配置枠や倉庫の在庫とは別です。\n\n必要な資材\n8\n2\n資材を使って習得\n\n不足：木材 6 / 石材 2"
+    },
+    "freed": {
+      "ground": 11,
+      "full": false,
+      "warning": false,
+      "wood": 3
+    },
+    "worker": {
+      "pending": 0,
+      "units": [
+        {
+          "id": "woodcutter",
+          "x": 390,
+          "y": 330
+        }
+      ],
+      "goal": "鋭い刃先",
+      "cost": "0 / 10"
+    },
+    "power": {
+      "power": 2,
+      "hand": 1,
+      "carry": 0,
+      "detail": "採集力 · 段階 2 / 6\n切り出しの技\n習得すると\n採集力 2 → 採集力 3\n資材\t前の段階\t習得後\n 木材\t2打で1個\t1打で1個\n 石材\t3打で1個\t2打で1個\n\n打数はゲージが空のときの目安。余った採集力は次に持ち越し、強くなると1打で複数の資材が落ちます。仲間の採集速度は変わりません。\n\n必要な資材\n30\n6\n資材を使って習得\n次：切り出しの技／あと木材30・あと石材6"
+    },
+    "errors": []
+  },
+  "noviceTouchAfterFix": [
+    {
+      "mode": "touch",
+      "status": "passed",
+      "firstHit": {
+        "key": 1,
+        "work": 1,
+        "stock": 300,
+        "drops": 0
+      },
+      "two": {
+        "cue": {
+          "kind": "hire",
+          "button": false,
+          "unit": "woodcutter",
+          "step": "worker"
+        },
+        "wood": 2,
+        "title": "木こりを雇う",
+        "cost": "2 / 6"
+      },
+      "fullBefore": {
+        "ground": 12,
+        "work": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "meter": "地面の資材：12 / 12 満杯：倉庫へ運ぶ",
+        "warning": "置き場の上限を強化（スキルツリー）",
+        "visible": true
+      },
+      "fullAfter": {
+        "ground": 12,
+        "work": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "guide": "資材置き場が満杯（12 / 12）。納品するか、強化で上限を増やしましょう。"
+      },
+      "capacityTree": {
+        "open": true,
+        "selected": "storage1",
+        "detail": "地面の置き場 · 段階 1 / 6\n置き場を広げる\n習得すると\n地面に最大 12個 → 地面に最大 24個\n\n地面と搬送中の資材の合計上限。満杯になると採集が止まり、倉庫に納品すると再開します。仲間の配置枠や倉庫の在庫とは別です。\n\n必要な資材\n8\n2\n資材を使って習得\n\n不足：木材 6 / 石材 2"
+      },
+      "freed": {
+        "ground": 11,
+        "full": false,
+        "warning": false,
+        "wood": 3
+      },
+      "errors": []
+    }
+  ],
+  "treePrepared": [
+    {
+      "lang": "ja",
+      "mode": "pc",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "採集力 2",
+        "table": "資材\t前の段階\t習得後\n 木材\t3打で1個\t2打で1個\n 石材\t5打で1個\t3打で1個",
+        "detail": {
+          "x": 123,
+          "y": 600.96875,
+          "width": 1034,
+          "height": 249.03125,
+          "top": 600.96875,
+          "right": 1157,
+          "bottom": 850,
+          "left": 123
+        },
+        "dialog": {
+          "x": 100,
+          "y": 18,
+          "width": 1080,
+          "height": 864,
+          "top": 18,
+          "right": 1180,
+          "bottom": 882,
+          "left": 100
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " 木材1打で4個1打で6個",
+        " 石材1打で2–3個1打で3–4個"
+      ],
+      "storage": "地面と搬送中の資材の合計上限。満杯になると採集が止まり、倉庫に納品すると再開します。仲間の配置枠や倉庫の在庫とは別です。",
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mode": "touch",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "採集力 2",
+        "table": "資材\t前の段階\t習得後\n 木材\t3打で1個\t2打で1個\n 石材\t5打で1個\t3打で1個",
+        "detail": {
+          "x": 27,
+          "y": 510.171875,
+          "width": 336,
+          "height": 284.65625,
+          "top": 510.171875,
+          "right": 363,
+          "bottom": 794.828125,
+          "left": 27
+        },
+        "dialog": {
+          "x": 16,
+          "y": 24.171875,
+          "width": 358,
+          "height": 795.65625,
+          "top": 24.171875,
+          "right": 374,
+          "bottom": 819.828125,
+          "left": 16
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " 木材1打で4個1打で6個",
+        " 石材1打で2–3個1打で3–4個"
+      ],
+      "storage": "地面と搬送中の資材の合計上限。満杯になると採集が止まり、倉庫に納品すると再開します。仲間の配置枠や倉庫の在庫とは別です。",
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mode": "pc",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "Gathering power 2",
+        "table": "Material\tPrevious tier\tAfter\n Wood\t3 taps for 1\t2 taps for 1\n Stone\t5 taps for 1\t3 taps for 1",
+        "detail": {
+          "x": 123,
+          "y": 617.8125,
+          "width": 1034,
+          "height": 232.1875,
+          "top": 617.8125,
+          "right": 1157,
+          "bottom": 850,
+          "left": 123
+        },
+        "dialog": {
+          "x": 100,
+          "y": 18,
+          "width": 1080,
+          "height": 864,
+          "top": 18,
+          "right": 1180,
+          "bottom": 882,
+          "left": 100
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " Wood4 per tap6 per tap",
+        " Stone2–3 per tap3–4 per tap"
+      ],
+      "storage": "Total limit for loose and travelling items. Deliver some to restart gathering when full. This is separate from ally slots and warehouse stock.",
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mode": "touch",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "Gathering power 2",
+        "table": "Material\tPrevious tier\tAfter\n Wood\t3 taps for 1\t2 taps for 1\n Stone\t5 taps for 1\t3 taps for 1",
+        "detail": {
+          "x": 27,
+          "y": 528.953125,
+          "width": 336,
+          "height": 270.09375,
+          "top": 528.953125,
+          "right": 363,
+          "bottom": 799.046875,
+          "left": 27
+        },
+        "dialog": {
+          "x": 16,
+          "y": 19.953125,
+          "width": 358,
+          "height": 804.09375,
+          "top": 19.953125,
+          "right": 374,
+          "bottom": 824.046875,
+          "left": 16
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " Wood4 per tap6 per tap",
+        " Stone2–3 per tap3–4 per tap"
+      ],
+      "storage": "Total limit for loose and travelling items. Deliver some to restart gathering when full. This is separate from ally slots and warehouse stock.",
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mode": "pc",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "采集力 2",
+        "table": "物资\t前一阶段\t习得后\n 木材\t3次点击得1件\t2次点击得1件\n 石材\t5次点击得1件\t3次点击得1件",
+        "detail": {
+          "x": 123,
+          "y": 615.96875,
+          "width": 1034,
+          "height": 234.03125,
+          "top": 615.96875,
+          "right": 1157,
+          "bottom": 850,
+          "left": 123
+        },
+        "dialog": {
+          "x": 100,
+          "y": 18,
+          "width": 1080,
+          "height": 864,
+          "top": 18,
+          "right": 1180,
+          "bottom": 882,
+          "left": 100
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 900
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " 木材每次4件每次6件",
+        " 石材每次2–3件每次3–4件"
+      ],
+      "storage": "地面和运输中物资的总上限。满额后采集暂停，入库后恢复。与伙伴位置数和仓库库存无关。",
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mode": "touch",
+      "status": "passed",
+      "initial": {
+        "power": 1,
+        "effect": "采集力 2",
+        "table": "物资\t前一阶段\t习得后\n 木材\t3次点击得1件\t2次点击得1件\n 石材\t5次点击得1件\t3次点击得1件",
+        "detail": {
+          "x": 27,
+          "y": 517.421875,
+          "width": 336,
+          "height": 270.15625,
+          "top": 517.421875,
+          "right": 363,
+          "bottom": 787.578125,
+          "left": 27
+        },
+        "dialog": {
+          "x": 16,
+          "y": 31.421875,
+          "width": 358,
+          "height": 781.15625,
+          "top": 31.421875,
+          "right": 374,
+          "bottom": 812.578125,
+          "left": 16
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "overflow": false
+      },
+      "bought": {
+        "tier": 1,
+        "power": 2,
+        "wood": 0,
+        "selected": "hand2",
+        "open": true
+      },
+      "mastery": [
+        " 木材每次4件每次6件",
+        " 石材每次2–3件每次3–4件"
+      ],
+      "storage": "地面和运输中物资的总上限。满额后采集暂停，入库后恢复。与伙伴位置数和仓库库存无关。",
+      "errors": []
+    }
+  ],
+  "freeWorksitePrepared": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "fixture": "Prepared material grant only; real pointer placement and natural worker/physics output",
+      "sites": [
+        {
+          "type": "wood",
+          "x": 340,
+          "y": 300
+        },
+        {
+          "type": "wood",
+          "x": 620,
+          "y": 300
+        },
+        {
+          "type": "stone",
+          "x": 430,
+          "y": 425
+        },
+        {
+          "type": "stone",
+          "x": 750,
+          "y": 425
+        }
+      ],
+      "idlePoint": {
+        "x": 860,
+        "y": 285
+      },
+      "workingPoint": {
+        "x": 270.5000019453437,
+        "y": 315.5000019453437,
+        "node": 1
+      },
+      "beforeAim": {
+        "key": 1,
+        "x": 340,
+        "y": 240,
+        "dir": 4,
+        "costWood": 4
+      },
+      "afterAim": {
+        "key": 1,
+        "x": 340,
+        "y": 240,
+        "dir": 2,
+        "costWood": 4
+      },
+      "plan": {
+        "x": 281,
+        "y": 340,
+        "dir": 4,
+        "home": 7
+      },
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "fixture": "Prepared material grant only; real pointer placement and natural worker/physics output",
+      "sites": [
+        {
+          "type": "wood",
+          "x": 340,
+          "y": 300
+        },
+        {
+          "type": "wood",
+          "x": 620,
+          "y": 300
+        },
+        {
+          "type": "stone",
+          "x": 430,
+          "y": 425
+        },
+        {
+          "type": "stone",
+          "x": 750,
+          "y": 425
+        }
+      ],
+      "idlePoint": {
+        "x": 860,
+        "y": 285
+      },
+      "workingPoint": {
+        "x": 270.5,
+        "y": 315.5,
+        "node": 1
+      },
+      "beforeAim": {
+        "key": 1,
+        "x": 340,
+        "y": 240,
+        "dir": 4,
+        "costWood": 4
+      },
+      "afterAim": {
+        "key": 1,
+        "x": 340,
+        "y": 240,
+        "dir": 2,
+        "costWood": 4
+      },
+      "plan": {
+        "x": 281,
+        "y": 340,
+        "dir": 4,
+        "home": 7
+      },
+      "errors": []
+    }
+  ],
+  "workerRangePrepared": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "fixture": "Prepared wood20 and learned gesture flag; real recruit/free placement/reposition; natural6.2sidle and real harvesting",
+      "far": {
+        "x": 820,
+        "y": 250
+      },
+      "near": {
+        "x": 414,
+        "y": 300
+      },
+      "idle": {
+        "point": [
+          [
+            819.9999805465637,
+            250.0000097267181
+          ]
+        ],
+        "stock": [
+          300,
+          300
+        ],
+        "outputs": 0
+      },
+      "output": {
+        "point": [
+          [
+            414.00000583603094,
+            300
+          ]
+        ],
+        "count": 1
+      },
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "fixture": "Prepared wood20 and learned gesture flag; real recruit/free placement/reposition; natural6.2sidle and real harvesting",
+      "far": {
+        "x": 820,
+        "y": 250
+      },
+      "near": {
+        "x": 414,
+        "y": 300
+      },
+      "idle": {
+        "point": [
+          [
+            820,
+            250
+          ]
+        ],
+        "stock": [
+          300,
+          300
+        ],
+        "outputs": 0
+      },
+      "output": {
+        "point": [
+          [
+            414,
+            300
+          ]
+        ],
+        "count": 1
+      },
+      "errors": []
+    }
+  ],
+  "adultReview": {
+    "scope": "Fresh sixindividual logs->freefaridleplacement->nearreposition->realworkerlog; prepared40wood only for fan feature",
+    "logs": [
+      {
+        "phase": "after2",
+        "s": {
+          "wood": 2,
+          "stone": 0,
+          "ground": 0,
+          "delivered": 2,
+          "phase": "prep",
+          "wave": 1,
+          "cleared": 0,
+          "win": null,
+          "paused": false,
+          "arch": 0,
+          "woodcutter": 0,
+          "pending": false,
+          "lesson": "worker",
+          "blowers": 0,
+          "fences": 0,
+          "hoppers": 0,
+          "links": 0
+        },
+        "text": "次の目標\n木こりを雇う\n木を切る作業を仲間に任せる\n2 / 6"
+      },
+      {
+        "phase": "idle",
+        "before": {
+          "soldiers": [
+            {
+              "x": 500.0000194534362,
+              "y": 470.0000194534362
+            }
+          ],
+          "drops": 0,
+          "text": "↑\n次の目標\n鋭い刃先\n採集力 1 → 2：木3打 → 2打\n0 / 10\nスキルツリー"
+        },
+        "after": {
+          "soldiers": [
+            {
+              "x": 500.0000194534362,
+              "y": 470.0000194534362
+            }
+          ],
+          "drops": 0,
+          "text": "↑\n次の目標\n鋭い刃先\n採集力 1 → 2：木3打 → 2打\n0 / 10\nスキルツリー"
+        }
+      },
+      {
+        "phase": "working",
+        "active": {
+          "soldiers": [
+            {
+              "x": 280.00000972671813,
+              "y": 339.9999805465638
+            }
+          ],
+          "drops": [
+            {
+              "x": 256.00000972671813,
+              "y": 363.9999805465638,
+              "worker": true
+            },
+            {
+              "x": 254.00000972671813,
+              "y": 353.9999805465638,
+              "worker": true
+            }
+          ],
+          "goal": "↑\n次の目標\n鋭い刃先\n採集力 1 → 2：木3打 → 2打\n0 / 10\nスキルツリー"
+        }
+      },
+      {
+        "phase": "power-detail",
+        "text": "採集力 · 段階 1 / 6\n鋭い刃先\n習得すると\n採集力 1 → 採集力 2\n資材\t前の段階\t習得後\n 木材\t3打で1個\t2打で1個\n 石材\t5打で1個\t3打で1個\n\n打数はゲージが空のときの目安。余った採集力は次に持ち越し、強くなると1打で複数の資材が落ちます。仲間の採集速度は変わりません。\n\n必要な資材\n10\n資材を使って習得\n\n不足：木材 10"
+      },
+      {
+        "phase": "prepared-fan-aim",
+        "before": {
+          "key": 1,
+          "x": 330,
+          "y": 364,
+          "dir": 4,
+          "costWood": 4
+        },
+        "after": {
+          "key": 1,
+          "x": 330,
+          "y": 364,
+          "dir": 6,
+          "costWood": 4
+        }
+      }
+    ],
+    "errors": []
+  },
+  "adultAutomationPrepared": {
+    "scope": "Prepared worker andsingleblower; normal game clock/realworkeroutput/nomanualdelivery; notearnedprogression",
+    "before": {
+      "nodes": [
+        {
+          "x": 340,
+          "y": 300,
+          "type": "wood"
+        },
+        {
+          "x": 620,
+          "y": 300,
+          "type": "wood"
+        },
+        {
+          "x": 430,
+          "y": 425,
+          "type": "stone"
+        },
+        {
+          "x": 750,
+          "y": 425,
+          "type": "stone"
+        }
+      ],
+      "w": {
+        "x": 280,
+        "y": 340
+      },
+      "end": {
+        "x": 256,
+        "y": 364
+      },
+      "share": 3,
+      "before": 0
+    },
+    "after": {
+      "delivered": 1,
+      "inventory": 1
+    },
+    "errors": []
+  },
+  "adultIdleAndCanopyRecheck": {
+    "scope": "Prepared workerfaraway and fanunderfoliage; visiblebodydraginput",
+    "before": {
+      "worker": [
+        {
+          "x": 500,
+          "y": 470,
+          "idle": true
+        }
+      ],
+      "fan": {
+        "key": 1,
+        "x": 330,
+        "y": 264,
+        "dir": 4,
+        "costWood": 4
+      }
+    },
+    "after": {
+      "key": 1,
+      "x": 330,
+      "y": 264,
+      "dir": 0,
+      "costWood": 4
+    },
+    "errors": []
+  },
+  "saveSlots": {
+    "status": "passed",
+    "lesson1": "older-slot",
+    "lesson2": "separate-slot",
+    "fixture": "Ephemeral browser only; no user storage accessed"
+  },
+  "startup": [
+    {
+      "name": "pc",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "lesson",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "touch",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": true
+    }
+  ],
+  "scope": "AI browser review; CDP is emulation. Prepared inventory distinguished from earned materials. No audio listening or full nine-wave replay."
+}
