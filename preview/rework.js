@@ -35,7 +35,9 @@ window.Rework=(()=>{
  function rankLabel(lv){return [['兵士','精鋭','近衛','神話'],['Recruit','Veteran','Elite','Mythic'],['新兵','精锐','近卫','神话']][Math.max(0,at())][Core.tier(lv)];}
  function recruitCost(u,n=quantity){if(window.__OUTPOST_BUILD__)return 0;let cost=0;for(let i=0;i<n;i++)cost+=Core.unitCost(S,u,(S.owned[u.id]||0)+i);return cost;}
  function armyCards(){
-  const visible=new Set(S.firstWorkerPickup?['woodcutter','miner','arch']:['woodcutter']);
+  // The sequel teaches ordinary delivery, not collecting one specially tagged worker log.
+  // Its introductory CSS reveals these cards after the first two deposits, with prices visible.
+  const visible=new Set(window.__OUTPOST_BUILD__||S.firstWorkerPickup?['woodcutter','miner','arch']:['woodcutter']);
   if(window.__OUTPOST_BUILD__&&window.ExpeditionCore)for(const id of ['farmer','ballista'])visible.add(id);
   if(S.clearedBossWave>=(window.__OUTPOST_BUILD__?1:2))visible.add('sword');if(!window.__OUTPOST_BUILD__&&S.clearedBossWave>=3)visible.add('heavy');
   return UNITS.filter(u=>!u.healer&&u.id!=='porter'&&(!window.__OUTPOST_BUILD__||OutpostCore.stats(u.id))&&(unitOwned(u)||visible.has(u.id))).sort(ArmyView.orderUnits).map(u=>{

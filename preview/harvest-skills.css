@@ -26,15 +26,6 @@ body.outpost-game .harvest-tree{width:min(96vw,1000px);max-width:1000px;max-heig
  body.outpost-game .harvest-tree{padding:12px 10px 6px;width:calc(100vw - 16px);max-height:96dvh;border-radius:12px}.harvest-tree-header{gap:6px}.harvest-tree h2{font-size:20px;margin:0 0 3px}.harvest-tree-intro{font-size:10px;line-height:1.45}.harvest-tree .harvest-tree-close{font-size:10px!important;min-width:45px;padding:6px!important}.harvest-tree-wallet{margin:7px 0;font-size:14px;gap:18px;min-height:21px}.harvest-tree-tabs{gap:4px;margin-bottom:7px}.harvest-tree-tabs button{padding:5px 9px;font-size:10px}.harvest-map-scroll{padding:0 3px 5px;max-height:44dvh;min-height:140px;flex-basis:320px}.harvest-tree-root{width:155px;margin-bottom:18px;padding:7px 8px}.harvest-tree-root strong{font-size:12px}.harvest-tree-root::after{bottom:-19px;height:18px}.harvest-tree-root>span{font-size:9px}.harvest-branches{gap:8px;padding-top:15px}.harvest-branch{gap:13px}.harvest-branch::before{top:-15px;height:15px}.harvest-branch>header{padding:4px 2px;min-height:66px;justify-content:center;border-radius:7px}.harvest-branch>header svg{width:20px;height:20px}.harvest-branch h3{font-size:11px}.harvest-branch>header small{font-size:8px;line-height:1.3;overflow-wrap:anywhere}.harvest-node{min-height:104px;padding:5px 2px;gap:4px;border-radius:8px}.harvest-node::before{top:-14px;height:13px}.harvest-node>b{font-size:10px;line-height:1.4}.harvest-node-effect{font-size:8px;line-height:1.35}.harvest-node-emblem{height:21px;width:24px}.harvest-node-emblem svg{width:21px;height:21px}.harvest-node-emblem>small{font-size:8px;width:12px;height:12px;right:-5px}.harvest-node-state{font-size:8px;gap:2px;flex-wrap:wrap;min-height:13px}.harvest-node-state .material-icon{width:12px;height:12px}.harvest-node.is-goal::after{inset:-3px;border-radius:10px}.harvest-node[aria-pressed=true]{outline-width:1px;outline-offset:2px}.harvest-skill-detail{padding:9px 10px 7px;margin-top:7px;grid-template-columns:1fr;gap:5px}.harvest-detail-heading h3{font-size:14px}.harvest-detail-heading small{font-size:9px}.harvest-detail-heading>svg{width:25px;height:25px}.harvest-detail-change{font-size:10px;gap:4px}.harvest-detail-change>small{font-size:9px}.harvest-detail-change b{padding:0 3px}.harvest-detail-note{font-size:9px;line-height:1.4}.harvest-detail-purchase{grid-column:1;grid-row:auto;flex-direction:row;align-items:center;justify-content:space-between;gap:8px;min-width:0;padding-top:3px}.harvest-detail-purchase>div{gap:7px}.harvest-detail-purchase button{font-size:11px;padding:9px 10px;max-width:55%}.harvest-detail-purchase small{font-size:9px}.harvest-detail-cost{font-size:12px;gap:6px}.harvest-detail-cost .material-icon{width:19px;height:18px}.harvest-detail-status{font-size:9px}.harvest-tree-message{font-size:10px;min-height:14px;margin-top:4px}
 }
 @media(prefers-reduced-motion:reduce){body.outpost-game #harvestSkillsButton.has-upgrade{animation:none;box-shadow:0 0 0 2px #e6c16b55}}
-/* Keep all six steps in view on a tall desktop; selected-node details stay below. */
-@media(min-width:681px){
- .harvest-map-scroll{max-height:52dvh;flex-basis:470px}
- .harvest-tree-root{padding:7px 12px;margin-bottom:18px}.harvest-tree-root::after{height:18px;bottom:-19px}
- .harvest-branches:not(.single-branch){padding-top:14px;gap:18px}.harvest-branches:not(.single-branch) .harvest-branch{gap:10px}.harvest-branches:not(.single-branch) .harvest-branch::before{top:-14px;height:14px}
- .harvest-branches:not(.single-branch) .harvest-branch>header{height:48px;min-height:48px;display:grid;grid-template-columns:26px 1fr;grid-template-rows:1fr 1fr;gap:0 5px;padding:5px 9px;text-align:left}.harvest-branches:not(.single-branch) .harvest-branch>header>svg{grid-column:1;grid-row:1/3}.harvest-branches:not(.single-branch) .harvest-branch>header>h3{font-size:13px}.harvest-branches:not(.single-branch) .harvest-branch>header>small{font-size:9px}
- .harvest-branches:not(.single-branch) .harvest-node{height:46px;min-height:46px;display:grid;grid-template-columns:28px minmax(0,1fr);grid-template-rows:1fr 1fr;column-gap:6px;row-gap:0;text-align:left;padding:5px 7px;border-radius:8px}.harvest-branches:not(.single-branch) .harvest-node::before{top:-11px;height:10px}.harvest-branches:not(.single-branch) .harvest-node-emblem{grid-row:1/3;grid-column:1;width:23px;height:23px}.harvest-branches:not(.single-branch) .harvest-node-emblem>svg{width:23px;height:23px}.harvest-branches:not(.single-branch) .harvest-node>b{grid-column:2;font-size:11px;line-height:1.2}.harvest-branches:not(.single-branch) .harvest-node-effect{grid-column:2;font-size:9px}.harvest-branches:not(.single-branch) .harvest-node-state{display:none}.harvest-branches:not(.single-branch) .harvest-node.is-built .harvest-node-state{display:block;position:absolute;right:5px;top:2px;color:#dceba9;font-size:9px}
-}
-
 /* M2 learning feedback: local to the node, its branch spine, the header, the wallet and the detail. No screen shake, no full-screen layer. */
 /* Branch spine: a 4px track; learned segments in the branch colour, the next one part-filled by the materials already held. */
 .harvest-node::before{display:none}
@@ -107,13 +98,6 @@ body.outpost-game .harvest-tree{width:min(96vw,1000px);max-width:1000px;max-heig
 @keyframes harvest-detail-in{0%{opacity:.4;transform:translateY(3px)}100%{opacity:1;transform:none}}
 .harvest-ready-count.ready-up{animation:harvest-badge .5s cubic-bezier(.3,1.6,.5,1)}
 @keyframes harvest-badge{0%{transform:scale(1)}45%{transform:scale(1.35)}100%{transform:scale(1)}}
-@media(min-width:681px){
- .harvest-branches:not(.single-branch) .harvest-link{top:-11px;height:10px}
- .harvest-branches:not(.single-branch) .harvest-node{height:50px;min-height:50px}
- .harvest-branches:not(.single-branch) .harvest-node .harvest-value{grid-column:2;justify-content:flex-start}
- .harvest-branches:not(.single-branch) .harvest-branch>header>div{grid-column:2}
- .harvest-branches:not(.single-branch) .harvest-node.is-ready .harvest-node-state{display:flex;position:absolute;right:6px;bottom:5px}
-}
 @media(max-width:680px){
  .harvest-link{top:-14px;height:13px}
  .harvest-value{flex-wrap:wrap;column-gap:2px;row-gap:0}.harvest-value small{flex-basis:100%;text-align:center;margin:0;font-size:8px}.harvest-value strong{font-size:14px}.harvest-value i{font-size:10px}
@@ -140,3 +124,77 @@ body.outpost-game #campDragGhost.hand-full,#campDragGhost.hand-full{color:#ffd96
 @keyframes harvest-value-static{0%{color:#ffd86b}100%{}}
 .harvest-detail-purchase button.is-wait{background:#34463b;border-color:#5c725d;color:#a8b9a7;cursor:default}
 .harvest-field-cue.is-hint{font-size:12px;font-weight:700;white-space:normal;width:max-content;max-width:min(240px,80vw);text-align:center}
+
+/* The growth map remains a map at every stage, including the first purchase.
+   Four independently funded paths fan out of the worksite. Each node has a
+   large circular touch target; narrow screens pan the map instead of shrinking
+   every label into four tiny columns. The detail stays outside this scroller. */
+.harvest-map-hint{margin:0 0 7px;color:#bdcdb9;text-align:center;font-size:11px;line-height:1.4;flex:none}
+.harvest-pan-hint{display:block;flex:none;font-size:10px;line-height:1.3;color:#c7cdb6;text-align:center;margin:5px 0 0}
+body.outpost-game .harvest-tree{width:min(96vw,1080px);max-width:1080px;max-height:96dvh;padding:17px 22px 9px}
+.harvest-tree-intro{display:none}
+.harvest-tree-wallet{position:absolute;right:102px;top:19px;margin:0;font-size:15px;gap:14px}
+.harvest-tree-header{position:relative;min-height:33px;padding-right:210px}
+.harvest-tree-header .harvest-tree-close{position:absolute!important;right:0;top:0}
+.harvest-tree h2{font-size:22px}
+.harvest-tree-tabs{margin:3px 0 7px;gap:5px}
+.harvest-map-scroll{position:relative;border:1px solid #4f6754;border-radius:12px;padding:12px 12px 8px;max-height:56dvh;flex:1 1 500px;min-height:170px;scrollbar-color:#a6b980 #1c3028;scrollbar-width:thin;background:radial-gradient(ellipse at 50% 0,#6f85532b,transparent 63%),#14271f;touch-action:pan-x pan-y}
+.harvest-map-stage{position:relative;min-width:700px;max-width:980px;margin:auto;padding:0 5px 12px}
+.harvest-tree-root{width:190px;margin:0 auto 31px;padding:8px 13px;border-radius:50px;border:2px solid #d5bf76;background:radial-gradient(ellipse at 50% 0,#62704a,#2b4836);box-shadow:0 0 18px #ceb95d15;isolation:isolate}
+.harvest-tree-root strong{font-size:14px}.harvest-tree-root>span{font-size:10px}
+.harvest-tree-root::after{width:4px;height:33px;left:calc(50% - 2px);bottom:-34px;background:linear-gradient(#d4bd78,#748665);border-radius:2px}
+.harvest-branches:not(.single-branch){grid-template-columns:repeat(4,minmax(0,1fr));column-gap:24px;max-width:none;padding-top:24px}
+.harvest-branches:not(.single-branch)::before{height:3px;top:0;left:calc(12.5% - 9px);right:calc(12.5% - 9px);background:linear-gradient(90deg,#e8c783,#b6d893 34%,#93cbdc 67%,#cfb3e5);opacity:.8}
+.harvest-branches .harvest-branch{gap:22px}
+.harvest-branches:not(.single-branch) .harvest-branch::before{height:25px;top:-25px;width:3px;left:calc(50% - 1.5px);border-radius:2px}
+.harvest-branches .harvest-branch>header{height:43px;min-height:43px;padding:0 3px;border:0;background:transparent;display:flex;flex-direction:column;gap:2px;justify-content:center;text-align:center;position:relative;width:100%}
+.harvest-branches .harvest-branch>header>svg{display:none}
+.harvest-branches .harvest-branch>header>h3{font-size:14px;line-height:1.2}
+.harvest-branches .harvest-branch>header>div{display:block}
+.harvest-branches .harvest-branch>header .harvest-value{display:flex;justify-content:center;gap:2px}
+.harvest-branches .harvest-branch>header .harvest-value small{font-size:9px;color:#9daf9d}.harvest-branches .harvest-branch>header .harvest-value strong{font-size:13px}.harvest-branches .harvest-branch>header .harvest-value i{font-size:9px}
+.harvest-branches .harvest-node{height:97px;min-height:97px;width:100%;max-width:186px;padding:0 3px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:3px;border:0;border-radius:12px;background:transparent!important;box-shadow:none!important;isolation:isolate}
+.harvest-branches .harvest-node[aria-pressed=true]{outline:0}
+.harvest-branches .harvest-node:focus-visible{outline:2px solid #fff0b3;outline-offset:4px}
+.harvest-branches .harvest-node-emblem{height:43px;width:43px;flex:none;border:2px solid #536a5b;border-radius:50%;color:var(--branch);background:radial-gradient(circle at 40% 25%,#3c5542,#1a2e26);box-shadow:0 0 0 3px #15251c;box-sizing:border-box}
+.harvest-branches .harvest-node-emblem>svg{height:24px;width:24px}
+.harvest-branches .harvest-node-emblem>small{right:-4px;bottom:-2px;width:15px;height:15px;font-size:9px;background:#20372b;border-color:var(--branch)}
+.harvest-branches .harvest-node>b{font-size:11px;line-height:1.3;min-height:14px;max-width:100%;color:#d8e3d3}
+.harvest-branches .harvest-node>.harvest-value{display:flex;justify-content:center;gap:3px;flex-wrap:nowrap;min-height:16px}
+.harvest-branches .harvest-node>.harvest-value small{display:none}
+.harvest-branches .harvest-node>.harvest-value strong{font-size:14px;line-height:1.1}.harvest-branches .harvest-node>.harvest-value i{font-size:10px}
+.harvest-branches .harvest-node .harvest-node-state,.harvest-branches:not(.single-branch) .harvest-node.is-ready .harvest-node-state,.harvest-branches:not(.single-branch) .harvest-node.is-built .harvest-node-state{display:flex;position:static;min-height:14px;font-size:10px;line-height:1;color:#8fa58f}
+.harvest-branches .harvest-node-cost{font-size:10px;gap:6px}.harvest-branches .harvest-node-state .material-icon{width:14px;height:13px}
+.harvest-branches .harvest-node.is-built .harvest-node-emblem{background:radial-gradient(circle at 40% 25%,#6a8c4b,#345336);border-color:var(--branch);box-shadow:0 0 0 3px #243a2b}
+.harvest-branches .harvest-node.is-ready .harvest-node-emblem{background:radial-gradient(circle at 40% 25%,#8b7943,#55471f);border-color:#ffe5a0;box-shadow:0 0 0 3px #d6bd5730,0 0 14px #ffe3892b}
+.harvest-branches .harvest-node.is-ready>b,.harvest-branches .harvest-node.is-ready .harvest-node-state{color:#ffe4a0}
+.harvest-branches .harvest-node.is-next:not(.is-ready) .harvest-node-emblem{border-color:var(--branch);box-shadow:0 0 0 3px #304333}
+.harvest-branches .harvest-node[aria-pressed=true] .harvest-node-emblem{outline:2px solid #fff0ae;outline-offset:4px}
+.harvest-branches .harvest-node.is-dim{opacity:.72}.harvest-branches .harvest-node.is-next{opacity:1}
+.harvest-branches .harvest-node.is-milestone .harvest-node-emblem{border-radius:12px;rotate:0deg;border-width:2px}
+.harvest-branches .harvest-node.is-medal .harvest-node-emblem{height:43px;width:43px;border-radius:14px;border-width:2px;box-shadow:0 0 0 3px #15251c}
+.harvest-branches .harvest-node.is-medal .harvest-node-emblem::before,.harvest-branches .harvest-node.is-medal .harvest-node-emblem::after{bottom:-7px;width:7px;height:10px}
+.harvest-branches .harvest-node.is-goal::after{inset:-5px 4px;border-radius:13px;opacity:.4}
+.harvest-branches .harvest-link,.harvest-branches:not(.single-branch) .harvest-link{top:-23px;height:22px;width:4px;left:calc(50% - 2px);background:#425544;z-index:-1}
+.harvest-branches .harvest-node-learn{left:50%;right:auto;top:auto;bottom:20px;translate:-50% 0;padding:4px 8px;font-size:10px;box-shadow:0 1px 6px #000c}
+.harvest-branches .harvest-node-fx{inset:-3px 0 0;border-radius:12px}
+.harvest-branches.single-branch{padding-top:24px;max-width:200px;min-width:180px;grid-template-columns:1fr}
+.harvest-branches.single-branch::before{top:0;height:3px;width:4px}
+.harvest-branches.single-branch .harvest-branch::before{top:-25px;height:25px;width:4px;left:calc(50% - 2px)}
+.harvest-skill-detail{margin-top:8px;padding:10px 13px 7px;box-shadow:none}
+@media(max-width:760px){
+ body.outpost-game .harvest-tree{width:calc(100vw - 14px);padding:12px 10px 7px;max-height:97dvh}
+ .harvest-tree-header{min-height:34px;padding-right:55px}.harvest-tree h2{font-size:19px}.harvest-tree-wallet{position:static;margin:3px 0 5px;font-size:15px;gap:20px}
+ .harvest-tree-tabs{margin-bottom:5px;gap:4px}.harvest-tree-tabs button{font-size:10px;padding:5px 9px}
+ .harvest-map-hint{font-size:10px;margin:0 0 5px}.harvest-map-scroll{padding:10px 8px 6px;max-height:43dvh;flex-basis:330px;min-height:140px}
+ .harvest-map-stage{min-width:680px}.harvest-pan-hint{display:block}
+ .harvest-tree-root{width:172px}.harvest-tree-root strong{font-size:13px}
+ .harvest-branches:not(.single-branch){column-gap:18px}.harvest-branches .harvest-node>b{font-size:11px}
+ .harvest-detail-heading h3{font-size:14px}.harvest-detail-note{font-size:10px;line-height:1.45}.harvest-detail-status{font-size:10px}
+ .harvest-detail-purchase button{min-height:37px}.harvest-tree-message{margin-top:3px;font-size:10px;min-height:14px}
+}
+/* Keep the effect and the price visible while the selected ready node offers
+   its direct learn target beside the icon. */
+.harvest-branches .harvest-node-learn{left:calc(50% + 27px);top:13px;bottom:auto;translate:0 0;padding:5px 7px}
+.harvest-branches .harvest-node:has(.harvest-node-learn) .harvest-node-state{visibility:visible}
+.harvest-map-scroll.is-focused .harvest-map-stage{min-width:0;width:auto}

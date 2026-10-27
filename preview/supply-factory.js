@@ -272,7 +272,7 @@ window.SupplyFactory=(()=>{
    ctx.globalAlpha=n.type==='food'?1:n.stock?1:.25;
    if(n.type==='food')drawFarm(ctx,s,n,z);else sprite(ctx,scenery,n.type==='stone'?1:n.key%2?3:0,0,0,n.type==='wood'?100:54,z);ctx.restore();
    if(outpostMode()&&!n.stock){const left=Math.max(0,Math.ceil(n.regrow-s.time));pill(ctx,LANG==='ja'?(n.type==='food'?'収穫まで ':'再生まで ')+left+'秒':LANG==='zh'?left+'秒':left+'s',x,y-12*z,11);}
-   if(selected){
+   if(selected&&!(outpostMode()&&window.OutpostTutorial)){
     const firstWoodCost=outpostMode()&&window.OutpostCore?OutpostCore.recipe('woodcutter',0,1).wood:3;
     const initial=!(S.owned.woodcutter||0)&&!S.clearedBossWave,needsPickup=initial&&s.inventory.wood+totalGround('wood')>=firstWoodCost;
     if(!window.OutpostTutorial?.active&&!needsPickup&&(!outpostMode()||S.outpost?.phase!=='active')){const label=LANG==='ja'?(n.type==='wood'?'木を連打 → 丸太が落ちる':n.type==='food'?(n.stock?'実った麦をタップ → 食料が落ちる':'畑で麦が育っています'):'岩を連打 → 石材が落ちる'):LANG==='en'?'TAP · '+tr(n.type):'连续点击'+tr(n.type);const size=Math.max(12,14*z),base=y-(n.type==='wood'?100:n.type==='food'?72:54)*z-8;ctx.font='700 '+size+'px system-ui';const half=ctx.measureText(label).width/2+10;

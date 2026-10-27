@@ -1,0 +1,553 @@
+{
+  "version": "20261027-goals-tree-r2",
+  "nodeTests": {
+    "passed": 291,
+    "failed": 0
+  },
+  "freshGoals": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "errors": [],
+      "log": [
+        {
+          "event": "two-deliveries-retire-hands",
+          "state": {
+            "cue": {
+              "kind": "hire",
+              "button": false,
+              "unit": "woodcutter",
+              "step": "worker"
+            },
+            "step": {
+              "id": "worker",
+              "progress": 2,
+              "goal": 6,
+              "title": "",
+              "detail": "",
+              "action": ""
+            },
+            "basics": true,
+            "wood": 2,
+            "delivered": 2,
+            "workers": 0,
+            "carry": 0,
+            "remaining": 237.3334999999996
+          }
+        },
+        {
+          "event": "worker-placed-next-material-upgrade",
+          "state": {
+            "cue": {
+              "kind": "upgrade",
+              "button": true,
+              "step": "carry1"
+            },
+            "step": {
+              "id": "carry1",
+              "progress": 0,
+              "goal": 10,
+              "skill": "carry1",
+              "title": "",
+              "detail": "",
+              "action": ""
+            },
+            "basics": true,
+            "wood": 0,
+            "delivered": 6,
+            "workers": 1,
+            "carry": 0,
+            "remaining": 230.6836999999985
+          }
+        }
+      ],
+      "fixture": "Fresh save, real taps/drags and visible buttons only; no resource grants or time edits. Touch is CDP emulation."
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "errors": [],
+      "log": [
+        {
+          "event": "two-deliveries-retire-hands",
+          "state": {
+            "cue": {
+              "kind": "hire",
+              "button": false,
+              "unit": "woodcutter",
+              "step": "worker"
+            },
+            "step": {
+              "id": "worker",
+              "progress": 2,
+              "goal": 6,
+              "title": "",
+              "detail": "",
+              "action": ""
+            },
+            "basics": true,
+            "wood": 2,
+            "delivered": 2,
+            "workers": 0,
+            "carry": 0,
+            "remaining": 236.2501999999995
+          }
+        },
+        {
+          "event": "worker-placed-next-material-upgrade",
+          "state": {
+            "cue": {
+              "kind": "upgrade",
+              "button": true,
+              "step": "carry1"
+            },
+            "step": {
+              "id": "carry1",
+              "progress": 0,
+              "goal": 10,
+              "skill": "carry1",
+              "title": "",
+              "detail": "",
+              "action": ""
+            },
+            "basics": true,
+            "wood": 0,
+            "delivered": 6,
+            "workers": 1,
+            "carry": 0,
+            "remaining": 228.4003999999983
+          }
+        }
+      ],
+      "fixture": "Fresh save, real taps/drags and visible buttons only; no resource grants or time edits. Touch is CDP emulation."
+    }
+  ],
+  "noviceFinal": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "two": {
+        "cue": {
+          "kind": "hire",
+          "button": false,
+          "unit": "woodcutter",
+          "step": "worker"
+        },
+        "title": "木こりを雇う",
+        "cost": "2 / 6",
+        "wood": 2,
+        "body": "first-camp outpost-game campaign-game progressive-intro has-work-goal compact-play intro-basics-learned intro-has-worker intro-has-blower intro-has-defence intro-has-upgrade"
+      },
+      "postBasics": {
+        "arch": true,
+        "guide": "仲間・スキル・設備は、必要な資材が揃えば自由に選べます。",
+        "goal": {
+          "l": 382,
+          "r": 622,
+          "t": 12,
+          "b": 105.578125
+        },
+        "camera": {
+          "l": 8,
+          "r": 154.21875,
+          "t": 92,
+          "b": 130
+        }
+      },
+      "tree": {
+        "nodes": 24,
+        "map": {
+          "x": 123,
+          "y": 164.484375,
+          "w": 1034,
+          "h": 500
+        },
+        "dialog": {
+          "x": 100,
+          "y": 52.5,
+          "w": 1080,
+          "h": 794.984375
+        },
+        "bodyW": 1280,
+        "detail": {
+          "x": 123,
+          "y": 672.484375,
+          "w": 1034,
+          "h": 143
+        },
+        "tabs": "全体持ち運び採集搬送置き場",
+        "text": "持ち運び · 段階 1 / 6\n両手で運ぶ\n習得すると\n1個まで持てる → 2個まで持てる\n\n資材をつかみ、他の資材に触れて追加。倉庫までドラッグして運びます。\n\n必要な資材\n10\n資材を使って習得\n\n不足：木材 8"
+      },
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "two": {
+        "cue": {
+          "kind": "hire",
+          "button": false,
+          "unit": "woodcutter",
+          "step": "worker"
+        },
+        "title": "木こりを雇う",
+        "cost": "2 / 6",
+        "wood": 2,
+        "body": "first-camp outpost-game campaign-game progressive-intro has-work-goal compact-play intro-basics-learned intro-has-worker intro-has-blower intro-has-defence intro-has-upgrade"
+      },
+      "postBasics": {
+        "arch": true,
+        "guide": "仲間・スキル・設備は、必要な資材が揃えば自由に選べます。",
+        "goal": {
+          "l": 10,
+          "r": 380,
+          "t": 10,
+          "b": 100.890625
+        },
+        "camera": {
+          "l": 8,
+          "r": 126.03125,
+          "t": 112,
+          "b": 147
+        }
+      },
+      "tree": {
+        "nodes": 24,
+        "map": {
+          "x": 27,
+          "y": 201,
+          "w": 336,
+          "h": 330
+        },
+        "dialog": {
+          "x": 16,
+          "y": 71,
+          "w": 358,
+          "h": 702
+        },
+        "bodyW": 390,
+        "detail": {
+          "x": 27,
+          "y": 557,
+          "w": 336,
+          "h": 191
+        },
+        "tabs": "全体持ち運び採集搬送置き場",
+        "text": "持ち運び · 段階 1 / 6\n両手で運ぶ\n習得すると\n1個まで持てる → 2個まで持てる\n\n資材をつかみ、他の資材に触れて追加。倉庫までドラッグして運びます。\n\n必要な資材\n10\n資材を使って習得\n\n不足：木材 8"
+      },
+      "errors": []
+    }
+  ],
+  "treePrepared": [
+    {
+      "lang": "ja",
+      "mode": "pc",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 1078,
+          "scroll": 1078
+        },
+        "map": {
+          "w": 1032,
+          "scroll": 1032
+        },
+        "node": {
+          "x": 174.25,
+          "y": 355.484375,
+          "width": 186,
+          "height": 97,
+          "top": 355.484375,
+          "right": 360.25,
+          "bottom": 452.484375,
+          "left": 174.25
+        },
+        "detail": {
+          "x": 123,
+          "y": 672.484375,
+          "width": 1034,
+          "height": 143,
+          "top": 672.484375,
+          "right": 1157,
+          "bottom": 815.484375,
+          "left": 123
+        }
+      },
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "mode": "touch",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 356,
+          "scroll": 356
+        },
+        "map": {
+          "w": 334,
+          "scroll": 696
+        },
+        "node": {
+          "x": 41,
+          "y": 389,
+          "width": 154,
+          "height": 97,
+          "top": 389,
+          "right": 195,
+          "bottom": 486,
+          "left": 41
+        },
+        "detail": {
+          "x": 27,
+          "y": 557,
+          "width": 336,
+          "height": 191,
+          "top": 557,
+          "right": 363,
+          "bottom": 748,
+          "left": 27
+        }
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mode": "pc",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 1078,
+          "scroll": 1078
+        },
+        "map": {
+          "w": 1032,
+          "scroll": 1032
+        },
+        "node": {
+          "x": 174.25,
+          "y": 352.984375,
+          "width": 186,
+          "height": 97,
+          "top": 352.984375,
+          "right": 360.25,
+          "bottom": 449.984375,
+          "left": 174.25
+        },
+        "detail": {
+          "x": 123,
+          "y": 677.984375,
+          "width": 1034,
+          "height": 128,
+          "top": 677.984375,
+          "right": 1157,
+          "bottom": 805.984375,
+          "left": 123
+        }
+      },
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "mode": "touch",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 356,
+          "scroll": 356
+        },
+        "map": {
+          "w": 334,
+          "scroll": 696
+        },
+        "node": {
+          "x": 41,
+          "y": 386,
+          "width": 154,
+          "height": 97,
+          "top": 386,
+          "right": 195,
+          "bottom": 483,
+          "left": 41
+        },
+        "detail": {
+          "x": 27,
+          "y": 562,
+          "width": 336,
+          "height": 177,
+          "top": 562,
+          "right": 363,
+          "bottom": 739,
+          "left": 27
+        }
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mode": "pc",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 1078,
+          "scroll": 1078
+        },
+        "map": {
+          "w": 1032,
+          "scroll": 1032
+        },
+        "node": {
+          "x": 174.25,
+          "y": 355.484375,
+          "width": 186,
+          "height": 97,
+          "top": 355.484375,
+          "right": 360.25,
+          "bottom": 452.484375,
+          "left": 174.25
+        },
+        "detail": {
+          "x": 123,
+          "y": 672.484375,
+          "width": 1034,
+          "height": 143,
+          "top": 672.484375,
+          "right": 1157,
+          "bottom": 815.484375,
+          "left": 123
+        }
+      },
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "mode": "touch",
+      "status": "passed",
+      "layout": {
+        "panel": {
+          "w": 356,
+          "scroll": 356
+        },
+        "map": {
+          "w": 334,
+          "scroll": 696
+        },
+        "node": {
+          "x": 41,
+          "y": 396.25,
+          "width": 154,
+          "height": 97,
+          "top": 396.25,
+          "right": 195,
+          "bottom": 493.25,
+          "left": 41
+        },
+        "detail": {
+          "x": 27,
+          "y": 564.25,
+          "width": 336,
+          "height": 176.5,
+          "top": 564.25,
+          "right": 363,
+          "bottom": 740.75,
+          "left": 27
+        }
+      },
+      "errors": []
+    }
+  ],
+  "fanPrepared": [
+    {
+      "mode": "pc",
+      "status": "passed",
+      "fixture": "Prepared inventory only; real placement and worker output/physics delivery",
+      "view": {
+        "workerHeight": 44,
+        "archerHeight": 44,
+        "ballistaHeight": 60
+      },
+      "spot": {
+        "x": 340.4852755166021,
+        "y": 307.9076826998014
+      },
+      "plan": {
+        "x": 400,
+        "y": 332,
+        "dir": 4,
+        "home": 4
+      },
+      "draft": {
+        "kind": "blower",
+        "x": 400,
+        "y": 332,
+        "dir": 4
+      },
+      "placed": {
+        "key": 1,
+        "x": 400,
+        "y": 332,
+        "dir": 4,
+        "costWood": 4
+      },
+      "errors": []
+    },
+    {
+      "mode": "touch",
+      "status": "passed",
+      "fixture": "Prepared inventory only; real placement and worker output/physics delivery",
+      "view": {
+        "workerHeight": 44,
+        "archerHeight": 44,
+        "ballistaHeight": 60
+      },
+      "spot": {
+        "x": 340.4852755166021,
+        "y": 307.9076826998014
+      },
+      "plan": {
+        "x": 400,
+        "y": 332,
+        "dir": 4,
+        "home": 4
+      },
+      "draft": {
+        "kind": "blower",
+        "x": 400,
+        "y": 332,
+        "dir": 4
+      },
+      "placed": {
+        "key": 1,
+        "x": 400,
+        "y": 332,
+        "dir": 4,
+        "costWood": 4
+      },
+      "errors": []
+    }
+  ],
+  "startup": [
+    {
+      "name": "pc",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "lesson",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "touch",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": true
+    }
+  ],
+  "scope": "AI browser reviews. CDP is emulation. Prepared inventory explicitly labelled; fresh runs use earned materials. No audio listening or full nine-wave run this revision."
+}

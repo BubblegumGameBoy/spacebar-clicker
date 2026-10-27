@@ -55,7 +55,9 @@ window.ArmyView=(()=>{
    if(p){anchor.style.left=p.x+'px';anchor.style.top=(p.y-35)+'px';}
   }
  }
- const bodyHeight=u=>u.id==='giant'?106:u.fly?(u.id.includes('dragon')?86:66):outpost()?64:54;
+ // People share a human scale relative to the 100px trees and the warehouse.
+ // Siege equipment has a larger footprint; it is not an oversized human sprite.
+ const bodyHeight=u=>u.id==='giant'?106:u.fly?(u.id.includes('dragon')?86:66):outpost()?(u.id==='ballista'?60:u.id==='heavy'?50:44):54;
  function spriteAtlas(img,u,screenHeight,dpr){
   const ph=Math.max(2,Math.round(screenHeight*dpr)),geometry=img.geometry;if(!geometry)return null;const key=img.src+'@'+ph;
   if(spriteCache.has(key))return spriteCache.get(key);

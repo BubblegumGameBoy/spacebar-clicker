@@ -1,24 +1,17 @@
-/* Show one action beside the world, rather than a page of instructions. */
-#onboardingGuide{position:absolute;z-index:12;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;max-width:calc(100% - 24px);padding:9px 13px;border:1px solid #e9cb83;border-radius:28px;background:#203e30f2;color:#fff0c5;box-shadow:0 3px 14px #10271955;pointer-events:none;font:750 15px/1.3 system-ui;white-space:nowrap}
-#onboardingGuide[hidden],#onboardingAction[hidden]{display:none!important}.onboarding-icon{font-size:24px;color:#ffdf8b}.onboarding-progress{font-variant-numeric:tabular-nums;font-size:13px;color:#ecd397}#onboardingGuide progress{width:48px;height:7px;accent-color:#dfc37b}#onboardingGuide progress[hidden]{display:none}#onboardingAction{pointer-events:auto;cursor:pointer;border:1px solid #ffe9a5;border-radius:22px;background:#ebcf87;color:#233c2c;padding:11px 22px;min-height:44px;font:800 16px system-ui}.has-action .onboarding-label{display:none}
-.learning-worksite #contextGuide,.learning-worksite #campaignGoal,.learning-worksite #raidBoard{display:none!important}.lesson-target{outline:2px solid #f3ce7e!important;outline-offset:2px;box-shadow:0 0 12px #e6bf6a55!important}
-@media(max-width:980px){#onboardingGuide{top:10px;font-size:14px;padding:7px 11px;gap:7px}#onboardingAction{font-size:15px;padding:10px 18px}}
-@media(prefers-reduced-motion:reduce){.lesson-target{animation:none!important}}
-
-/* The first upgrade is a single choice. The full tree opens after the first defence. */
-.learning-worksite #harvestSkillOverlay .harvest-map-scroll,.learning-worksite #harvestSkillOverlay .harvest-tree-tabs,.learning-worksite #harvestSkillOverlay .harvest-tree-intro,.learning-worksite #harvestSkillOverlay .harvest-tree-wallet,.learning-worksite #harvestSkillOverlay .harvest-detail-note,.learning-worksite #harvestSkillOverlay .harvest-detail-foot{display:none!important}
-.learning-worksite #harvestSkillOverlay .harvest-tree{max-width:440px;min-height:0;height:auto}
-.learning-worksite #harvestSkillOverlay .harvest-skill-detail{position:static;margin:12px;border-radius:14px}
-/* Reveal the next useful card only after the player earns its place in the flow. */
+/* Teach the gesture twice, then show a small material goal. Nothing here limits the skill tree. */
+#onboardingGuide{position:absolute;z-index:12;top:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;max-width:calc(100% - 24px);box-sizing:border-box;padding:9px 14px;border:1px solid #bdaa6a;border-radius:20px;background:#20392fee;color:#fff0c5;box-shadow:0 3px 14px #10271945;pointer-events:none;font:750 15px/1.3 system-ui}
+#onboardingGuide[hidden],#onboardingAction[hidden]{display:none!important}.onboarding-icon{font-size:24px;color:#dec68c;flex:none}.onboarding-icon img{width:29px;height:32px;object-fit:contain;image-rendering:pixelated;vertical-align:middle}.onboarding-copy{display:flex;flex-direction:column;gap:2px;min-width:0}.onboarding-kicker{font-size:10px;font-weight:500;color:#b5c6b6}.onboarding-kicker:empty,.onboarding-note:empty,.onboarding-costs:empty{display:none}.onboarding-label{font-size:14px;line-height:1.3}.onboarding-note{font-size:11px;line-height:1.4;font-weight:500;color:#bacbbd;max-width:290px}.onboarding-costs{display:flex;gap:12px;margin-top:3px}.onboarding-costs>span{display:flex;align-items:center;gap:4px;color:#dfd6bb;font-size:13px;font-variant-numeric:tabular-nums}.onboarding-costs .material-icon{width:22px;height:20px;object-fit:contain}.onboarding-costs>span.is-met{color:#e1ca78}.onboarding-costs b{font-weight:750}
+#onboardingGuide.is-goal{border-radius:10px;padding:8px 11px;gap:9px;min-width:240px}
+#onboardingAction{pointer-events:auto;cursor:pointer;border:1px solid #d9c48c;border-radius:7px;background:#decb93;color:#24372c;padding:9px 11px;min-height:40px;font:750 12px system-ui;flex:none}
+.learning-worksite #contextGuide,.has-work-goal #campaignGoal{display:none!important}.lesson-target{outline:2px solid #d9bf7d!important;outline-offset:2px;box-shadow:0 0 8px #d9bf7d33!important}
+/* Familiar actions are not gates: show affordable and unaffordable early options with their prices. */
 .progressive-intro:not(.intro-after-defence) #pane-summon .card:not(:has([data-recruit="woodcutter"],[data-recruit="arch"],[data-equipment="blower"])){display:none!important}
-.progressive-intro:not(.intro-has-worker) #pane-summon .card:has([data-recruit="woodcutter"]),.progressive-intro:not(.intro-has-defence) #pane-summon .card:has([data-recruit="arch"]),.progressive-intro:not(.intro-has-blower) #pane-summon .card:has([data-equipment="blower"]){display:none!important}
-.progressive-intro:not(.intro-has-upgrade) #harvestSkillsButton{display:none!important}
-.progressive-intro:not(.intro-has-worker) #panels{display:none!important}
-#introRaidClock{position:absolute;right:12px;top:66px;z-index:11;padding:6px 10px;border-radius:20px;background:#244333df;border:1px solid #aab787;color:#eee0ba;font:700 13px system-ui;pointer-events:none;font-variant-numeric:tabular-nums}#introRaidClock[hidden]{display:none}.is-near#introRaidClock{color:#ffe0a0;border-color:#f0bc70;background:#60462aee}
-
-.onboarding-icon img{width:32px;height:36px;object-fit:contain;image-rendering:pixelated;vertical-align:middle}
+.progressive-intro:not(.intro-basics-learned) #panels{display:none!important}
 .progressive-intro.intro-after-defence #pane-summon .card:not(:has([data-recruit="woodcutter"],[data-recruit="miner"],[data-recruit="arch"],[data-recruit="sword"],[data-equipment="blower"],[data-equipment="fence"])){display:none!important}
-.progressive-intro #contextGuide,.progressive-intro #campaignGoal{display:none!important}
 .progressive-intro:not(.intro-after-defence) #rxMeasure,.progressive-intro:not(.intro-after-defence) #expeditionButton{display:none!important}
-
-#introRaidClock{display:flex;align-items:center;gap:4px}#introRaidClock canvas{width:28px;height:24px;image-rendering:pixelated}
+#introRaidClock{position:absolute;right:12px;top:112px;z-index:11;display:flex;align-items:center;gap:4px;padding:5px 9px;border-radius:20px;background:#244333df;border:1px solid #aab787;color:#eee0ba;font:700 13px system-ui;pointer-events:none;font-variant-numeric:tabular-nums}#introRaidClock[hidden]{display:none}#introRaidClock canvas{width:28px;height:24px;image-rendering:pixelated}.is-near#introRaidClock{color:#ffe0a0;border-color:#f0bc70;background:#60462aee}
+@media(max-width:980px){#onboardingGuide{top:10px;font-size:14px;padding:7px 11px;gap:7px}#onboardingGuide.is-goal{width:calc(100% - 20px);min-width:0;max-width:370px}.onboarding-label{font-size:13px}.onboarding-note{font-size:10px;max-width:210px}#onboardingAction{font-size:11px;padding:8px 9px;min-height:40px}.onboarding-costs>span{font-size:12px}.onboarding-icon img{width:25px;height:29px}#introRaidClock{top:116px;font-size:11px;padding:4px 7px}#introRaidClock canvas{width:22px;height:20px}}
+@media(prefers-reduced-motion:reduce){.lesson-target{animation:none!important}}
+/* The objective owns its top strip; camera controls and older context hints must not cover its material counts. */
+#onboardingGuide.is-goal .onboarding-copy{flex:1}.has-work-goal #contextGuide{display:none!important}
+@media(max-width:980px){body.has-work-goal #field #cameraTools{top:112px!important;left:8px;bottom:auto}}
