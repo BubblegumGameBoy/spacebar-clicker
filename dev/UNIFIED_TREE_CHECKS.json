@@ -1,0 +1,54 @@
+{
+  "revision": "20261028-unified-tree-r1",
+  "node": {
+    "passed": 304,
+    "failed": 0,
+    "files": 29
+  },
+  "journeys": [
+    {
+      "mode": "PC",
+      "status": "passed",
+      "freshJourney": true,
+      "preparedLateEquipment": true,
+      "errors": []
+    },
+    {
+      "mode": "CDP touch",
+      "status": "passed",
+      "freshJourney": true,
+      "preparedLateEquipment": true,
+      "errors": []
+    }
+  ],
+  "startup": [
+    {
+      "name": "pc",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "lesson",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": false
+    },
+    {
+      "name": "touch",
+      "errors": [],
+      "http": [],
+      "failed": [],
+      "touchEmulation": true
+    }
+  ],
+  "project": "Real worker interval 5s -> 2.5s after tree purchase",
+  "limitations": [
+    "Late equipment used prepared stock; not full fresh nine-wave progression",
+    "CDP touch is emulation",
+    "No independent final agent review after agent usage limit",
+    "Public Pages deployment not verified from this environment"
+  ]
+}

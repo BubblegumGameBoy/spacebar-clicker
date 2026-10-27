@@ -5,13 +5,14 @@
  const Outpost=typeof module==='object'&&module.exports?require('./outpost-core.js'):null;
  const HarvestSkills=typeof module==='object'&&module.exports?require('./harvest-skill-core.js'):globalThis.HarvestSkillCore;
  const Expedition=typeof module==='object'&&module.exports?require('./expedition-core.js'):globalThis.ExpeditionCore;
+ const Progression=typeof module==='object'&&module.exports?require('./progression-core.js'):globalThis.ProgressionCore;
  const VERSION=3, MAX_LEVEL=500;
  const SKILLS={strike:3,critical:3,rhythm:3,storm:1,haste:3,quartermaster:3,awakening:3,camp:3,covenant:1,fortune:3,bounty:3,memory:3,aurora:1};
  const BRANCHES={storm:['strike','critical','rhythm'],covenant:['haste','quartermaster','awakening','camp'],aurora:['fortune','bounty','memory']};
  const num=(v,f=0,max=1e150)=>Number.isFinite(Number(v))?Math.max(0,Math.min(max,Number(v))):f;
  const integer=(v,f=0,max=MAX_LEVEL)=>Math.floor(num(v,f,max));
  const skill=(s,id)=>integer(s.skills?.[id],0,SKILLS[id]||0);
- function fresh(ids=[]){return {version:VERSION,expedition:null,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
+ function fresh(ids=[]){return {version:VERSION,progression:Progression?.fresh()||{version:1,recipes:[],legacyPending:false},expedition:null,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
  function migrateCamp(raw,factory){
   if(!raw||raw.version!==1||!factory)return null;
   const key=value=>Number.isInteger(value)&&value>=1&&value<=1e12;
@@ -37,6 +38,7 @@
   const fenceKeys=new Set();for(const f of (Array.isArray(raw.fences)?raw.fences:[]).slice(0,400)){const ax=coordinate(f?.a?.x,960),ay=coordinate(f?.a?.y,540),bx=coordinate(f?.b?.x,960),by=coordinate(f?.b?.y,540);if(!f||!key(f.key)||fenceKeys.has(f.key)||[ax,ay,bx,by].includes(null))continue;const length=Math.hypot(bx-ax,by-ay);if(length<23.5||length>120.5)continue;fenceKeys.add(f.key);camp.fences.push({key:f.key,a:{x:ax,y:ay},b:{x:bx,y:by},costWood:integer(f.costWood,0,1e6)});}
   // M4 hoppers (shape only; the queue inside starts empty, items in it come back as loose items) and the one-time unlock milestone.
   camp.hoppers=[];const hopperKeys=new Set();for(const h of (Array.isArray(raw.hoppers)?raw.hoppers:[]).slice(0,100)){const x=coordinate(h?.x,960),y=coordinate(h?.y,540);if(!h||!key(h.key)||hopperKeys.has(h.key)||x===null||y===null)continue;hopperKeys.add(h.key);camp.hoppers.push({key:h.key,x,y,dir:integer(h.dir,0,7),costWood:integer(h.costWood,0,1e6),costStone:integer(h.costStone,0,1e6)});}camp.conveyorUnlockSeen=raw.conveyorUnlockSeen===true;
+  camp.loaders=[];const loaderKeys=new Set();for(const l of (Array.isArray(raw.loaders)?raw.loaders:[]).slice(0,200)){const x=coordinate(l?.x,960),y=coordinate(l?.y,540);if(!l||!key(l.key)||loaderKeys.has(l.key)||x===null||y===null)continue;loaderKeys.add(l.key);camp.loaders.push({key:l.key,x,y,costWood:integer(l.costWood,0,1e6),costStone:integer(l.costStone,0,1e6)});}
   // logisticsVersion 2: belts from version 1 stay as wooden conveyors even before chapter 1.
   camp.logisticsVersion=2;camp.legacyBelts=raw.legacyBelts===true||(raw.logisticsVersion!==2&&camp.links.length>0);camp.newToolsSeen=raw.newToolsSeen===true;
   camp.nextKey=Math.max(key(raw.nextKey)?raw.nextKey:1,...camp.cargo.map(item=>item.key+1));
@@ -72,6 +74,7 @@
    s.battle={width:Math.max(1,num(r.battle.width,1100,1e6)),height:Math.max(1,num(r.battle.height,500,1e6)),captain:{x:num(r.battle.captain?.x,150,1e6),y:num(r.battle.captain?.y,370,1e6)},units:rows.filter(a=>Array.isArray(a)&&a.length===6&&known.has(a[0])&&a.slice(1).every(Number.isFinite)).map(a=>[a[0],integer(a[1],0,100000),num(a[2],0,1e6),num(a[3],0,1e6),a[4]>=0?num(a[4],0,1e6):-1,a[5]>=0?num(a[5],0,1e6):-1])};
   }
   s.factory=Supply.migrate(r.factory);s.outpost=(Outpost||globalThis.OutpostCore)?.migrate(r.outpost)||null;s.camp=migrateCamp(r.camp,s.factory);s.captainHp=num(r.captainHp,heroMax(s),heroMax(s));s.goldBonus=mastery(s);if(legacy)s.migrated=true;
+  s.progression=Progression?.migrate(r.progression)||{version:1,recipes:[],legacyPending:Progression?.legacyEvidence(s)===true};
   return s;
  }
  const mastery=s=>(1+.35*Math.sqrt(num(s.renown,0,1e9)))*(1+.05*skill(s,'memory'));

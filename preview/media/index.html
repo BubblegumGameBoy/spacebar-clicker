@@ -2,6 +2,9 @@
 <html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mythos Slayers II 試遊記録</title>
 <style>body{max-width:1050px;margin:24px auto;padding:16px;background:#15241e;color:#eee5cc;font:16px/1.7 system-ui}a{color:#ecd188}img,video{max-width:100%;height:auto;max-height:720px;border:1px solid #63795a;border-radius:5px}figure{margin:18px 0}figcaption,small{font-size:13px;color:#bfceb7}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}h1{font-size:25px}h2{font-size:20px}summary{cursor:pointer}</style>
+<h1>一つのツリーから、自分の作業場を組む</h1><p>2026-10-28：能力・レシピ・設備強化を43ノードの接続図へ統合。レシピを解放すると購入カードが増えます。積み込み機は資材を一個ずつ拾い、自分で作ったコンベアへ載せます。</p>
+<div class="grid"><figure><img src="unified-tree-pc.png" alt="木こりレシピを解放する統合ツリー"><figcaption>新規プレイで2個を実納品。解放費と雇用費を分けて表示。</figcaption></figure><figure><img src="unified-tree-touch.png" alt="タッチ画面の統合ツリー"><figcaption>CDPタッチ。接続図をスクロールし、選択したノードの購入は下に固定。</figcaption></figure><figure><img src="loader-wait.png" alt="コンベアなしと表示する積み込み機"><figcaption>資材を用意した設備確認。コンベアがなければ待機。</figcaption></figure><figure><img src="loader-carry.png" alt="積み込み機の腕が石材をコンベアへ運ぶ"><figcaption>同じ石材を掴んでコンベアへ。実際の搬送で倉庫在庫が1だけ増えることを確認。</figcaption></figure></div>
+<p><a href="../?lesson=2&amp;v=20261028-unified-tree-r1">試遊版</a> · <a href="../../dev/UNIFIED_TREE_RELEASE.md">確認範囲と限界</a></p><details><summary>前の版：採集力と自由配置</summary>
 <h1>木を削り、作業場を自分で組む</h1><p>2026-10-27：初期は木3打・石5打で1個。採集力を育て、自由に置いた木こりと、自分で向けた送風機で運ぶ。</p>
 <div class="grid"><figure><a href="power-hit.png"><img src="power-hit.png" alt="木の採集進捗が2/3になり、まだ丸太は出ていない"></a><figcaption>新規の実操作。一打ごとの進行と、切り出す瞬間を分ける</figcaption></figure><figure><a href="power-tree.png"><img src="power-tree.png" alt="採集力と木・石の打数、木材10個の費用を表示するスキルツリー"></a><figcaption>資材を用意した機能確認。打数と余剰持ち越しの説明は実規則と共通</figcaption></figure><figure><a href="power-full-touch.png"><img src="power-full-touch.png" alt="スマホで地面の上限12/12と、倉庫内の上限強化ボタンが見える"></a><figcaption>CDPタッチの正規採集。満杯が分かり、襲撃パネルに隠れず上限の強化を開ける</figcaption></figure><figure><a href="power-idle-fan.png"><img src="power-idle-fan.png" alt="遠方に置いた木こりの待機表示と、葉の下でも見える送風機"></a><figcaption>用意した資材での機能確認。位置を選ぶ自由を保ち、動いていない理由を見せる</figcaption></figure><figure><a href="power-automation.png"><img src="power-automation.png" alt="離した資源から自分で置いた木こりと送風機で実際に入庫"></a><figcaption>用意した資材での機能確認。配置後は入力せず、実出力が風で倉庫へ届く</figcaption></figure></div>
 <p><a href="../?lesson=2&amp;v=20261027-gather-power-r3">新しい配置を別セーブで試す</a> · <a href="../../dev/GATHER_POWER_DESIGN.md">スキルと作業場の設計</a> · <a href="../../dev/GATHER_POWER_RELEASE.md">変更とレビュー範囲</a> · <a href="../../dev/GATHER_POWER_CHECKS.json">検証結果</a></p>
@@ -37,3 +40,4 @@
 </details>
 </details>
 <p><small>AIによるブラウザ操作・観点別レビューです。実在の児童や作者本人が試遊した評価ではありません。試遊版では広告・解析・オンラインランキングを停止しています。</small></p></html>
+</details>

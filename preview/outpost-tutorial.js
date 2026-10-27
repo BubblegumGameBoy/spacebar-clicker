@@ -9,7 +9,7 @@ window.OutpostTutorial=(()=>{
  function snapshot(){const q=OutpostTutorialCore.step(S,facts());return {...q,title:'',detail:'',action:''};}
  // Only the first two deposits get a gesture demonstration. Afterwards the player chooses how to earn the goal.
  function goalQuote(q=snapshot()){
-  if(q.skill)return HarvestSkillCore.quote(S,q.skill);
+  if(q.skill)return window.ProgressionCore?ProgressionCore.quote(S,q.skill):HarvestSkillCore.quote(S,q.skill);
   const unit=q.id==='worker'?'woodcutter':q.id==='defenders'?'arch':null;
   if(unit)return window.ExpeditionCore?.slotQuote?{...ExpeditionCore.slotQuote(S,unit),unit}:{cost:OutpostCore.recipe(unit,S.owned[unit]||0,1),unit};
   if(q.id==='blower')return {cost:{wood:4,stone:0},ready:SupplyFactory.state.inventory.wood>=4};
@@ -64,12 +64,13 @@ window.OutpostTutorial=(()=>{
  function goalView(q,cue){
   if(cue.basic)return {title:local(labels[cue.kind]),note:'',cost:null,button:''};
   const goal=goals[q.id]||goals.worker,quote=goalQuote(q),placement=cue.kind==='place';
+  if(quote?.kind==='recipe')return {title:quote.title[LANG]||quote.title.ja,note:quote.description[LANG]||quote.description.ja,cost:quote.cost,button:local(['ツリーで解放','Unlock in tree','在技能树解锁'])};
   return {title:placement?local(['設置場所を選ぶ','Choose a position','选择放置位置']):local(goal[0]),note:placement?local(['予告を見ながら好きな場所で放す','Release where the preview works for you','查看预览后，在合适的位置松开']):local(goal[1]),cost:placement?null:quote?.cost,button:q.skill?local(['スキルツリー','Skill tree','技能树']):cue.kind==='blower'?local(['設置する','Place','放置']):local(['雇う','Hire','雇佣'])};
  }
  function sync(force=false){if(!panel)return;if(!force&&++clock%8)return;const left=Math.ceil(S.outpost.prepRemaining||0);const timer=document.getElementById('introRaidClock');if(timer){timer.hidden=S.outpost.round>0||S.outpost.phase==='active'||OutpostTutorialCore.basicsLearned(S);timer.innerHTML='<canvas width=32 height=28 aria-hidden=true></canvas><span>◷ '+Math.floor(left/60)+':'+String(left%60).padStart(2,'0')+'</span>';const art=Outpost.look('rat')?.art,f=art?.frames?.[0];if(f){const c=timer.querySelector('canvas'),k=Math.min(30/f.w,26/f.h);c.getContext('2d').drawImage(art.image,f.x,f.y,f.w,f.h,16-f.w*k/2,27-f.h*k,f.w*k,f.h*k);}timer.classList.toggle('is-near',left<=45);timer.setAttribute('aria-label',local(['襲撃まで ','Raid in ','袭击倒计时 '])+left+local(['秒',' seconds','秒']));}const t=OutpostTutorialCore.state(S);if(S.outpost.phase==='active'&&!t.started){t.started=true;save();}const q=snapshot();revealOptions(t);const cue=visualCue(),view=goalView(q,cue),inventory=SupplyFactory.state.inventory,key=JSON.stringify([LANG,q.id,q.progress,t.started,S.outpost.phase,cue.kind,cue.unit,!!cue.button,cue.basic,inventory.wood,inventory.stone]);if(key===signature)return;signature=key;
   panel.hidden=q.id==='complete'||S.outpost.phase==='active';document.body.classList.toggle('learning-worksite',!!cue.basic);document.body.classList.toggle('has-work-goal',!panel.hidden);document.body.dataset.lesson=q.id;
   panel.classList.toggle('is-goal',!cue.basic);panel.dataset.cue=cue.kind;panel.setAttribute('aria-label',view.title);
-  panel.querySelector('.onboarding-kicker').textContent=cue.basic?'':local(['次の目標','Next goal','下个目标']);
+  panel.querySelector('.onboarding-kicker').textContent=cue.basic?'':local(['次のおすすめ','Suggested next step','下一步建议']);
   const emblem=panel.querySelector('.onboarding-icon');emblem.textContent=icons[cue.kind]||'↑';if(cue.unit){const u=UNITS.find(u=>u.id===cue.unit),src=u&&ArmyView.portrait(u);if(src){const img=document.createElement('img');img.src=src;img.alt='';emblem.replaceChildren(img);}}
   panel.querySelector('.onboarding-label').textContent=view.title;panel.querySelector('.onboarding-note').textContent=view.note;
   const costs=panel.querySelector('.onboarding-costs');costs.replaceChildren();

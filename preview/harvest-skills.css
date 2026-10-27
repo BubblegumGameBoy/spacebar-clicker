@@ -207,3 +207,40 @@ body.outpost-game .harvest-tree{width:min(96vw,1080px);max-width:1080px;max-heig
 .harvest-power-preview tbody th{text-align:left;white-space:nowrap}.harvest-power-preview tbody th .material-icon{width:18px;height:16px;vertical-align:middle}
 .harvest-power-preview tr:last-child>*{border-bottom:0}.harvest-power-preview tbody td:last-child{color:#f3e2a4;font-weight:750;background:#44543b33}
 @media(max-width:760px){.harvest-power-preview{font-size:10px;margin:1px 0}.harvest-power-preview th,.harvest-power-preview td{padding:4px 5px}.harvest-power-preview thead th{font-size:9px}}
+/* One graph. The map pans; the selected action stays outside it. */
+.unified-tree .harvest-tree-header{padding-right:65px;min-height:30px}
+.unified-tree .harvest-tree-wallet{position:static;display:flex;flex-wrap:wrap;margin:5px 0 8px;gap:16px;font-size:14px}
+.unified-tree .harvest-map-scroll{padding:0;min-height:180px;flex-basis:390px;max-height:48dvh}
+.unified-map{position:relative;isolation:isolate}
+.unified-edges{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.unified-edge{fill:none;stroke:#516457;stroke-width:2;opacity:.65}
+.unified-edge.is-built{stroke:#a0b77b;opacity:.9;stroke-width:3}
+.unified-edge.is-related{stroke:#ffe19a;opacity:1;stroke-width:4}
+.unified-root{position:absolute;box-sizing:border-box;padding:10px;text-align:center;border:2px solid #c4b271;border-radius:30px;background:#34533a;color:#eee1b4;display:grid;gap:4px}
+.unified-root strong{font-size:15px}.unified-root span{font-size:10px}
+.unified-map .unified-node{position:absolute;margin:0;padding:8px 7px;min-height:0;max-width:none;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:11px}
+.unified-node>b{font-size:12px;line-height:1.25;min-height:16px}
+.unified-node .harvest-node-emblem{height:25px;width:32px}
+.unified-node .harvest-node-emblem img{max-height:30px;max-width:34px;object-fit:contain;image-rendering:pixelated}
+.unified-node-kind{font-size:9px;line-height:1;color:#bfcbb4}
+.unified-node.kind-recipe{border-style:dashed;border-color:#aeb9d1;background:#293b41}
+.unified-node.kind-project{border-width:2px;border-radius:5px;background:#393d29}
+.unified-node.is-ready{border-color:#f2d487;box-shadow:inset 0 0 0 1px #eac77144;background:#555333}
+.unified-node.is-built{border-color:#96b27e;background:#304c35}
+.unified-node.is-dim{opacity:.68}.unified-node[aria-pressed=true]{opacity:1;outline:2px solid #ffe8a0;outline-offset:3px}
+.unified-node-effect{font-size:10px;color:#c1cebe}
+.unified-legend{display:flex;gap:15px;font-size:10px;margin:0 0 6px;color:#d2d5bd}
+.unified-legend>span{display:flex;align-items:center;gap:5px}.unified-legend i{display:inline-block;width:12px;height:12px;border:1px solid #9cac80;border-radius:4px}
+.unified-legend .kind-recipe i{border-style:dashed;border-color:#b3bed1}.unified-legend .kind-project i{border-width:2px;border-radius:0}
+.progression-currency{font:700 12px system-ui;color:#e6ce86;display:inline-grid;place-items:center;width:20px;height:19px}.progression-currency.is-coin{color:#bfe5f6}
+.unified-prerequisites{grid-column:1;display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:#b9c9b9}
+.unified-prerequisites button{font:inherit;color:#d7c894;background:#24382e;border:1px solid #66785f;border-radius:5px;padding:4px 6px;cursor:pointer}.unified-prerequisites button.is-built{color:#c3e9ad}
+.unified-recipe-rule{grid-column:1;margin:0;color:#d9c99f;font-size:10px;line-height:1.45}
+.unified-build-cost{grid-column:1;display:flex;gap:7px;align-items:center;flex-wrap:wrap;font-size:11px;color:#dfd6b8}.unified-build-cost>span{display:flex;gap:7px}.unified-build-cost>span>span{display:flex;align-items:center;gap:3px}.unified-build-cost small,.unified-build-cost em{font-size:10px;color:#aebfac;font-style:normal}.unified-build-cost .material-icon{width:20px;height:19px}
+.unified-detail-portrait{display:grid;place-items:center;width:35px;height:35px}.unified-detail-portrait svg{width:30px;height:30px;stroke:var(--branch);fill:none}.unified-detail-portrait img{max-width:35px;max-height:35px;object-fit:contain;image-rendering:pixelated}
+.unified-tree .harvest-detail-purchase{grid-row:1/6}.unified-tree .harvest-detail-foot{grid-column:1/-1}
+.unified-tree .harvest-detail-purchase .unified-show-card{background:#324c37;color:#f0dfa8;border-color:#9d9d6a}
+.recipe-new-card{outline:2px solid #e6c875;outline-offset:-2px;box-shadow:inset 0 0 18px #e3c06533}
+@media(max-width:680px){
+ body.outpost-game .unified-tree{padding:10px 9px 5px;max-height:97dvh}.unified-tree h2{font-size:18px}.unified-tree .harvest-map-scroll{min-height:135px;flex-basis:280px;max-height:37dvh}.unified-tree .harvest-tree-wallet{gap:14px;font-size:12px;margin:3px 0 6px}.unified-legend{gap:12px;margin-bottom:4px}.unified-tree .harvest-skill-detail{padding:8px;max-height:43dvh;overflow:auto}.unified-tree .harvest-detail-purchase{grid-column:1;grid-row:auto;flex-wrap:wrap}.unified-tree .harvest-detail-purchase button{max-width:none;flex:1;min-width:110px}.unified-tree .harvest-detail-purchase>div{flex:1;min-width:115px}.unified-tree .harvest-detail-heading h3{font-size:13px}.unified-tree .harvest-detail-note{font-size:10px}.unified-prerequisites button{padding:5px}.unified-tree .harvest-map-hint{font-size:10px}.unified-tree .harvest-pan-hint{font-size:9px}
+}
