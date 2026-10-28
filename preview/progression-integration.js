@@ -2,7 +2,7 @@
 window.ProgressionCards={buildCost(id){
  const unit=typeof UNITS!=='undefined'&&UNITS.find(u=>u.id===id);
  if(unit)return window.ExpeditionCore?.slotQuote(S,id)?.cost;
- return {broom:{wood:6,stone:2},blower:{wood:4},fence:{wood:1,note:{ja:'長さ24ごと',en:'Per 24 length',zh:'每24长度'}},belt:{wood:1,note:{ja:'長さ48ごと',en:'Per 48 length',zh:'每48长度'}},platform:{wood:8,stone:4},hopper:{wood:10,stone:4},loader:{wood:12,stone:6}}[id];
+ return {magnet:{wood:10,stone:6},broom:{wood:6,stone:2},blower:{wood:4},fence:{wood:1,note:{ja:'長さ24ごと',en:'Per 24 length',zh:'每24长度'}},belt:{wood:1,note:{ja:'長さ48ごと',en:'Per 48 length',zh:'每48长度'}},platform:{wood:8,stone:4},hopper:{wood:10,stone:4},loader:{wood:12,stone:6}}[id];
 }};
 window.ProgressionIntegration=(()=>{
  function refresh(){if(typeof S!=='object')return;ProgressionCore.ensure(S);window.SupplyFactory?.ensureFarm?.();if(typeof renderCards==='function')renderCards();if(typeof updateHud==='function')updateHud();window.SupplyFactory?.translate?.();window.OutpostTutorial?.sync?.(true);window.HarvestSkills?.sync?.();if(typeof save==='function')save();}

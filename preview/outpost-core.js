@@ -93,7 +93,7 @@
  function preparationCut(state){return heat(state?.heat).conditions.includes('rush')?HEAT_TUNE.prepCut:0;}
 
  function fresh(){
-  return {version:1,heat:{level:0,conditions:[],seed:0},planVersion:PLAN_VERSION,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:240,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0},result:null};
+  return {version:1,heat:{level:0,conditions:[],seed:0},planVersion:PLAN_VERSION,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:240,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0,handIron:0,crewIron:0},result:null};
  }
  // The preparation clock is advanced explicitly by the live game, separately from battle simulation.
  function preparationSeconds(state){if(!state)return 240;const cut=preparationCut(state);if(state.round===0)return 240-cut;const next=state.result?.win?Math.min(MAX_WAVE,state.result.wave+1):state.wave;return (state.result&&!state.result.win?90:next<=3?90:120)-cut;}

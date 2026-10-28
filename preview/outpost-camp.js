@@ -86,7 +86,7 @@ window.OutpostCamp = (() => {
  let warehouse=null,overlay=null,goldLabel=null,deliveryLabel=null,workshopStatus=null;
  let statusKey='clickPile',statusUntil=0,visualTime=0,positionKey='',languageKey='',notices=[];
  const language=()=>typeof LANG==='string'?LANG:'ja';
- const tr=key=>(words[key]||projectWords[key]||railWords[key]||beltWords[key]||pickWords[key]||toolWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
+ const tr=key=>key==='iron'?'鉄鉱石':(words[key]||projectWords[key]||railWords[key]||beltWords[key]||pickWords[key]||toolWords[key])[Math.max(0,['ja','en','zh'].indexOf(language()))];
  const format=n=>typeof fmt==='function'?fmt(n):String(Math.floor(n));
  const current=()=>typeof S==='undefined'?null:S;
  const setText=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value;};
@@ -109,7 +109,7 @@ window.OutpostCamp = (() => {
    s.factory.nodes=[{key:1,type:'wood',x:340,y:300},{key:2,type:'wood',x:620,y:300},{key:3,type:'stone',x:430,y:425},{key:4,type:'stone',x:750,y:425}].map(n=>({...n,stock:300,radius:n.type==='wood'?16:19,regrow:0}));
    s.factory.next=Math.max(5,s.factory.next||1,...s.factory.drops.map(d=>(Number(d.key)||0)+1));
   }
-  FieldCore.expand(s.factory,s.camp);
+  FieldCore.expand(s.factory,s.camp);FieldCore.revealOre(s.factory,s.camp);
   s.camp.loaders??=[];s.camp.platforms??=[];s.camp.blowers??=[];s.camp.fences??=[];s.camp.hoppers??=[];s.camp.logisticsVersion??=2;s.camp.tools??={wood:0,stone:0};for(const type of ['wood','stone'])s.camp.tools[type]=Math.max(0,Math.min(2,Math.floor(Number(s.camp.tools[type])||0)));for(const flag of ['gate','beacon','cart','endingSeen','removeLearned'])s.camp[flag]=s.camp[flag]===true;
   if(activeCamp!==s.camp){
    activeCamp=s.camp;railClock=0;uiClock=0;houseFlash=0;notices=[];railDraft=null;railHover=null;
@@ -173,7 +173,7 @@ window.OutpostCamp = (() => {
   setText(overlay.querySelector('.camp-workshop-intro'),tr('intro'));
   setText(overlay.querySelector('.camp-workshop-wallet span'),tr('gold'));
   setText(overlay.querySelector('.camp-workshop-wallet strong'),format(s.gold)+' G');
-  const stocks=overlay.querySelector('.camp-stock-wallet');if(stocks){const key=language()+':'+Math.floor(s.factory.inventory.wood)+':'+Math.floor(s.factory.inventory.stone)+':'+Math.floor(s.factory.inventory.food||0);if(stocks.dataset.value!==key){stocks.dataset.value=key;stocks.innerHTML=['wood','stone',...(Object.hasOwn(s.factory.inventory,'food')?['food']:[])].map(type=>'<span>'+((window.SupplyFactory?.icon(type))||tr(type))+'<b>'+format(Math.floor(s.factory.inventory[type]))+'</b></span>').join('');}}
+  const stocks=overlay.querySelector('.camp-stock-wallet');if(stocks){const key=language()+':'+Math.floor(s.factory.inventory.wood)+':'+Math.floor(s.factory.inventory.stone)+':'+Math.floor(s.factory.inventory.food||0)+':'+Math.floor(s.factory.inventory.iron||0);if(stocks.dataset.value!==key){stocks.dataset.value=key;stocks.innerHTML=['wood','stone',...(Object.hasOwn(s.factory.inventory,'food')?['food']:[]),...(Object.hasOwn(s.factory.inventory,'iron')?['iron']:[])].map(type=>'<span>'+((window.SupplyFactory?.icon(type))||tr(type))+'<b>'+format(Math.floor(s.factory.inventory[type]))+'</b></span>').join('');}}
   setText(overlay.querySelector('.camp-workshop-note'),tr('available'));
   for(const button of overlay.querySelectorAll('[data-camp-tab]')){setText(button,tr(button.dataset.campTab));button.setAttribute('aria-pressed',String(activeTab===button.dataset.campTab));}overlay.querySelector('.camp-rail-options').hidden=activeTab!=='rails';overlay.querySelector('.camp-projects').hidden=activeTab!=='growth';overlay.querySelector('.camp-rail-options').style.display=activeTab==='rails'?'grid':'none';overlay.querySelector('.camp-projects').style.display=activeTab==='growth'?'grid':'none';syncProjects(s);
   for(const type of ['wood','stone']){
@@ -195,7 +195,7 @@ window.OutpostCamp = (() => {
     setText(warehouse.querySelector('.camp-house-label b'),tr('warehouse'));
     setText(warehouse.querySelector('.camp-house-label span'),tr('workshop')+' ›');
     setText(warehouse.querySelector('.camp-gold span'),tr('gold'));
-    for(const type of ['wood','stone','food'])document.getElementById('gather'+({wood:'Wood',stone:'Stone',food:'Food'}[type]))?.setAttribute('data-camp-label',tr(type));
+    for(const type of ['wood','stone','food','iron'])document.getElementById('gather'+({wood:'Wood',stone:'Stone',food:'Food',iron:'Iron'}[type]))?.setAttribute('data-camp-label',tr(type));
    }
    const cap=window.HarvestSkillCore?.effects(S.harvestSkills)?.groundCapacity||12,used=s.factory.drops.length,full=used>=cap,meter=warehouse.querySelector('#groundStorageStatus');
    setText(meter,(language()==='ja'?'地面の資材：':language()==='zh'?'地面材料：':'Ground items: ')+used+' / '+cap+(full?local([' 満杯：倉庫へ運ぶ',' FULL: deliver to storage',' 已满：搬进仓库']):''));if(meter){meter.classList.toggle('is-full',full);meter.style?.setProperty?.('--ground-fill',Math.min(100,used/cap*100)+'%');meter.dataset.used=String(used);meter.dataset.limit=String(cap);meter.setAttribute('role','status');}document.body.classList.toggle('ground-full',full);setText(goldLabel,format(s.gold)+' G');if(beltButton)setText(beltButton,tr('beltBuild'));if(platformButton)setText(platformButton,tr('platformBuild'));
@@ -518,7 +518,7 @@ window.OutpostCamp = (() => {
  }
 
  function dispatch(s,dt=0){
-  let moved=false;const arrivals=[],speed=ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(s.camp.cart?1.25:1),occupied=[];
+  let moved=false;const arrivals=[],speed=ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*MaterialsCore.conveyorBonus(s.camp),occupied=[];
   for(const drop of s.factory.drops.slice().filter(d=>!heldDrop(d)&&!window.LoaderDevice?.isHeld?.(d)&&d.hopperKey==null&&!window.SupplyFactory?.isAirborne?.(d))){const next=ConveyorCore.step(s.camp.links,s.camp.platforms,drop,dt,speed);if(!next.onConveyor)continue;drop.onConveyor=true;drop.vx=0;drop.vy=0;
    if(next.arrived){const index=s.factory.drops.indexOf(drop);if(index>=0){s.factory.drops.splice(index,1);arrivals.push({type:drop.type,count:drop.count,worker:drop.worker});}moved=true;continue;}
    if(!occupied.some(p=>Math.hypot(p.x-next.x,p.y-next.y)<13)){drop.x=next.x;drop.y=next.y;drop.beltId=next.beltId;drop.platformKey=next.platformKey;drop.conveyorBlocked=next.blocked;occupied.push(next);moved=true;}
@@ -528,16 +528,16 @@ window.OutpostCamp = (() => {
 
  function receive(s,arrivals,automatic=false){
   if(!arrivals.length)return;
-  const totals={wood:0,stone:0,food:0,gold:0},wind=arrivals.filter(c=>c.via==='blower');let first=false;const firstWind=wind.length>0&&!(s.tutorial?.blownWood>0);
+  const totals={wood:0,stone:0,food:0,iron:0,gold:0},wind=arrivals.filter(c=>c.via==='blower');let first=false;const firstWind=wind.length>0&&!(s.tutorial?.blownWood>0);
   for(const cargo of arrivals){
-   if(!['wood','stone','food','gold'].includes(cargo.type)||!Number.isFinite(cargo.count)||cargo.count<=0)continue;
-   totals[cargo.type]+=cargo.count;window.OutpostTutorial?.delivered?.(cargo.type,cargo.count,automatic&&cargo.via!=='broom',cargo.worker===true,cargo.via||null);
+   if(!['wood','stone','food','iron','gold'].includes(cargo.type)||!Number.isFinite(cargo.count)||cargo.count<=0)continue;
+   totals[cargo.type]+=cargo.count;window.OutpostTutorial?.delivered?.(cargo.type,cargo.count,automatic&&!['broom','magnet'].includes(cargo.via),cargo.worker===true,cargo.via||null);
    if(cargo.type==='gold'){if(typeof earnGold==='function')earnGold(cargo.count);else s.gold+=cargo.count;}
    else s.factory.inventory[cargo.type]=Math.min(1e9,(s.factory.inventory[cargo.type]||0)+cargo.count);
    s.factory.delivered=(s.factory.delivered||0)+cargo.count;
    if(cargo.worker&&cargo.type==='wood'&&!s.firstWorkerPickup){s.firstWorkerPickup=true;first=true;}
   }
-  for(const type of ['wood','stone','food','gold'])if(totals[type])notices.push({type,count:totals[type],age:0,wind:wind.length>0&&wind.every(c=>c.type===type)});
+  for(const type of ['wood','stone','food','iron','gold'])if(totals[type])notices.push({type,count:totals[type],age:0,wind:wind.length>0&&wind.every(c=>c.type===type)});
   notices=notices.slice(-4);houseFlash=.42;warehouse?.classList.add('camp-received');
   statusKey='arrived';statusUntil=visualTime+1.7;if(wind.length)windCredit(s,wind,firstWind);else audio('pickup');
   if(first){if(typeof renderCards==='function')renderCards();window.Rework?.revealAllies?.('arch');}
@@ -578,7 +578,7 @@ window.OutpostCamp = (() => {
   // a single light sweep across the frame (static with reduced motion)
   if(!reduced&&t<1.2){const sx=-w/2+w*(t/1.2);const g=ctx.createLinearGradient(sx-30,0,sx+30,0);g.addColorStop(0,'#fff6d000');g.addColorStop(.5,'#fff6d055');g.addColorStop(1,'#fff6d000');ctx.fillStyle=g;ctx.fillRect(Math.max(-w/2,sx-30),-h/2+2,Math.min(60,w/2-sx+30),h-4);}
   ctx.textAlign='center';ctx.fillStyle='#ffe7a0';ctx.font='900 19px system-ui';ctx.fillText(title,0,-4,w-20);ctx.fillStyle='#e8f1d6';ctx.font='700 12px system-ui';ctx.fillText(body,0,17,w-20);ctx.restore();}
- const FOLD=.13,PULSE_COLOR='#93cbdc',beltSpeed=s=>ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(s.camp.cart?1.25:1);
+ const FOLD=.13,PULSE_COLOR='#93cbdc',beltSpeed=s=>ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*MaterialsCore.conveyorBonus(s.camp);
  // A learned route skill sends one light streak along every player-built belt, from its far end toward the warehouse.
  function startPulse(){const s=state();if(!s)return;const reduced=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,speed=beltSpeed(s);
   const paths=s.camp.links.filter(l=>l.points?.length>1).map(l=>{const points=ConveyorCore.oriented(l).slice().reverse(),length=ConveyorCore.length(points);return {points,length,dur:Math.min(1.2,length/speed),home:ConveyorCore.distance(points.at(-1),HOME)<60};}).filter(p=>p.length>1);
@@ -596,10 +596,10 @@ window.OutpostCamp = (() => {
  function midpoint(points){return ConveyorCore.at(points,ConveyorCore.length(points)/2);}
  function railSegment(ctx,a,b){
   const dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);if(len<1)return;const nx=-dy/len,ny=dx/len;ctx.lineCap='butt';ctx.strokeStyle='#252e2c';ctx.lineWidth=29;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.strokeStyle='#778b80';ctx.lineWidth=25;ctx.stroke();ctx.strokeStyle='#344c40';ctx.lineWidth=19;ctx.stroke();
-  const phase=(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%10;ctx.strokeStyle='#849879';ctx.lineWidth=2;for(let t=-phase;t<len;t+=10){if(t<0)continue;const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.beginPath();ctx.moveTo(x-nx*9,y-ny*9);ctx.lineTo(x+nx*9,y+ny*9);ctx.stroke();}
+  const phase=(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*MaterialsCore.conveyorBonus(state().camp))%10;ctx.strokeStyle='#849879';ctx.lineWidth=2;for(let t=-phase;t<len;t+=10){if(t<0)continue;const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.beginPath();ctx.moveTo(x-nx*9,y-ny*9);ctx.lineTo(x+nx*9,y+ny*9);ctx.stroke();}
   for(let t=Math.min(10,len/2);t<len;t+=60){const x=a.x+dx*t/len,y=a.y+dy*t/len;ctx.strokeStyle='#f3d17a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x+dx/len*5+nx*5,y+dy/len*5+ny*5);ctx.lineTo(x-dx/len*3,y-dy/len*3);ctx.lineTo(x+dx/len*5-nx*5,y+dy/len*5-ny*5);ctx.stroke();}
  }
- function drawPlatform(ctx,p,preview=false){ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle=preview?(p.invalid?'#995d4b99':'#62775299'):'#61775c';ctx.strokeStyle='#b9c69e';ctx.lineWidth=3;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeStyle='#40583f';ctx.lineWidth=4;const horizontal=(p.dir||0)%2===0,phase=((p.dir||0)>=2?-1:1)*(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*(state().camp.cart?1.25:1))%12;for(let t=-48-phase;t<48;t+=12){ctx.beginPath();if(horizontal){ctx.moveTo(t,-p.h/2+3);ctx.lineTo(t,p.h/2-3);}else{ctx.moveTo(-p.w/2+3,t);ctx.lineTo(p.w/2-3,t);}ctx.stroke();}ctx.rotate((p.dir||0)*Math.PI/2);ctx.fillStyle='#ffe295';ctx.beginPath();ctx.moveTo(-22,0);ctx.lineTo(-7,-12);ctx.lineTo(-7,-5);ctx.lineTo(17,-5);ctx.lineTo(17,5);ctx.lineTo(-7,5);ctx.lineTo(-7,12);ctx.closePath();ctx.fill();ctx.restore();const out=ConveyorCore.outlet(p);const ready=ConveyorCore.downstream(state().camp.links,out,null,ConveyorCore.WIDTH/2+1);ctx.strokeStyle=ready?'#bfe69b':'#e8a76b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(out.x,out.y,7,0,Math.PI*2);ctx.stroke();if(!ready){ctx.fillStyle='#e8a76b';ctx.fillRect(out.x-4,out.y-5,3,10);ctx.fillRect(out.x+2,out.y-5,3,10);}}
+ function drawPlatform(ctx,p,preview=false){ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle=preview?(p.invalid?'#995d4b99':'#62775299'):'#61775c';ctx.strokeStyle='#b9c69e';ctx.lineWidth=3;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeRect(-p.w/2,-p.h/2,p.w,p.h);ctx.strokeStyle='#40583f';ctx.lineWidth=4;const horizontal=(p.dir||0)%2===0,phase=((p.dir||0)>=2?-1:1)*(visualTime*ConveyorCore.SPEED*Math.max(1,skillEffects().cartSpeed||1)*MaterialsCore.conveyorBonus(state().camp))%12;for(let t=-48-phase;t<48;t+=12){ctx.beginPath();if(horizontal){ctx.moveTo(t,-p.h/2+3);ctx.lineTo(t,p.h/2-3);}else{ctx.moveTo(-p.w/2+3,t);ctx.lineTo(p.w/2-3,t);}ctx.stroke();}ctx.rotate((p.dir||0)*Math.PI/2);ctx.fillStyle='#ffe295';ctx.beginPath();ctx.moveTo(-22,0);ctx.lineTo(-7,-12);ctx.lineTo(-7,-5);ctx.lineTo(17,-5);ctx.lineTo(17,5);ctx.lineTo(-7,5);ctx.lineTo(-7,12);ctx.closePath();ctx.fill();ctx.restore();const out=ConveyorCore.outlet(p);const ready=ConveyorCore.downstream(state().camp.links,out,null,ConveyorCore.WIDTH/2+1);ctx.strokeStyle=ready?'#bfe69b':'#e8a76b';ctx.lineWidth=3;ctx.beginPath();ctx.arc(out.x,out.y,7,0,Math.PI*2);ctx.stroke();if(!ready){ctx.fillStyle='#e8a76b';ctx.fillRect(out.x-4,out.y-5,3,10);ctx.fillRect(out.x+2,out.y-5,3,10);}}
  // Tool art (2/TOOL_ART.md): blower 2 cells of 679x552 (0 normal, 1 strong wind, facing right); fence 1075x405 with posts at x2-137 and x935-1072.
  let toolArt=null;
  const artReady=key=>{if(!toolArt&&typeof Image==='function'){toolArt={blower:new Image(),fence:new Image(),hopper:new Image()};toolArt.blower.src='../assets/tool-blower.webp';toolArt.fence.src='../assets/tool-fence.webp';toolArt.hopper.src='../assets/tool-hopper.webp';}const img=toolArt?.[key];return !!img&&img.complete&&img.naturalWidth>0;};

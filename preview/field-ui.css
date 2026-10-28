@@ -15,3 +15,6 @@ body.outpost-game #cameraTools{pointer-events:none}body.outpost-game #cameraTool
 
 body.outpost-game #battleViewport{touch-action:none}#fieldMoveHelp{display:none}
 @media(max-width:680px){#fieldMoveHelp{display:block;padding:6px 9px;margin:0;background:#263e30;color:#d5d9b8;font:10px/1.5 system-ui}}
+body.outpost-game #field.magnet-equipped{cursor:crosshair!important}.ore-gadget-card{border-color:#72949a}.ore-gadget-card b{color:#c2e3e8}body.has-iron .resource-buttons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}body.has-iron .resource-buttons button{min-width:0!important;width:auto!important}.ts-lang[data-lang="en"],.ts-lang[data-lang="zh"],#langBtn{display:none!important}
+
+body.outpost-game #audioLang,body.outpost-game #langToggle{display:none!important}

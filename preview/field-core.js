@@ -11,7 +11,9 @@
   for(const p of EXTRA_SOURCES)if(!factory.nodes.some(n=>n.type===p.type&&Math.hypot(n.x-p.x,n.y-p.y)<1))factory.nodes.push({key:factory.next++,type:p.type,x:p.x,y:p.y,stock:300,radius:p.type==='wood'?16:19,regrow:0,work:0});
   camp.fieldVersion=1;return true;
  }
+ const IRON_SOURCES=Object.freeze([{x:1240,y:655},{x:1480,y:815}].map(Object.freeze));
+ function revealOre(factory,camp){if(!factory||!camp?.oreMining||camp.oreVersion===1)return false;factory.next=Math.max(factory.next||1,...factory.nodes.map(n=>Number(n.key)+1));for(const p of IRON_SOURCES)if(!factory.nodes.some(n=>n.type==='iron'&&Math.hypot(n.x-p.x,n.y-p.y)<1))factory.nodes.push({key:factory.next++,type:'iron',x:p.x,y:p.y,stock:120,radius:19,regrow:0,work:0});factory.inventory.iron=Number.isFinite(factory.inventory.iron)?factory.inventory.iron:0;camp.oreVersion=1;return true;}
  function forecast(plan,state){return HOLES.map(h=>{const complete=state?.completed&&state.phase==='result'&&state.result?.win,list=complete?[]:plan.spawns.filter(e=>(e.holeId||((e.lane==='upper'?'north':'south')))===h.id),next=list.filter(e=>state?.phase!=='active'||e.spawnIndex>=state.spawned),first=next.length?Math.min(...next.map(e=>e.at)):null;
   return {id:h.id,count:list.length,remaining:next.length,kinds:[...new Set(list.map(e=>e.kind))],firstAt:first,seconds:first===null?null:Math.max(0,state?.phase==='active'?first-state.elapsed:(state?.prepRemaining||0)+first),held:state?.held===true};});}
- return {WORLD,HOLES,EXTRA_SOURCES,hole,sourceFor,expand,forecast};
+ return {WORLD,HOLES,EXTRA_SOURCES,IRON_SOURCES,revealOre,hole,sourceFor,expand,forecast};
 });

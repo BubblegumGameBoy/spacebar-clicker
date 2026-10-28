@@ -98,7 +98,7 @@ window.ArmyView=(()=>{
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.imageSmoothingEnabled=false;
   const ox=Math.max(0,(Math.max(width,camera.w*camera.scale)-camera.w*camera.scale)/2)-viewport.scrollLeft;
   const oy=Math.max(0,(Math.max(height,camera.h*camera.scale)-camera.h*camera.scale)/2)-viewport.scrollTop;
-  const z=camera.scale;window.FieldUI?.frame?.({ox,oy,z});
+  const z=camera.scale;window.FieldUI?.frame?.({ox,oy,z});window.OreUI?.frame?.({ox,oy,z});
   // Terrain fills the viewport, rather than exposing the edges of a scaled rectangle.
   // Its texture follows the army camera; the distant scenery stays behind the battlefield.
   const top=Math.max(0,oy+(outpost()?150:camera.h*.28)*z-30),tile=Math.max(20,256*z);
@@ -136,7 +136,7 @@ window.ArmyView=(()=>{
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
   for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,(p.ballista?4:2)*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*(p.ballista?.075:.035)*z,y-(p.ty-p.y)*(p.ballista?.075:.035)*z);ctx.stroke();}
   if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);window.BattleControl?.draw(ctx,view);
-  if(raid){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view);window.FieldUI?.drawBrush?.(ctx,view); }
+  if(raid){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view);window.FieldUI?.drawBrush?.(ctx,view);window.OreUI?.draw?.(ctx,view); }
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;

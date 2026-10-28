@@ -1,0 +1,301 @@
+{
+  "version": "20261028-iron-magnet-r1",
+  "date": "2026-10-28",
+  "node": {
+    "tests": 329,
+    "passed": 329,
+    "failed": 0
+  },
+  "iron": {
+    "fixture": "Prepared base research, upgrade stock and separate motion fixtures; real new research/crafting/harvest/delivery/placement/input",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "worker": {
+          "x": 1189.9999744683455,
+          "y": 655.0000182133296,
+          "node": "iron",
+          "interval": 6,
+          "cooldown": 11.666699999999999
+        },
+        "attracted": {
+          "moved": 84,
+          "pulling": true,
+          "drops": [
+            {
+              "type": "wood",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "stone",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "iron",
+              "x": 516.3931574073981,
+              "y": 550.0000001236981,
+              "count": 1
+            }
+          ]
+        },
+        "speed": {
+          "base": 6.75,
+          "motor": 9.112499999999955,
+          "ratio": 1.3499999999999932
+        },
+        "checks": [
+          "Japanese forced and language selector hidden",
+          "research reveals two ore sources once; original nodes unchanged",
+          "separate magnet research and crafting costs",
+          "iron harvested and delivered with real pointer input",
+          "miner placed by UI mines real iron at double interval",
+          "held magnet moves only iron by ground physics",
+          "magnet warehouse delivery and physical belt handoff each credit one ore",
+          "broom/magnet/build mode exclusions",
+          "both iron upgrades paid exactly",
+          "actual conveyor movement +35%",
+          "reload preserves sources, stock and upgrades",
+          "no overflow or JS errors"
+        ]
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "worker": {
+          "x": 1190.0000213019957,
+          "y": 654.9999413392064,
+          "node": "iron",
+          "interval": 6,
+          "cooldown": 11.699999999999998
+        },
+        "attracted": {
+          "moved": 84,
+          "pulling": true,
+          "drops": [
+            {
+              "type": "wood",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "stone",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "iron",
+              "x": 516.3306732532037,
+              "y": 549.9999915283537,
+              "count": 1
+            }
+          ]
+        },
+        "speed": {
+          "base": 6.75,
+          "motor": 9.112499999999955,
+          "ratio": 1.3499999999999932
+        },
+        "checks": [
+          "Japanese forced and language selector hidden",
+          "research reveals two ore sources once; original nodes unchanged",
+          "separate magnet research and crafting costs",
+          "iron harvested and delivered with real pointer input",
+          "miner placed by UI mines real iron at double interval",
+          "held magnet moves only iron by ground physics",
+          "magnet warehouse delivery and physical belt handoff each credit one ore",
+          "broom/magnet/build mode exclusions",
+          "both iron upgrades paid exactly",
+          "actual conveyor movement +35%",
+          "reload preserves sources, stock and upgrades",
+          "no overflow or JS errors"
+        ]
+      }
+    ]
+  },
+  "fieldRegression": {
+    "fixture": "Prepared research materials; held raid clock; real pointer actions",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "swept": [
+          {
+            "type": "wood",
+            "x": 647.4987274688092,
+            "y": 350,
+            "count": 1
+          },
+          {
+            "type": "stone",
+            "x": 588.2970186162196,
+            "y": 370,
+            "count": 1
+          }
+        ],
+        "checks": [
+          "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+          "Broom researched and crafted by UI with exact separate material charges",
+          "Real sweep moves wood farther than stone and preserves trees and item counts",
+          "Wide broom upgrade changes radius and charges exact materials",
+          "Swept warehouse delivery credits once without wind/automation credit",
+          "Minimap jump, hold-and-drag pan and whole-field zoom",
+          "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+          "Four late-wave hole forecasts sum to the actual authored spawns",
+          "No page overflow or JS errors"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "swept": [
+          {
+            "type": "wood",
+            "x": 640.2537117945867,
+            "y": 350,
+            "count": 1
+          },
+          {
+            "type": "stone",
+            "x": 531.1221605657096,
+            "y": 370,
+            "count": 1
+          }
+        ],
+        "checks": [
+          "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+          "Broom researched and crafted by UI with exact separate material charges",
+          "Real sweep moves wood farther than stone and preserves trees and item counts",
+          "Wide broom upgrade changes radius and charges exact materials",
+          "Swept warehouse delivery credits once without wind/automation credit",
+          "Minimap jump, hold-and-drag pan and whole-field zoom",
+          "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+          "Four late-wave hole forecasts sum to the actual authored spawns",
+          "No page overflow or JS errors"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "recoveryRegression": {
+    "fixture": "Prepared checkpoint results and research stock; not a new-save campaign",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "earnedContinuation": {
+    "source": "Previously genuinely earned 28-unit completed camp; continued by real UI/input without resource grants",
+    "status": "passed",
+    "start": {
+      "inventory": {
+        "wood": 44,
+        "stone": 164,
+        "food": 54
+      },
+      "skills": {
+        "carry": 2,
+        "hand": 2,
+        "route": 0,
+        "storage": 2
+      },
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 3
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "arch",
+          "count": 6
+        },
+        {
+          "id": "farmer",
+          "count": 1
+        },
+        {
+          "id": "miner",
+          "count": 3
+        },
+        {
+          "id": "ballista",
+          "count": 3
+        },
+        {
+          "id": "sword",
+          "count": 6
+        }
+      ]
+    },
+    "oreHarvested": 20,
+    "oreDelivered": 20,
+    "upgrades": {
+      "magnet": true,
+      "magnetHead": true,
+      "ironMotor": true
+    },
+    "end": {
+      "inventory": {
+        "wood": 13,
+        "stone": 114,
+        "food": 67,
+        "iron": 0
+      },
+      "skills": {
+        "carry": 2,
+        "hand": 2,
+        "route": 2,
+        "storage": 2
+      }
+    },
+    "errors": []
+  },
+  "limits": [
+    "Targeted new-feature and regression checks; not a new-save nine-wave run",
+    "CDP touch is not a physical device",
+    "Independent implementation review not performed",
+    "Main publication and live deployment are separate checks"
+  ]
+}

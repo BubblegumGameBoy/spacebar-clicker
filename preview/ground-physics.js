@@ -128,7 +128,9 @@
  // status: 'delivered' | 'belt' (hand to ConveyorCore.step) | 'moving' | 'rest'
  function step(raw,item,now=0,dt=DT){
   const w=world(raw),P=w.params,p={x:item.x,y:item.y},v={x:finite(item.vx)?item.vx:0,y:finite(item.vy)?item.vy:0};
-  const a=accelAt(w,p,now),pushed=a.x!==0||a.y!==0;
+  // A held magnet is a continuous force. Let its small per-frame impulses build
+  // against friction instead of discarding them at the resting speed threshold.
+  const a=accelAt(w,p,now),pushed=a.x!==0||a.y!==0||item.magnetPull===true;
   // A resting, unpushed item never acts on its own (an old pile beside the house is not auto-delivered).
   if(!pushed&&v.x===0&&v.y===0){if(w.hoppers.length&&!(w.belt&&w.belt(p))){const k=hopperAt(w,p);if(k>=0)return {x:p.x,y:p.y,vx:0,vy:0,status:'hopper',hopper:k};}return {x:p.x,y:p.y,vx:0,vy:0,status:'rest'};}
   if(received(w,p))return {x:p.x,y:p.y,vx:0,vy:0,status:'delivered'};

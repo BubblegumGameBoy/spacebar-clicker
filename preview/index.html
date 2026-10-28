@@ -565,14 +565,14 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="harvest-skills.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="outpost.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="ground-tools.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="compact-ui.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="outpost-tutorial.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="expedition-ui.css?v=20261028-field-gadgets-r1">
-<link rel="stylesheet" href="field-ui.css?v=20261028-field-gadgets-r1">
+<link rel="stylesheet" href="rework.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="outpost.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="ground-tools.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="compact-ui.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="outpost-tutorial.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="expedition-ui.css?v=20261028-iron-magnet-r1">
+<link rel="stylesheet" href="field-ui.css?v=20261028-iron-magnet-r1">
 </head>
 <body>
 <div id="titleScreen">
@@ -696,15 +696,16 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="progression-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="field-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="gadget-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="outpost-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="supply-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="expedition-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="game-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="forest-audio.js?v=20261028-field-gadgets-r1"></script>
+<script src="harvest-skill-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="progression-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="field-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="materials-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="gadget-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="outpost-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="supply-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="expedition-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="game-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="forest-audio.js?v=20261028-iron-magnet-r1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -946,7 +947,7 @@ const I18N={
 const validLanguage=v=>["ja","en","zh"].includes(v);
 const requestedLanguage=new URLSearchParams(location.search).get("lang");
 const storedLanguage=readStored("sbr2_preview_outpost_lang");
-let LANG=validLanguage(requestedLanguage)?requestedLanguage:validLanguage(storedLanguage)?storedLanguage:"ja";
+let LANG="ja";
 const LANG_CHOSEN=validLanguage(requestedLanguage)||validLanguage(storedLanguage);
 function t(k,...a){ const d=I18N[LANG]||I18N.ja; let v=d[k]; if(v==null) v=I18N.ja[k]; if(v==null) return k;
   return typeof v==="function"?v(...a):v; }
@@ -1930,7 +1931,7 @@ function loop(now){
 
 /* ===== 言語適用 / タイトル画面 ===== */
 // 静的テキスト(data-i18n / data-i18n-html)を差し替え、動的描画を呼び直す。
-function applyLang(lang){
+function applyLang(lang){lang="ja";
  if(validLanguage(lang)) LANG=lang;
  document.documentElement.lang=LANG;
  $$("[data-i18n]").forEach(e=>{ e.textContent=t(e.dataset.i18n); });
@@ -1939,7 +1940,7 @@ function applyLang(lang){
  if(BOSS[bossIndex]) setBossName(BOSS[bossIndex].name);
  renderCards(); updateStageTag(); updateHud();window.Rework?.translate();
 }
-function chooseLang(lang){
+function chooseLang(lang){lang="ja";
  try{ localStorage.setItem("sbr2_preview_outpost_lang",lang); }catch(e){}
  applyLang(lang);
  $("#titleScreen").classList.add("hidden");
@@ -2099,27 +2100,28 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261028-field-gadgets-r1"></script>
-<script src="army-view.js?v=20261028-field-gadgets-r1"></script>
+<script src="army-sim.js?v=20261028-iron-magnet-r1"></script>
+<script src="army-view.js?v=20261028-iron-magnet-r1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261028-field-gadgets-r1"></script>
-<script src="ground-physics.js?v=20261028-field-gadgets-r1"></script>
-<script src="supply-factory.js?v=20261028-field-gadgets-r1"></script>
-<script src="camp-training.js?v=20261028-field-gadgets-r1"></script>
-<script src="rail-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="conveyor-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="loader-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="loader-device.js?v=20261028-field-gadgets-r1"></script>
-<script src="outpost-camp.js?v=20261028-field-gadgets-r1"></script>
-<script src="outpost-tutorial-core.js?v=20261028-field-gadgets-r1"></script>
-<script src="outpost-tutorial.js?v=20261028-field-gadgets-r1"></script>
-<script src="outpost.js?v=20261028-field-gadgets-r1"></script>
-<script src="rework.js?v=20261028-field-gadgets-r1"></script>
-<script src="harvest-skills.js?v=20261028-field-gadgets-r1"></script>
-<script src="placement-controls.js?v=20261028-field-gadgets-r1"></script>
-<script src="expedition-ui.js?v=20261028-field-gadgets-r1"></script>
-<script src="expedition-integration.js?v=20261028-field-gadgets-r1"></script>
-<script src="progression-integration.js?v=20261028-field-gadgets-r1"></script>
-<script src="field-ui.js?v=20261028-field-gadgets-r1"></script>
+<script src="battle-control.js?v=20261028-iron-magnet-r1"></script>
+<script src="ground-physics.js?v=20261028-iron-magnet-r1"></script>
+<script src="supply-factory.js?v=20261028-iron-magnet-r1"></script>
+<script src="camp-training.js?v=20261028-iron-magnet-r1"></script>
+<script src="rail-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="conveyor-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="loader-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="loader-device.js?v=20261028-iron-magnet-r1"></script>
+<script src="outpost-camp.js?v=20261028-iron-magnet-r1"></script>
+<script src="outpost-tutorial-core.js?v=20261028-iron-magnet-r1"></script>
+<script src="outpost-tutorial.js?v=20261028-iron-magnet-r1"></script>
+<script src="outpost.js?v=20261028-iron-magnet-r1"></script>
+<script src="rework.js?v=20261028-iron-magnet-r1"></script>
+<script src="harvest-skills.js?v=20261028-iron-magnet-r1"></script>
+<script src="placement-controls.js?v=20261028-iron-magnet-r1"></script>
+<script src="expedition-ui.js?v=20261028-iron-magnet-r1"></script>
+<script src="expedition-integration.js?v=20261028-iron-magnet-r1"></script>
+<script src="progression-integration.js?v=20261028-iron-magnet-r1"></script>
+<script src="field-ui.js?v=20261028-iron-magnet-r1"></script>
+<script src="ore-ui.js?v=20261028-iron-magnet-r1"></script>
 </body>
 </html>

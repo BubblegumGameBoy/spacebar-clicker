@@ -35,7 +35,11 @@
  project('beacon','carry',{wood:220,stone:160},['project_gate','route3'],word('射手のかがり火','Archer beacon','射手烽火'),word('弓兵の実射程を90から110へ広げる。','Increase actual archer range: 90 → 110.','弓箭手实际射程：90 → 110。'));
  recipe('broom','route',{wood:6,stone:2},['recipe_blower'],word('箒のレシピ','Broom recipe','扫帚配方'),word('箒の製作カードが増える。地面の丸太や石をドラッグで掃く。重い石は動きにくい。','Adds a broom card. Sweep loose logs and stone by dragging; heavy stone moves less.','增加扫帚制作卡。拖动扫动地上的木材与石材，重石较难移动。'));
  project('broomHead','route',{wood:28,stone:16},['recipe_broom','hand1'],word('幅広の箒','Wide broom head','宽扫帚头'),word('掃く幅を60から88へ広げ、押す力を55%上げる。','Sweep width: 60 → 88. Push force +55%.','扫动宽度60→88，推动力量提高55%。'));
- const byId=new Map(nodes.map(n=>[n.id,n])),recipeIds=nodes.filter(n=>n.kind==='recipe').map(n=>n.recipe),types=['wood','stone','gold','coins'];
+ project('oreMining','hand',{wood:16,stone:20},['recipe_miner','hand2'],{ja:'鉄鉱採掘'},{ja:'東の平地に鉄鉱脈を見つける。採集力12で鉄鉱石1個。近くに置いた採掘師も採れる。'});
+ recipe('magnet','route',{wood:12,stone:8},['project_oreMining','recipe_broom'],{ja:'手持ち磁石のレシピ'},{ja:'手持ち磁石の製作カードが増える。鉄鉱石だけを引き寄せ、搬送へつなぐ。'});
+ project('magnetHead','route',{wood:24,iron:8},['recipe_magnet'],{ja:'強力な磁石'},{ja:'磁石の半径85→125。引く力と運ぶ速さを上げる。'});
+ project('ironMotor','route',{stone:30,iron:12},['recipe_belt','project_oreMining','route2'],{ja:'鉄製の搬送機構'},{ja:'コンベアと受け土台の実際の搬送速度をさらに35%上げる。'});
+ const byId=new Map(nodes.map(n=>[n.id,n])),recipeIds=nodes.filter(n=>n.kind==='recipe').map(n=>n.recipe),types=['wood','stone','iron','gold','coins'];
  const amount=n=>Number.isFinite(n)?Math.max(0,n):0;
  function fresh(){return {version:1,recipes:[],legacyPending:false};}
  function migrate(raw){if(!raw||raw.version!==1)return null;return {version:1,recipes:[...new Set((Array.isArray(raw.recipes)?raw.recipes:[]).filter(id=>recipeIds.includes(id)))],legacyPending:raw.legacyPending===true};}
@@ -71,11 +75,11 @@
  function built(S,id){const n=byId.get(id);if(!n)return false;if(n.kind==='skill')return (Skills.migrate(S.harvestSkills)[n.branch]||0)>=n.tier;if(n.kind==='recipe')return ensure(S).recipes.includes(n.recipe);return projectBuilt(S,n.project);}
  function balance(S,type){return amount(type==='coins'?S.expedition?.coins:type==='gold'?S.gold:S.factory?.inventory?.[type]);}
  function quote(S,id){
-  ensure(S);const n=byId.get(id);if(!n)return null;const learned=built(S,id),missingPrereqs=n.requires.filter(req=>!built(S,req)),cost={wood:0,stone:0,gold:0,coins:0,...n.cost},missing=Object.fromEntries(types.map(type=>[type,Math.max(0,cost[type]-balance(S,type))]));
+  ensure(S);const n=byId.get(id);if(!n)return null;const learned=built(S,id),missingPrereqs=n.requires.filter(req=>!built(S,req)),cost={wood:0,stone:0,iron:0,gold:0,coins:0,...n.cost},missing=Object.fromEntries(types.map(type=>[type,Math.max(0,cost[type]-balance(S,type))]));
   const locked=!learned&&missingPrereqs.length>0;return {...n,node:n,cost,built:learned,locked,missing,missingPrereqs,needsPrevious:missingPrereqs.length>0,needsRail:false,ready:!learned&&!locked&&!Object.values(missing).some(Boolean)};
  }
  function available(S){return nodes.map(n=>quote(S,n.id)).filter(q=>q.ready);}
- function pay(S,cost){S.factory??={inventory:{}};S.factory.inventory??={};for(const type of ['wood','stone'])if(cost[type])S.factory.inventory[type]=balance(S,type)-cost[type];if(cost.gold)S.gold=balance(S,'gold')-cost.gold;if(cost.coins)S.expedition.coins=balance(S,'coins')-cost.coins;}
+ function pay(S,cost){S.factory??={inventory:{}};S.factory.inventory??={};for(const type of ['wood','stone','iron'])if(cost[type])S.factory.inventory[type]=balance(S,type)-cost[type];if(cost.gold)S.gold=balance(S,'gold')-cost.gold;if(cost.coins)S.expedition.coins=balance(S,'coins')-cost.coins;}
  function purchase(S,id){
   const q=quote(S,id);if(!q?.ready)return false;
   if(q.kind==='skill'&&q.branch!=='route')return Skills.purchase(S,id);

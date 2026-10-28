@@ -48,7 +48,7 @@ window.HarvestSkills=(()=>{
  // Plays a short run of sounds; each waits for the previous one, so busy frames cannot bunch them under the 28 ms input throttle.
  function chain(steps,gap,first=0){let i=0;const next=()=>{if(i>=steps.length)return;steps[i++]();if(i<steps.length)setTimeout(next,gap);};if(first)setTimeout(next,first);else next();}
  // Manual harvest: from gathering tier 2 every tap adds quiet extra drops; the first tap after learning also gets a label.
- function noteHarvest({node,made}={}){const sound=node?.type==='food'?'pickup':node?.type==='stone'?'stone':'wood',use=HarvestSkillCore.fieldUse(fieldPending.get('hand'),{harvested:made}),extras=HarvestSkillCore.harvestExtras(HarvestSkillCore.migrate(S.harvestSkills).hand,made)||use?.extraSounds||0;
+ function noteHarvest({node,made}={}){const sound=node?.type==='food'?'pickup':node?.type==='stone'||node?.type==='iron'?'stone':'wood',use=HarvestSkillCore.fieldUse(fieldPending.get('hand'),{harvested:made}),extras=HarvestSkillCore.harvestExtras(HarvestSkillCore.migrate(S.harvestSkills).hand,made)||use?.extraSounds||0;
   if(use){fieldPending.delete('hand');const p=worldToClient(node?.x||0,(node?.y||0)-70);fieldCue(use.id,p.x,p.y);}
   chain(Array.from({length:extras},()=>()=>window.ForestAudio?.play(sound,{level:.4})),30,30);}
  function observeField(){const storage=fieldPending.get('storage');if(storage){const drops=S.factory?.drops||[],use=HarvestSkillCore.fieldUse(storage,{ground:drops.length});if(use){fieldPending.delete('storage');const d=drops[drops.length-1],p=worldToClient(d?.x||0,(d?.y||0)-30);fieldCue(use.id,p.x,p.y);}}
@@ -95,7 +95,8 @@ window.HarvestSkills=(()=>{
   gold:['G','Gold','金币'],coins:['転生コイン','Rebirth coins','转生币'],food:['食料','Food','食物'],free:['消費なし','No cost','无需消耗'],owned:['習得・解放','learned / unlocked','已习得／解锁'],
   improveNow:['設備を強化','Improve camp','强化营地'],nodeReady:['選択できます','Ready to choose','可以选择'],graph:['スキルの接続図','Connected skill tree','技能连接图']
  });
- const currencies=['wood','stone','gold','coins'];
+ const currencies=['wood','stone','iron','gold','coins'];
+ words.iron=['鉄鉱石'];
  const esc=x=>String(x??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]||c));
  const localized=x=>typeof x==='object'&&x?x[['ja','en','zh'][li()]]||x.ja||'':String(x||'');
  const api=()=>window.ProgressionCore;

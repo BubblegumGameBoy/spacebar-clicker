@@ -44,7 +44,7 @@ window.BattleControl=(()=>{
  function useful(point,u){return !outpost()||u.worker||!window.Outpost?.coverage||Outpost.coverage(point,u)<=.72;}
  function spots(p=candidate()){
   if(!p)return [];neighbors({x:0,y:0},0);const key=p.u.id+':'+(p.key||0),now=performance.now(),cached=spotCache.get(key);if(cached&&now<cached.until&&cached.points.every(q=>valid(q,p)))return cached.points;
-  const nodes=p.u.worker?SupplyFactory.state.nodes.filter(n=>(n.stock||n.type==='food')&&n.type===((SupplyFactory.resourceTypeForWorker?.(p.u.worker)||(p.u.worker==='woodcutter'?'wood':'stone')))):outpost()?window.Outpost.placementNodes():[{x:sim().boss.x-sim().boss.r-(p.u.ranged?125:20),y:sim().boss.y}];
+  const nodes=p.u.worker?SupplyFactory.state.nodes.filter(n=>(n.stock||n.type==='food')&&(SupplyFactory.workerCanHarvest?SupplyFactory.workerCanHarvest(p.u.worker,n):n.type===((SupplyFactory.resourceTypeForWorker?.(p.u.worker)||(p.u.worker==='woodcutter'?'wood':'stone'))))):outpost()?window.Outpost.placementNodes():[{x:sim().boss.x-sim().boss.r-(p.u.ranged?125:20),y:sim().boss.y}];
   const result=[],gap=Math.max(36,30/ArmyView.camera.scale);
   const add=point=>{if(!valid(point,p)||!useful(point,p.u)||result.some(q=>Math.hypot(q.x-point.x,q.y-point.y)<gap))return false;if(!p.u.worker&&(outpost()?!window.Outpost.covers(point,p.u):Math.hypot(point.x-sim().boss.x,point.y-sim().boss.y)-sim().boss.r>sim().range(p)+p.r))return false;result.push(point);return true;};
   for(const n of nodes){let found=0;
