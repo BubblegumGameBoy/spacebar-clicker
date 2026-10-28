@@ -1,18 +1,18 @@
 /* Small, saved outpost rounds. Only enemies move; presentation and payment live outside this module. */
 (function(root,factory){
- const api=factory();
+ const api=factory(typeof module==='object'&&module.exports?require('./field-core.js'):root.FieldCore);
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.OutpostCore=api;
-})(typeof globalThis!=='undefined'?globalThis:this,function(){
+})(typeof globalThis!=='undefined'?globalThis:this,function(Field){
  'use strict';
- const WORLD=Object.freeze({width:960,height:540,home:Object.freeze({x:100,y:340}),entryX:925,turnX:190,upper:185,lower:435});
- const MAX_WAVE=9,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=3,PIERCE=['sword','ballista'];
+ const WORLD=Field.WORLD;
+ const MAX_WAVE=9,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=4,PIERCE=['sword','ballista'];
  const finite=(value,fallback=0,min=0,max=1e9)=>Number.isFinite(value)?Math.max(min,Math.min(max,value)):fallback;
  const integer=(value,fallback=0,min=0,max=1e9)=>Math.floor(finite(value,fallback,min,max));
  const waveNumber=value=>integer(value,1,1,MAX_WAVE);
  const laneY=lane=>WORLD[lane==='lower'?'lower':'upper'];
- const pathLength=lane=>WORLD.entryX-WORLD.turnX+Math.hypot(WORLD.turnX-WORLD.home.x,laneY(lane)-WORLD.home.y);
- const flightLength=lane=>Math.hypot(WORLD.entryX-WORLD.home.x,laneY(lane)-WORLD.home.y);
+ const pathLength=(lane,entryX=WORLD.entryX)=>entryX-WORLD.turnX+Math.hypot(WORLD.turnX-WORLD.home.x,laneY(lane)-WORLD.home.y);
+ const flightLength=(lane,entryX=WORLD.entryX)=>Math.hypot(entryX-WORLD.home.x,laneY(lane)-WORLD.home.y);
  /* One row per enemy. Rules read `traits` and the trait's own numbers; drawing reads `height`, `bar` and `art`.
     art.sheet is the production 2x2 sheet; art.fallback is the provisional look (tinted rat + canvas overlay) used if that sheet fails to load. */
  const fallback=(tint,overlay)=>({sheet:'mob-rat',tint,overlay});
@@ -41,9 +41,9 @@
  const KINDS=Object.freeze(Object.keys(ENEMIES));
  const has=(enemy,trait)=>!!ENEMIES[enemy?.kind]?.traits.includes(trait);
  const def=kind=>ENEMIES[kind]||ENEMIES.rat;
- function lengthOf(enemy){const d=def(enemy.kind);return d.sling?Math.min(d.sling.at,pathLength(enemy.lane)):d.traits.includes('fly')?flightLength(enemy.lane):pathLength(enemy.lane);}
+ function lengthOf(enemy){const d=def(enemy.kind);return d.sling?Math.min(d.sling.at,pathLength(enemy.lane,enemy.entryX)):d.traits.includes('fly')?flightLength(enemy.lane,enemy.entryX):pathLength(enemy.lane,enemy.entryX);}
  function gateLimit(state,enemy){const d=def(enemy.kind);return d.sling?d.sling.seconds:state.gateSeconds;}
- function burrowed(enemy){const d=def(enemy.kind);if(!d.burrow||!enemy.alive)return false;const t=enemy.travel/pathLength(enemy.lane);return t>d.burrow[0]+EPS&&t<d.burrow[1]-EPS;}
+ function burrowed(enemy){const d=def(enemy.kind);if(!d.burrow||!enemy.alive)return false;const t=enemy.travel/pathLength(enemy.lane,enemy.entryX);return t>d.burrow[0]+EPS&&t<d.burrow[1]-EPS;}
  // Visible to allies: hidden kinds only while `seen` (set by the battle sim from real ally positions). Burrowed moles never.
  function exposed(enemy){return !burrowed(enemy)&&(!has(enemy,'hidden')||enemy.seen===true);}
  function canStrike(enemy,role){if(!exposed(enemy))return false;if(has(enemy,'fly')&&PIERCE.includes(role))return false;return true;}
@@ -117,7 +117,7 @@
   return {mix,replace:raw.replace===true,...(Number.isFinite(raw.duration)?{duration:finite(raw.duration,60,30,180)}:{}),...flags};
  }
  function plan(value,planVersion=PLAN_VERSION,options=null){
-  const wave=waveNumber(value),spawns=[],mods=modifiers(options),duration=mods?.duration??(wave<=3?50:wave<=6?60:70),v=planVersion===1?1:planVersion===2?2:3;
+  const wave=waveNumber(value),spawns=[],mods=modifiers(options),duration=mods?.duration??(wave<=3?50:wave<=6?planVersion>=4?85:60:planVersion>=4?100:70),v=planVersion===1?1:planVersion===2?2:planVersion===3?3:4;
   const stat=kind=>{const d=ENEMIES[kind];return {hp:d.hp,speed:d.speed,armor:d.armor,r:d.r};};
   const specs={rat:{hp:wave<=3?wave===1?14:wave===2?18:22:26,speed:wave===1?22:wave===2?24:25,armor:0,r:13}};
   const add=(kind,lane,at)=>spawns.push({at,lane,kind,...(specs[kind]||stat(kind))});
@@ -138,7 +138,7 @@
   }
   for(const m of mods?.mix||[])for(let i=0;i<m.count;i++){const lane=m.lane==='both'?(i%2?'lower':'upper'):m.lane,at=m.at+(m.lane==='both'?Math.floor(i/2):i)*m.gap;if(at<duration)add(m.kind,lane,at);}
   if(mods?.ironhide)for(const e of spawns){if(e.kind==='guard')e.armor+=2;else if(e.kind==='rat'&&mods.ironhide!=='guards')e.armor=Math.max(e.armor,1);}
-  spawns.sort((a,b)=>a.at-b.at);spawns.forEach((e,i)=>e.spawnIndex=i);
+  spawns.sort((a,b)=>a.at-b.at);const laneCounts={upper:0,lower:0};spawns.forEach((e,i)=>{e.spawnIndex=i;if(v>=4){const h=Field.sourceFor(wave,e.lane,laneCounts[e.lane]++);e.holeId=h.id;e.entryX=h.x;}});
   const patterns=['single','single','pack','scout','guard','mixed','guard','swarm','final'],kinds=[...new Set(spawns.map(e=>e.kind))];
   const potential=spawns.reduce((n,e)=>n+1+(ENEMIES[e.kind].split?.count||0),0);
   return {wave,duration,chapter:chapter(wave),pattern:mods?.replace?'custom':wave===4&&v!==1?'vanguard':patterns[wave-1],spawns,potential,counts:{upper:spawns.filter(e=>e.lane==='upper').length,lower:spawns.filter(e=>e.lane==='lower').length},kinds,special:kinds.filter(k=>!['rat','scout','guard','chief'].includes(k)),boxes:mods?.boxes||3,heat:mods?.heat||0,...(mods?.flank?{flank:mods.flank}:{}),boss:wave===MAX_WAVE?mods?.boss||'chief':null};
@@ -149,16 +149,16 @@
   return next===4?'workshop':next===7?'gate':next===9?'beacon':null;
  }
  function position(enemy){
-  const y=laneY(enemy.lane);
-  if(has(enemy,'fly')){const t=Math.min(1,enemy.travel/flightLength(enemy.lane));enemy.x=WORLD.entryX+(WORLD.home.x-WORLD.entryX)*t;enemy.y=y+(WORLD.home.y-y)*t;return;}
-  const straight=WORLD.entryX-WORLD.turnX;
-  if(enemy.travel<=straight){enemy.x=WORLD.entryX-enemy.travel;enemy.y=y;return;}
-  const turnLength=pathLength(enemy.lane)-straight,t=Math.min(1,(enemy.travel-straight)/turnLength);
+  const origin=enemy.entryX||WORLD.entryX,y=laneY(enemy.lane);
+  if(has(enemy,'fly')){const t=Math.min(1,enemy.travel/flightLength(enemy.lane,enemy.entryX));enemy.x=origin+(WORLD.home.x-origin)*t;enemy.y=y+(WORLD.home.y-y)*t;return;}
+  const straight=origin-WORLD.turnX;
+  if(enemy.travel<=straight){enemy.x=origin-enemy.travel;enemy.y=y;return;}
+  const turnLength=pathLength(enemy.lane,enemy.entryX)-straight,t=Math.min(1,(enemy.travel-straight)/turnLength);
   enemy.x=WORLD.turnX+(WORLD.home.x-WORLD.turnX)*t;
   enemy.y=y+(WORLD.home.y-y)*t;
  }
  // Unit vector of the enemy's current heading (used for the beetle's frontal shell).
- function heading(enemy){if(has(enemy,'fly')){const dx=WORLD.home.x-WORLD.entryX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<WORLD.entryX-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
+ function heading(enemy){const origin=enemy.entryX||WORLD.entryX;if(has(enemy,'fly')){const dx=WORLD.home.x-origin,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<origin-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
  // One source for the live objective and the chapter retry boundary.
  function raidRules(wave,mods){return {boxes:mods?.boxes||3,retryWave:(chapter(wave)-1)*3+1,boss:wave===MAX_WAVE?mods?.boss||'chief':null};}
  function failureReason(state){const rules=raidRules(state.wave,state.modifiers);return state.boxes<=0?'crates':rules.boss&&state.enemies.some(e=>e.kind===rules.boss&&!e.alive&&e.hp>0)?'captain':null;}
@@ -170,12 +170,12 @@
   const reason=success?null:['crates','captain','timeout'].includes(raw.reason)?raw.reason:boxes===0?'crates':wave===MAX_WAVE?'captain':'timeout';
   return {wave,win:success,boxes,kills,escaped,gold:trial?0:goldFor(wave,success,boxes,first),first,...(reason?{reason}:{}),...(trial?{trial:true}:{}),...(wave===MAX_WAVE?{chiefDefeated:raw.chiefDefeated===true}:{})};
  }
- function makeEnemy(state,item,extra){const d=def(item.kind),enemy={key:state.nextKey++,spawnIndex:item.spawnIndex,kind:item.kind,lane:item.lane,x:WORLD.entryX,y:laneY(item.lane),r:item.r,speed:item.speed,armor:item.armor,hp:item.hp,maxHp:item.hp,travel:0,slowUntil:0,alive:true,atGate:false,gateTime:0,...extra};
+ function makeEnemy(state,item,extra){const d=def(item.kind),enemy={key:state.nextKey++,spawnIndex:item.spawnIndex,...(item.holeId?{holeId:item.holeId,entryX:item.entryX}:{}),kind:item.kind,lane:item.lane,x:item.entryX||WORLD.entryX,y:laneY(item.lane),r:item.r,speed:item.speed,armor:item.armor,hp:item.hp,maxHp:item.hp,travel:0,slowUntil:0,alive:true,atGate:false,gateTime:0,...extra};
   if(d.shield)enemy.shield=d.shield;if(d.heal)enemy.healAt=state.elapsed+d.heal.every;if(d.leap)enemy.leapAt=state.elapsed+d.leap.every;position(enemy);return enemy;}
  function migrate(raw){
   const state=fresh();
   if(!raw||typeof raw!=='object'||raw.version!==1)return state;
-  state.planVersion=raw.planVersion===3?3:raw.planVersion===2?2:1;state.heat=heat(raw.heat);
+  state.planVersion=raw.planVersion===4?4:raw.planVersion===3?3:raw.planVersion===2?2:1;state.heat=heat(raw.heat);
   const mods=modifiers(raw.modifiers);if(mods)state.modifiers=mods;
   state.phase=['prep','active','result'].includes(raw.phase)?raw.phase:'prep';
   state.wave=waveNumber(raw.wave);state.cleared=integer(raw.cleared,0,0,MAX_WAVE);state.round=integer(raw.round,0,0,1e9);
@@ -192,7 +192,7 @@
   const definition=planFor(state),seen=new Set(),seenSpawns=new Set(),rows=(Array.isArray(raw.enemies)?raw.enemies:[]).slice(0,definition.potential);
   const restore=(row,item)=>{const d=def(item.kind),maxHp=item.hp,length=lengthOf(item),travel=finite(row.travel,0,0,length),limit=gateLimit(state,item),atGate=row.atGate===true||travel>=length-EPS;
    const hp=finite(row.hp,maxHp,0,maxHp),gateTime=atGate?finite(row.gateTime,0,0,limit):0;
-   const enemy={key:row.key,spawnIndex:item.spawnIndex,kind:item.kind,lane:item.lane,x:0,y:0,r:item.r,speed:item.speed,armor:item.armor,hp,maxHp,travel:atGate?length:travel,slowUntil:finite(row.slowUntil,0,0,definition.duration+1.5),alive:row.alive===true&&hp>0&&gateTime<limit,atGate,gateTime};
+   const enemy={key:row.key,spawnIndex:item.spawnIndex,...(item.holeId?{holeId:item.holeId,entryX:item.entryX}:{}),kind:item.kind,lane:item.lane,x:0,y:0,r:item.r,speed:item.speed,armor:item.armor,hp,maxHp,travel:atGate?length:travel,slowUntil:finite(row.slowUntil,0,0,definition.duration+1.5),alive:row.alive===true&&hp>0&&gateTime<limit,atGate,gateTime};
    if(item.parent)enemy.parent=item.parent;if(d.shield)enemy.shield=integer(row.shield,d.shield,0,d.shield);if(d.heal)enemy.healAt=finite(row.healAt,state.elapsed+d.heal.every,0,state.elapsed+d.heal.every);if(d.leap)enemy.leapAt=finite(row.leapAt,state.elapsed+d.leap.every,0,state.elapsed+d.leap.every);
    if(!enemy.alive)enemy.resolvedAt=finite(row.resolvedAt,state.elapsed,0,state.elapsed);position(enemy);state.enemies.push(enemy);seen.add(row.key);};
   const validRow=row=>row&&Object.hasOwn(ENEMIES,row.kind)&&['upper','lower'].includes(row.lane)&&Number.isInteger(row.key)&&row.key>=1&&row.key<=MAX_KEY&&!seen.has(row.key);
@@ -209,7 +209,7 @@
    const parent=state.enemies.find(e=>e.key===row.parent&&!e.parent),split=parent&&def(parent.kind).split;
    if(!split||parent.alive||parent.hp>0||row.kind!==split.kind||row.lane!==parent.lane||(children.get(parent.key)||0)>=split.count)continue;
    children.set(parent.key,(children.get(parent.key)||0)+1);const d=def(split.kind);
-   restore(row,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r,parent:parent.key});
+   restore(row,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r,parent:parent.key,...(parent.holeId?{holeId:parent.holeId,entryX:parent.entryX}:{})});
   }
   const fromPlan=state.enemies.filter(e=>!e.parent).length;
   state.spawned=Math.max(integer(raw.spawned,0,0,definition.spawns.length),fromPlan);
@@ -241,7 +241,7 @@
  }
  function release(state,parent){
   const split=def(parent.kind).split;if(!split)return [];const d=def(split.kind),out=[];
-  for(let i=0;i<split.count;i++){const child=makeEnemy(state,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r},{parent:parent.key,travel:Math.max(0,Math.min(lengthOf({kind:split.kind,lane:parent.lane}),parent.travel-i*9))});
+  for(let i=0;i<split.count;i++){const child=makeEnemy(state,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r},{parent:parent.key,...(parent.holeId?{holeId:parent.holeId,entryX:parent.entryX}:{}),travel:Math.max(0,Math.min(lengthOf({kind:split.kind,lane:parent.lane,entryX:parent.entryX}),parent.travel-i*9))});
    if(child.travel>=lengthOf(child)-EPS){child.travel=lengthOf(child);child.atGate=true;}position(child);state.enemies.push(child);out.push(child);}
   return out;
  }
@@ -354,7 +354,7 @@
   return null;
  }
  // Road geometry for placement previews: the parts of each road an ally at `center` can reach.
- function roadPath(lane){const y=laneY(lane);return [{x:WORLD.entryX,y},{x:WORLD.turnX,y},{x:WORLD.home.x,y:WORLD.home.y}];}
+ function roadPath(lane,entryX=WORLD.entryX){const y=laneY(lane);return [{x:entryX,y},{x:WORLD.turnX,y},{x:WORLD.home.x,y:WORLD.home.y}];}
  function circleSpan(a,b,c,r){const dx=b.x-a.x,dy=b.y-a.y,fx=a.x-c.x,fy=a.y-c.y,A=dx*dx+dy*dy,B=2*(fx*dx+fy*dy),C=fx*fx+fy*fy-r*r;if(!(r>0)||!A)return null;const disc=B*B-4*A*C;if(disc<0)return null;const q=Math.sqrt(disc),t0=Math.max(0,(-B-q)/(2*A)),t1=Math.min(1,(-B+q)/(2*A));return t1>t0?[t0,t1]:null;}
  function coveredSpans(points,center,radius,minRadius=0){
   const spans=[];if(!Array.isArray(points)||!Number.isFinite(center?.x)||!Number.isFinite(center?.y)||!Number.isFinite(radius))return spans;
@@ -364,6 +364,6 @@
    for(const [t0,t1] of parts){if(t1-t0<=1e-9)continue;const from=lerp(a,b,t0),to=lerp(a,b,t1),last=spans.at(-1),tail=last?.points.at(-1);if(last&&last.segment===i-1&&t0<=1e-9&&Math.hypot(tail.x-from.x,tail.y-from.y)<1e-6){last.points.push(to);last.segment=i;}else spans.push({points:[from,to],segment:i});}}
   return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
  }
- function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane),center,radius,minRadius).map(span=>({lane,...span})));}
+ function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane,Math.max(...Field.HOLES.map(h=>h.x))),center,radius,minRadius).map(span=>({lane,...span})));}
  return {raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });

@@ -4,7 +4,7 @@
  const IDS=['woodcutter','miner','farmer','arch','sword','ballista'],COUNTS=[1,3,6,10],LIMIT=4,MAX_HEAT=Object.values(Outpost.HEAT).reduce((n,c)=>n+c.points,0),UNLOCKS={farmer:3,ballista:4};
  const integer=(n,f=0,max=1e9)=>Number.isFinite(n)?Math.max(0,Math.min(max,Math.floor(n))):f;
  const bucket=id=>['woodcutter','miner','farmer'].includes(id)?'production':IDS.includes(id)?'combat':null;
- const point=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)?{x:Math.max(15,Math.min(945,p.x)),y:Math.max(105,Math.min(515,p.y))}:null;
+ const point=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)?{x:Math.max(15,Math.min(Outpost.WORLD.width-15,p.x)),y:Math.max(105,Math.min(Outpost.WORLD.height-25,p.y))}:null;
  const copyCost=c=>({wood:integer(c?.wood),stone:integer(c?.stone),food:integer(c?.food),gold:integer(c?.gold)});
  function fresh(){return {version:1,initialized:false,groups:[],nextKey:1,unlocks:{farmer:false,ballista:false},coins:0,claimed:0,records:[],heatUnlocked:false,heatLast:[],trainingBest:0,awaitingDecision:false,awaitingReady:false,run:1,settled:[],lastReceipt:null};}
  function migrate(raw){
@@ -41,7 +41,7 @@
  function capture(S){const rows=new Map((S.battle?.units||[]).map(r=>[r[0]+':'+r[1],r]));for(const a of assignments(S)){const r=rows.get(a.id+':'+a.index);if(!r)continue;const g=groups(S).find(g=>g.key===a.groupKey);g.positions[a.member]=point({x:r[2],y:r[3]});if(!a.member&&!g.pending)g.anchor=g.positions[0];}}
  function formation(g,member){if(g.positions[member])return g.positions[member];if(!g.anchor)return null;if(!member)return {...g.anchor};const angle=(member*2.399963)+(g.key*.17),radius=23*Math.sqrt(member);return point({x:g.anchor.x+Math.cos(angle)*radius,y:g.anchor.y+Math.sin(angle)*radius});}
  function project(S){S.owned??={};S.pending??={};S.pendingRefunds??={};for(const id of IDS){S.owned[id]=0;S.pending[id]=0;S.pendingRefunds[id]=[];}const rows=(S.battle?.units||[]).filter(r=>!IDS.includes(r[0]));for(const a of assignments(S)){const g=groups(S).find(g=>g.key===a.groupKey);S.owned[a.id]++;if(a.pending){S.pending[a.id]++;if(g.receipt)S.pendingRefunds[a.id].push({wood:g.receipt.wood,stone:g.receipt.stone,gold:g.receipt.gold});continue;}const p=formation(g,a.member);if(p){g.positions[a.member]=p;rows.push([a.id,a.index,p.x,p.y,-1,-1]);}}
-  S.battle={...(S.battle||{}),width:S.battle?.width||960,height:S.battle?.height||540,captain:S.battle?.captain||{x:150,y:370},units:rows};return S;
+  S.battle={...(S.battle||{}),width:Outpost.WORLD.width,height:Outpost.WORLD.height,captain:S.battle?.captain||{x:150,y:370},units:rows};return S;
  }
  function funds(S,cost){return Object.fromEntries(['wood','stone','food','gold'].map(t=>[t,Math.max(0,cost[t]-(t==='gold'?integer(S.gold):integer(S.factory?.inventory?.[t])))]));}
  function payable(missing){return !Object.values(missing).some(Boolean);}

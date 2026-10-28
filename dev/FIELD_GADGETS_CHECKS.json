@@ -1,0 +1,323 @@
+{
+  "version": "20261028-field-gadgets-r1",
+  "scope": "One expanded flat map; 9 waves; no second-region travel; prepared browser fixtures plus one earned-save final replay",
+  "node": {
+    "tests": 320,
+    "passed": 320,
+    "failed": 0
+  },
+  "field_and_gadgets": [
+    {
+      "lang": "ja",
+      "input": "mouse",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 646.0540884536958,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 588.3650227381753,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "input": "mouse",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 649.2926309933822,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 590.3456106149722,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "input": "mouse",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 647.0501311449432,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 589.0010067708183,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "input": "CDP touch",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 640.500542548,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 517.5849930438519,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "input": "CDP touch",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 645.3162849669607,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 531.718555676307,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "input": "CDP touch",
+      "status": "passed",
+      "swept": [
+        {
+          "type": "wood",
+          "x": 645.4011303660919,
+          "y": 350,
+          "count": 1
+        },
+        {
+          "type": "stone",
+          "x": 532.0728099224214,
+          "y": 370,
+          "count": 1
+        }
+      ],
+      "checks": [
+        "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+        "Broom researched and crafted by UI with exact separate material charges",
+        "Real sweep moves wood farther than stone and preserves trees and item counts",
+        "Wide broom upgrade changes radius and charges exact materials",
+        "Swept warehouse delivery credits once without wind/automation credit",
+        "Minimap jump, hold-and-drag pan and whole-field zoom",
+        "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+        "Four late-wave hole forecasts sum to the actual authored spawns",
+        "No page overflow or JS errors"
+      ],
+      "errors": []
+    }
+  ],
+  "existing_worksite_regressions": [
+    {
+      "lang": "ja",
+      "input": "mouse",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "input": "mouse",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "input": "mouse",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "ja",
+      "input": "CDP touch",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "en",
+      "input": "CDP touch",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    },
+    {
+      "lang": "zh",
+      "input": "CDP touch",
+      "status": "passed",
+      "checks": [
+        "Wave 3 and 6 hold through reload until Ready",
+        "Pending placement disables Ready",
+        "Ready starts real 90-second preparation",
+        "Capped construction explains the limit",
+        "Next manual drag joins at the highlighted end; exact material costs preserved",
+        "Green loader preview on a belt places the loader; existing machines remain selectable",
+        "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+      ],
+      "errors": []
+    }
+  ],
+  "earned_save_replay": {
+    "source": "Previously earned forest completion in a separate local browser context",
+    "crew_count": 28,
+    "result": {
+      "wave": 9,
+      "win": true,
+      "boxes": 3,
+      "kills": 37,
+      "escaped": 0,
+      "gold": 18,
+      "first": false,
+      "chiefDefeated": true
+    },
+    "manual_assist_clicks": 0,
+    "materials_granted": false,
+    "time_accelerated": false,
+    "completion_survives_reload": true,
+    "fresh_full_campaign": false,
+    "old_soldier_positions_preserved": 28,
+    "old_source_positions_preserved": true,
+    "old_conveyor_routes_preserved": true
+  },
+  "visual_review": [
+    "PC sweep and overview",
+    "CDP touch flat-map overview"
+  ],
+  "physical_touch_device": false,
+  "independent_review": false,
+  "public_deployment_verified": false,
+  "source_archive": {
+    "files": 220,
+    "sha256": "bd988ceee53face0e1460ad0c3d3eb57abde21c2c973f635a014c78d2d5b2030",
+    "wip_identical": true
+  }
+}

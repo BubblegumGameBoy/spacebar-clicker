@@ -46,7 +46,7 @@ window.ArmyView=(()=>{
   world.style.width=camera.w+'px';world.style.height=camera.h+'px';
   bossEl.style.height=giant+'px';bossEl.style.maxWidth=(giant*1.25)+'px';bossEl.style.bottom='48px';bossEl.style.right='55px';
   camera.fit=Math.min(1.15,viewport.clientWidth/camera.w,viewport.clientHeight/camera.h);
-  if(!manual){camera.target=camera.fit;if(resized)camera.scale=camera.fit;}
+  if(!manual){camera.target=raid?Math.min(1.15,viewport.clientWidth/960,viewport.clientHeight/540):camera.fit;if(resized)camera.scale=camera.target;}
   applyCamera();
   for(const u of UNITS.filter(unitOwned)){
    let anchor=world.querySelector('.army-anchor[data-type="'+u.id+'"]');
@@ -75,7 +75,7 @@ window.ArmyView=(()=>{
   const group=slots.filter(p=>p.id===id);if(!group.length)return;
   flash={id,until:performance.now()+2100,evolution};
  }
- function fit(){manual=false;camera.target=camera.fit;viewport.scrollTo({left:0,top:0,behavior:'instant'});}
+ function fit(){manual=true;camera.target=camera.fit;viewport.scrollTo({left:0,top:0,behavior:'instant'});}
  function render(reason){
   if(!viewport)return;
   const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];accumulator=0;powerClock=0;engagedDps=0;}
@@ -83,7 +83,7 @@ window.ArmyView=(()=>{
   const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,minRange:stats?.minRange||0,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
   if(outpost()&&window.ExpeditionCore){const groups=new Map(ExpeditionCore.groups(S).map(g=>[g.key,g])),policies=new Map(ExpeditionCore.assignments(S).map(a=>[a.id+':'+a.index,groups.get(a.groupKey)?.policy||'front']));for(const p of slots)p.policy=policies.get(p.id+':'+p.index)||'front';}
-  if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=camera.w/S.battle.width,sy=camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
+  if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=outpost()?1:camera.w/S.battle.width,sy=outpost()?1:camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
   if(restore){for(const p of slots)p.enterAt=sim.time-.34;window.BattleControl?.restore();}
   document.getElementById('armyCount').textContent=count().toLocaleString();
   document.getElementById('armyRoster').innerHTML=UNITS.filter(unitOwned).sort(orderUnits).map(u=>'<button type="button" data-focus="'+u.id+'"><span>'+L(u.name)+'</span><b>×'+S.owned[u.id].toLocaleString()+'</b><small>'+('◆'.repeat(Math.min(3,Core.tier(S.ulvl[u.id])))||'Lv.'+S.ulvl[u.id])+'</small></button>').join('');
@@ -98,10 +98,10 @@ window.ArmyView=(()=>{
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.imageSmoothingEnabled=false;
   const ox=Math.max(0,(Math.max(width,camera.w*camera.scale)-camera.w*camera.scale)/2)-viewport.scrollLeft;
   const oy=Math.max(0,(Math.max(height,camera.h*camera.scale)-camera.h*camera.scale)/2)-viewport.scrollTop;
-  const z=camera.scale;
+  const z=camera.scale;window.FieldUI?.frame?.({ox,oy,z});
   // Terrain fills the viewport, rather than exposing the edges of a scaled rectangle.
   // Its texture follows the army camera; the distant scenery stays behind the battlefield.
-  const top=Math.max(0,oy+camera.h*.28*z-30),tile=Math.max(20,256*z);
+  const top=Math.max(0,oy+(outpost()?150:camera.h*.28)*z-30),tile=Math.max(20,256*z);
   const key=[top,tile,ox,oy].map(v=>v.toFixed(1)).join(':');
   if(key!==terrainKey){terrainKey=key;ground.style.top=top+'px';ground.style.backgroundSize=tile+'px';ground.style.backgroundPosition=ox+'px '+(oy-top)+'px';}
   const raid=outpost(),view={ox,oy,z};
@@ -136,7 +136,7 @@ window.ArmyView=(()=>{
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
   for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,(p.ballista?4:2)*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*(p.ballista?.075:.035)*z,y-(p.ty-p.y)*(p.ballista?.075:.035)*z);ctx.stroke();}
   if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);window.BattleControl?.draw(ctx,view);
-  if(raid){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view); }
+  if(raid){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view);window.FieldUI?.drawBrush?.(ctx,view); }
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;
@@ -168,5 +168,5 @@ window.ArmyView=(()=>{
   new ResizeObserver(()=>layout()).observe(viewport);
   render();window.BattleControl?.boot();window.SupplyFactory?.boot();camera.scale=camera.target;applyCamera();frame=requestAnimationFrame(draw);
  }
- return {redraw:()=>{if(viewport)draw(performance.now(),true);},boot,render,reloadFormation:()=>{lastState=null;render();},focus,fit,layout,tick,point,snapshot,captureFrame:()=>{draw(performance.now(),true);if(!outpost())return canvas.toDataURL();const dpr=canvas.width/viewport.clientWidth,z=camera.scale,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*z)-camera.w*z)/2)-viewport.scrollLeft,oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*z)-camera.h*z)/2)-viewport.scrollTop;const x=Math.max(0,ox+20*z),y=Math.max(0,oy+70*z),w=Math.min(880*z,viewport.clientWidth-x),h=Math.min(450*z,viewport.clientHeight-y);if(w<=0||h<=0)return canvas.toDataURL();const photo=document.createElement('canvas');photo.width=880;photo.height=Math.round(880*h/w);const context=photo.getContext('2d');context.imageSmoothingEnabled=false;context.drawImage(canvas,x*dpr,y*dpr,w*dpr,h*dpr,0,0,photo.width,photo.height);return photo.toDataURL();},orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
+ return {home:()=>{manual=true;camera.target=Math.min(1.15,viewport.clientWidth/960,viewport.clientHeight/540);viewport.scrollTo({left:0,top:0,behavior:'instant'});},zoom,panTo:(x,y)=>{viewport.scrollTo({left:Math.max(0,x*camera.scale-viewport.clientWidth/2),top:Math.max(0,y*camera.scale-viewport.clientHeight/2),behavior:'instant'});},redraw:()=>{if(viewport)draw(performance.now(),true);},boot,render,reloadFormation:()=>{lastState=null;render();},focus,fit,layout,tick,point,snapshot,captureFrame:()=>{draw(performance.now(),true);if(!outpost())return canvas.toDataURL();const dpr=canvas.width/viewport.clientWidth,z=camera.scale,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*z)-camera.w*z)/2)-viewport.scrollLeft,oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*z)-camera.h*z)/2)-viewport.scrollTop;const x=Math.max(0,ox+20*z),y=Math.max(0,oy+70*z),w=Math.min(880*z,viewport.clientWidth-x),h=Math.min(450*z,viewport.clientHeight-y);if(w<=0||h<=0)return canvas.toDataURL();const photo=document.createElement('canvas');photo.width=880;photo.height=Math.round(880*h/w);const context=photo.getContext('2d');context.imageSmoothingEnabled=false;context.drawImage(canvas,x*dpr,y*dpr,w*dpr,h*dpr,0,0,photo.width,photo.height);return photo.toDataURL();},orderUnits,bodyHeight,get engagedDps(){return engagedDps;},get sim(){return sim;},get camera(){return camera;},portrait:u=>imageFor(u).portrait,attack:u=>{attacks[u.id]=performance.now();},get ready(){return !!viewport;},get count(){return count();},get stats(){return {soldiers:slots.length,worldWidth:camera.w,worldHeight:camera.h,scale:camera.scale,pairs:sim.stats.pairs,attacks:sim.stats.attacks,projectiles:projectiles.length};}};
 })();

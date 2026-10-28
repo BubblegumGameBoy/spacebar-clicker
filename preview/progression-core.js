@@ -33,6 +33,8 @@
  project('cart','route',{gold:55},['recipe_belt','route1'],word('搬送車輪','Transport wheels','运输车轮'),word('コンベアの実際の搬送速度をさらに25%上げる。','Increase actual conveyor speed by a further 25%.','传送带实际运输速度额外提高25%。'));
  project('gate','storage',{wood:100,stone:60},['recipe_sword','storage3'],word('防衛門','Defence gate','防御门'),word('倉庫前の門を建て、突破してきた敵への対処時間を得る。','Build the gate by the warehouse and gain time to handle escaping enemies.','在仓库前修建防御门，获得应对突破敌人的时间。'));
  project('beacon','carry',{wood:220,stone:160},['project_gate','route3'],word('射手のかがり火','Archer beacon','射手烽火'),word('弓兵の実射程を90から110へ広げる。','Increase actual archer range: 90 → 110.','弓箭手实际射程：90 → 110。'));
+ recipe('broom','route',{wood:6,stone:2},['recipe_blower'],word('箒のレシピ','Broom recipe','扫帚配方'),word('箒の製作カードが増える。地面の丸太や石をドラッグで掃く。重い石は動きにくい。','Adds a broom card. Sweep loose logs and stone by dragging; heavy stone moves less.','增加扫帚制作卡。拖动扫动地上的木材与石材，重石较难移动。'));
+ project('broomHead','route',{wood:28,stone:16},['recipe_broom','hand1'],word('幅広の箒','Wide broom head','宽扫帚头'),word('掃く幅を60から88へ広げ、押す力を55%上げる。','Sweep width: 60 → 88. Push force +55%.','扫动宽度60→88，推动力量提高55%。'));
  const byId=new Map(nodes.map(n=>[n.id,n])),recipeIds=nodes.filter(n=>n.kind==='recipe').map(n=>n.recipe),types=['wood','stone','gold','coins'];
  const amount=n=>Number.isFinite(n)?Math.max(0,n):0;
  function fresh(){return {version:1,recipes:[],legacyPending:false};}
