@@ -25,7 +25,7 @@ window.BattleControl=(()=>{
  function encounter(){clock=0;if(!outpost())BossArt.set(bossIndex);}
 
  function cancelGesture(){const pointer=workerDrag;workerDrag=null;const field=document.getElementById('field');try{if(pointer!==null&&field?.hasPointerCapture?.(pointer))field.releasePointerCapture(pointer);}catch(_){}preview=null;}
- function setPlacement(value){if(value&&raiding())return false;cancelGesture();if(value){window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.SupplyFactory?.setBuilding(false);}mode=value;selectedKey=null;preview=null;notice='';displayedSpots=[];translate();return true;}
+ function setPlacement(value){if(value&&raiding())return false;cancelGesture();if(value){window.FieldUI?.equip(false);window.OreUI?.equip(false);window.OutpostCamp?.clearSelection?.();window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.SupplyFactory?.setBuilding(false);}mode=value;selectedKey=null;preview=null;notice='';displayedSpots=[];translate();return true;}
  function beginPlacement(){return setPlacement(true);}
  function selectGroup(key){if(raiding())return false;const a=ExpeditionCore.assignments(S).find(a=>a.groupKey===Number(key)&&!a.pending),p=a&&sim().soldiers.find(p=>p.id===a.id&&p.index===a.index);if(!p)return false;setPlacement(true);selectedKey=p.key;preview={x:p.x,y:p.y};translate();return true;}
  function selectType(id){if(raiding())return false;const p=sim().soldiers.find(p=>p.id===id);if(p){setPlacement(true);selectedKey=p.key;preview={x:p.x,y:p.y};notice='';translate();}}

@@ -1,6 +1,6 @@
 # SPACEBAR Mythos Slayers II — 最小引き継ぎ
 
-更新：2026-10-28 JST。最新版 `20261028-iron-magnet-r1`。まずこのファイルだけ読み、必要なコードと確認記録へ進む。過去全文の再読・多数の並列レビューは不要。
+更新：2026-10-28 JST。最新版 `20261028-equipment-flow-r1`。まずこのファイルだけ読み、必要なコードと確認記録へ進む。過去全文の再読・多数の並列レビューは不要。
 
 ## 現在の方針
 
@@ -10,7 +10,15 @@
 - 資材は個別の実物。仲間・設備・搬送は手動配置。仲間の自動歩行・主人公HPは導入しない。細部は担当に一任。
 - 統合ツリーは能力24＋レシピ14＋設備強化11＝49ノード。従来の45ノードに鉄鉱採掘・磁石レシピ・磁石強化・鉄製搬送機構を追加した。研究費と製作・建設費は別。旧セーブの既得レシピと転生時の研究保持を維持。
 
-## 今回：鉄鉱石・磁石・搬送強化
+## 今回：設備の仮置き・確定・近くで終了
+
+- 送風機・集積口・積み込み機・受け土台は **1回押して仮置き → 同じ場所をもう1回押すか近くの「ここに設置」で確定**。別の場所を押すと候補を移す。資材は確定時だけ消費。
+- 仮置きの近くに回転・確定・やめる。既存設備の操作枠に「× 閉じる」。仮置き前・線の建設・仲間配置・箒・磁石はフィールド内の「操作を終了」を共有する。終了で未配置の仲間を勝手に返金しない。
+- 縮小時の既存設備の広い選択範囲が、空き地の設置を奪うバグを再現・修正。プレビューと確定座標を統一し、資材不足などの理由も近くに表示。
+- 送風機の短押しで強風・長押しで選択・ドラッグで風向き変更は維持。風向き変更の取消と遅い解放・再読込にも対処。コンベア・柵のドラッグと仲間の配置は維持。
+- Node329件。日本語マウス/CDPタッチで新操作と従来の搬送・地図・鉄・敗北後の操作を確認。設計は `dev/EQUIPMENT_FLOW.md`、結果は `dev/EQUIPMENT_FLOW_CHECKS.json`。実機・全編再プレイ・独立レビューは未実施。
+
+## 前版：鉄鉱石・磁石・搬送強化
 
 - 日本語に固定し、言語切り替えを非表示にした。既存翻訳の削除作業や新規翻訳は行わない。
 - 鉄鉱採掘を木16・石20で研究すると、東の平地に鉄鉱脈2か所を一度だけ発見。鉄は採集力12・重さ4.5。採掘師も採る（石の2倍の間隔）。
@@ -48,12 +56,13 @@
 ```bash
 tar -xzf dev/sequel-source.tar.gz
 node --test --test-isolation=none test/*.test.cjs
-python3 tools/build_playtest.py /tmp/mythos-iron
-python3 -m http.server 4426 --bind 127.0.0.1 --directory /tmp/mythos-iron
+python3 tools/build_playtest.py /tmp/mythos-placement
+python3 -m http.server 4427 --bind 127.0.0.1 --directory /tmp/mythos-placement
 # 別セッション
-GAME_URL='http://127.0.0.1:4426/preview/?lesson=2' node tools/qa_iron_magnet.cjs
-GAME_URL='http://127.0.0.1:4426/preview/?lesson=2' node tools/qa_field_gadgets.cjs
-GAME_URL='http://127.0.0.1:4426/preview/?lesson=2' node tools/qa_campaign_recovery.cjs
+GAME_URL='http://127.0.0.1:4427/preview/?lesson=2' node tools/qa_equipment_flow.cjs
+GAME_URL='http://127.0.0.1:4427/preview/?lesson=2' node tools/qa_iron_magnet.cjs
+GAME_URL='http://127.0.0.1:4427/preview/?lesson=2' node tools/qa_field_gadgets.cjs
+GAME_URL='http://127.0.0.1:4427/preview/?lesson=2' node tools/qa_campaign_recovery.cjs
 ```
 
 Node22+・Python3・npm ci・Playwright・`/usr/bin/chromium` が必要。旧QAに固定の3言語ループがある場合は日本語だけに絞って実行する。新規確認は新しいブラウザcontextを使い、既存セーブを消さない。rawセーブやプレイヤーIDは公開しない。

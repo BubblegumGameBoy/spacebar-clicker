@@ -20,3 +20,12 @@ body.outpost-game #beltActions .fan-aim-hint{display:block;font:11px/1.4 system-
 body.outpost-game #beltActions .fan-aim-hint[hidden]{display:none}
 body.outpost-game #campWarehouse #groundCapacityWarning{position:static!important;left:auto!important;bottom:auto!important;transform:none!important;z-index:auto!important;grid-column:1/-1;width:100%;max-width:100%!important;margin:3px 0 0;padding:7px 8px!important;font-size:11px!important;box-sizing:border-box}
 body.outpost-game #campWarehouse #groundCapacityWarning[hidden]{display:none!important}
+
+/* Confirmation and dismissal stay beside the work, in the field's screen coordinates. */
+body.outpost-game #placementActions{position:absolute;left:0;top:0;z-index:24;width:270px;max-width:calc(100% - 16px);padding:8px;border:2px solid #dbc474;border-radius:8px;background:#203b2ff5;color:#f5eac4;box-shadow:0 4px 12px #09180f80;touch-action:manipulation;box-sizing:border-box}
+body.outpost-game #placementActions[hidden],body.outpost-game #fieldExit[hidden]{display:none!important}
+body.outpost-game #placementActions b{display:block;font:700 12px system-ui}body.outpost-game #placementActions small{display:block;margin:5px 0;font:11px/1.4 system-ui;color:#d6dfbe}
+body.outpost-game #placementActions>div{display:flex;gap:5px}body.outpost-game #placementActions button,body.outpost-game #fieldExit button{min-height:44px;min-width:44px;padding:6px 9px;border:1px solid #d8bc6b;border-radius:5px;background:#405d3e;color:#fff0bc;font:700 12px system-ui;cursor:pointer}
+body.outpost-game #placementActions [data-placement-confirm]{flex:1;background:#776432}body.outpost-game #placementActions button:disabled{opacity:.5;cursor:default}body.outpost-game #placementActions[data-valid="false"]{border-color:#d68b72}
+body.outpost-game #fieldExit{position:absolute;left:10px;bottom:10px;z-index:23;display:flex;align-items:center;gap:10px;max-width:calc(100% - 20px);padding:5px 7px;border:1px solid #cfb771;border-radius:7px;background:#203b2ff5;box-shadow:0 3px 9px #07130d60;pointer-events:auto}
+body.outpost-game #fieldExit b{font:700 12px system-ui;color:#f4e2a9}body.outpost-game #beltActions .context-close{align-self:flex-end;flex:none;min-height:44px;padding:3px 8px;font-size:11px;background:#294634}

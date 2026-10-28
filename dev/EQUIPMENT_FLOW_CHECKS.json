@@ -1,0 +1,300 @@
+{
+  "version": "20261028-equipment-flow-r1",
+  "date": "2026-10-28",
+  "node": {
+    "tests": 329,
+    "passed": 329,
+    "failed": 0
+  },
+  "reproducedBug": {
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    },
+    "scale": 0.6321628327001628,
+    "existingBlower": {
+      "x": 600,
+      "y": 550
+    },
+    "attemptedPosition": {
+      "x": 633,
+      "y": 550
+    },
+    "physicalPlacementWasValid": true,
+    "oldOutcome": {
+      "blowerCount": 1,
+      "selectedExistingBlower": true,
+      "woodSpent": 0
+    }
+  },
+  "equipmentFlow": {
+    "fixture": "Prepared equipment recipes and materials; native pointer integration, not earned progression",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+          "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+          "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+          "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+          "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+          "Cancel beside the ghost spends nothing and exits all construction",
+          "Missing materials are explained at the disabled local confirmation",
+          "Releasing a held preview outside the ground neither places nor charges",
+          "Field-local exit is available before the first placement click",
+          "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+          "Escape during a wind drag restores and saves the old direction, ignoring late release",
+          "Same local exit puts broom and magnet away",
+          "Reload discards unpaid previews and preserves built equipment"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+          "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+          "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+          "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+          "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+          "Cancel beside the ghost spends nothing and exits all construction",
+          "Missing materials are explained at the disabled local confirmation",
+          "Releasing a held preview outside the ground neither places nor charges",
+          "Field-local exit is available before the first placement click",
+          "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+          "Same local exit puts broom and magnet away",
+          "Reload discards unpaid previews and preserves built equipment"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "confirmationTolerance": "Second confirmation tap tested 10 world units toward the neighbouring device; exact stored preview coordinates retained.",
+  "fieldRegression": {
+    "fixture": "Prepared research materials; held raid clock; real pointer actions",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "swept": [
+          {
+            "type": "wood",
+            "x": 647.3463636836054,
+            "y": 350,
+            "count": 1
+          },
+          {
+            "type": "stone",
+            "x": 589.348997518557,
+            "y": 370,
+            "count": 1
+          }
+        ],
+        "checks": [
+          "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+          "Broom researched and crafted by UI with exact separate material charges",
+          "Real sweep moves wood farther than stone and preserves trees and item counts",
+          "Wide broom upgrade changes radius and charges exact materials",
+          "Swept warehouse delivery credits once without wind/automation credit",
+          "Minimap jump, hold-and-drag pan and whole-field zoom",
+          "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+          "Four late-wave hole forecasts sum to the actual authored spawns",
+          "No page overflow or JS errors"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "swept": [
+          {
+            "type": "wood",
+            "x": 640.6224470842263,
+            "y": 350,
+            "count": 1
+          },
+          {
+            "type": "stone",
+            "x": 531.1568830243026,
+            "y": 370,
+            "count": 1
+          }
+        ],
+        "checks": [
+          "1600x900 flat worksite, 8 resource nodes and 4 preplaced burrows",
+          "Broom researched and crafted by UI with exact separate material charges",
+          "Real sweep moves wood farther than stone and preserves trees and item counts",
+          "Wide broom upgrade changes radius and charges exact materials",
+          "Swept warehouse delivery credits once without wind/automation credit",
+          "Minimap jump, hold-and-drag pan and whole-field zoom",
+          "A blower placed at 1280,720 and broom upgrades survive reload without duplicate expansion",
+          "Four late-wave hole forecasts sum to the actual authored spawns",
+          "No page overflow or JS errors"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "ironRegression": {
+    "fixture": "Prepared base research, upgrade stock and separate motion fixtures; real new research/crafting/harvest/delivery/placement/input",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "worker": {
+          "x": 1189.999968053372,
+          "y": 655.0000449056018,
+          "node": "iron",
+          "interval": 6,
+          "cooldown": 11.616699999999996
+        },
+        "attracted": {
+          "moved": 82,
+          "pulling": true,
+          "drops": [
+            {
+              "type": "wood",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "stone",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "iron",
+              "x": 516.6390579511049,
+              "y": 549.9999997563334,
+              "count": 1
+            }
+          ]
+        },
+        "speed": {
+          "base": 6.75,
+          "motor": 9.112499999999955,
+          "ratio": 1.3499999999999932
+        },
+        "checks": [
+          "Japanese forced and language selector hidden",
+          "research reveals two ore sources once; original nodes unchanged",
+          "separate magnet research and crafting costs",
+          "iron harvested and delivered with real pointer input",
+          "miner placed by UI mines real iron at double interval",
+          "held magnet moves only iron by ground physics",
+          "magnet warehouse delivery and physical belt handoff each credit one ore",
+          "broom/magnet/build mode exclusions",
+          "both iron upgrades paid exactly",
+          "actual conveyor movement +35%",
+          "reload preserves sources, stock and upgrades",
+          "no overflow or JS errors"
+        ]
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "worker": {
+          "x": 1190.0000485620785,
+          "y": 655.0000540426477,
+          "node": "iron",
+          "interval": 6,
+          "cooldown": 11.666699999999997
+        },
+        "attracted": {
+          "moved": 84,
+          "pulling": true,
+          "drops": [
+            {
+              "type": "wood",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "stone",
+              "x": 500,
+              "y": 550,
+              "count": 1
+            },
+            {
+              "type": "iron",
+              "x": 516.4464632024906,
+              "y": 550.0000005372056,
+              "count": 1
+            }
+          ]
+        },
+        "speed": {
+          "base": 6.75,
+          "motor": 9.112499999999955,
+          "ratio": 1.3499999999999932
+        },
+        "checks": [
+          "Japanese forced and language selector hidden",
+          "research reveals two ore sources once; original nodes unchanged",
+          "separate magnet research and crafting costs",
+          "iron harvested and delivered with real pointer input",
+          "miner placed by UI mines real iron at double interval",
+          "held magnet moves only iron by ground physics",
+          "magnet warehouse delivery and physical belt handoff each credit one ore",
+          "broom/magnet/build mode exclusions",
+          "both iron upgrades paid exactly",
+          "actual conveyor movement +35%",
+          "reload preserves sources, stock and upgrades",
+          "no overflow or JS errors"
+        ]
+      }
+    ]
+  },
+  "recoveryRegression": {
+    "fixture": "Prepared checkpoint results and research stock; not a new-save campaign",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "limits": [
+    "Prepared fixtures, not a new-save full campaign",
+    "CDP touch is not a physical device",
+    "Independent review not performed",
+    "Main publication and live delivery verification are separate"
+  ]
+}
