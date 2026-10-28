@@ -96,7 +96,8 @@ body.outpost-game #cameraTools{opacity:.8}
 body.outpost-game #field,body.outpost-game #battleWorld{cursor:default}
 @media(max-width:680px){body.outpost-game #raidBoard .raid-heading{font-size:11px}body.outpost-game #raidBoard .raid-clock{float:none;display:block;font-size:10px}body.outpost-game #raidBoard{width:149px}body.outpost-game #raidBoard .raid-result{font-size:9px}}
 /* Forecast occupies the scenery margin, keeping both enemy entrances visible. */
-body.outpost-game #raidBoard{width:385px;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:'heading clock' 'forecast boxes' 'result result' 'start workshop';gap:3px 8px;padding:8px 10px}
+body.outpost-game #raidBoard{width:385px;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:'heading clock' 'forecast boxes' 'rule rule' 'result result' 'start workshop';gap:3px 8px;padding:8px 10px}
+body.outpost-game #raidBoard .raid-rule{grid-area:rule;font:10px/1.5 system-ui;color:#f0d694;overflow-wrap:anywhere}
 body.outpost-game #raidBoard .raid-heading{grid-area:heading;font-size:12px}
 body.outpost-game #raidBoard .raid-clock{grid-area:clock;float:none;text-align:right;font-size:10px}
 body.outpost-game #raidBoard .raid-forecast{grid-area:forecast;margin:0;font-size:10px}
@@ -169,7 +170,7 @@ body.outpost-game #field.dragging-supplies{cursor:grabbing!important}
 body.outpost-game #field.dragging-supplies #weaponPointer{display:none!important}
 
 /* Leave the upper road and tall captain visible while a raid is running. */
-body.outpost-game #raidBoard.raid-active{grid-template-areas:'heading clock' 'forecast boxes';padding:6px 10px;gap:2px 8px}
+body.outpost-game #raidBoard.raid-active{grid-template-areas:'heading clock' 'forecast boxes' 'rule rule';padding:6px 10px;gap:2px 8px}
 body.outpost-game #raidBoard.raid-active .raid-result,body.outpost-game #raidBoard.raid-active #raidWorkshop{display:none}
 
 /* The player lays each section; construction controls stay outside the field. */

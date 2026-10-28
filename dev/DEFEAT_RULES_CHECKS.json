@@ -1,0 +1,271 @@
+{
+  "version": "20261028-defeat-rules-r1",
+  "fixture_scope": "Prepared near-breach, deadline and capacity states; no new-save full campaign claim",
+  "node": {
+    "command": "node --test --test-isolation=none test/*.test.cjs",
+    "tests": 309,
+    "passed": 309,
+    "failed": 0
+  },
+  "defeat_rules": {
+    "fixture": "Prepared battles and full-ground stock; no new-save balance claim",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "mouse",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "mouse",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "CDP touch",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "CDP touch",
+        "status": "passed",
+        "failure": {
+          "reason": "crates",
+          "escaped": 3,
+          "boxes": 0,
+          "gold": 123,
+          "remaining": 1,
+          "elapsed": 0.56
+        },
+        "checks": [
+          "Zero crates stops immediately; unresolved raiders are not breakthroughs",
+          "Loss earns no gold",
+          "Wave 8 retries at 7 with paid reinforcements, stock, coins and reward receipts intact",
+          "Reload holds preparation while production time advances; Ready starts 90 seconds",
+          "Escaped final captain fails with two crates left",
+          "Timeout reports a remaining raider instead of inventing a breach",
+          "Real full-ground pointer input plays a decoded rejection sound; rapid repeat and SE off are quiet; freed capacity permits harvesting",
+          "Rules and controls fit the viewport"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "previous_worksite_regressions": {
+    "fixture": "Prepared checkpoint results and research stock; not a new-save campaign",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "manual_review": {
+    "screenshots": [
+      "ja-pc crates loss",
+      "en-pc retry and rules",
+      "en-touch crates loss",
+      "ja-touch timeout loss"
+    ],
+    "physical_touch_device": false,
+    "subjective_audio_review": false,
+    "independent_reviewer": false
+  },
+  "source_archive": {
+    "files": 214,
+    "sha256": "fb4a439882b62ab20cf937176c05698c8c8ebcbe0281a418a54c45123e7711f4",
+    "wip_identical": true
+  },
+  "public_deployment_verified": false
+}

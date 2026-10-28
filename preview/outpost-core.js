@@ -159,12 +159,16 @@
  }
  // Unit vector of the enemy's current heading (used for the beetle's frontal shell).
  function heading(enemy){if(has(enemy,'fly')){const dx=WORLD.home.x-WORLD.entryX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<WORLD.entryX-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
- function goldFor(wave,win,boxes,first){return win?12+(first?12+wave*8:0)+boxes*2:8;}
+ // One source for the live objective and the chapter retry boundary.
+ function raidRules(wave,mods){return {boxes:mods?.boxes||3,retryWave:(chapter(wave)-1)*3+1,boss:wave===MAX_WAVE?mods?.boss||'chief':null};}
+ function failureReason(state){const rules=raidRules(state.wave,state.modifiers);return state.boxes<=0?'crates':rules.boss&&state.enemies.some(e=>e.kind===rules.boss&&!e.alive&&e.hp>0)?'captain':null;}
+ function goldFor(wave,win,boxes,first){return win?12+(first?12+wave*8:0)+boxes*2:0;}
  function normalizedResult(raw,mods){
   if(!raw||typeof raw!=='object')return null;
   const wave=waveNumber(raw.wave),boxes=integer(raw.boxes,0,0,3),win=raw.win===true&&boxes>0,count=Math.max(...[1,2,3].map(v=>plan(wave,v,mods).potential));
   const kills=integer(raw.kills,0,0,count),escaped=integer(raw.escaped,0,0,count-kills),success=win&&(wave!==MAX_WAVE||raw.chiefDefeated===true),trial=!!mods?.replace,first=success&&!trial&&raw.first===true;
-  return {wave,win:success,boxes,kills,escaped,gold:trial?0:goldFor(wave,success,boxes,first),first,...(trial?{trial:true}:{}),...(wave===MAX_WAVE?{chiefDefeated:raw.chiefDefeated===true}:{})};
+  const reason=success?null:['crates','captain','timeout'].includes(raw.reason)?raw.reason:boxes===0?'crates':wave===MAX_WAVE?'captain':'timeout';
+  return {wave,win:success,boxes,kills,escaped,gold:trial?0:goldFor(wave,success,boxes,first),first,...(reason?{reason}:{}),...(trial?{trial:true}:{}),...(wave===MAX_WAVE?{chiefDefeated:raw.chiefDefeated===true}:{})};
  }
  function makeEnemy(state,item,extra){const d=def(item.kind),enemy={key:state.nextKey++,spawnIndex:item.spawnIndex,kind:item.kind,lane:item.lane,x:WORLD.entryX,y:laneY(item.lane),r:item.r,speed:item.speed,armor:item.armor,hp:item.hp,maxHp:item.hp,travel:0,slowUntil:0,alive:true,atGate:false,gateTime:0,...extra};
   if(d.shield)enemy.shield=d.shield;if(d.heal)enemy.healAt=state.elapsed+d.heal.every;if(d.leap)enemy.leapAt=state.elapsed+d.leap.every;position(enemy);return enemy;}
@@ -268,12 +272,12 @@
   for(const shaman of state.enemies){const heal=def(shaman.kind).heal;if(!heal||!shaman.alive)continue;
    while(shaman.healAt<=time+EPS){for(const other of state.enemies)if(other!==shaman&&other.alive&&other.hp<other.maxHp&&!burrowed(other)&&Math.hypot(other.x-shaman.x,other.y-shaman.y)<=heal.radius+EPS){const before=other.hp,pack=def(other.kind).pack,cap=pack?Math.ceil(other.hp/pack.each-EPS)*pack.each:other.maxHp;other.hp=Math.min(other.maxHp,cap,other.hp+heal.amount);shaman.healed=(shaman.healed||0)+other.hp-before;}shaman.healAt+=heal.every;}}
  }
- function settle(state){
-  for(const enemy of state.enemies)if(enemy.alive)escape(state,enemy);
-  const boss=state.modifiers?.boss||'chief',chiefDefeated=state.enemies.some(e=>e.kind===boss&&e.hp===0)&&state.enemies.filter(e=>e.kind===boss).every(e=>e.hp===0),win=state.boxes>0&&(state.wave!==MAX_WAVE||chiefDefeated),trial=!!state.modifiers?.replace,first=win&&!trial&&!state.claimedFirst.includes(state.wave);
+ function settle(state,reason=null){
+  // Freeze the battlefield on failure. Enemies still on the road did not breach the camp.
+  const boss=state.modifiers?.boss||'chief',chiefDefeated=state.enemies.some(e=>e.kind===boss&&e.hp===0)&&state.enemies.filter(e=>e.kind===boss).every(e=>e.hp===0),win=!reason&&state.boxes>0&&(state.wave!==MAX_WAVE||chiefDefeated),trial=!!state.modifiers?.replace,first=win&&!trial&&!state.claimedFirst.includes(state.wave);
   // A replaced (test) wave is not that wave: no progress, no first-clear, no gold.
   if(win&&!trial){state.cleared=Math.max(state.cleared,state.wave);if(first)state.claimedFirst.push(state.wave);if(state.wave===MAX_WAVE){state.completed=true;if(!state.completedAtRound)state.completedAtRound=state.round;}}
-  const result={wave:state.wave,win,boxes:state.boxes,kills:state.kills,escaped:state.escaped,gold:trial?0:goldFor(state.wave,win,state.boxes,first),first,...(trial?{trial:true}:{}),...(state.wave===MAX_WAVE?{chiefDefeated}:{})};
+  const result={wave:state.wave,win,boxes:state.boxes,kills:state.kills,escaped:state.escaped,gold:trial?0:goldFor(state.wave,win,state.boxes,first),first,...(!win?{reason:reason||failureReason(state)||'captain'}:{}),...(trial?{trial:true}:{}),...(state.wave===MAX_WAVE?{chiefDefeated}:{})};
   state.phase='result';state.result=result;
   return {type:'settle',result:{...result}};
  }
@@ -282,18 +286,19 @@
  function tick(state,dt,context){
   if(!state||state.phase!=='active'||!Number.isFinite(dt)||dt<0)return [];
   if(context&&Object.hasOwn(context,'gateBuilt'))state.gateSeconds=context.gateBuilt===true?2.5:1;
+  const failure=failureReason(state);if(failure)return [settle(state,failure)];
   const definition=planFor(state),end=Math.min(definition.duration,state.elapsed+dt);
   spawnDue(state,definition);if(resolved(state,definition))return finishResolved(state);
   while(state.elapsed<end-EPS){
    const nextSpawn=definition.spawns[state.spawned]?.at??Infinity;
    const next=Math.min(end,state.elapsed+.25,nextSpawn);
-   for(const enemy of state.enemies)if(enemy.alive)advance(state,enemy,state.elapsed,next,enemy.speed);
+   for(const enemy of state.enemies)if(enemy.alive){advance(state,enemy,state.elapsed,next,enemy.speed);if(!enemy.alive){const failure=failureReason(state);if(failure){state.elapsed=enemy.resolvedAt??next;return [settle(state,failure)];}}}
    chant(state,next);
    state.elapsed=next;spawnDue(state,definition);if(resolved(state,definition))return finishResolved(state);
   }
   state.elapsed=end;
   if(resolved(state,definition))return finishResolved(state);
-  if(state.elapsed>=definition.duration-EPS){state.elapsed=definition.duration;return [settle(state)];}
+  if(state.elapsed>=definition.duration-EPS){state.elapsed=definition.duration;return [settle(state,'timeout')];}
   return [];
  }
  /* `from` is the attacker's position (beetle shell faces forward). Returns what the enemy really lost.
@@ -360,5 +365,5 @@
   return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
  }
  function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane),center,radius,minRadius).map(span=>({lane,...span})));}
- return {HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ return {raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });

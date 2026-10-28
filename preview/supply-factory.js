@@ -135,10 +135,10 @@ window.SupplyFactory=(()=>{
   const current=state(),node=current.nodes.find(n=>n.key===targetKey);if(!node||!node.stock){feedback=tr(node?.type==='food'?'growing':'empty');translate();return false;}
   const sequel=outpostMode(),power=sequel?Math.max(1,window.HarvestSkillCore?.effects(S.harvestSkills)?.manualPower||1):1;
   const plan=sequel?SupplyCore.strikePlan(node,power,groundCapacity()-current.drops.length):{applied:true,produced:1,work:0};
-  if(!plan.applied){feedback=capacityMessage();blockedUntil=current.time+2;translate();return false;}
+  if(!plan.applied){feedback=capacityMessage();blockedUntil=current.time+2;ForestAudio.play('groundBlocked');translate();return false;}
   let made=0;for(let i=0;i<plan.produced;i++){if(!take(node))break;made++;}
   // A failed physical output cannot become stored damage or free material on a later tap.
-  if(made<plan.produced){feedback=current.drops.length>=groundCapacity()?capacityMessage():tr('noRoom');blockedUntil=current.time+2;translate();return false;}
+  if(made<plan.produced){feedback=current.drops.length>=groundCapacity()?capacityMessage():tr('noRoom');blockedUntil=current.time+2;ForestAudio.play('groundBlocked');translate();return false;}
   if(sequel){node.work=plan.work;hits.set(node.key,{at:current.time,worker:false,power});ForestAudio.play(node.type==='food'?'pickup':node.type,{group:'user'});if(made)window.HarvestSkills?.noteHarvest?.({node,made});}
   lastManualAt=current.time;feedback=made?tr('fallen'):local(['採集力 '+power+' · あと'+Math.ceil((plan.required-plan.work)/power)+'打','Gather power '+power+' · '+Math.ceil((plan.required-plan.work)/power)+' more hits','采集力 '+power+' · 还需'+Math.ceil((plan.required-plan.work)/power)+'击']);document.getElementById('field').classList.remove('target-boss');translate();save();dirty=false;return true;
  }

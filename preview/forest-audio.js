@@ -9,7 +9,7 @@ window.ForestAudio=(()=>{
  const music=new Audio('../assets/audio/'+tracks.camp+'.mp3');music.loop=true;music.preload='metadata';music.volume=0;
  let ctx=null,bus=null,master=null,unlocked=false,fade=0,seed=345671,lastUser=-Infinity,duckTimer=null,duckUntil=0;
  const lastAuto={worker:-Infinity,unit:-Infinity},lastCue=new Map(),lastPlayed=new Map(),counts={played:0,throttled:0,capacity:0};
- const cues=new Set(['windFirst','hire','victory','evolve','defeat','raidStart','crateLost','complete','build','reinforce','unlock','skill','skillMilestone','mastery']);
+ const cues=new Set(['groundBlocked','windFirst','hire','victory','evolve','defeat','raidStart','crateLost','complete','build','reinforce','unlock','skill','skillMilestone','mastery']);
  const buffers=new Map(),voices=[];
  function save(){try{localStorage.setItem('sbr2_preview_outpost_audio_v2',JSON.stringify(settings));}catch(e){}}
  function context(){if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();bus=ctx.createDynamicsCompressor();bus.threshold.value=-16;bus.knee.value=16;bus.ratio.value=3;bus.attack.value=.005;bus.release.value=.12;master=ctx.createGain();master.gain.value=settings.seOn&&!document.hidden?settings.seVol:0;bus.connect(master);master.connect(ctx.destination);}return ctx;}
@@ -59,6 +59,9 @@ window.ForestAudio=(()=>{
    }else if(kind==='skillReady'||kind==='treeOpen'){
     // A small two-note "something is ready" chime; the tree-open version is one softer note.
     for(const [delay,freq,amp] of kind==='skillReady'?[[0,880,.12],[.06,1174.66,.1]]:[[0,659.25,.09]]){const q=t-delay;if(q>=0)v+=amp*Math.sin(2*Math.PI*freq*q)*(1-Math.exp(-q/.002))*Math.exp(-q*28);}
+   }else if(kind==='groundBlocked'){
+    // A muted descending double knock: an attempted harvest could not produce an item.
+    for(const [delay,freq]of [[0,220],[.075,146.83]]){const q=t-delay;if(q>=0)v+=(.16*Math.sin(2*Math.PI*freq*q)+body*.6)*(1-Math.exp(-q/.001))*Math.exp(-q*38);}
    }else if(kind==='handFull'){
     // Hands full: a short wooden knock with a high glint.
     v=body*.5*Math.exp(-t*40)+.12*Math.sin(2*Math.PI*1318.5*t)*(1-Math.exp(-t/.002))*Math.exp(-t*30)+.1*Math.sin(2*Math.PI*523.25*t)*Math.exp(-t*35);
@@ -100,7 +103,7 @@ window.ForestAudio=(()=>{
   // The camp's own pickup while carrying is replaced by HarvestSkills' per-item rising pickups (from camp:handpickup).
   if(kind==='pickup'&&options===undefined&&window.HarvestSkills?.carrying?.())return false;
   const now=performance.now(),automatic=group==='unit'||group==='worker',cue=cues.has(kind),priority=cue?3:automatic?1:2;
-  if(cue){const gap=kind==='crateLost'?110:kind==='hire'||kind==='reinforce'||kind==='unlock'||kind==='skill'||kind==='skillMilestone'||kind==='mastery'?90:300;if(now-(lastCue.get(kind)??-Infinity)<gap){counts.throttled++;return false;}}
+  if(cue){const gap=kind==='groundBlocked'?700:kind==='crateLost'?110:kind==='hire'||kind==='reinforce'||kind==='unlock'||kind==='skill'||kind==='skillMilestone'||kind==='mastery'?90:300;if(now-(lastCue.get(kind)??-Infinity)<gap){counts.throttled++;return false;}}
   else if(automatic){if(now-lastAuto[group]<(group==='worker'?180:110)){counts.throttled++;return false;}}
   else if(now-lastUser<28){counts.throttled++;return false;}
   try{
@@ -111,7 +114,7 @@ window.ForestAudio=(()=>{
    const source=c.createBufferSource(),g=c.createGain();source.buffer=buffer(kind,kind==='reinforce'?Math.max(1,Math.min(3,Math.floor(Number(stage)||1))):kind==='skill'||kind==='skillMilestone'||kind==='mastery'?Math.max(0,Math.min(3,Math.floor(Number(branch)||0))):kind==='wood'||kind==='stone'?Math.floor((noise()+1)*1.5):0);source.playbackRate.value=Number.isFinite(rate)&&rate>0?Math.max(.5,Math.min(2,rate)):kind==='wood'||kind==='stone'?.96+(noise()+1)*.04:1;
    const gain=cue?.47:group==='worker'?.13:group==='unit'?.18:.52;g.gain.value=Math.min(.6,gain*finite(level,1,2));source.connect(g);g.connect(bus);
    const voice={source,g,automatic,group,priority};voices.push(voice);source.onended=()=>{const i=voices.indexOf(voice);if(i>=0)voices.splice(i,1);source.disconnect();g.disconnect();};source.start();
-   if(cue){lastCue.set(kind,now);duckMusic(kind==='complete'?1250:850);}else if(automatic)lastAuto[group]=now;else lastUser=now;lastPlayed.set(kind,now);counts.played++;return true;
+   if(cue){lastCue.set(kind,now);if(kind!=='groundBlocked')duckMusic(kind==='complete'?1250:850);}else if(automatic)lastAuto[group]=now;else lastUser=now;lastPlayed.set(kind,now);counts.played++;return true;
   }catch(e){return false;}
  }
  function cancelTransition(){clearTimeout(transitionTimer);transitionTimer=null;}

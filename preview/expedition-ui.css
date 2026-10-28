@@ -31,6 +31,9 @@ body.outpost-game .expedition-dialog{width:min(96vw,900px);max-width:900px;max-h
 .expedition-routes{margin:16px 0;padding:14px;border:1px solid #796946;border-radius:12px}.expedition-routes>div{display:flex;flex-wrap:wrap;gap:8px}.expedition-routes p{font-size:13px;line-height:1.6}.expedition-action[aria-pressed="true"]{outline:2px solid #eecb78;outline-offset:2px}
 
 .expedition-briefing{padding:12px 16px;background:#202a26;border:1px solid #536649;border-radius:12px;margin-bottom:16px}.expedition-briefing h3{margin:0 0 10px}.expedition-briefing p{display:flex;justify-content:space-between;gap:12px;margin:6px 0;flex-wrap:wrap}.expedition-briefing small{display:block;line-height:1.6;color:#d0d6bd;margin-top:10px}
+.expedition-rules{margin-top:10px;font:12px/1.7 system-ui;color:#e6d5a4}.expedition-rules summary{cursor:pointer;min-height:28px}.expedition-rules p{display:block}
+.expedition-loss-reason{padding:11px 13px;border:1px solid #d7a86d;border-radius:8px;background:#513c28;color:#ffe0a8;font:700 13px/1.7 system-ui}
+.expedition-retry-cost{margin:12px 0;padding:10px 12px;border:1px solid #768461;border-radius:8px;background:#233d2b;font:12px/1.75 system-ui;color:#d9dfc2}.expedition-retry-cost p{margin:3px 0}.expedition-retry-cost b{color:#f0d38e}
 
 /* Only paid, confirmed growth earns this local accent; controls remain immediately available. */
 .expedition-growth{position:relative;isolation:isolate;animation:expedition-grow 1000ms ease-out both;animation-delay:var(--growth-elapsed,0ms)}
