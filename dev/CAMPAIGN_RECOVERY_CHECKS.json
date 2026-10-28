@@ -1,0 +1,739 @@
+{
+  "version": "20261028-campaign-recovery-r1",
+  "nodeTests": {
+    "passed": 304,
+    "failed": 0,
+    "skipped": 0
+  },
+  "playthrough": {
+    "status": "passed",
+    "method": "Fresh browser context; normally earned stock and coins; pointer/UI actions; no resource grants or time acceleration. Two rebirths, checkpoint 4 departure, and one final-wave retry. The first three waves used the baseline build; fixes were applied to the same earned save before later waves.",
+    "manualAssist": true,
+    "manualCaveat": "Wave 3 assist started at spawn. From wave 4, only enemies near home (x < 330). For the final retry, assist selection was corrected from raw travel to distance to home; the two lanes have different lengths. Reinforcement and policy also changed, so click counts are not a controlled comparison.",
+    "wallSecondsIncludingInvestigation": 2468.3,
+    "approximateActiveSecondsByRun": [
+      268.0,
+      426.0,
+      862.0
+    ],
+    "approximateTotalActiveSeconds": 1556.1,
+    "timingCaveat": "Includes investigation, menus, idle production and harness adjustments; not a normal-player duration estimate. Ending timer covers only the final rebirth, not the complete fresh-save journey.",
+    "battles": [
+      {
+        "wallSeconds": 233.5,
+        "attacks": 0,
+        "assist": false,
+        "result": {
+          "wave": 1,
+          "win": true,
+          "boxes": 3,
+          "kills": 3,
+          "escaped": 0,
+          "gold": 38,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 1,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 285.3,
+        "attacks": 0,
+        "assist": false,
+        "result": {
+          "wave": 2,
+          "win": false,
+          "boxes": 0,
+          "kills": 0,
+          "escaped": 4,
+          "gold": 8,
+          "first": false
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 1,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 761,
+        "attacks": 0,
+        "assist": false,
+        "result": {
+          "wave": 1,
+          "win": true,
+          "boxes": 3,
+          "kills": 3,
+          "escaped": 0,
+          "gold": 38,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 1,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 791.8,
+        "attacks": 0,
+        "assist": false,
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 1,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 807.2,
+        "attacks": 44,
+        "assist": true,
+        "result": {
+          "wave": 3,
+          "win": true,
+          "boxes": 3,
+          "kills": 6,
+          "escaped": 0,
+          "gold": 54,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 1,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 1541.2,
+        "attacks": 3,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 4,
+          "win": true,
+          "boxes": 3,
+          "kills": 10,
+          "escaped": 0,
+          "gold": 62,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 1626.4,
+        "attacks": 0,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 5,
+          "win": true,
+          "boxes": 3,
+          "kills": 14,
+          "escaped": 0,
+          "gold": 70,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "sword",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 1664.2,
+        "attacks": 2,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 6,
+          "win": true,
+          "boxes": 3,
+          "kills": 18,
+          "escaped": 0,
+          "gold": 78,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "sword",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 1831.1,
+        "attacks": 29,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 7,
+          "win": true,
+          "boxes": 3,
+          "kills": 22,
+          "escaped": 0,
+          "gold": 86,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "sword",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 1868.3,
+        "attacks": 17,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 8,
+          "win": true,
+          "boxes": 3,
+          "kills": 28,
+          "escaped": 0,
+          "gold": 94,
+          "first": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "sword",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 2053.8,
+        "attacks": 91,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "result": {
+          "wave": 9,
+          "win": false,
+          "boxes": 0,
+          "kills": 34,
+          "escaped": 3,
+          "gold": 8,
+          "first": false,
+          "chiefDefeated": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "armor"
+          },
+          {
+            "id": "sword",
+            "count": 3,
+            "policy": "front"
+          }
+        ]
+      },
+      {
+        "wallSeconds": 2398.4,
+        "attacks": 30,
+        "assist": true,
+        "manualOnlyNearHome": true,
+        "manualPriority": "distance-to-home",
+        "result": {
+          "wave": 9,
+          "win": true,
+          "boxes": 3,
+          "kills": 37,
+          "escaped": 0,
+          "gold": 102,
+          "first": true,
+          "chiefDefeated": true
+        },
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "arch",
+            "count": 6,
+            "policy": "front"
+          },
+          {
+            "id": "farmer",
+            "count": 1,
+            "policy": "front"
+          },
+          {
+            "id": "miner",
+            "count": 3,
+            "policy": "front"
+          },
+          {
+            "id": "ballista",
+            "count": 3,
+            "policy": "armor"
+          },
+          {
+            "id": "sword",
+            "count": 6,
+            "policy": "armor"
+          }
+        ]
+      }
+    ],
+    "finalResult": {
+      "wave": 9,
+      "win": true,
+      "boxes": 3,
+      "kills": 37,
+      "escaped": 0,
+      "gold": 102,
+      "first": true,
+      "chiefDefeated": true
+    },
+    "finalDamage": {
+      "ballista": {
+        "applied": 164,
+        "kills": 6
+      },
+      "arch": {
+        "applied": 654,
+        "kills": 15
+      },
+      "sword": {
+        "applied": 276,
+        "kills": 3
+      },
+      "manual": {
+        "applied": 98,
+        "kills": 13
+      }
+    },
+    "unitDamageShare": 0.9178,
+    "completionPersistsOnReload": true,
+    "javascriptAndLocalHttpErrors": [],
+    "automation": {
+      "before": {
+        "wood": 8,
+        "stone": 0,
+        "food": 14
+      },
+      "after": {
+        "wood": 11,
+        "stone": 3,
+        "food": 21
+      }
+    },
+    "chapterPause": {
+      "before": {
+        "ready": true,
+        "prep": 120,
+        "inventory": {
+          "wood": 14,
+          "stone": 111,
+          "food": 58
+        }
+      },
+      "after": {
+        "ready": true,
+        "prep": 120,
+        "inventory": {
+          "wood": 16,
+          "stone": 113,
+          "food": 59
+        }
+      }
+    },
+    "screenshots": [
+      "preview/media/campaign-recovery-ending.jpg",
+      "preview/media/campaign-recovery-camp.jpg"
+    ]
+  },
+  "targetedBrowserRegression": {
+    "fixture": "Prepared checkpoint results and research stock; not a new-save campaign",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "en",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "zh",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "Wave 3 and 6 hold through reload until Ready",
+          "Pending placement disables Ready",
+          "Ready starts real 90-second preparation",
+          "Capped construction explains the limit",
+          "Next manual drag joins at the highlighted end; exact material costs preserved",
+          "Green loader preview on a belt places the loader; existing machines remain selectable",
+          "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "limits": [
+    "One earned route with active assistance, not idle-only completion or every viable build.",
+    "Prepared regression fixtures are separate from the earned playthrough.",
+    "All 43 nodes, high threat, long-term economy, physical phones and subjective audio quality remain unassessed.",
+    "No independent reviewer or public Pages response verification is claimed."
+  ]
+}
