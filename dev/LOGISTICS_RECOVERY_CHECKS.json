@@ -1,0 +1,465 @@
+{
+  "date": "2026-10-30 JST",
+  "version": "20261030-logistics-recovery-r1",
+  "base_main": "50ad855a5a6b5b034c54f29f09ae59268e8d4cc6",
+  "unit_tests": {
+    "passed": 332,
+    "failed": 0
+  },
+  "earned_campaign": {
+    "fixture": false,
+    "input": "日本語PC幅・UI操作スクリプト",
+    "normal_time": true,
+    "raid_early_start_button": true,
+    "manual_combat_hits": 0,
+    "direct_state_grants": false,
+    "interrupted_and_resumed_same_earned_save": true,
+    "waves": [
+      {
+        "wave": 1,
+        "round": 1,
+        "defenders": 0,
+        "win": false,
+        "boxes": 1,
+        "kills": 0,
+        "escaped": 2,
+        "gold": 0,
+        "reason": "timeout"
+      },
+      {
+        "wave": 1,
+        "round": 2,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 3,
+        "escaped": 0,
+        "gold": 38
+      },
+      {
+        "wave": 2,
+        "round": 3,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 4,
+        "escaped": 0,
+        "gold": 46
+      },
+      {
+        "wave": 3,
+        "round": 4,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 6,
+        "escaped": 0,
+        "gold": 54
+      },
+      {
+        "wave": 4,
+        "round": 5,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 10,
+        "escaped": 0,
+        "gold": 62
+      },
+      {
+        "wave": 5,
+        "round": 6,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 14,
+        "escaped": 0,
+        "gold": 70
+      },
+      {
+        "wave": 6,
+        "round": 7,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 18,
+        "escaped": 0,
+        "gold": 78
+      },
+      {
+        "wave": 7,
+        "round": 8,
+        "defenders": 12,
+        "win": true,
+        "boxes": 1,
+        "kills": 20,
+        "escaped": 2,
+        "gold": 82
+      },
+      {
+        "wave": 8,
+        "round": 9,
+        "defenders": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 28,
+        "escaped": 0,
+        "gold": 94
+      },
+      {
+        "wave": 9,
+        "round": 10,
+        "defenders": 12,
+        "win": false,
+        "boxes": 0,
+        "kills": 25,
+        "escaped": 3,
+        "gold": 0,
+        "reason": "crates",
+        "chiefDefeated": false
+      },
+      {
+        "wave": 7,
+        "round": 11,
+        "defenders": 32,
+        "win": true,
+        "boxes": 3,
+        "kills": 22,
+        "escaped": 0,
+        "gold": 18
+      },
+      {
+        "wave": 8,
+        "round": 12,
+        "defenders": 32,
+        "win": true,
+        "boxes": 3,
+        "kills": 28,
+        "escaped": 0,
+        "gold": 18
+      },
+      {
+        "wave": 9,
+        "round": 13,
+        "defenders": 32,
+        "win": true,
+        "boxes": 3,
+        "kills": 37,
+        "escaped": 0,
+        "gold": 102,
+        "chiefDefeated": true
+      }
+    ],
+    "ending_reload": {
+      "fixture": false,
+      "checks": [
+        "earned nine-wave completion survives reload",
+        "37 kills, captain defeated, 3 crates",
+        "ending and camp can be viewed",
+        "reload does not pay victory gold again"
+      ],
+      "before": {
+        "gold": 482,
+        "result": {
+          "wave": 9,
+          "win": true,
+          "boxes": 3,
+          "kills": 37,
+          "escaped": 0,
+          "gold": 102,
+          "first": true,
+          "chiefDefeated": true
+        },
+        "journey": {
+          "seconds": 1745.1148439997444,
+          "handWood": 527,
+          "handStone": 170,
+          "crewWood": 272,
+          "crewStone": 195,
+          "handFood": 0,
+          "crewFood": 0,
+          "handIron": 0,
+          "crewIron": 76
+        },
+        "people": 35,
+        "links": 5,
+        "loaders": 2
+      },
+      "errors": []
+    },
+    "limits": [
+      "12人失敗／32人勝利であり、最小人数は未検証",
+      "実ユーザーの難易度測定ではない"
+    ]
+  },
+  "prepared_fixture_regressions": {
+    "east_mouse": {
+      "fixture": "Prepared research, devices and construction stock; real miner and isolated physical ore transfers. Not earned campaign.",
+      "rows": [
+        {
+          "input": "mouse",
+          "lang": "ja",
+          "actual": {
+            "iron": 1,
+            "journey": 3,
+            "links": 5
+          },
+          "checks": [
+            "real miner ore stops at reversed eastern join",
+            "selected route reports blockage",
+            "one reversal repairs same paid belt without inventory charge",
+            "physical loader and five joined segments deliver original ore",
+            "reload keeps corrected flow",
+            "hopper -> platform -> six joined belts delivers physical ore",
+            "magnet feeds same hopper physically",
+            "no overflow or JS errors"
+          ]
+        }
+      ]
+    },
+    "east_touch": {
+      "fixture": "Prepared research, devices and construction stock; real miner and isolated physical ore transfers. Not earned campaign.",
+      "rows": [
+        {
+          "input": "CDP touch",
+          "lang": "ja",
+          "actual": {
+            "iron": 1,
+            "journey": 3,
+            "links": 5
+          },
+          "checks": [
+            "real miner ore stops at reversed eastern join",
+            "selected route reports blockage",
+            "one reversal repairs same paid belt without inventory charge",
+            "physical loader and five joined segments deliver original ore",
+            "reload keeps corrected flow",
+            "hopper -> platform -> six joined belts delivers physical ore",
+            "magnet feeds same hopper physically",
+            "no overflow or JS errors"
+          ]
+        }
+      ]
+    },
+    "equipment": {
+      "fixture": "Prepared equipment recipes and materials; native pointer integration, not earned progression",
+      "rows": [
+        {
+          "lang": "ja",
+          "input": "mouse",
+          "status": "passed",
+          "checks": [
+            "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+            "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+            "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+            "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+            "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+            "Cancel beside the ghost spends nothing and exits all construction",
+            "Missing materials are explained at the disabled local confirmation",
+            "Releasing a held preview outside the ground neither places nor charges",
+            "Field-local exit is available before the first placement click",
+            "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+            "Escape during a wind drag restores and saves the old direction, ignoring late release",
+            "Same local exit puts broom and magnet away",
+            "Reload discards unpaid previews and preserves built equipment"
+          ],
+          "errors": []
+        },
+        {
+          "lang": "ja",
+          "input": "CDP touch",
+          "status": "passed",
+          "checks": [
+            "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+            "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+            "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+            "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+            "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+            "Cancel beside the ghost spends nothing and exits all construction",
+            "Missing materials are explained at the disabled local confirmation",
+            "Releasing a held preview outside the ground neither places nor charges",
+            "Field-local exit is available before the first placement click",
+            "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+            "Same local exit puts broom and magnet away",
+            "Reload discards unpaid previews and preserves built equipment"
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "iron": {
+      "fixture": "Prepared base research, upgrade stock and separate motion fixtures; real new research/crafting/harvest/delivery/placement/input",
+      "rows": [
+        {
+          "lang": "ja",
+          "input": "mouse",
+          "status": "passed",
+          "worker": {
+            "x": 1190.0000276036812,
+            "y": 655.0000074333507,
+            "node": "iron",
+            "interval": 6,
+            "cooldown": 11.650099999999998
+          },
+          "attracted": {
+            "moved": 85,
+            "pulling": true,
+            "drops": [
+              {
+                "type": "wood",
+                "x": 500,
+                "y": 550,
+                "count": 1
+              },
+              {
+                "type": "stone",
+                "x": 500,
+                "y": 550,
+                "count": 1
+              },
+              {
+                "type": "iron",
+                "x": 516.4957436563678,
+                "y": 550.0000084483362,
+                "count": 1
+              }
+            ]
+          },
+          "speed": {
+            "base": 6.75,
+            "motor": 9.112499999999955,
+            "ratio": 1.3499999999999932
+          },
+          "checks": [
+            "Japanese forced and language selector hidden",
+            "research reveals two ore sources once; original nodes unchanged",
+            "separate magnet research and crafting costs",
+            "iron harvested and delivered with real pointer input",
+            "miner placed by UI mines real iron at double interval",
+            "held magnet moves only iron by ground physics",
+            "magnet warehouse delivery and physical belt handoff each credit one ore",
+            "broom/magnet/build mode exclusions",
+            "both iron upgrades paid exactly",
+            "actual conveyor movement +35%",
+            "reload preserves sources, stock and upgrades",
+            "no overflow or JS errors"
+          ]
+        },
+        {
+          "lang": "ja",
+          "input": "CDP touch",
+          "status": "passed",
+          "worker": {
+            "x": 1189.9999565211788,
+            "y": 654.9999687155471,
+            "node": "iron",
+            "interval": 6,
+            "cooldown": 11.699999999999998
+          },
+          "attracted": {
+            "moved": 85,
+            "pulling": true,
+            "drops": [
+              {
+                "type": "wood",
+                "x": 500,
+                "y": 550,
+                "count": 1
+              },
+              {
+                "type": "stone",
+                "x": 500,
+                "y": 550,
+                "count": 1
+              },
+              {
+                "type": "iron",
+                "x": 517.1547519514551,
+                "y": 550.0000047658507,
+                "count": 1
+              }
+            ]
+          },
+          "speed": {
+            "base": 6.75,
+            "motor": 9.112499999999955,
+            "ratio": 1.3499999999999932
+          },
+          "checks": [
+            "Japanese forced and language selector hidden",
+            "research reveals two ore sources once; original nodes unchanged",
+            "separate magnet research and crafting costs",
+            "iron harvested and delivered with real pointer input",
+            "miner placed by UI mines real iron at double interval",
+            "held magnet moves only iron by ground physics",
+            "magnet warehouse delivery and physical belt handoff each credit one ore",
+            "broom/magnet/build mode exclusions",
+            "both iron upgrades paid exactly",
+            "actual conveyor movement +35%",
+            "reload preserves sources, stock and upgrades",
+            "no overflow or JS errors"
+          ]
+        }
+      ]
+    },
+    "recovery": {
+      "fixture": "Prepared checkpoint results and research stock; not a new-save campaign",
+      "rows": [
+        {
+          "lang": "ja",
+          "input": "mouse",
+          "status": "passed",
+          "checks": [
+            "Wave 3 and 6 hold through reload until Ready",
+            "Pending placement disables Ready",
+            "Ready starts real 90-second preparation",
+            "Capped construction explains the limit",
+            "Next manual drag joins at the highlighted end; exact material costs preserved",
+            "Green loader preview on a belt places the loader; existing machines remain selectable",
+            "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+          ],
+          "errors": []
+        },
+        {
+          "lang": "ja",
+          "input": "CDP touch",
+          "status": "passed",
+          "checks": [
+            "Wave 3 and 6 hold through reload until Ready",
+            "Pending placement disables Ready",
+            "Ready starts real 90-second preparation",
+            "Capped construction explains the limit",
+            "Next manual drag joins at the highlighted end; exact material costs preserved",
+            "Green loader preview on a belt places the loader; existing machines remain selectable",
+            "Loss notice reopens the result, retry holds the clock, and the advised armour policy applies without spending stock"
+          ],
+          "errors": []
+        }
+      ]
+    }
+  },
+  "nearby_food_checks": [
+    "14Gでは購入無効",
+    "30Gから2回購入でG0・食料10",
+    "続く3→6人への増員で木36・石18・食料9を別途消費",
+    "Gだけの変更でも財布・購入可否を更新",
+    "日本語マウス・CDPタッチで成功"
+  ],
+  "source_archives": {
+    "identical": true,
+    "sha256": "b2167ae19fed73e87d4c475aafc67d987995a37d8c94b6947342402968d74fb0",
+    "bytes": 691600,
+    "members_verified": 229,
+    "private_checkpoints_included": false
+  },
+  "preview_manifest_verified": true,
+  "publication": {
+    "status": "未確認・main反映後に別途確認する",
+    "expected_version": "20261030-logistics-recovery-r1"
+  },
+  "limitations": [
+    "実機タッチではなくCDPエミュレーション",
+    "独立レビュー未実施",
+    "全編成・高脅威・長時間混雑は未検証"
+  ]
+}

@@ -58,3 +58,5 @@ body.outpost-game .expedition-dialog{width:min(96vw,900px);max-width:900px;max-h
 .expedition-slot.is-sealed{opacity:.55;border-style:dashed;background:#2a2620;cursor:default}.expedition-sealed-note{color:#f3b98a!important}
 @media(max-width:680px){.expedition-heat{padding:10px 9px;margin:10px 0}.expedition-heat-options{grid-template-columns:1fr 1fr}.expedition-heat-option{padding:7px 6px 7px 30px;font-size:11px}.expedition-heat-option small{font-size:9px}.expedition-heat>p{font-size:10px}}
 .expedition-heat-sealed{margin:8px 0 0!important;padding:6px 9px;border-radius:7px;background:#5a2e1c;color:#ffd2a6!important;font-weight:700}
+.expedition-training-food{margin-top:10px;padding-top:10px;border-top:1px solid #79916b66}
+.expedition-training-food p{margin:0 0 8px;font-size:12px;line-height:1.6}

@@ -6,6 +6,8 @@
  function nearest(points,p){let best=null,start=0;for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],dx=b.x-a.x,dy=b.y-a.y,l=Math.hypot(dx,dy);if(!l)continue;const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(l*l))),x=a.x+dx*t,y=a.y+dy*t,d=Math.hypot(p.x-x,p.y-y);if(!best||d<best.distance)best={x,y,distance:d,along:start+l*t,segment:i};start+=l;}return best;}
  function at(points,s){s=Math.max(0,s);for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],l=distance(a,b);if(s<=l&&l)return{x:a.x+(b.x-a.x)*s/l,y:a.y+(b.y-a.y)*s/l};s-=l;}return {...points.at(-1)};}
  const oriented=link=>link.kind==='conveyor'?link.points:homeFirst(link.points);
+ // Re-aim the existing paid belt. Riding items keep their positions and identity.
+ function reverse(link){if(!Array.isArray(link?.points)||link.points.length<2)return false;link.points=oriented(link).slice().reverse().map(p=>({...p}));link.kind='conveyor';return true;}
  function contact(links,p,radius=WIDTH/2){let hit=null;for(const link of links){if(!link.points||link.points.length<2)continue;const points=oriented(link),q=nearest(points,p);if(q&&q.distance<=radius&&(!hit||q.distance<hit.distance))hit={...q,points,link};}return hit;}
  const cost=points=>Math.max(1,Math.ceil((length(points)-.001)/48));
  // Wooden conveyor (M4): one belt is at most MAX_LENGTH long; farther routes join two belts.
@@ -41,7 +43,7 @@
   if(!Number.isFinite(point?.x)||!Number.isFinite(point?.y)||!contact(links,point)&&!platformAt(platforms,point))return 'manual';
   if(!Number.isFinite(speed)||speed<=0)return 'unknown';
   const distance=links.reduce((n,l)=>n+length(oriented(l)),0)+platforms.reduce((n,p)=>n+2*Math.hypot(p.w,p.h),0)+WIDTH*links.length+100;
-  const probe=dt=>{let item={x:point.x,y:point.y};const visited=new Set(),budget=Math.min(20000,Math.ceil(2*distance/(speed*dt))+120);
+  const probe=dt=>{let item={x:point.x,y:point.y,...(point.beltId!=null?{beltId:point.beltId}:{})};const visited=new Set(),budget=Math.min(20000,Math.ceil(2*distance/(speed*dt))+120);
    for(let i=0;i<budget;i++){const key=[item.beltId,item.platformKey,Math.round(item.x*1000),Math.round(item.y*1000)].join(':');if(visited.has(key))return 'blocked';visited.add(key);item=step(links,platforms,item,dt,speed);if(item.arrived)return 'warehouse';if(!item.onConveyor)return 'blocked';}
    return 'unknown';};
   // Platform pickup can depend on frame size. Never promise delivery when normal frame sizes disagree.
@@ -90,7 +92,7 @@
   memo.set(link,r);return r;
  }
  function graphProbe(G,point,probe){
-  const dt=PROBES[probe],speed=G.speed,sd=Math.max(0,dt*speed),links=G.links,platforms=G.platforms;let item={x:point.x,y:point.y};const visited=new Set(),budget=Math.min(20000,Math.ceil(2*G.distanceBudget/(speed*dt))+120);
+  const dt=PROBES[probe],speed=G.speed,sd=Math.max(0,dt*speed),links=G.links,platforms=G.platforms;let item={x:point.x,y:point.y,...(point.beltId!=null?{beltId:point.beltId}:{})};const visited=new Set(),budget=Math.min(20000,Math.ceil(2*G.distanceBudget/(speed*dt))+120);
   for(let i=0;i<budget;i++){const key=[item.beltId,item.platformKey,Math.round(item.x*1000),Math.round(item.y*1000)].join(':');if(visited.has(key))return 'blocked';visited.add(key);item=step(links,platforms,item,dt,speed);if(item.arrived)return 'warehouse';if(!item.onConveyor)return 'blocked';
    if(item.blocked||item.platformKey!=null||item.beltId==null)continue;const link=G.byKey.get(String(item.beltId));if(!link||G.tangled(link))continue;const ps=G.pts.get(link),q=nearest(ps,item);if(!q||q.distance>1e-7||q.along<=1)continue;
    const fate=headFate(G,link,probe,new Set());if(fate!=='sim')return fate;
@@ -124,5 +126,5 @@
   return released;
  }
 
- return {hitLink,removalRefund,releaseItems,deliveryStatus,deliveryStatusLegacy,MAX_LENGTH,WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
+ return {reverse,hitLink,removalRefund,releaseItems,deliveryStatus,deliveryStatusLegacy,MAX_LENGTH,WIDTH,SPEED,HOME,distance,length,homeFirst,oriented,nearest,at,contact,cost,stretch,platformAt,outlet,downstream,step};
 });
