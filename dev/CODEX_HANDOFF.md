@@ -35,7 +35,7 @@
 
 試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-cabin-worksite-r1&slot=new-game
 
-公開配信の最終結果はCHECKSへ追記する。
+公開配信を確認済み。更新14ファイルがUTF8・LF正規化後に検証ビルドと一致し、公開の3画面サイズで小屋・研究・9枠・初期240個・はみ出しなしを確認。通常獲得2波セーブを最終UIで再開し、自動採集と実物搬送、下の枠から送風機の研究木4＋設置木4を支払う操作、選択継続も確認した。既存セーブは継続。
 
 ## 再開・保存
 
@@ -51,6 +51,8 @@ python3 -m http.server 4427 --bind 127.0.0.1
 node tools/qa_cabin_v15.cjs
 node tools/qa_hotbar_selection_v15.cjs
 node tools/qa_cabin_earned_v15.cjs
+# QA_RESUMEで上記の通常獲得2波セーブを指定すると、最終9枠での継続確認
+node tools/qa_cabin_public_v15.cjs
 node tools/qa_equipment_flow.cjs
 ```
 

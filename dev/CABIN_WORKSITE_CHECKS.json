@@ -323,7 +323,7 @@
     ],
     "errors": []
   },
-  "earned_note": "空のセーブ・通常時間・実UI入力。小屋からの強化、雇用、配置、出撃を通して第2波まで防衛。この後に3枠の採集道具を1枠の自動切替へ変更した。自動切替と全道具の選択は別フィクスチャで確認。",
+  "earned_note": "空のセーブ・通常時間・実UI入力。小屋からの強化、雇用、配置、出撃を通して第2波まで防衛。この後に3枠の採集道具を1枠の自動切替へ変更した。自動切替と全道具の選択は別フィクスチャで確認。 最後に通常獲得の第2波セーブを最終UIで再開し、1枠のまま木と石を採集・実物運搬、送風機の研究木4＋設置木4を支払って配置し、枠の選択が残ることを確認した。",
   "capacity": {
     "before": [
       12,
@@ -348,11 +348,254 @@
     "price_and_saved_levels_preserved": true
   },
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "commit": "7b53c9984184c9f5357090f03c43f4745a2cb806",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-cabin-worksite-r1&slot=new-game",
+    "workflow_run": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/41204770701",
+    "workflow_conclusion": "success",
+    "payload": {
+      "commit": "7b53c9984184c9f5357090f03c43f4745a2cb806",
+      "canonical": "UTF8 LF",
+      "files": [
+        {
+          "file": "preview/build.json",
+          "utf8_lf_sha256": "8a32f9c02a68787d317b1e480f3133404e72f406f5e387775719f63d54b998e4"
+        },
+        {
+          "file": "preview/cabin-ui.css",
+          "utf8_lf_sha256": "4e78c34ff1d265ff9dcbee4c6dab6031a8d4cd63e8f80ac8438651b543afb526"
+        },
+        {
+          "file": "preview/cabin-ui.js",
+          "utf8_lf_sha256": "af7ee58f0eba512ba0b62601f60d176ea63eea024c8945e6234e6057263f6623"
+        },
+        {
+          "file": "preview/expedition-ui.js",
+          "utf8_lf_sha256": "70f7d4a80bc37b26ac2f764fadc88b7be21c28409ebe6abc7cf467b94e14cd17"
+        },
+        {
+          "file": "preview/harvest-skill-core.js",
+          "utf8_lf_sha256": "a5f6cf82e47ca9a388871face6ba90f212cf64d5303047d4459d0da08abc7b73"
+        },
+        {
+          "file": "preview/harvest-skills.js",
+          "utf8_lf_sha256": "4fb7efd23bca671440d8109fb4d34a1763658c628a87a75e9658d5f5f00aa1f8"
+        },
+        {
+          "file": "preview/index.html",
+          "utf8_lf_sha256": "92f8a3a27776c31839b9d282d67a5bd9ffc72803690829775ded72986c8d960d"
+        },
+        {
+          "file": "preview/inventory-core.js",
+          "utf8_lf_sha256": "a12efee26a7bddbc681edbfce81c54ab133e9c5dd50afb3bbe4f5c413272da42"
+        },
+        {
+          "file": "preview/inventory-ui.js",
+          "utf8_lf_sha256": "a25b5372a7e4e0b2312ca98a4a634678df28f5cabadd0c11558eecd18918f7d2"
+        },
+        {
+          "file": "preview/outpost-camp.js",
+          "utf8_lf_sha256": "8f8453b68bca5952f904c8975c1215184e2a3177ba24a27d8629f9b1100c3845"
+        },
+        {
+          "file": "preview/outpost-tutorial.js",
+          "utf8_lf_sha256": "1dceaf1f868aeadcb6214d4a688e910314a29982e15fbc4e026364798d14e842"
+        },
+        {
+          "file": "preview/outpost.js",
+          "utf8_lf_sha256": "d43366b6f42d04ab62b890b3c52ef9e159f8fa77a5a3ffccaa60b38d5b0b790a"
+        },
+        {
+          "file": "preview/placement-controls.js",
+          "utf8_lf_sha256": "2f3aa707bd49cd4b3affe8bc46fe5116c49664e42d0f4390d68f4c3d2441f3d3"
+        },
+        {
+          "file": "preview/progression-integration.js",
+          "utf8_lf_sha256": "316e1edccb96e4da5ff7a303ffa25a76224730bc521510b04b8d92855280235f"
+        }
+      ]
+    },
+    "browser_smoke": [
+      {
+        "width": 1280,
+        "height": 900,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 62.099998474121094,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 7.999509811401367,
+        "errors": []
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 47.76197814941406,
+        "errors": []
+      }
+    ]
   },
   "limitations": [
     "実機タッチ・全端末の描画性能は未検証",
     "今回のUIで30波を再試遊したとは扱わない。前版で通常獲得30波完走済み",
     "セーブ削除なし。公開版は同じslot=new-gameを継続する"
-  ]
+  ],
+  "earned_hotbar_continuation": {
+    "fixture": false,
+    "normalTime": true,
+    "grants": false,
+    "resumedFromEarnedWave": 2,
+    "rows": [
+      {
+        "event": "resume-earned-current-ui",
+        "inventory": {
+          "wood": 10,
+          "stone": 2
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "cleared": 2,
+        "wave": 2,
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        },
+        "cap": 240,
+        "recipes": [
+          "woodcutter",
+          "arch"
+        ]
+      },
+      {
+        "event": "automatic-gather-and-real-delivery",
+        "inventory": {
+          "wood": 26,
+          "stone": 2
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "cleared": 2,
+        "wave": 2,
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        },
+        "cap": 240,
+        "recipes": [
+          "woodcutter",
+          "arch"
+        ]
+      },
+      {
+        "event": "earned-hotbar-paid-research-and-placement",
+        "inventory": {
+          "wood": 18,
+          "stone": 2
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "cleared": 2,
+        "wave": 2,
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        },
+        "cap": 240,
+        "recipes": [
+          "woodcutter",
+          "arch",
+          "blower"
+        ]
+      }
+    ],
+    "errors": []
+  }
 }
