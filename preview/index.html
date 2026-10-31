@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script src="playtest-boot.js?v=a77d25e845de"></script>
+<script src="playtest-boot.js?v=9b005076ee39"></script>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect x=%273%27 y=%2712%27 width=%2726%27 height=%2712%27 rx=%273%27 fill=%27%23c4ae76%27/%3E%3C/svg%3E">
 <!-- Google tag (gtag.js) -->
@@ -565,14 +565,15 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="harvest-skills.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="outpost.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="ground-tools.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="compact-ui.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="outpost-tutorial.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="expedition-ui.css?v=20261031-rising-roads-r2">
-<link rel="stylesheet" href="field-ui.css?v=20261031-rising-roads-r2">
+<link rel="stylesheet" href="rework.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="outpost.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="ground-tools.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="compact-ui.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="outpost-tutorial.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="expedition-ui.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="field-ui.css?v=20261031-inventory-map-r1">
+<link rel="stylesheet" href="inventory-ui.css?v=20261031-inventory-map-r1">
 </head>
 <body>
 <div id="titleScreen">
@@ -580,7 +581,7 @@
   <div class="ts-kicker">Spacebar</div>
   <div class="ts-title">Mythos Slayers <em>II</em></div>
   <div class="ts-rule"><i></i></div>
-  <div class="ts-prompt">言語を選択 ・ Select Language ・ 选择语言</div>
+  <div class="ts-prompt">集めて、運んで、守り抜こう。</div>
   <div class="ts-langs">
     <div class="ts-lang" data-lang="ja" tabindex="0">日本語<span class="sub">Japanese</span></div>
     <div class="ts-lang" data-lang="en" tabindex="0">English<span class="sub">English</span></div>
@@ -696,17 +697,18 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261031-rising-roads-r2"></script>
-<script src="progression-core.js?v=20261031-rising-roads-r2"></script>
-<script src="field-core.js?v=20261031-rising-roads-r2"></script>
-<script src="materials-core.js?v=20261031-rising-roads-r2"></script>
-<script src="gadget-core.js?v=20261031-rising-roads-r2"></script>
-<script src="campaign-core.js?v=20261031-rising-roads-r2"></script>
-<script src="outpost-core.js?v=20261031-rising-roads-r2"></script>
-<script src="supply-core.js?v=20261031-rising-roads-r2"></script>
-<script src="expedition-core.js?v=20261031-rising-roads-r2"></script>
-<script src="game-core.js?v=20261031-rising-roads-r2"></script>
-<script src="forest-audio.js?v=20261031-rising-roads-r2"></script>
+<script src="harvest-skill-core.js?v=20261031-inventory-map-r1"></script>
+<script src="progression-core.js?v=20261031-inventory-map-r1"></script>
+<script src="field-core.js?v=20261031-inventory-map-r1"></script>
+<script src="materials-core.js?v=20261031-inventory-map-r1"></script>
+<script src="gadget-core.js?v=20261031-inventory-map-r1"></script>
+<script src="inventory-core.js?v=20261031-inventory-map-r1"></script>
+<script src="campaign-core.js?v=20261031-inventory-map-r1"></script>
+<script src="outpost-core.js?v=20261031-inventory-map-r1"></script>
+<script src="supply-core.js?v=20261031-inventory-map-r1"></script>
+<script src="expedition-core.js?v=20261031-inventory-map-r1"></script>
+<script src="game-core.js?v=20261031-inventory-map-r1"></script>
+<script src="forest-audio.js?v=20261031-inventory-map-r1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -2101,28 +2103,30 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261031-rising-roads-r2"></script>
-<script src="army-view.js?v=20261031-rising-roads-r2"></script>
+<script src="army-sim.js?v=20261031-inventory-map-r1"></script>
+<script src="army-view.js?v=20261031-inventory-map-r1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261031-rising-roads-r2"></script>
-<script src="ground-physics.js?v=20261031-rising-roads-r2"></script>
-<script src="supply-factory.js?v=20261031-rising-roads-r2"></script>
-<script src="camp-training.js?v=20261031-rising-roads-r2"></script>
-<script src="rail-core.js?v=20261031-rising-roads-r2"></script>
-<script src="conveyor-core.js?v=20261031-rising-roads-r2"></script>
-<script src="loader-core.js?v=20261031-rising-roads-r2"></script>
-<script src="loader-device.js?v=20261031-rising-roads-r2"></script>
-<script src="outpost-camp.js?v=20261031-rising-roads-r2"></script>
-<script src="outpost-tutorial-core.js?v=20261031-rising-roads-r2"></script>
-<script src="outpost-tutorial.js?v=20261031-rising-roads-r2"></script>
-<script src="outpost.js?v=20261031-rising-roads-r2"></script>
-<script src="rework.js?v=20261031-rising-roads-r2"></script>
-<script src="harvest-skills.js?v=20261031-rising-roads-r2"></script>
-<script src="placement-controls.js?v=20261031-rising-roads-r2"></script>
-<script src="expedition-ui.js?v=20261031-rising-roads-r2"></script>
-<script src="expedition-integration.js?v=20261031-rising-roads-r2"></script>
-<script src="progression-integration.js?v=20261031-rising-roads-r2"></script>
-<script src="field-ui.js?v=20261031-rising-roads-r2"></script>
-<script src="ore-ui.js?v=20261031-rising-roads-r2"></script>
+<script src="battle-control.js?v=20261031-inventory-map-r1"></script>
+<script src="ground-physics.js?v=20261031-inventory-map-r1"></script>
+<script src="supply-factory.js?v=20261031-inventory-map-r1"></script>
+<script src="camp-training.js?v=20261031-inventory-map-r1"></script>
+<script src="rail-core.js?v=20261031-inventory-map-r1"></script>
+<script src="conveyor-core.js?v=20261031-inventory-map-r1"></script>
+<script src="loader-core.js?v=20261031-inventory-map-r1"></script>
+<script src="loader-device.js?v=20261031-inventory-map-r1"></script>
+<script src="outpost-camp.js?v=20261031-inventory-map-r1"></script>
+<script src="outpost-tutorial-core.js?v=20261031-inventory-map-r1"></script>
+<script src="outpost-tutorial.js?v=20261031-inventory-map-r1"></script>
+<script src="outpost.js?v=20261031-inventory-map-r1"></script>
+<script src="rework.js?v=20261031-inventory-map-r1"></script>
+<script src="harvest-skills.js?v=20261031-inventory-map-r1"></script>
+<script src="placement-controls.js?v=20261031-inventory-map-r1"></script>
+<script src="expedition-ui.js?v=20261031-inventory-map-r1"></script>
+<script src="expedition-integration.js?v=20261031-inventory-map-r1"></script>
+<script src="progression-integration.js?v=20261031-inventory-map-r1"></script>
+<script src="field-navigation.js?v=20261031-inventory-map-r1"></script>
+<script src="field-ui.js?v=20261031-inventory-map-r1"></script>
+<script src="ore-ui.js?v=20261031-inventory-map-r1"></script>
+<script src="inventory-ui.js?v=20261031-inventory-map-r1"></script>
 </body>
 </html>

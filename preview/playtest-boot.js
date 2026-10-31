@@ -2,7 +2,9 @@
 window.__MYTHOS_PLAYTEST__ = true;
 (() => {
   const params = new URLSearchParams(location.search);
-  const namespace = params.has('lab') ? 'mythos_lab:' : params.get('lesson') === '1' ? 'mythos_lesson:' : params.get('lesson') === '2' ? 'mythos_lesson_2:' : '';
+  const profile = params.get('slot');
+  const profilePrefix = profile && /^[a-z0-9-]{1,40}$/.test(profile) ? 'mythos_slot_' + profile + ':' : '';
+  const namespace = profilePrefix || (params.has('lab') ? 'mythos_lab:' : params.get('lesson') === '1' ? 'mythos_lesson:' : params.get('lesson') === '2' ? 'mythos_lesson_2:' : '');
   if (namespace) {
     // A separate practice slot preserves existing play and laboratory saves.
     for (const method of ['getItem', 'setItem', 'removeItem']) {

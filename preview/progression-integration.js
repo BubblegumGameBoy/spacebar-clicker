@@ -8,7 +8,7 @@ window.ProgressionIntegration=(()=>{
  function refresh(){if(typeof S!=='object')return;ProgressionCore.ensure(S);window.SupplyFactory?.ensureFarm?.();if(typeof renderCards==='function')renderCards();if(typeof updateHud==='function')updateHud();window.SupplyFactory?.translate?.();window.OutpostTutorial?.sync?.(true);window.HarvestSkills?.sync?.();if(typeof save==='function')save();}
  function mark(id){const button=document.querySelector('[data-recruit="'+id+'"], [data-equipment="'+id+'"], [data-gadget="'+id+'"]'),card=button?.closest('.card');if(card){card.classList.add('recipe-new-card');setTimeout(()=>card.classList.remove('recipe-new-card'),8000);}return button;}
  window.addEventListener('progression:learned',e=>{if(e.detail?.kind==='project'){if(typeof renderUnits==='function')renderUnits();window.Outpost?.update?.();}refresh();if(e.detail?.recipe){mark(e.detail.recipe);}});
- window.addEventListener('progression:show-card',e=>{refresh();const button=mark(e.detail.recipe);if(button){button.scrollIntoView({block:'center',inline:'center',behavior:'smooth'});button.focus({preventScroll:true});}});
+ window.addEventListener('progression:show-card',e=>{refresh();const button=mark(e.detail.recipe);if(button){window.InventoryUI?.open();button.scrollIntoView({block:'center',inline:'center',behavior:'smooth'});button.focus({preventScroll:true});}});
  // A fresh game deliberately starts with no recipes. Migration runs once for earned legacy cards.
  refresh();
  return {refresh};

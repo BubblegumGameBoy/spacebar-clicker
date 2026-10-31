@@ -134,6 +134,7 @@ window.SupplyFactory=(()=>{
  function harvestSelected(){
   if(!ready||Rework.paused||BattleControl.placement||document.hidden||window.OutpostCamp?.layingRails)return false;
   const current=state(),node=current.nodes.find(n=>n.key===targetKey);if(!node||!node.stock){feedback=tr(node?.type==='food'?'growing':'empty');translate();return false;}
+  if(outpostMode()&&window.InventoryUI&&!InventoryUI.canGather(node.type)){InventoryUI.suggest(node.type);return false;}
   const sequel=outpostMode(),power=sequel?Math.max(1,window.HarvestSkillCore?.effects(S.harvestSkills)?.manualPower||1):1;
   const plan=sequel?SupplyCore.strikePlan(node,power,groundCapacity()-current.drops.length):{applied:true,produced:1,work:0};
   if(!plan.applied){feedback=capacityMessage();blockedUntil=current.time+2;ForestAudio.play('groundBlocked');translate();return false;}
