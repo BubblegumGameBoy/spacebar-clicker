@@ -34,7 +34,7 @@ window.OutpostTutorial=(()=>{
  function delivered(...args){OutpostTutorialCore.delivered(S,...args);signature='';queueMicrotask(()=>sync(true));}
  function raidAllowed(){return true;}
  function targetSkill(){const q=snapshot();return q.skill||null;}
- function action(){const q=snapshot(),cue=visualCue();
+ function action(){const q=snapshot(),cue=visualCue();if(window.CabinUI&&(cue.unit||cue.kind==='blower'||cue.kind==='fence')){CabinUI.open();return;}
   if(cue.kind==='ready')return;
   if(cue.kind==='upgrade'){window.HarvestSkills?.open(q.skill);return;}
   if(cue.unit){document.querySelector('[data-recruit="'+cue.unit+'"]')?.click();document.getElementById('field').scrollIntoView({block:'start',behavior:'smooth'});sync(true);return;}
@@ -56,7 +56,7 @@ window.OutpostTutorial=(()=>{
   carry1:[['両手で運ぶ','Both hands','双手搬运'],['持てる資材 1 → 2個','Carry 1 → 2 items','携带量 1 → 2个']],
   carry2:[['大きなかご','Large basket','大篮子'],['持てる資材 2 → 4個','Carry 2 → 4 items','携带量 2 → 4个']],
   hand1:[['鋭い刃先','Sharpened tools','锋利刃口'],['採集力 1 → 2：木3打 → 2打','Gathering power 1 → 2: wood 3 hits → 2','采集力1 → 2：木材3次 → 2次']],
-  storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 12 → 24個','Ground items 12 → 24','地面物资上限 12 → 24个']],
+  storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 240 → 360個','Ground items 12 → 24','地面物资上限 12 → 24个']],
   blower:[['送風機で運ぶ','Transport with wind','用风力搬运'],['落下先に風を当て、矢印を倉庫へ向ける','Cover the drop point with wind; aim toward the warehouse','让风覆盖掉落点，箭头朝向仓库']],
   defenders:[['弓兵を2人配置','Place two archers','放置两名弓箭手'],['上の道に射程を重ねて迎え撃つ','Cover the upper road with their range','让射程覆盖上路']],
   defend:[['敵を迎え撃つ','Defend the camp','守卫营地'],['敵をクリック・Spaceで援護','Click enemies or press Space to help','点击敌人或按空格支援']]
@@ -75,7 +75,7 @@ window.OutpostTutorial=(()=>{
   panel.querySelector('.onboarding-label').textContent=view.title;panel.querySelector('.onboarding-note').textContent=view.note;
   const costs=panel.querySelector('.onboarding-costs');costs.replaceChildren();
   for(const type of ['wood','stone'])if(view.cost?.[type]>0){const have=Math.floor(inventory[type]||0),need=view.cost[type],span=document.createElement('span');span.classList.toggle('is-met',have>=need);span.innerHTML=SupplyFactory.icon(type);const text=document.createElement('b');text.textContent=have+' / '+need;span.append(text);span.setAttribute('aria-label',local(type==='wood'?['木材','Wood','木材']:['石材','Stone','石材'])+' '+have+' / '+need);costs.append(span);}
-  const button=panel.querySelector('button');button.hidden=!cue.button;button.textContent=view.button;button.setAttribute('aria-label',view.button);panel.classList.toggle('has-action',!!cue.button);
+  const button=panel.querySelector('button');button.hidden=!cue.button;const actionLabel=window.CabinUI&&!cue.basic&&(cue.unit||cue.kind==='blower'||cue.kind==='fence')?'小屋をひらく':view.button;button.textContent=actionLabel;button.setAttribute('aria-label',actionLabel);panel.classList.toggle('has-action',!!cue.button);
   document.querySelectorAll('.lesson-target').forEach(el=>el.classList.remove('lesson-target'));
   if(!panel.hidden)document.getElementById('campaignGoal').hidden=true;
  }

@@ -5,7 +5,7 @@ window.PlacementControls=(()=>{
  const names={loader:['積み込み機','Loader','装载机'],allies:['仲間','Ally','伙伴'],woodcutter:['木こり','Lumberjack','伐木工'],miner:['採掘師','Miner','矿工'],farmer:['農家','Farmer','农夫'],ballista:['バリスタ隊','Ballista crew','弩炮队'],arch:['弓兵','Archer','弓箭手'],sword:['剣士','Swordsman','剑士'],belt:['コンベア','Conveyor','传送带'],platform:['受け土台','Receiving platform','接收台'],blower:['送風機','Blower','鼓风机'],fence:['誘導柵','Guide fence','导流栅栏'],hopper:['集積口','Hopper','集料斗']};
  let bar=null,guide=null,exit=null,touch=null,lastTouch=null;
  const kind=()=>window.OutpostCamp?.buildingKind||(window.BattleControl?.placement?'allies':'gather');
- function finish(){window.FieldUI?.equip(false);window.OreUI?.equip(false);window.OutpostCamp?.clearSelection?.();window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);sync();}
+ function finish(){window.FieldUI?.equip(false);window.OreUI?.equip(false);window.OutpostCamp?.clearSelection?.();window.OutpostCamp?.cancelRails?.();window.OutpostCamp?.cancelCarry?.();window.SupplyFactory?.stopHold?.();window.BattleControl?.setPlacement(false);sync();window.dispatchEvent?.(new Event('inventory:finish'));}
  function choose(id){if(id==='gather'){finish();return true;}if(id==='allies'){const ok=window.BattleControl?.beginPlacement();sync();return ok;}let ok;if(id==='belt')ok=window.OutpostCamp?.beginRail();else if(id==='platform')ok=window.OutpostCamp?.buildPlatform();else if(id==='blower'||id==='fence'||id==='hopper'||id==='loader')ok=window.OutpostCamp?.buildDevice(id);else return false;sync();return ok!==false;}
  function setText(el,value){if(el&&el.textContent!==value)el.textContent=value;}
  function sync(){

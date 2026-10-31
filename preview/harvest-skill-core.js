@@ -4,7 +4,7 @@
  const branches=['carry','hand','route','storage'],MAX_TIER=6;
  const prices={carry:[[10,0],[30,0],[60,0],[120,40],[240,100],[480,240]],hand:[[10,0],[30,6],[70,25],[140,60],[280,140],[560,300]],route:[[16,12],[50,35],[100,70],[200,140],[400,280],[800,560]],storage:[[8,2],[24,10],[60,25],[120,60],[240,140],[480,300]]};
  const costs=Object.fromEntries(branches.map(branch=>[branch,prices[branch].map(([wood,stone])=>({wood,stone}))]));
- const values={groundCapacity:[12,24,48,80,120,180,240],carryCapacity:[1,2,4,6,8,12,16],manualInterval:[1,.8,.6,.5,.4,.3,.25],manualPower:[1,2,3,5,8,12,18],manualHits:[3,2,1,1,1,1,1],manualYield:[1,2,3,4,5,6,8],cartSpeed:[1,1.25,1.5,1.8,2.1,2.5,3]};
+ const values={groundCapacity:[240,360,500,650,800,1000,1200],carryCapacity:[1,2,4,6,8,12,16],manualInterval:[1,.8,.6,.5,.4,.3,.25],manualPower:[1,2,3,5,8,12,18],manualHits:[3,2,1,1,1,1,1],manualYield:[1,2,3,4,5,6,8],cartSpeed:[1,1.25,1.5,1.8,2.1,2.5,3]};
  const level=n=>Number.isInteger(n)?Math.max(0,Math.min(MAX_TIER,n)):0;
  function migrate(raw){return Object.fromEntries(branches.map(id=>[id,level(raw?.[id])]));}
  function effects(raw){const s=migrate(raw);return {groundCapacity:values.groundCapacity[s.storage],carryCapacity:values.carryCapacity[s.carry],manualInterval:values.manualInterval[s.hand],manualPower:values.manualPower[s.hand],manualHits:values.manualHits[s.hand],manualYield:values.manualYield[s.hand],cartSpeed:values.cartSpeed[s.route]};}
