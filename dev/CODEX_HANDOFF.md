@@ -21,7 +21,7 @@
 
 ## 検証と公開
 
-詳細：`dev/RISING_ROADS.md`、`dev/RISING_ROADS_CHECKS.json`。通常獲得プレイと準備済み条件を分ける。Node339件成功。全30波の構成・10ボスの撃破／突破時敗北・旧セーブ・区間停止・初回Readyの起動順を確認した。ブラウザー結果と公開配信の状態は CHECKS.json を参照。
+詳細：`dev/RISING_ROADS.md`、`dev/RISING_ROADS_CHECKS.json`。通常獲得プレイと準備済み条件を分ける。Node339件成功。全30波の構成・10ボスの撃破／突破時敗北・旧セーブ・区間停止・初回Readyの起動順を確認した。公開URLの新規contextで30波・初回準備待ち・小屋・道程10区間を確認。配信された主要13ファイルは改行をLFに揃えて検証済みビルドと一致。詳細は CHECKS.json を参照。
 
 試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-rising-roads-r2
 

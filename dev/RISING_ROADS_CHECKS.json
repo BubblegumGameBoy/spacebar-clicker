@@ -333,8 +333,136 @@
   },
   "preview_manifest_verified": true,
   "publication": {
-    "status": "main反映後に確認",
-    "expected_version": "20261031-rising-roads-r2"
+    "status": "confirmed",
+    "version": "20261031-rising-roads-r2",
+    "implementation_commit": "84152dd356673d86a653af8097505f28dbd2dd3a",
+    "pages_deployment": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/41151250578",
+    "pages_conclusion": "success",
+    "verified_at_jst": "2026-10-31T09:39:30.059121+09:00",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-rising-roads-r2",
+    "ruleset": "outpost-30-rising-roads-v13",
+    "comparison": "UTF-8 with CRLF normalized to LF; Git deploy line endings may differ",
+    "files": [
+      {
+        "file": "index.html",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "638d0757bbc7fa4e5ab751229a70c906868b640c98d76635304aa407825681fc",
+        "local_sha256": "193d449c91b2e4d27de46a51d0645f42f5680fe840a92fd49ebf2a3fb9be7c6a",
+        "canonical_sha256": "638d0757bbc7fa4e5ab751229a70c906868b640c98d76635304aa407825681fc"
+      },
+      {
+        "file": "build.json",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "4673d045ff0ee670c87cb1242ae545dc6438d28d9a40e517c535a92b575288af",
+        "local_sha256": "02b3d9bf56f562c4f388a394000503a73dbb9f93d28016153a29b58103ae45a7",
+        "canonical_sha256": "4673d045ff0ee670c87cb1242ae545dc6438d28d9a40e517c535a92b575288af"
+      },
+      {
+        "file": "campaign-core.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "494d2585bd2a9958dab3670fa3652aa66cbf1e2060eec64b146d01d83e3c4798",
+        "local_sha256": "581ea55a3f021f96a908ada68bf6114a407d34f68510336fee8ecd5bbdd1a01d",
+        "canonical_sha256": "494d2585bd2a9958dab3670fa3652aa66cbf1e2060eec64b146d01d83e3c4798"
+      },
+      {
+        "file": "expedition-core.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "b4afa2f4463c12d7f00bb183ef6e7bf546a7d73a28b0c80090ecb75284893767",
+        "local_sha256": "3c9af829138004f44d3d54be996e726b587a5b2c3da25eb73998c9e0827d5ad7",
+        "canonical_sha256": "b4afa2f4463c12d7f00bb183ef6e7bf546a7d73a28b0c80090ecb75284893767"
+      },
+      {
+        "file": "expedition-ui.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "8c7f6860cb998208bca75077f2f4fd84e72076b73ae242ae38cd4d57a8f235d4",
+        "local_sha256": "fc6867beeab4c9e63746fa64c8d5984a84811441cecaa3244c1788d571b534d0",
+        "canonical_sha256": "8c7f6860cb998208bca75077f2f4fd84e72076b73ae242ae38cd4d57a8f235d4"
+      },
+      {
+        "file": "field-core.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "59f3af9295b02e90edb9919eaa7a85afd75e28a350ecc10201d6eb6d73efe86d",
+        "local_sha256": "e14a3870cbe466620325ffe904326af3b3971557bd920f7ce68e39e035ff7772",
+        "canonical_sha256": "59f3af9295b02e90edb9919eaa7a85afd75e28a350ecc10201d6eb6d73efe86d"
+      },
+      {
+        "file": "field-ui.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "9eb27a1114730f10463807556a83918118eb1ddb7bbef94d912f739563b52b3a",
+        "local_sha256": "261848373c96702d4bf4520e2dea4028c50f463ca0f54b74c8277b4cae2bfcb9",
+        "canonical_sha256": "9eb27a1114730f10463807556a83918118eb1ddb7bbef94d912f739563b52b3a"
+      },
+      {
+        "file": "game-core.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "76344df2f29061d62fcc984eedf415ff1ed1ba8806a4e97e6f761de9f7fe939a",
+        "local_sha256": "3ff2792ec453425b24a31590662502a9a54855d60d1dcb46717a18517c4f1383",
+        "canonical_sha256": "76344df2f29061d62fcc984eedf415ff1ed1ba8806a4e97e6f761de9f7fe939a"
+      },
+      {
+        "file": "outpost-camp.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "8db78f51a2dc2e71fad9dce57e63be7770a7ab2e44f210b57b1f1733eac3b79c",
+        "local_sha256": "512dc703a0d22432beefd8745b3ca841419439479ca6dcbc50e593999891050c",
+        "canonical_sha256": "8db78f51a2dc2e71fad9dce57e63be7770a7ab2e44f210b57b1f1733eac3b79c"
+      },
+      {
+        "file": "outpost-core.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "73c27513dc59db6e691e1575a365a889dfcdd9b109ef9402f177ece7c4540b7d",
+        "local_sha256": "8e049ce6ad1996507fb73d595173d22e8d2e18af8b4b15826e543a25f8693cd3",
+        "canonical_sha256": "73c27513dc59db6e691e1575a365a889dfcdd9b109ef9402f177ece7c4540b7d"
+      },
+      {
+        "file": "outpost-tutorial.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "20cc6c9ddedbc9e66056ebabaf1695770e5291f6746fe305d3d38a68d1894444",
+        "local_sha256": "4ca291e40427268a59266e40467450630e6660fa464e2c64f404b8b964ba5dd8",
+        "canonical_sha256": "20cc6c9ddedbc9e66056ebabaf1695770e5291f6746fe305d3d38a68d1894444"
+      },
+      {
+        "file": "outpost.css",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "7f31e42090c1eeee5d726eccc4eec898f3c5213297cbb09d3f36c6503bf30efa",
+        "local_sha256": "e750fe5d2caa29d6520b46bf0ad2cfbd7002a4af93ba93ed23d3274708663ead",
+        "canonical_sha256": "7f31e42090c1eeee5d726eccc4eec898f3c5213297cbb09d3f36c6503bf30efa"
+      },
+      {
+        "file": "outpost.js",
+        "http_status": 200,
+        "matches_local_lf": true,
+        "public_sha256": "4969b9d79a6c060684f1d369e7d9ca22d08e907a0a4c898530e0d4efa3732602",
+        "local_sha256": "e6edef4a8d029765fc30d2818dba356ca1e93b0934470799562a331772ed5e12",
+        "canonical_sha256": "4969b9d79a6c060684f1d369e7d9ca22d08e907a0a4c898530e0d4efa3732602"
+      }
+    ],
+    "fresh_browser": {
+      "fresh": true,
+      "state": {
+        "lang": "ja",
+        "waves": 30,
+        "planVersion": 5,
+        "held": true,
+        "prep": 240,
+        "playtest": true,
+        "heading": "次の襲撃 1 / 30",
+        "stage": "森の小屋",
+        "overflow": false
+      },
+      "errors": []
+    }
   },
   "limitations": [
     "通常獲得の全30波完走は未検証",
