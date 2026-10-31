@@ -1,5 +1,5 @@
 {
-  "version": "20261031-rising-roads-r1",
+  "version": "20261031-rising-roads-r2",
   "date_jst": "2026-10-31",
   "baseline_main": "f14767e5abd1ee86e690c8f38d662d96d3ca2925",
   "language": "ja",
@@ -319,12 +319,14 @@
       "旧エンディング既読から30波の新エンディング",
       "再読込後の既読保持とG二重加算なし",
       "画面横はみ出しなし",
-      "ページ例外・要求失敗なし"
+      "ページ例外・要求失敗なし",
+      "新規導入の最初から道程10区間と森の小屋を表示",
+      "初回の停止時計は準備中と明示"
     ]
   },
   "source_archives": {
     "identical": true,
-    "sha256": "5d911cd969aafb9226a274bb64dab277c36669135eeae206f9903c1fd2e36191",
+    "sha256": "4541bd6cdf7b1cbbf2407bcd718d66f15db0bc8305eb034687dd6c79cdd32e98",
     "files": 233,
     "all_members_match_source": true,
     "no_private_storage": true
@@ -332,7 +334,7 @@
   "preview_manifest_verified": true,
   "publication": {
     "status": "main反映後に確認",
-    "expected_version": "20261031-rising-roads-r1"
+    "expected_version": "20261031-rising-roads-r2"
   },
   "limitations": [
     "通常獲得の全30波完走は未検証",

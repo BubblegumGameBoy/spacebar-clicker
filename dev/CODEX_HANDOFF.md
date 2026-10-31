@@ -1,6 +1,6 @@
 # Mythos Slayers II — 最小引き継ぎ
 
-更新：2026-10-31 JST。版名 `20261031-rising-roads-r1`。まずこのファイルだけ読む。既存の編集ソースを上書きしない。過去全文の調査や多数の同時レビュアーは不要。
+更新：2026-10-31 JST。版名 `20261031-rising-roads-r2`。まずこのファイルだけ読む。既存の編集ソースを上書きしない。過去全文の調査や多数の同時レビュアーは不要。
 
 ## 方針
 
@@ -23,7 +23,7 @@
 
 詳細：`dev/RISING_ROADS.md`、`dev/RISING_ROADS_CHECKS.json`。通常獲得プレイと準備済み条件を分ける。Node339件成功。全30波の構成・10ボスの撃破／突破時敗北・旧セーブ・区間停止・初回Readyの起動順を確認した。ブラウザー結果と公開配信の状態は CHECKS.json を参照。
 
-試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-rising-roads-r1
+試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-rising-roads-r2
 
 ## 再開・保存
 
