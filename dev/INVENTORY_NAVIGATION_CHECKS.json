@@ -214,17 +214,475 @@
     "fixture": false,
     "normal_time": true,
     "grants": false,
-    "status": "running",
-    "full_30_wave_completion": false,
-    "note": "別contextの空のセーブから、通常採集・物流建設・支払いで継続試遊中。第1波前に高度な設備・研究を揃える検証方針で、人の所要時間・最小編成の証明ではない。"
+    "input": "UI mouse",
+    "status": "passed",
+    "full_30_wave_completion": true,
+    "cleared": 30,
+    "wins": 30,
+    "losses": 0,
+    "final_gold": 4365,
+    "combat_people": 40,
+    "workers": 9,
+    "conveyors": 5,
+    "blowers": 1,
+    "final_inventory": {
+      "wood": 236,
+      "stone": 228,
+      "food": 1,
+      "iron": 349
+    },
+    "raids": [
+      {
+        "wave": 1,
+        "win": true,
+        "boxes": 3,
+        "kills": 3,
+        "escaped": 0,
+        "gold": 38,
+        "first": true
+      },
+      {
+        "wave": 2,
+        "win": true,
+        "boxes": 3,
+        "kills": 4,
+        "escaped": 0,
+        "gold": 46,
+        "first": true
+      },
+      {
+        "wave": 3,
+        "win": true,
+        "boxes": 3,
+        "kills": 6,
+        "escaped": 0,
+        "gold": 54,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 4,
+        "win": true,
+        "boxes": 3,
+        "kills": 10,
+        "escaped": 0,
+        "gold": 62,
+        "first": true
+      },
+      {
+        "wave": 5,
+        "win": true,
+        "boxes": 3,
+        "kills": 14,
+        "escaped": 0,
+        "gold": 70,
+        "first": true
+      },
+      {
+        "wave": 6,
+        "win": true,
+        "boxes": 3,
+        "kills": 18,
+        "escaped": 0,
+        "gold": 78,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 7,
+        "win": true,
+        "boxes": 3,
+        "kills": 22,
+        "escaped": 0,
+        "gold": 86,
+        "first": true
+      },
+      {
+        "wave": 8,
+        "win": true,
+        "boxes": 3,
+        "kills": 28,
+        "escaped": 0,
+        "gold": 94,
+        "first": true
+      },
+      {
+        "wave": 9,
+        "win": true,
+        "boxes": 3,
+        "kills": 37,
+        "escaped": 0,
+        "gold": 102,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 10,
+        "win": true,
+        "boxes": 3,
+        "kills": 36,
+        "escaped": 0,
+        "gold": 110,
+        "first": true
+      },
+      {
+        "wave": 11,
+        "win": true,
+        "boxes": 3,
+        "kills": 40,
+        "escaped": 0,
+        "gold": 118,
+        "first": true
+      },
+      {
+        "wave": 12,
+        "win": true,
+        "boxes": 3,
+        "kills": 35,
+        "escaped": 0,
+        "gold": 126,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 13,
+        "win": true,
+        "boxes": 3,
+        "kills": 20,
+        "escaped": 0,
+        "gold": 134,
+        "first": true
+      },
+      {
+        "wave": 14,
+        "win": true,
+        "boxes": 3,
+        "kills": 24,
+        "escaped": 0,
+        "gold": 142,
+        "first": true
+      },
+      {
+        "wave": 15,
+        "win": true,
+        "boxes": 3,
+        "kills": 19,
+        "escaped": 0,
+        "gold": 150,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 16,
+        "win": true,
+        "boxes": 3,
+        "kills": 20,
+        "escaped": 0,
+        "gold": 158,
+        "first": true
+      },
+      {
+        "wave": 17,
+        "win": true,
+        "boxes": 3,
+        "kills": 24,
+        "escaped": 0,
+        "gold": 166,
+        "first": true
+      },
+      {
+        "wave": 18,
+        "win": true,
+        "boxes": 3,
+        "kills": 19,
+        "escaped": 0,
+        "gold": 174,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 19,
+        "win": true,
+        "boxes": 3,
+        "kills": 20,
+        "escaped": 0,
+        "gold": 182,
+        "first": true
+      },
+      {
+        "wave": 20,
+        "win": true,
+        "boxes": 3,
+        "kills": 24,
+        "escaped": 0,
+        "gold": 190,
+        "first": true
+      },
+      {
+        "wave": 21,
+        "win": true,
+        "boxes": 3,
+        "kills": 19,
+        "escaped": 0,
+        "gold": 198,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 22,
+        "win": true,
+        "boxes": 3,
+        "kills": 20,
+        "escaped": 0,
+        "gold": 206,
+        "first": true
+      },
+      {
+        "wave": 23,
+        "win": true,
+        "boxes": 3,
+        "kills": 24,
+        "escaped": 0,
+        "gold": 214,
+        "first": true
+      },
+      {
+        "wave": 24,
+        "win": true,
+        "boxes": 3,
+        "kills": 19,
+        "escaped": 0,
+        "gold": 222,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 25,
+        "win": true,
+        "boxes": 3,
+        "kills": 38,
+        "escaped": 0,
+        "gold": 230,
+        "first": true
+      },
+      {
+        "wave": 26,
+        "win": true,
+        "boxes": 3,
+        "kills": 48,
+        "escaped": 0,
+        "gold": 238,
+        "first": true
+      },
+      {
+        "wave": 27,
+        "win": true,
+        "boxes": 3,
+        "kills": 43,
+        "escaped": 0,
+        "gold": 246,
+        "first": true,
+        "chiefDefeated": true
+      },
+      {
+        "wave": 28,
+        "win": true,
+        "boxes": 3,
+        "kills": 20,
+        "escaped": 0,
+        "gold": 254,
+        "first": true
+      },
+      {
+        "wave": 29,
+        "win": true,
+        "boxes": 3,
+        "kills": 24,
+        "escaped": 0,
+        "gold": 262,
+        "first": true
+      },
+      {
+        "wave": 30,
+        "win": true,
+        "boxes": 3,
+        "kills": 19,
+        "escaped": 0,
+        "gold": 270,
+        "first": true,
+        "chiefDefeated": true
+      }
+    ],
+    "note": "空のセーブから実時間のUI入力。第1波前に約27分かけて物流・城・研究を揃える検証方針。第1〜6波で得た金を食料と交換し、第7波前に弓兵20・剣士20へ有料増員。第21波開始時のチェックポイントから最終UIへ再読み込みし、地面の整理を追加。25波前に手動で前進させ、弓兵は回復役・剣士は鎧を優先。ゲームの資材・兵員・研究・時刻の付与と加速なし。一般プレイヤーの所要時間や最小編成の証明ではない。"
   },
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "commit": "8db678add87c79e6a9771a84b67706cbc8f58084",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261031-inventory-map-r1&slot=new-game",
+    "workflow_run": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/41162137111",
+    "workflow_conclusion": "success",
+    "payload": {
+      "commit": "8db678add87c79e6a9771a84b67706cbc8f58084",
+      "canonical": "UTF8 LF",
+      "files": [
+        {
+          "file": "preview/army-view.js",
+          "utf8_lf_sha256": "e6710ffd6ec27ee684ef1ee5ab6f6f945f9db8ae640e3292f38c3c1150b0e845"
+        },
+        {
+          "file": "preview/build.json",
+          "utf8_lf_sha256": "fc34229662314187ecaf55c43f5d067c3075b1f81407f38747969cfadf00ee72"
+        },
+        {
+          "file": "preview/field-navigation.js",
+          "utf8_lf_sha256": "e232deb9e5322ce1f37ad866de890edfe726d2743abd2c54876ca1a4e64c9567"
+        },
+        {
+          "file": "preview/field-ui.js",
+          "utf8_lf_sha256": "b01df36a9a3ae13fbe419b4c3720a6d604b02eb47a12e68a2a02657cc87bc487"
+        },
+        {
+          "file": "preview/index.html",
+          "utf8_lf_sha256": "0e6322ba82c02485b629a091f6796d43f2bd5ef44090da924a78837f2b587b42"
+        },
+        {
+          "file": "preview/inventory-core.js",
+          "utf8_lf_sha256": "dddb69accd022e77a36b2e4bedaba93e0e0c444c4eb1ec185091e4c6e88b417d"
+        },
+        {
+          "file": "preview/inventory-ui.css",
+          "utf8_lf_sha256": "ad8d5b0f24ede68e4dead67c8c0ef3b26a754860d0ebd93303581e11a8df12c2"
+        },
+        {
+          "file": "preview/inventory-ui.js",
+          "utf8_lf_sha256": "6faeb93407d904fa1814049e37be02f5587c7f98df954e2a56b280c097518df3"
+        },
+        {
+          "file": "preview/ore-ui.js",
+          "utf8_lf_sha256": "a45617012c46131d1681f4e7d60baa75b34b511259727b0bac05121a5f20e1dc"
+        },
+        {
+          "file": "preview/outpost-camp.js",
+          "utf8_lf_sha256": "69e4c10492f67e64638c61bbabe6f15c9e0c2c1976061e2f38e55cf9042a31b5"
+        },
+        {
+          "file": "preview/outpost.js",
+          "utf8_lf_sha256": "1484751d98fd138125a24d327812cacd5d70761ac40c442d95788e6bd5a204f8"
+        },
+        {
+          "file": "preview/playtest-boot.js",
+          "utf8_lf_sha256": "9b005076ee394a713c68cb571fd6bbca2dd593dcd6cf16712a151a672fab1850"
+        },
+        {
+          "file": "preview/progression-integration.js",
+          "utf8_lf_sha256": "b9729fc17684b5b74aae36d69b7c473d927c8da9c187af694c3ae0369efa883e"
+        },
+        {
+          "file": "preview/ranking.html",
+          "utf8_lf_sha256": "2c4db864130749d014dfde634f39f1805a6f98e42eba7946a9e78257f56a0b31"
+        },
+        {
+          "file": "preview/supply-factory.js",
+          "utf8_lf_sha256": "76246d474a06ad078e5af516fd80b70e0d23db840f3cc632be638922f13bb66e"
+        }
+      ]
+    },
+    "fresh_browser": {
+      "complete": null,
+      "fresh": {
+        "wave": 1,
+        "cleared": 0,
+        "ready": true,
+        "people": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0
+      },
+      "oldKeysPreserved": 3,
+      "errors": []
+    }
   },
   "limitations": [
     "タッチはCDPによる390×844。実機未確認。",
     "全編成・高脅威・長期継続率は未検証。",
     "ユーザーの旧セーブは削除しない。slot=new-gameで保存先を分ける。",
     "生セーブ・player IDは公開記録とアーカイブへ含めない。"
-  ]
+  ],
+  "earned_gadgets": {
+    "fixture": false,
+    "grants": false,
+    "input": "mouse",
+    "rows": [
+      {
+        "id": "broom",
+        "ownedBefore": false,
+        "craftedNow": true,
+        "before": {
+          "wood": 561,
+          "stone": 381,
+          "food": 1,
+          "iron": 457
+        },
+        "after": {
+          "wood": 555,
+          "stone": 379,
+          "food": 1,
+          "iron": 457
+        },
+        "paidNow": true,
+        "movedRealMaterial": true
+      },
+      {
+        "id": "magnet",
+        "ownedBefore": true,
+        "craftedNow": false,
+        "before": {
+          "wood": 555,
+          "stone": 379,
+          "food": 1,
+          "iron": 457
+        },
+        "after": {
+          "wood": 555,
+          "stone": 379,
+          "food": 1,
+          "iron": 457
+        },
+        "paidNow": false,
+        "movedRealMaterial": true
+      }
+    ],
+    "errors": []
+  },
+  "earned_fresh_reload_and_slot": {
+    "complete": {
+      "wave": 30,
+      "cleared": 30,
+      "gold": 4365,
+      "endingSeenWave": 30,
+      "people": 49,
+      "links": 5,
+      "inventory": {
+        "wood": 236,
+        "stone": 228,
+        "food": 1,
+        "iron": 349
+      }
+    },
+    "fresh": {
+      "wave": 1,
+      "cleared": 0,
+      "ready": true,
+      "people": 0,
+      "inventory": {
+        "wood": 0,
+        "stone": 0
+      },
+      "gold": 0
+    },
+    "oldKeysPreserved": 4,
+    "errors": []
+  }
 }
