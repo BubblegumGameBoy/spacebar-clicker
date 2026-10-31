@@ -259,6 +259,14 @@ window.OutpostCamp = (() => {
  }
  function drawProjects(ctx,s){
   // Permanent additions stay still, so the camp's growth is visible without camera motion.
+  const fort=CampaignCore.stronghold(s.camp);
+  if(fort.stage){
+   const stone=fort.stage>=2;ctx.fillStyle=stone?'#777f70':'#775d39';ctx.strokeStyle=stone?'#b4b99a':'#bb945b';ctx.lineWidth=2;
+   // The open eastern entrance keeps the existing loading porch and its interaction area clear.
+   for(const [x,y,w] of [[28,312,32],[124,312,30]]){ctx.fillRect(x,y-22,w,22);ctx.strokeRect(x,y-22,w,22);for(let k=0;k<w;k+=9)ctx.fillRect(x+k,y-28,6,7);}
+   for(const x of [33,149]){const y=313,h=stone?65:39;ctx.fillStyle=stone?'#8b9681':'#8e7046';ctx.fillRect(x-12,y-h,24,h);ctx.fillStyle='#d4c58e';ctx.fillRect(x-13,y-h,26,4);for(let k=-12;k<=7;k+=9)ctx.fillRect(x+k,y-h-7,6,9);ctx.fillStyle='#334839';ctx.fillRect(x-3,y-h+15,6,13);if(fort.stage===3){ctx.fillStyle='#859b6a';ctx.beginPath();ctx.moveTo(x-16,y-h-7);ctx.lineTo(x,y-h-28);ctx.lineTo(x+16,y-h-7);ctx.fill();ctx.strokeStyle='#d9c583';ctx.beginPath();ctx.moveTo(x,y-h-28);ctx.lineTo(x,y-h-48);ctx.stroke();ctx.fillStyle='#d7b86b';ctx.fillRect(x,y-h-48,16,9);}}
+   if(fort.stage===1){ctx.fillStyle='#b99b66';for(const x of [35,148])for(let y=326;y<=345;y+=6)ctx.fillRect(x,y,5,4);}
+  }
   for(const type of ['wood','stone'])if(s.camp.tools[type]){
    const n=s.factory.nodes.find(n=>n.type===type);if(!n)continue;const x=n.x+38,y=n.y+7;
    ctx.fillStyle='#3b3927';ctx.fillRect(x-18,y-19,36,20);ctx.fillStyle=type==='wood'?'#a07c45':'#95987a';ctx.fillRect(x-15,y-17,30,14);

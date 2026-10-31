@@ -1,0 +1,344 @@
+{
+  "version": "20261031-rising-roads-r1",
+  "date_jst": "2026-10-31",
+  "baseline_main": "f14767e5abd1ee86e690c8f38d662d96d3ca2925",
+  "language": "ja",
+  "node": {
+    "passed": 339,
+    "failed": 0
+  },
+  "earned_opening": {
+    "fixture": false,
+    "normal_time": true,
+    "grants": false,
+    "input": "UI mouse",
+    "full_30_wave_completion": false,
+    "note": "初回Ready追加前に起動した試作。同じ採集・戦闘ルール。増員用採集中に第2波が自動開始し、実際の到達は第4波。最終版の初回停止は別contextで確認。",
+    "raids": [
+      {
+        "wave": 1,
+        "result": {
+          "wave": 1,
+          "win": true,
+          "boxes": 3,
+          "kills": 3,
+          "escaped": 0,
+          "gold": 38,
+          "first": true
+        },
+        "gold_after": 38,
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1
+          },
+          {
+            "id": "arch",
+            "count": 1
+          },
+          {
+            "id": "arch",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "wave": 2,
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        },
+        "gold_after": 84,
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1
+          },
+          {
+            "id": "arch",
+            "count": 3
+          },
+          {
+            "id": "arch",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "wave": 3,
+        "result": {
+          "wave": 3,
+          "win": true,
+          "boxes": 3,
+          "kills": 6,
+          "escaped": 0,
+          "gold": 54,
+          "first": true,
+          "chiefDefeated": true
+        },
+        "gold_after": 138,
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1
+          },
+          {
+            "id": "arch",
+            "count": 3
+          },
+          {
+            "id": "arch",
+            "count": 3
+          }
+        ]
+      },
+      {
+        "wave": 4,
+        "result": {
+          "wave": 4,
+          "win": true,
+          "boxes": 3,
+          "kills": 10,
+          "escaped": 0,
+          "gold": 62,
+          "first": true
+        },
+        "gold_after": 200,
+        "crews": [
+          {
+            "id": "woodcutter",
+            "count": 1
+          },
+          {
+            "id": "arch",
+            "count": 3
+          },
+          {
+            "id": "arch",
+            "count": 3
+          }
+        ]
+      }
+    ]
+  },
+  "prepared_boss_battles": {
+    "fixture": true,
+    "normal_time": true,
+    "crew": {
+      "arch": 20,
+      "sword": 10,
+      "ballista": 10
+    },
+    "rear_formation": [
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "brood",
+        "result": {
+          "wave": 3,
+          "win": true,
+          "boxes": 3,
+          "kills": 6,
+          "escaped": 0,
+          "gold": 54,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "shieldlord",
+        "result": {
+          "wave": 6,
+          "win": true,
+          "boxes": 3,
+          "kills": 18,
+          "escaped": 0,
+          "gold": 78,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "chief",
+        "result": {
+          "wave": 9,
+          "win": true,
+          "boxes": 3,
+          "kills": 37,
+          "escaped": 0,
+          "gold": 102,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "oozemother",
+        "result": {
+          "wave": 12,
+          "win": true,
+          "boxes": 3,
+          "kills": 35,
+          "escaped": 0,
+          "gold": 126,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "nightwing",
+        "result": {
+          "wave": 15,
+          "win": true,
+          "boxes": 3,
+          "kills": 19,
+          "escaped": 0,
+          "gold": 150,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "elder",
+        "result": {
+          "wave": 18,
+          "win": true,
+          "boxes": 3,
+          "kills": 19,
+          "escaped": 0,
+          "gold": 174,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "deeproot",
+        "result": {
+          "wave": 21,
+          "win": true,
+          "boxes": 3,
+          "kills": 19,
+          "escaped": 0,
+          "gold": 198,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "boar",
+        "result": {
+          "wave": 24,
+          "win": true,
+          "boxes": 3,
+          "kills": 19,
+          "escaped": 0,
+          "gold": 222,
+          "first": true,
+          "chiefDefeated": true
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "siegeking",
+        "result": {
+          "wave": 27,
+          "win": false,
+          "boxes": 0,
+          "kills": 0,
+          "escaped": 3,
+          "gold": 0,
+          "first": false,
+          "reason": "crates",
+          "chiefDefeated": false
+        }
+      },
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "duskking",
+        "result": {
+          "wave": 30,
+          "win": true,
+          "boxes": 3,
+          "kills": 19,
+          "escaped": 0,
+          "gold": 270,
+          "first": true,
+          "chiefDefeated": true
+        }
+      }
+    ],
+    "forward_siege": [
+      {
+        "prepared": true,
+        "realTime": true,
+        "boss": "siegeking",
+        "result": {
+          "wave": 27,
+          "win": true,
+          "boxes": 3,
+          "kills": 43,
+          "escaped": 0,
+          "gold": 246,
+          "first": true,
+          "chiefDefeated": true
+        }
+      }
+    ],
+    "meaning": "27波は後方配置で失敗、同人数の前方配置で勝利。通常獲得30波完走や最小人数の証明ではない。"
+  },
+  "browser": {
+    "mouse": "passed",
+    "cdp_touch": "passed",
+    "equipment_regression_mouse_and_touch": "passed",
+    "checks": [
+      "実出現に一致する段階的な道と穴の予告",
+      "初回Readyで時計停止",
+      "10区間の道程とボス予告",
+      "門と灯火の正確な資材支払と城の表示",
+      "旧9波から10波の準備待ちへ継続、482Gを保持",
+      "旧エンディング既読から30波の新エンディング",
+      "再読込後の既読保持とG二重加算なし",
+      "画面横はみ出しなし",
+      "ページ例外・要求失敗なし"
+    ]
+  },
+  "source_archives": {
+    "identical": true,
+    "sha256": "5d911cd969aafb9226a274bb64dab277c36669135eeae206f9903c1fd2e36191",
+    "files": 233,
+    "all_members_match_source": true,
+    "no_private_storage": true
+  },
+  "preview_manifest_verified": true,
+  "publication": {
+    "status": "main反映後に確認",
+    "expected_version": "20261031-rising-roads-r1"
+  },
+  "limitations": [
+    "通常獲得の全30波完走は未検証",
+    "実機タッチではなくCDP",
+    "全編成・高脅威・長期継続率は未検証",
+    "新しい道の延伸は4・7波まで。その後は敵の能力が主な変化",
+    "ボスと城は既存画像・canvasを拡張した試作"
+  ]
+}

@@ -1,12 +1,12 @@
 /* Small, saved outpost rounds. Only enemies move; presentation and payment live outside this module. */
 (function(root,factory){
- const api=factory(typeof module==='object'&&module.exports?require('./field-core.js'):root.FieldCore);
+ const api=factory(typeof module==='object'&&module.exports?require('./field-core.js'):root.FieldCore,typeof module==='object'&&module.exports?require('./campaign-core.js'):root.CampaignCore);
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.OutpostCore=api;
-})(typeof globalThis!=='undefined'?globalThis:this,function(Field){
+})(typeof globalThis!=='undefined'?globalThis:this,function(Field,Campaign){
  'use strict';
  const WORLD=Field.WORLD;
- const MAX_WAVE=9,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=4,PIERCE=['sword','ballista'];
+ const MAX_WAVE=Campaign.MAX_WAVE,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=5,PIERCE=['sword','ballista'];
  const finite=(value,fallback=0,min=0,max=1e9)=>Number.isFinite(value)?Math.max(min,Math.min(max,value)):fallback;
  const integer=(value,fallback=0,min=0,max=1e9)=>Math.floor(finite(value,fallback,min,max));
  const waveNumber=value=>integer(value,1,1,MAX_WAVE);
@@ -16,7 +16,7 @@
  /* One row per enemy. Rules read `traits` and the trait's own numbers; drawing reads `height`, `bar` and `art`.
     art.sheet is the production 2x2 sheet; art.fallback is the provisional look (tinted rat + canvas overlay) used if that sheet fails to load. */
  const fallback=(tint,overlay)=>({sheet:'mob-rat',tint,overlay});
- const ENEMIES=Object.freeze({
+ const ENEMIES={
   rat:{hp:26,speed:25,armor:0,r:13,height:43,bar:'#e1a084',traits:[],art:{sheet:'mob-rat',tint:null,scale:1,overlay:null},name:['ネズミ','Rat','老鼠'],note:['基本の敵','Basic raider','基础敌人']},
   scout:{hp:16,speed:34,armor:0,r:10,height:34,bar:'#e1a084',traits:[],art:{sheet:'mob-rat',tint:null,scale:1,overlay:null},name:['俊足ネズミ','Runner','迅捷鼠'],note:['足が速い。弓兵で止める','Fast. Stop it with archers','速度快，用弓兵拦截']},
   guard:{hp:42,speed:19,armor:2,r:16,height:51,bar:'#c5cabb',traits:[],art:{sheet:'mob-rat',tint:null,scale:1,overlay:'guard'},name:['鎧ネズミ','Armoured rat','铁甲鼠'],note:['鎧2：弓の矢が通りにくい。剣士・バリスタは貫通','Armour 2: arrows lose damage. Swords and ballistas pierce','护甲2：箭矢伤害降低。剑士和弩炮可贯穿']},
@@ -35,8 +35,11 @@
   toad:{hp:260,speed:15,armor:1,r:28,height:86,bar:'#a8c070',traits:['boss','leap'],leap:{every:6,distance:70},art:{sheet:'mob-toad',uniform:true,death:3,fallback:fallback({hue:90,light:.8},null)},name:['大ガマ','Giant Toad','巨蟾']},
   boar:{hp:220,speed:20,armor:4,r:28,height:80,bar:'#b08a64',traits:['boss','charge'],art:{sheet:'mob-boar',uniform:true,death:3,fallback:fallback({hue:20,light:.6},null)},name:['鉄牙の猪','Iron-tusk Boar','铁牙野猪']},
   envoy:{hp:200,speed:22,armor:0,r:24,height:100,lift:40,bar:'#9a8aa8',traits:['boss','fly'],art:{sheet:'mob-envoy',uniform:true,death:3,fallback:fallback({hue:270,light:.4},'wings')},name:['異界の使い','Otherworld Envoy','异界使者']}
- });
+ };
  ENEMIES.toad.note=['ときどき大きく跳んで前へ出る','Leaps forward every few seconds','不时向前大跳'];ENEMIES.boar.note=['鎧4。剣士の足止めが効かない','Armour 4. Sword slows do not stop it','护甲4，剑士的减速无效'];ENEMIES.envoy.note=['飛行の頭領。弓兵だけが届く','A flying boss: only archers reach it','飞行首领，只有弓兵能打到'];
+ // Boss silhouettes reuse the existing species art and inherit their actual combat traits.
+ for(const c of Campaign.CHAPTERS)if(c.base){const d=ENEMIES[c.base];ENEMIES[c.boss]={...d,hp:c.hp,speed:c.speed,r:Math.max(20,d.r),height:Math.round(d.height*1.55),traits:[...new Set([...d.traits,'boss'])],art:{...d.art,uniform:true},name:[c.title,c.title,c.title],note:[c.note,c.note,c.note],...(c.boss==='oozemother'?{split:{kind:'oozelet',count:4}}:{}),...(c.boss==='elder'?{heal:{radius:85,amount:6,every:2}}:{}),...(c.boss==='siegeking'?{split:{kind:'rat',count:6,hp:14}}:{})};}
+ Object.freeze(ENEMIES);
  for(const row of Object.values(ENEMIES)){Object.freeze(row.traits);Object.freeze(row);}
  const KINDS=Object.freeze(Object.keys(ENEMIES));
  const has=(enemy,trait)=>!!ENEMIES[enemy?.kind]?.traits.includes(trait);
@@ -72,7 +75,7 @@
  const HEAT_TUNE={hordeEvery:[2,2,5],flankExtra:[2,3,4],shields:[2,4,6],bats:[2,4,6],moles:[2,3,4],moleGap:[2,2.5,2.5],shamans:[2,2,4],slingers:[2,2,4],carts:[0,2,2],siegeExtraTime:20,prepCut:30,bossLevel:3,ironRatArmor:[1,1,1]};
  // The modifiers one wave gets from the run's threat (merged with any extra round modifiers by roundModifiers()).
  function heatModifiers(value,raw){
-  const h=heat(raw);if(!h.level)return null;const wave=waveNumber(value),c=chapter(wave),T=HEAT_TUNE,at=list=>list[c-1],on=id=>h.conditions.includes(id),mix=[],out={heat:h.level};
+  const h=heat(raw);if(!h.level)return null;const wave=waveNumber(value),c=chapter(wave),T=HEAT_TUNE,at=list=>list[Math.min(2,c-1)],on=id=>h.conditions.includes(id),mix=[],out={heat:h.level};
   if(on('horde'))out.horde=at(T.hordeEvery);if(on('ironhide'))out.ironhide=at(T.ironRatArmor)?true:'guards';if(on('thin'))out.boxes=2;
   if(on('flank')){out.flank=(wave+h.seed)%2?'lower':'upper';mix.push({kind:'scout',lane:out.flank,count:at(T.flankExtra),at:9,gap:1.2});}
   if(on('shieldwall'))mix.push({kind:'shield',lane:'both',count:at(T.shields),at:0,gap:1.5});
@@ -93,7 +96,7 @@
  function preparationCut(state){return heat(state?.heat).conditions.includes('rush')?HEAT_TUNE.prepCut:0;}
 
  function fresh(){
-  return {version:1,heat:{level:0,conditions:[],seed:0},planVersion:PLAN_VERSION,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:240,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0,handIron:0,crewIron:0},result:null};
+  return {version:1,heat:{level:0,conditions:[],seed:0},planVersion:PLAN_VERSION,routeSeen:0,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:240,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0,handIron:0,crewIron:0},result:null};
  }
  // The preparation clock is advanced explicitly by the live game, separately from battle simulation.
  function preparationSeconds(state){if(!state)return 240;const cut=preparationCut(state);if(state.round===0)return 240-cut;const next=state.result?.win?Math.min(MAX_WAVE,state.result.wave+1):state.wave;return (state.result&&!state.result.win?90:next<=3?90:120)-cut;}
@@ -103,7 +106,7 @@
   state.prepRemaining=Math.max(0,finite(state.prepRemaining,preparationSeconds(state),0,600)-dt);
   return state.prepRemaining<=EPS;
  }
- function chapter(value){return Math.min(3,Math.ceil(waveNumber(value)/3));}
+ function chapter(value){return Math.ceil(waveNumber(value)/3);}
  /* Extra enemy groups for later threat levels / loops / test waves: [{kind,lane:'upper'|'lower'|'both',count,at,gap}].
     replace:true drops the authored wave; duration overrides the round length (30–180 s). Unknown kinds are ignored. */
  function modifiers(raw){
@@ -117,7 +120,7 @@
   return {mix,replace:raw.replace===true,...(Number.isFinite(raw.duration)?{duration:finite(raw.duration,60,30,180)}:{}),...flags};
  }
  function plan(value,planVersion=PLAN_VERSION,options=null){
-  const wave=waveNumber(value),spawns=[],mods=modifiers(options),duration=mods?.duration??(wave<=3?50:wave<=6?planVersion>=4?85:60:planVersion>=4?100:70),v=planVersion===1?1:planVersion===2?2:planVersion===3?3:4;
+  const wave=waveNumber(value),spawns=[],mods=modifiers(options),duration=mods?.duration??(wave<=3?50:wave<=6?planVersion>=4?85:60:planVersion>=4?100:70),v=integer(planVersion,PLAN_VERSION,1,PLAN_VERSION);
   const stat=kind=>{const d=ENEMIES[kind];return {hp:d.hp,speed:d.speed,armor:d.armor,r:d.r};};
   const specs={rat:{hp:wave<=3?wave===1?14:wave===2?18:22:26,speed:wave===1?22:wave===2?24:25,armor:0,r:13}};
   const add=(kind,lane,at)=>spawns.push({at,lane,kind,...(specs[kind]||stat(kind))});
@@ -131,6 +134,8 @@
    if(wave===7){for(let i=0;i<6;i++)add('guard',i%2?'lower':'upper',Math.floor(i/2));for(let i=0;i<16;i++)add(i%4<2?v>=3&&i>=12?'bat':'scout':'rat',i%2?'lower':'upper',3+Math.floor(i/2)*.8);}
    if(wave===8){for(let i=0;i<28;i++)add(i%7===0?'guard':i%3===0?'scout':'rat',i%2?'lower':'upper',Math.floor(i/2)*.55);}
    if(wave===9){for(let i=0;i<6;i++)add('guard',i%2?'lower':'upper',Math.floor(i/2)*1.5);for(let i=0;i<22;i++)add('rat',i%2?'lower':'upper',3+Math.floor(i/2)*.8);for(let i=0;i<8;i++)add('scout',i%2?'lower':'upper',12+Math.floor(i/2)*1.1);add(mods?.boss||'chief','upper',14);}
+   if(v>=5&&wave<=6&&wave%3===0){const c=Campaign.chapter(wave),old=spawns.filter(e=>!has(e,'boss')).at(-1),d=stat(c.boss);if(old)Object.assign(old,{kind:c.boss,...d});}
+   if(wave>9)Campaign.compose(wave,(kind,lane,at)=>add(kind===Campaign.chapter(wave).boss&&mods?.boss?mods.boss:kind,lane,at));
    // Threat: larger packs (every second authored rat or runner brings a partner 0.6 s behind), runners massed on one road.
    if(mods?.horde){const every=mods.horde===true?2:mods.horde;for(const kind of ['rat','scout'])spawns.filter(e=>e.kind===kind).forEach((e,i)=>{if(i%every===every-1&&e.at+.6<duration)add(kind,e.lane,e.at+.6);});}
    if(mods?.flank)for(const e of spawns)if(e.kind==='scout')e.lane=mods.flank;
@@ -138,10 +143,11 @@
   }
   for(const m of mods?.mix||[])for(let i=0;i<m.count;i++){const lane=m.lane==='both'?(i%2?'lower':'upper'):m.lane,at=m.at+(m.lane==='both'?Math.floor(i/2):i)*m.gap;if(at<duration)add(m.kind,lane,at);}
   if(mods?.ironhide)for(const e of spawns){if(e.kind==='guard')e.armor+=2;else if(e.kind==='rat'&&mods.ironhide!=='guards')e.armor=Math.max(e.armor,1);}
-  spawns.sort((a,b)=>a.at-b.at);const laneCounts={upper:0,lower:0};spawns.forEach((e,i)=>{e.spawnIndex=i;if(v>=4){const h=Field.sourceFor(wave,e.lane,laneCounts[e.lane]++);e.holeId=h.id;e.entryX=h.x;}});
+  spawns.sort((a,b)=>a.at-b.at);const laneCounts={upper:0,lower:0};spawns.forEach((e,i)=>{e.spawnIndex=i;if(v>=4){const h=Field.sourceFor(wave,e.lane,laneCounts[e.lane]++,mods?.replace?4:v);e.holeId=h.id;e.entryX=h.x;}});
   const patterns=['single','single','pack','scout','guard','mixed','guard','swarm','final'],kinds=[...new Set(spawns.map(e=>e.kind))];
   const potential=spawns.reduce((n,e)=>n+1+(ENEMIES[e.kind].split?.count||0),0);
-  return {wave,duration,chapter:chapter(wave),pattern:mods?.replace?'custom':wave===4&&v!==1?'vanguard':patterns[wave-1],spawns,potential,counts:{upper:spawns.filter(e=>e.lane==='upper').length,lower:spawns.filter(e=>e.lane==='lower').length},kinds,special:kinds.filter(k=>!['rat','scout','guard','chief'].includes(k)),boxes:mods?.boxes||3,heat:mods?.heat||0,...(mods?.flank?{flank:mods.flank}:{}),boss:wave===MAX_WAVE?mods?.boss||'chief':null};
+  const roundDuration=v>=5&&wave>3&&!Number.isFinite(mods?.duration)?Math.max(duration,...spawns.map(e=>e.at+lengthOf(e)/e.speed+(def(e.kind).sling?def(e.kind).sling.seconds:2.5)+3)):duration;
+  return {wave,duration:roundDuration,chapter:chapter(wave),pattern:mods?.replace?'custom':wave===4&&v!==1?'vanguard':patterns[wave-1]||'mixed',spawns,potential,counts:{upper:spawns.filter(e=>e.lane==='upper').length,lower:spawns.filter(e=>e.lane==='lower').length},kinds,special:kinds.filter(k=>!['rat','scout','guard','chief'].includes(k)),boxes:mods?.boxes||3,heat:mods?.heat||0,...(mods?.flank?{flank:mods.flank}:{}),boss:wave%3===0&&(v>=5||wave===9)?mods?.boss||Campaign.chapter(wave).boss:null,planVersion:v,district:Campaign.chapter(wave).name};
  }
  function planFor(state){return plan(state.wave,state.planVersion,state.modifiers);}
  function nextRequirement(state){
@@ -160,22 +166,22 @@
  // Unit vector of the enemy's current heading (used for the beetle's frontal shell).
  function heading(enemy){const origin=enemy.entryX||WORLD.entryX;if(has(enemy,'fly')){const dx=WORLD.home.x-origin,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<origin-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
  // One source for the live objective and the chapter retry boundary.
- function raidRules(wave,mods){return {boxes:mods?.boxes||3,retryWave:(chapter(wave)-1)*3+1,boss:wave===MAX_WAVE?mods?.boss||'chief':null};}
- function failureReason(state){const rules=raidRules(state.wave,state.modifiers);return state.boxes<=0?'crates':rules.boss&&state.enemies.some(e=>e.kind===rules.boss&&!e.alive&&e.hp>0)?'captain':null;}
+ function raidRules(wave,mods,planVersion=PLAN_VERSION){return {boxes:mods?.boxes||3,retryWave:(chapter(wave)-1)*3+1,boss:wave%3===0&&(planVersion>=5||wave===9)?mods?.boss||Campaign.chapter(wave).boss:null};}
+ function failureReason(state){const rules=raidRules(state.wave,state.modifiers,state.planVersion);return state.boxes<=0?'crates':rules.boss&&state.enemies.some(e=>e.kind===rules.boss&&!e.alive&&e.hp>0)?'captain':null;}
  function goldFor(wave,win,boxes,first){return win?12+(first?12+wave*8:0)+boxes*2:0;}
- function normalizedResult(raw,mods){
+ function normalizedResult(raw,mods,planVersion=PLAN_VERSION){
   if(!raw||typeof raw!=='object')return null;
-  const wave=waveNumber(raw.wave),boxes=integer(raw.boxes,0,0,3),win=raw.win===true&&boxes>0,count=Math.max(...[1,2,3].map(v=>plan(wave,v,mods).potential));
+  const wave=waveNumber(raw.wave),boxes=integer(raw.boxes,0,0,3),win=raw.win===true&&boxes>0,count=Math.max(...[1,2,3,4,5].map(v=>plan(wave,v,mods).potential));
   const kills=integer(raw.kills,0,0,count),escaped=integer(raw.escaped,0,0,count-kills),success=win&&(wave!==MAX_WAVE||raw.chiefDefeated===true),trial=!!mods?.replace,first=success&&!trial&&raw.first===true;
   const reason=success?null:['crates','captain','timeout'].includes(raw.reason)?raw.reason:boxes===0?'crates':wave===MAX_WAVE?'captain':'timeout';
-  return {wave,win:success,boxes,kills,escaped,gold:trial?0:goldFor(wave,success,boxes,first),first,...(reason?{reason}:{}),...(trial?{trial:true}:{}),...(wave===MAX_WAVE?{chiefDefeated:raw.chiefDefeated===true}:{})};
+  return {wave,win:success,boxes,kills,escaped,gold:trial?0:goldFor(wave,success,boxes,first),first,...(reason?{reason}:{}),...(trial?{trial:true}:{}),...(raidRules(wave,mods,planVersion).boss?{chiefDefeated:raw.chiefDefeated===true}:{})};
  }
  function makeEnemy(state,item,extra){const d=def(item.kind),enemy={key:state.nextKey++,spawnIndex:item.spawnIndex,...(item.holeId?{holeId:item.holeId,entryX:item.entryX}:{}),kind:item.kind,lane:item.lane,x:item.entryX||WORLD.entryX,y:laneY(item.lane),r:item.r,speed:item.speed,armor:item.armor,hp:item.hp,maxHp:item.hp,travel:0,slowUntil:0,alive:true,atGate:false,gateTime:0,...extra};
   if(d.shield)enemy.shield=d.shield;if(d.heal)enemy.healAt=state.elapsed+d.heal.every;if(d.leap)enemy.leapAt=state.elapsed+d.leap.every;position(enemy);return enemy;}
  function migrate(raw){
   const state=fresh();
   if(!raw||typeof raw!=='object'||raw.version!==1)return state;
-  state.planVersion=raw.planVersion===4?4:raw.planVersion===3?3:raw.planVersion===2?2:1;state.heat=heat(raw.heat);
+  state.planVersion=integer(raw.planVersion,1,1,PLAN_VERSION);state.routeSeen=integer(raw.routeSeen,raw.round>0?raw.wave:0,0,MAX_WAVE);state.heat=heat(raw.heat);
   const mods=modifiers(raw.modifiers);if(mods)state.modifiers=mods;
   state.phase=['prep','active','result'].includes(raw.phase)?raw.phase:'prep';
   state.wave=waveNumber(raw.wave);state.cleared=integer(raw.cleared,0,0,MAX_WAVE);state.round=integer(raw.round,0,0,1e9);
@@ -183,7 +189,7 @@
   state.elapsed=finite(raw.elapsed,0,0,planFor(state).duration);state.gateSeconds=finite(raw.gateSeconds,1,1,2.5);state.boxes=integer(raw.boxes,3,0,3);
   state.claimedFirst=[...new Set((Array.isArray(raw.claimedFirst)?raw.claimedFirst:[]).slice(0,1024).filter(n=>Number.isInteger(n)&&n>=1&&n<=MAX_WAVE))];
   for(let wave=1;wave<=state.cleared;wave++)if(!state.claimedFirst.includes(wave))state.claimedFirst.push(wave);
-  const result=normalizedResult(raw.result,mods);
+  const result=normalizedResult(raw.result,mods,state.planVersion);
   // A stored settlement is authoritative: never turn it back into a payable active round.
   if(result&&(state.phase==='result'||state.phase==='active')){state.phase='result';state.result=result;state.wave=result.wave;state.elapsed=finite(raw.elapsed,planFor(state).duration,0,planFor(state).duration);}
   else if(state.phase==='result')state.phase='prep';
@@ -227,7 +233,7 @@
  function start(state,options={}){
   if(!state||!['prep','result'].includes(state.phase)||state.phase==='result'&&state.result?.win&&state.result.wave===MAX_WAVE&&options.replay!==true)return false;
   state.wave=state.phase==='result'&&state.result?waveNumber(state.result.wave+(state.result.win?1:0)):waveNumber(state.wave);
-  state.planVersion=PLAN_VERSION;state.phase='active';state.round=integer(state.round,0,0,1e9)+1;state.elapsed=0;state.enemies=[];state.spawned=0;state.kills=0;state.escaped=0;state.result=null;
+  state.planVersion=PLAN_VERSION;state.routeSeen=Math.max(state.routeSeen||0,state.wave);state.phase='active';state.round=integer(state.round,0,0,1e9)+1;state.elapsed=0;state.enemies=[];state.spawned=0;state.kills=0;state.escaped=0;state.result=null;
   // Modifiers belong to one round: the run's threat for this wave, merged with any extra (loop variation, test wave), or none.
   const mods=roundModifiers(state,state.wave,options.modifiers);if(mods)state.modifiers=mods;else delete state.modifiers;state.boxes=mods?.boxes||3;
   state.nextKey=integer(state.nextKey,1,1,MAX_KEY+1);
@@ -274,10 +280,10 @@
  }
  function settle(state,reason=null){
   // Freeze the battlefield on failure. Enemies still on the road did not breach the camp.
-  const boss=state.modifiers?.boss||'chief',chiefDefeated=state.enemies.some(e=>e.kind===boss&&e.hp===0)&&state.enemies.filter(e=>e.kind===boss).every(e=>e.hp===0),win=!reason&&state.boxes>0&&(state.wave!==MAX_WAVE||chiefDefeated),trial=!!state.modifiers?.replace,first=win&&!trial&&!state.claimedFirst.includes(state.wave);
+  const boss=raidRules(state.wave,state.modifiers,state.planVersion).boss,chiefDefeated=state.enemies.some(e=>e.kind===boss&&e.hp===0)&&state.enemies.filter(e=>e.kind===boss).every(e=>e.hp===0),win=!reason&&state.boxes>0&&(!boss||chiefDefeated),trial=!!state.modifiers?.replace,first=win&&!trial&&!state.claimedFirst.includes(state.wave);
   // A replaced (test) wave is not that wave: no progress, no first-clear, no gold.
   if(win&&!trial){state.cleared=Math.max(state.cleared,state.wave);if(first)state.claimedFirst.push(state.wave);if(state.wave===MAX_WAVE){state.completed=true;if(!state.completedAtRound)state.completedAtRound=state.round;}}
-  const result={wave:state.wave,win,boxes:state.boxes,kills:state.kills,escaped:state.escaped,gold:trial?0:goldFor(state.wave,win,state.boxes,first),first,...(!win?{reason:reason||failureReason(state)||'captain'}:{}),...(trial?{trial:true}:{}),...(state.wave===MAX_WAVE?{chiefDefeated}:{})};
+  const result={wave:state.wave,win,boxes:state.boxes,kills:state.kills,escaped:state.escaped,gold:trial?0:goldFor(state.wave,win,state.boxes,first),first,...(!win?{reason:reason||failureReason(state)||'captain'}:{}),...(trial?{trial:true}:{}),...(boss?{chiefDefeated}:{})};
   state.phase='result';state.result=result;
   return {type:'settle',result:{...result}};
  }
@@ -365,5 +371,5 @@
   return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
  }
  function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane,Math.max(...Field.HOLES.map(h=>h.x))),center,radius,minRadius).map(span=>({lane,...span})));}
- return {raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ return {Campaign,raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });
