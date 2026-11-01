@@ -36,7 +36,7 @@
 
 試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261101-grounded-raids-r2&slot=new-game
 
-配信確認はGROUNDED_RAIDS_CHECKSのpublicationへ記録する。実機タッチ・長期継続率・全編成／高脅威の全組合せは未検証。
+公開配信を確認済み。更新13ファイルがUTF8・LFで検証ビルドと一致し、公開3画面サイズの操作と既存セーブの継続も確認。詳細はGROUNDED_RAIDS_CHECKSのpublication。実機タッチ・長期継続率・全編成／高脅威の全組合せは未検証。
 
 ## 再開
 

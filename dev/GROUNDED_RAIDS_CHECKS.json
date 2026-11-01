@@ -406,7 +406,116 @@
     "sha256": "6dc28568d9551f18452b32e33f9e9beb4745d3c88b537a2f24524f3a3e746a19"
   },
   "publication": {
-    "verified": false
+    "verified": true,
+    "release_commit": "0732955c7eaff127ff49d1a1488fcd0c647bc7a0",
+    "pages_run": 41276356695,
+    "pages_conclusion": "success",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261101-grounded-raids-r2&slot=new-game",
+    "payload": {
+      "canonical": "UTF8/LF",
+      "matched": [
+        "preview/army-view.js",
+        "preview/build.json",
+        "preview/cabin-ui.css",
+        "preview/cabin-ui.js",
+        "preview/expedition-core.js",
+        "preview/expedition-ui.js",
+        "preview/field-navigation.js",
+        "preview/index.html",
+        "preview/inventory-ui.js",
+        "preview/outpost-camp.js",
+        "preview/outpost-core.js",
+        "preview/outpost.js",
+        "preview/supply-factory.js"
+      ]
+    },
+    "fresh_isolated_smoke": [
+      {
+        "width": 1280,
+        "height": 900,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 62.099998474121094,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 7.999509811401367,
+        "errors": []
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 47.76197814941406,
+        "errors": []
+      }
+    ],
+    "native_user_tab": "Updated to final r2 using the same save slot. Existing single crew and two wood retained; no reset, grants, or new raid on the user save."
   },
   "limitations": [
     "CDP touch is not physical-device testing",
