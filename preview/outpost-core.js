@@ -56,7 +56,7 @@
  const HEAT=Object.freeze({
   horde:{points:1,name:['群れ増加','Larger packs','鼠群增多'],note:['ネズミと俊足が増え、間を詰めて来る（章1・2は50%、章3は20%増）','More rats and runners, packed closer (50% more in chapters 1–2; 20% in chapter 3)','老鼠和迅捷鼠增加，间隔更密（第1、2章增加50%，第3章增加20%）'],decide:['弓兵の数と位置','How many archers, and where','弓兵的数量与位置']},
   ironhide:{points:1,name:['鉄の毛皮','Iron hide','铁皮'],note:['鎧ネズミの鎧+2、ネズミにも鎧1','Armoured rats +2 armour; rats gain armour 1','铁甲鼠护甲+2，老鼠也有护甲1'],decide:['剣士・バリスタの比率と優先目標','Swords/ballistas vs archers, and target priority','剑士·弩炮的比例与优先目标']},
-  rush:{points:1,name:['急襲','Rush','突袭'],note:['準備時間が30秒短い','30 s less preparation time','准备时间缩短30秒'],decide:['自動化に先に投資するか','Whether automation is built first','是否先投资自动化']},
+  rush:{points:1,name:['急襲','Rush','突袭'],note:['敵の出現間隔が30%短い','30 s less preparation time','准备时间缩短30秒'],decide:['開戦前に搬送と防衛を整えるか','Whether automation is built first','是否先投资自动化']},
   thin:{points:2,name:['薄い備え','Thin stores','物资稀薄'],note:['物資箱2つで始まる','Start each raid with 2 crates','每波只有2个物资箱'],decide:['取りこぼしを許さない配置','Placement that lets nothing through','不放过任何敌人的布阵']},
   narrow:{points:2,name:['狭い陣地','Cramped camp','阵地狭窄'],note:['使っている防衛部隊の1つが封鎖され、枠は3つ（どれかは出発前に予告）','One of your defence squads is sealed for the run; 3 slots (shown before you depart)','你的一支防守部队被封锁，只剩3个位置（出发前预告）'],decide:['抜けた役を誰が埋めるか','Who covers the sealed squad’s job','由谁接替被封锁队伍的职责']},
   flank:{points:1,name:['片寄り','Flanking','偏路'],note:['俊足が片方の道に集まり、増える（予告あり）','Runners mass on one road, with extras (forecast)','迅捷鼠集中到一条路并增加（有预告）'],decide:['道ごとの配置','Which road gets more cover','各条道路的布阵']},
@@ -76,7 +76,7 @@
  // The modifiers one wave gets from the run's threat (merged with any extra round modifiers by roundModifiers()).
  function heatModifiers(value,raw){
   const h=heat(raw);if(!h.level)return null;const wave=waveNumber(value),c=chapter(wave),T=HEAT_TUNE,at=list=>list[Math.min(2,c-1)],on=id=>h.conditions.includes(id),mix=[],out={heat:h.level};
-  if(on('horde'))out.horde=at(T.hordeEvery);if(on('ironhide'))out.ironhide=at(T.ironRatArmor)?true:'guards';if(on('thin'))out.boxes=2;
+  if(on('rush'))out.rush=true;if(on('horde'))out.horde=at(T.hordeEvery);if(on('ironhide'))out.ironhide=at(T.ironRatArmor)?true:'guards';if(on('thin'))out.boxes=2;
   if(on('flank')){out.flank=(wave+h.seed)%2?'lower':'upper';mix.push({kind:'scout',lane:out.flank,count:at(T.flankExtra),at:9,gap:1.2});}
   if(on('shieldwall'))mix.push({kind:'shield',lane:'both',count:at(T.shields),at:0,gap:1.5});
   if(on('wings'))mix.push({kind:'bat',lane:'both',count:at(T.bats),at:8,gap:2.5});
@@ -115,7 +115,7 @@
   // Threat flags (M5). boss must be a kind with the boss trait; boxes is the crate count the round starts with.
   // swap: turn authored enemies of one kind into another (same lane and time), e.g. rats → moles. Bosses cannot be swapped in or out.
   const swap=(Array.isArray(raw.swap)?raw.swap:[]).slice(0,8).filter(w=>w&&Object.hasOwn(ENEMIES,w.from)&&Object.hasOwn(ENEMIES,w.to)&&!ENEMIES[w.from].traits.includes('boss')&&!ENEMIES[w.to].traits.includes('boss')).map(w=>({from:w.from,to:w.to,count:integer(w.count,1,1,60)}));
-  const flags={...(swap.length?{swap}:{}),...(raw.horde===true?{horde:true}:Number.isInteger(raw.horde)&&raw.horde>=2&&raw.horde<=10?{horde:raw.horde}:{}),...(raw.ironhide===true||raw.ironhide==='guards'?{ironhide:raw.ironhide}:{}),...(['upper','lower'].includes(raw.flank)?{flank:raw.flank}:{}),...(Number.isFinite(raw.boxes)&&raw.boxes<3?{boxes:integer(raw.boxes,3,1,3)}:{}),...(Object.hasOwn(ENEMIES,raw.boss)&&ENEMIES[raw.boss].traits.includes('boss')&&raw.boss!=='chief'?{boss:raw.boss}:{}),...(Number.isFinite(raw.heat)&&raw.heat>0?{heat:integer(raw.heat,0,0,99)}:{})};
+  const flags={...(raw.rush===true?{rush:true}:{}),...(swap.length?{swap}:{}),...(raw.horde===true?{horde:true}:Number.isInteger(raw.horde)&&raw.horde>=2&&raw.horde<=10?{horde:raw.horde}:{}),...(raw.ironhide===true||raw.ironhide==='guards'?{ironhide:raw.ironhide}:{}),...(['upper','lower'].includes(raw.flank)?{flank:raw.flank}:{}),...(Number.isFinite(raw.boxes)&&raw.boxes<3?{boxes:integer(raw.boxes,3,1,3)}:{}),...(Object.hasOwn(ENEMIES,raw.boss)&&ENEMIES[raw.boss].traits.includes('boss')&&raw.boss!=='chief'?{boss:raw.boss}:{}),...(Number.isFinite(raw.heat)&&raw.heat>0?{heat:integer(raw.heat,0,0,99)}:{})};
   if(!mix.length&&raw.replace!==true&&!Number.isFinite(raw.duration)&&!Object.keys(flags).length)return null;
   return {mix,replace:raw.replace===true,...(Number.isFinite(raw.duration)?{duration:finite(raw.duration,60,30,180)}:{}),...flags};
  }
@@ -149,6 +149,7 @@
   }
   if(v>=6&&wave>=3&&!mods?.replace&&!Number.isFinite(mods?.duration))scheduleColumns(spawns);
   for(const m of mods?.mix||[])for(let i=0;i<m.count;i++){const lane=m.lane==='both'?(i%2?'lower':'upper'):m.lane,at=m.at+(m.lane==='both'?Math.floor(i/2):i)*m.gap;if(at<duration)add(m.kind,lane,at);}
+  if(v>=6&&mods?.rush&&!mods?.replace)for(const e of spawns)e.at*=.7;
   if(mods?.ironhide)for(const e of spawns){if(e.kind==='guard')e.armor+=2;else if(e.kind==='rat'&&mods.ironhide!=='guards')e.armor=Math.max(e.armor,1);}
   spawns.sort((a,b)=>a.at-b.at);const laneCounts={upper:0,lower:0};spawns.forEach((e,i)=>{e.spawnIndex=i;if(v>=4){const h=Field.sourceFor(wave,e.lane,laneCounts[e.lane]++,mods?.replace?4:v);e.holeId=h.id;e.entryX=h.x;}});
   const patterns=['single','single','pack','scout','guard','mixed','guard','swarm','final'],kinds=[...new Set(spawns.map(e=>e.kind))];

@@ -1,10 +1,10 @@
 {
-  "version": "20261101-grounded-raids-r1",
+  "version": "20261101-grounded-raids-r2",
   "date_jst": "2026-11-01",
   "baseline_main": "e93e2aed2648f477d9d050af603f9e23308fe3df",
   "language": "ja",
   "node": {
-    "passed": 350,
+    "passed": 351,
     "failed": 0
   },
   "reproduced_before_after": {
@@ -396,13 +396,14 @@
         "planVersion": 6
       }
     ],
-    "errors": []
+    "errors": [],
+    "performed_on": "20261101-grounded-raids-r1"
   },
   "normal_trial_scope": "Continue the privately retained normally earned wave-2 save; harvest and physically deliver real resources; pay 24 wood/12 stone for each archer group; win wave 3 with six kills and three crates. No grants or time acceleration. This is not a new-start or full-thirty-wave playthrough.",
   "source_archives": {
     "matching": true,
     "verified_members": 255,
-    "sha256": "4d2364e8c24d0b518f79a51f2e5e2a3bd5e8ca062ea04bffcf7547b4fd79c846"
+    "sha256": "6dc28568d9551f18452b32e33f9e9beb4745d3c88b537a2f24524f3a3e746a19"
   },
   "publication": {
     "verified": false
@@ -411,5 +412,15 @@
     "CDP touch is not physical-device testing",
     "Current plan 6 has not been normally earned through all thirty waves",
     "All army and high-threat combinations have not been played"
-  ]
+  ],
+  "preparation_compatibility_followup": {
+    "rush_plan6": "spawn intervals multiplied by 0.7; no enemy-stat or count changes",
+    "legacy_rush_schedule": "unchanged for plans 1-5",
+    "roster_button": "starts directly after closing preparation; no obsolete 90-second label",
+    "roster_single_action_confirmed_on": [
+      "mouse 1280x900",
+      "CDP touch 390x844",
+      "CDP touch 844x390"
+    ]
+  }
 }
