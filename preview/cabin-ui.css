@@ -25,3 +25,10 @@ body.cabin-play #field.laying-rails #onboardingGuide,body.cabin-play #field.plac
 body.cabin-play #fieldExit{display:none!important}#quickbar .slot-locked svg{opacity:.45}#quickbar .slot-locked span{color:#a2b29a}
 
 body.cabin-play #field:not([data-held-item=hand]) #onboardingGuide{display:none!important}
+
+/* The scenery is part of the same physical world, including its camera transform. */
+body.cabin-play #battleWorld>#bgImg{position:absolute;inset:-100px 0 auto;width:100%;height:calc(100% + 100px);object-fit:fill;opacity:1;z-index:0}body.cabin-play #onboardingGuide.is-goal{display:none!important}
+body.cabin-play #onboardingGuide{pointer-events:none}
+/* One departure signal beside the material stock; keep the forecast free of duplicate actions. */
+body.cabin-play #raidStart{display:none!important}
+body.cabin-play #raidBoard{grid-template-areas:'heading clock boxes' 'district district district' 'forecast forecast forecast' 'result result result'}

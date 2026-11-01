@@ -6,7 +6,7 @@ window.FieldNavigation=(()=>{
  const world=e=>field()?.contains(e.target)&&!e.target.closest('button,input,select,summary,#quickbar,#raidBoard,#cameraTools,#campaignGoal,#burrowForecast,#placementActions,#beltActions,#fieldExit,#placementControls,#onboardingGuide');
  const live=()=>window.Outpost?.ready&&!Rework.paused&&document.getElementById('titleScreen')?.classList.contains('hidden');
  const stop=e=>{e.preventDefault();e.stopImmediatePropagation();};
- function send(type,e,target=first?.target){if(!target)return;const event=new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:e.pointerId,pointerType:e.pointerType,isPrimary:e.isPrimary,clientX:e.clientX,clientY:e.clientY,button:e.button,buttons:e.buttons,pressure:e.pressure||0,width:e.width||1,height:e.height||1});if(type==='pointerdown')Object.defineProperty(event,'fieldDelay',{value:Math.max(0,performance.now()-e.timeStamp)});replay.add(event);target.dispatchEvent(event);}
+ function send(type,e,target=first?.target){if(!target)return;const event=new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:e.pointerId,pointerType:e.pointerType,isPrimary:e.isPrimary,clientX:e.clientX,clientY:e.clientY,button:e.button,buttons:e.buttons,pressure:e.pressure||0,width:e.width||1,height:e.height||1});if(type==='pointerdown'&&first?.resourceKey!=null)Object.defineProperty(event,'resourceKey',{value:first.resourceKey});if(type==='pointerdown')Object.defineProperty(event,'fieldDelay',{value:Math.max(0,performance.now()-e.timeStamp)});replay.add(event);target.dispatchEvent(event);}
  function flush(){clearTimeout(timer);timer=0;if(first&&!first.sent&&!gesture){first.sent=true;send('pointerdown',first.down,first.target);if(first.move)send('pointermove',first.move,first.target);}}
  function clear(){clearTimeout(timer);timer=0;first=null;touches.clear();gesture=null;mouse=null;field()?.classList.remove('field-panning');}
  function metrics(){const p=[...touches.values()].slice(0,2);return {x:(p[0].clientX+p[1].clientX)/2,y:(p[0].clientY+p[1].clientY)/2,d:Math.max(1,Math.hypot(p[0].clientX-p[1].clientX,p[0].clientY-p[1].clientY))};}
@@ -14,7 +14,7 @@ window.FieldNavigation=(()=>{
  function down(e){if(replay.has(e)||!live())return;
   if(e.pointerType==='touch'&&(world(e)||touches.size)){
    stop(e);touches.set(e.pointerId,e);try{field().setPointerCapture(e.pointerId);}catch(_){}
-   if(touches.size===1){first={target:e.target,down:e,sent:false,move:null,pan:window.InventoryUI?.selected==='hand'&&!OutpostCamp.buildingKind&&!BattleControl.placement&&empty(ArmyView.point(e.clientX,e.clientY))};if(!first.pan)timer=setTimeout(flush,90);}
+   if(touches.size===1){first={target:e.target,down:e,resourceKey:SupplyFactory.pileAt(ArmyView.point(e.clientX,e.clientY))?.key,sent:false,move:null,pan:window.InventoryUI?.selected==='hand'&&!OutpostCamp.buildingKind&&!BattleControl.placement&&empty(ArmyView.point(e.clientX,e.clientY))};if(!first.pan)timer=setTimeout(flush,90);}
    else if(touches.size===2){clearTimeout(timer);timer=0;if(first?.sent)send('pointercancel',first.down,first.target);OutpostCamp.cancelPreview();OutpostCamp.clearSelection();OutpostCamp.cancelCarry();BattleControl.cancelGesture?.();FieldUI.cancelGesture?.();OreUI.cancelGesture?.();const m=metrics();gesture={...m,point:ArmyView.point(m.x,m.y),scale:ArmyView.camera.scale};field().classList.add('field-panning');}
    return;
   }

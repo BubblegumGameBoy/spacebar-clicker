@@ -75,7 +75,7 @@ window.ArmyView=(()=>{
   const group=slots.filter(p=>p.id===id);if(!group.length)return;
   flash={id,until:performance.now()+2100,evolution};
  }
- function viewAt(x,y,scale=camera.scale,clientX=null,clientY=null){manual=true;camera.target=camera.scale=Math.max(camera.fit*.7,Math.min(2.2,scale));applyCamera();const r=viewport.getBoundingClientRect(),px=clientX===null?viewport.clientWidth/2:clientX-r.left,py=clientY===null?viewport.clientHeight/2:clientY-r.top,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*camera.scale)-camera.w*camera.scale)/2),oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*camera.scale)-camera.h*camera.scale)/2);viewport.scrollTo({left:ox+x*camera.scale-px,top:oy+y*camera.scale-py,behavior:'instant'});}
+ function viewAt(x,y,scale=camera.scale,clientX=null,clientY=null){manual=true;camera.target=camera.scale=Math.max(camera.fit,Math.min(2.2,scale));applyCamera();const r=viewport.getBoundingClientRect(),px=clientX===null?viewport.clientWidth/2:clientX-r.left,py=clientY===null?viewport.clientHeight/2:clientY-r.top,ox=Math.max(0,(Math.max(viewport.clientWidth,camera.w*camera.scale)-camera.w*camera.scale)/2),oy=Math.max(0,(Math.max(viewport.clientHeight,camera.h*camera.scale)-camera.h*camera.scale)/2);viewport.scrollTo({left:ox+x*camera.scale-px,top:oy+y*camera.scale-py,behavior:'instant'});}
  function fit(){viewAt(camera.w/2,camera.h/2,camera.fit);}
  function render(reason){
   if(!viewport)return;
@@ -94,7 +94,7 @@ window.ArmyView=(()=>{
   if(!force)frame=requestAnimationFrame(draw);if(document.hidden||window.Rework?.paused&&!force)return;
   const dt=Math.min(40,now-last);last=now;
   if(Math.abs(camera.scale-camera.target)>.0004){camera.scale+=(camera.target-camera.scale)*(matchMedia('(prefers-reduced-motion: reduce)').matches?1:Math.min(1,dt/180));applyCamera();}
-  const width=viewport.clientWidth,height=viewport.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
+  const width=viewport.clientWidth,height=viewport.clientHeight,dpr=Math.min(2,devicePixelRatio||1);canvas.style.left=viewport.offsetLeft+'px';canvas.style.top=viewport.offsetTop+'px';
   if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);canvas.style.width=width+'px';canvas.style.height=height+'px';}
   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);ctx.imageSmoothingEnabled=false;
   const ox=Math.max(0,(Math.max(width,camera.w*camera.scale)-camera.w*camera.scale)/2)-viewport.scrollLeft;
@@ -158,9 +158,10 @@ window.ArmyView=(()=>{
  function snapshot(){const h=window.BattleControl?.hero;return {width:camera.w,height:camera.h,captain:{x:Math.round(h?.x||150),y:Math.round(h?.y||370)},units:slots.map(p=>[p.id,p.index,Math.round(p.x),Math.round(p.y),p.commanded&&p.order?Math.round(p.order.x):-1,p.commanded&&p.order?Math.round(p.order.y):-1])};}
  function orderUnits(a,b){const order=['woodcutter','miner','farmer','arch','ballista','sword','heavy','healer','porter'];const rank=u=>order.includes(u.id)?order.indexOf(u.id):7+UNITS.indexOf(u);return rank(a)-rank(b);}
  function point(clientX,clientY){const r=world.getBoundingClientRect();return {x:(clientX-r.left)/camera.scale,y:(clientY-r.top)/camera.scale};}
- function zoom(factor){manual=true;camera.target=Math.max(camera.fit*.7,Math.min(2.2,camera.target*factor));}
+ function zoom(factor){if(outpost()){const r=viewport.getBoundingClientRect(),p=point(r.left+viewport.clientWidth/2,r.top+viewport.clientHeight/2);viewAt(p.x,p.y,camera.scale*factor);return;}manual=true;camera.target=Math.max(camera.fit*.7,Math.min(2.2,camera.target*factor));}
  function boot(){
   viewport=document.getElementById('battleViewport');world=document.getElementById('battleWorld');stage=document.getElementById('worldStage');ground=document.getElementById('battleGround');canvas=document.getElementById('armyCanvas');ctx=canvas.getContext('2d',{alpha:true});
+  if(outpost())world.prepend?.(document.getElementById('bgImg'));
   // The inline legacy renderer runs before this module on reload; never leave its copies behind.
   world.querySelectorAll('.unit-sprite').forEach(el=>el.remove());
   document.getElementById('zoomIn').onclick=()=>zoom(1.3);document.getElementById('zoomOut').onclick=()=>zoom(1/1.3);document.getElementById('zoomFit').onclick=fit;

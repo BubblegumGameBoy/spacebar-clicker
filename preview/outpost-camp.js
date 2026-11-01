@@ -504,7 +504,7 @@ window.OutpostCamp = (() => {
  }
  function refreshDrag(e,initial=false){
   if(!drag)return;drag.x=e.clientX;drag.y=e.clientY;drag.over=dragTarget(e);
-  let added=initial?1:0;if(!drag.over){let extra=0;while(drag.items.length<handCapacity()){const more=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!more||heldDrop(more))break;drag.items.push({drop:more,count:1});extra++;}if(extra)audio('pickup');added+=extra;}
+  let added=initial?1:0;if(!drag.over){let extra=0;while(drag.items.length<handCapacity()){const more=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!more||heldDrop(more))break;if(window.SupplyFactory?.beginCarry?.(more)===false)break;drag.items.push({drop:more,count:1});extra++;}if(extra)audio('pickup');added+=extra;}
   if(added)window.dispatchEvent(new CustomEvent('camp:handpickup',{detail:{held:drag.items.length,capacity:handCapacity(),added}}));
   dragGhost.innerHTML='<b>'+drag.items.length+' / '+handCapacity()+'</b>';
   dragGhost.style.transform='translate('+e.clientX+'px,'+e.clientY+'px)';
@@ -537,8 +537,8 @@ window.OutpostCamp = (() => {
  function installDrag(){
   if(dragInstalled)return;dragInstalled=true;const field=document.getElementById('field');
   field.addEventListener('pointerdown',e=>{
-   if(railDraft||!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse,#fieldMinimap,#burrowForecast,#placementActions,#fieldExit')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;
-   const s=state(),drop=window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!drop||drag)return;
+   if(!booted||window.Rework?.paused||window.BattleControl?.placement||e.button!==0||e.isPrimary===false||e.target.closest('button,input,select,#campWarehouse,#fieldMinimap,#burrowForecast,#placementActions,#fieldExit')&&!e.target.closest('#cabinDoor')||!document.getElementById('titleScreen')?.classList.contains('hidden'))return;
+   const s=state(),drop=e.resourceKey!=null?s.factory.drops.find(d=>d.key===e.resourceKey):window.SupplyFactory?.pileAt(ArmyView.point(e.clientX,e.clientY));if(!drop||drag||window.SupplyFactory?.beginCarry?.(drop)===false)return;cancelBeltGesture();placementChoice=null;devicePreview=null;platformPreview=null;syncPlacementCard();
    e.preventDefault();e.stopImmediatePropagation();
    const view=document.getElementById('battleWorld').getBoundingClientRect(),z=ArmyView.camera.scale;drag={drop,count:1,items:[{drop,count:1}],state:s,pointerId:e.pointerId,x:e.clientX,y:e.clientY,offset:{x:view.left+drop.x*z-e.clientX,y:view.top+drop.y*z-e.clientY},over:false};
    dragGhost=document.createElement('div');dragGhost.id='campDragGhost';dragGhost.setAttribute('aria-hidden','true');dragGhost.innerHTML='<b>1 / '+handCapacity()+'</b>';document.body.append(dragGhost);

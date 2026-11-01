@@ -6,7 +6,7 @@
 })(typeof globalThis!=='undefined'?globalThis:this,function(Field,Campaign){
  'use strict';
  const WORLD=Field.WORLD;
- const MAX_WAVE=Campaign.MAX_WAVE,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=5,PIERCE=['sword','ballista'];
+ const MAX_WAVE=Campaign.MAX_WAVE,GATE_SECONDS=1,EPS=1e-9,MAX_COUNT=1e6,MAX_KEY=1e12,PLAN_VERSION=6,PIERCE=['sword','ballista'];
  const finite=(value,fallback=0,min=0,max=1e9)=>Number.isFinite(value)?Math.max(min,Math.min(max,value)):fallback;
  const integer=(value,fallback=0,min=0,max=1e9)=>Math.floor(finite(value,fallback,min,max));
  const waveNumber=value=>integer(value,1,1,MAX_WAVE);
@@ -119,6 +119,12 @@
   if(!mix.length&&raw.replace!==true&&!Number.isFinite(raw.duration)&&!Object.keys(flags).length)return null;
   return {mix,replace:raw.replace===true,...(Number.isFinite(raw.duration)?{duration:finite(raw.duration,60,30,180)}:{}),...flags};
  }
+ // Small, readable columns alternate roads. Bosses arrive after their escort.
+ function scheduleColumns(spawns){const regular=spawns.filter(e=>!has(e,'boss')),bosses=spawns.filter(e=>has(e,'boss')),size=Math.max(3,Math.ceil(regular.length/6)),lanes={upper:regular.filter(e=>e.lane==='upper'),lower:regular.filter(e=>e.lane==='lower')};let lane=regular[0]?.lane||'upper',column=0;
+  while(lanes.upper.length||lanes.lower.length){if(!lanes[lane].length)lane=lane==='upper'?'lower':'upper';const pack=lanes[lane].splice(0,size),gap=Math.min(1.2,4/Math.max(1,pack.length-1));pack.forEach((e,i)=>e.at=column*6+i*gap);column++;lane=lane==='upper'?'lower':'upper';}
+  const last=Math.max(0,...regular.map(e=>e.at));bosses.forEach((e,i)=>e.at=last+8+i*6);
+ }
+ function assaults(plan){const groups=[];for(const e of plan.spawns){let g=groups.at(-1);const boss=has(e,'boss');if(!g||g.lane!==e.lane||g.boss!==boss||e.at-g.until>3){g={at:e.at,until:e.at,lane:e.lane,boss,count:0,kinds:[],entryX:e.entryX||WORLD.entryX};groups.push(g);}g.until=e.at;g.count++;if(!g.kinds.includes(e.kind))g.kinds.push(e.kind);}return groups.map((g,i)=>({...g,title:g.boss?'ボス襲来':i===0?'先行隊':'第'+(i+1)+'小隊'}));}
  function plan(value,planVersion=PLAN_VERSION,options=null){
   const wave=waveNumber(value),spawns=[],mods=modifiers(options),duration=mods?.duration??(wave<=3?50:wave<=6?planVersion>=4?85:60:planVersion>=4?100:70),v=integer(planVersion,PLAN_VERSION,1,PLAN_VERSION);
   const stat=kind=>{const d=ENEMIES[kind];return {hp:d.hp,speed:d.speed,armor:d.armor,r:d.r};};
@@ -141,12 +147,13 @@
    if(mods?.flank)for(const e of spawns)if(e.kind==='scout')e.lane=mods.flank;
    for(const w of mods?.swap||[]){const list=spawns.filter(e=>e.kind===w.from),step=list.length/Math.max(1,w.count);for(let i=0;i<Math.min(w.count,list.length);i++){const e=list[Math.floor(i*step)],d=ENEMIES[w.to];Object.assign(e,{kind:w.to,hp:d.hp,speed:d.speed,armor:d.armor,r:d.r});}}
   }
+  if(v>=6&&wave>=3&&!mods?.replace&&!Number.isFinite(mods?.duration))scheduleColumns(spawns);
   for(const m of mods?.mix||[])for(let i=0;i<m.count;i++){const lane=m.lane==='both'?(i%2?'lower':'upper'):m.lane,at=m.at+(m.lane==='both'?Math.floor(i/2):i)*m.gap;if(at<duration)add(m.kind,lane,at);}
   if(mods?.ironhide)for(const e of spawns){if(e.kind==='guard')e.armor+=2;else if(e.kind==='rat'&&mods.ironhide!=='guards')e.armor=Math.max(e.armor,1);}
   spawns.sort((a,b)=>a.at-b.at);const laneCounts={upper:0,lower:0};spawns.forEach((e,i)=>{e.spawnIndex=i;if(v>=4){const h=Field.sourceFor(wave,e.lane,laneCounts[e.lane]++,mods?.replace?4:v);e.holeId=h.id;e.entryX=h.x;}});
   const patterns=['single','single','pack','scout','guard','mixed','guard','swarm','final'],kinds=[...new Set(spawns.map(e=>e.kind))];
   const potential=spawns.reduce((n,e)=>n+1+(ENEMIES[e.kind].split?.count||0),0);
-  const roundDuration=v>=5&&wave>3&&!Number.isFinite(mods?.duration)?Math.max(duration,...spawns.map(e=>e.at+lengthOf(e)/e.speed+(def(e.kind).sling?def(e.kind).sling.seconds:2.5)+3)):duration;
+  const roundDuration=v>=5&&(wave>3||v>=6&&wave===3)&&!Number.isFinite(mods?.duration)?Math.max(duration,...spawns.map(e=>e.at+lengthOf(e)/e.speed+(def(e.kind).sling?def(e.kind).sling.seconds:2.5)+3)):duration;
   return {wave,duration:roundDuration,chapter:chapter(wave),pattern:mods?.replace?'custom':wave===4&&v!==1?'vanguard':patterns[wave-1]||'mixed',spawns,potential,counts:{upper:spawns.filter(e=>e.lane==='upper').length,lower:spawns.filter(e=>e.lane==='lower').length},kinds,special:kinds.filter(k=>!['rat','scout','guard','chief'].includes(k)),boxes:mods?.boxes||3,heat:mods?.heat||0,...(mods?.flank?{flank:mods.flank}:{}),boss:wave%3===0&&(v>=5||wave===9)?mods?.boss||Campaign.chapter(wave).boss:null,planVersion:v,district:Campaign.chapter(wave).name};
  }
  function planFor(state){return plan(state.wave,state.planVersion,state.modifiers);}
@@ -297,8 +304,13 @@
   spawnDue(state,definition);if(resolved(state,definition))return finishResolved(state);
   while(state.elapsed<end-EPS){
    const nextSpawn=definition.spawns[state.spawned]?.at??Infinity;
-   const next=Math.min(end,state.elapsed+.25,nextSpawn);
-   for(const enemy of state.enemies)if(enemy.alive){advance(state,enemy,state.elapsed,next,enemy.speed);if(!enemy.alive){const failure=failureReason(state);if(failure){state.elapsed=enemy.resolvedAt??next;return [settle(state,failure)];}}}
+   // Resolve breaches chronologically, and freeze every actor at the same instant.
+   for(const enemy of state.enemies)if(enemy.alive&&enemy.atGate&&gateLimit(state,enemy)-enemy.gateTime<=EPS){enemy.gateTime=gateLimit(state,enemy);escape(state,enemy,state.elapsed);}
+   const immediateFailure=failureReason(state);if(immediateFailure)return [settle(state,immediateFailure)];
+   let next=Math.min(end,state.elapsed+.25,nextSpawn);
+   for(const enemy of state.enemies)if(enemy.alive&&enemy.atGate)next=Math.min(next,state.elapsed+gateLimit(state,enemy)-enemy.gateTime);
+   for(const enemy of state.enemies)if(enemy.alive)advance(state,enemy,state.elapsed,next,enemy.speed);
+   const failure=failureReason(state);if(failure){state.elapsed=next;return [settle(state,failure)];}
    chant(state,next);
    state.elapsed=next;spawnDue(state,definition);if(resolved(state,definition))return finishResolved(state);
   }
@@ -371,5 +383,5 @@
   return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
  }
  function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane,Math.max(...Field.HOLES.map(h=>h.x))),center,radius,minRadius).map(span=>({lane,...span})));}
- return {Campaign,raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ return {assaults,Campaign,raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });
