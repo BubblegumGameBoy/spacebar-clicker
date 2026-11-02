@@ -36,7 +36,7 @@
 
 試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261102-first-defender-r1&slot=new-game
 
-公開配信の確認はFIRST_DEFENDER_CHECKSのpublicationへ記録。実機タッチ・長期継続率・全編成／高脅威の全組合せは未確認。セーブは同じ保存先を継続し、リセットしない。
+公開配信を確認済み。更新12ファイルがUTF8・LFで検証ビルドと一致し、公開3画面サイズの固定ボタンと初回待機、ネイティブの既存セーブ継続を確認。詳細はFIRST_DEFENDER_CHECKSのpublication。実機タッチ・長期継続率・全編成／高脅威の全組合せは未確認。セーブは同じ保存先を継続し、リセットしない。
 
 ## 再開
 

@@ -381,6 +381,114 @@
     "sha256": "bf465cf4d5311e38139067038683a58dbc2042e50239054618e063f895034307"
   },
   "publication": {
-    "verified": false
+    "verified": true,
+    "release_commit": "7ce0c7f7b8d4add4e32967d0e81d7c6eaf45fa9a",
+    "pages_run": 41387790510,
+    "pages_conclusion": "success",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261102-first-defender-r1&slot=new-game",
+    "payload": {
+      "canonical": "UTF8/LF",
+      "matched": [
+        "preview/build.json",
+        "preview/cabin-ui.css",
+        "preview/cabin-ui.js",
+        "preview/expedition-ui.js",
+        "preview/field-ui.js",
+        "preview/harvest-skills.js",
+        "preview/index.html",
+        "preview/inventory-ui.js",
+        "preview/outpost-core.js",
+        "preview/outpost-tutorial-core.js",
+        "preview/outpost-tutorial.js",
+        "preview/outpost.js"
+      ]
+    },
+    "fresh_isolated_smoke": [
+      {
+        "width": 1280,
+        "height": 900,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 62.099998474121094,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 7.999509811401367,
+        "errors": []
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "wave": 1,
+        "ready": true,
+        "cleared": 0,
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "gold": 0,
+        "people": 0,
+        "capacity": 240,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "doorLeft": 118.86978912353516,
+        "errors": []
+      }
+    ],
+    "native_user_profile": "Same new-game slot retained one existing crew and two wood. Opening remains in preparation with the archer recipe lesson and missing stone shown. No resource, army or save reset actions performed."
   }
 }
