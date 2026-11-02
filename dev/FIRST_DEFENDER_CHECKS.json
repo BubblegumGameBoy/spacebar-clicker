@@ -1,0 +1,386 @@
+{
+  "version": "20261102-first-defender-r1",
+  "date_jst": "2026-11-02",
+  "baseline_main": "6d7dce03231388077a1ff6b86cd9d03cf0b7010a",
+  "language": "ja",
+  "node": {
+    "passed": 357,
+    "failed": 0
+  },
+  "fixture_ui": {
+    "fixture": true,
+    "accelerated": "initial hold, prepared victories and countdown expiry only",
+    "rows": [
+      {
+        "width": 1280,
+        "height": 900,
+        "input": "mouse",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "input": "CDP touch",
+        "passed": true,
+        "errors": []
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "input": "CDP touch",
+        "passed": true,
+        "errors": []
+      }
+    ]
+  },
+  "equipment_regression_fixture": {
+    "fixture": "Prepared equipment recipes and materials; native pointer integration, not earned progression",
+    "rows": [
+      {
+        "lang": "ja",
+        "input": "mouse",
+        "status": "passed",
+        "checks": [
+          "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+          "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+          "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+          "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+          "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+          "Cancel beside the ghost spends nothing and exits all construction",
+          "Missing materials are explained at the disabled local confirmation",
+          "Releasing a held preview outside the ground neither places nor charges",
+          "Automatic gathering slot exits a held construction tool before the first placement click",
+          "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+          "Escape during a wind drag restores and saves the old direction, ignoring late release",
+          "Automatic gathering slot puts broom and magnet away",
+          "Reload discards unpaid previews and preserves built equipment"
+        ],
+        "errors": []
+      },
+      {
+        "lang": "ja",
+        "input": "CDP touch",
+        "status": "passed",
+        "checks": [
+          "blower: first tap previews; second confirms once beside a neighbouring selection halo",
+          "hopper: first tap previews; second confirms once beside a neighbouring selection halo",
+          "loader: first tap previews; second confirms once beside a neighbouring selection halo",
+          "platform: first tap previews; second confirms once beside a neighbouring selection halo",
+          "Invalid ghost explains rejection, another point relocates it, local turn/confirm preserves the preview",
+          "Cancel beside the ghost spends nothing and exits all construction",
+          "Missing materials are explained at the disabled local confirmation",
+          "Releasing a held preview outside the ground neither places nor charges",
+          "Automatic gathering slot exits a held construction tool before the first placement click",
+          "Short tap still boosts, long press selects, adjacent Close deselects without removing",
+          "Automatic gathering slot puts broom and magnet away",
+          "Reload discards unpaid previews and preserves built equipment"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "hotbar_regression_fixture": {
+    "fixture": true,
+    "rows": [
+      {
+        "input": "mouse",
+        "passed": true,
+        "checks": [
+          "slot opens its recipe",
+          "researching the requested blueprint selects its hotbar slot automatically",
+          "two paid placements retain the selected object",
+          "first slot ends construction",
+          "broom crafts for 6 wood / 2 stone and is selected automatically",
+          "no duplicate field exit UI"
+        ],
+        "errors": []
+      },
+      {
+        "input": "CDP touch",
+        "passed": true,
+        "checks": [
+          "slot opens its recipe",
+          "researching the requested blueprint selects its hotbar slot automatically",
+          "two paid placements retain the selected object",
+          "first slot ends construction",
+          "broom crafts for 6 wood / 2 stone and is selected automatically",
+          "no duplicate field exit UI"
+        ],
+        "errors": []
+      }
+    ]
+  },
+  "normally_earned_from_empty": {
+    "fixture": false,
+    "normalTime": true,
+    "grants": false,
+    "rows": [
+      {
+        "event": "empty-start",
+        "phase": "prep",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": false,
+          "scheduledRound": 0,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {},
+        "lesson": "recipe_woodcutter",
+        "result": null
+      },
+      {
+        "event": "paid-unlock-recipe_woodcutter",
+        "phase": "prep",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": false,
+          "scheduledRound": 0,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {},
+        "lesson": "worker",
+        "result": null
+      },
+      {
+        "event": "paid-placed-woodcutter",
+        "phase": "prep",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": false,
+          "scheduledRound": 0,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {
+          "woodcutter": 1
+        },
+        "lesson": "recipe_arch",
+        "result": null
+      },
+      {
+        "event": "paid-unlock-recipe_arch",
+        "phase": "prep",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": false,
+          "scheduledRound": 0,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 3,
+          "stone": 0
+        },
+        "owned": {
+          "woodcutter": 1
+        },
+        "lesson": "defenders",
+        "result": null
+      },
+      {
+        "event": "paid-placed-arch",
+        "phase": "active",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": -1,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 1
+        },
+        "lesson": "defend",
+        "result": null
+      },
+      {
+        "event": "first-defender-starts-raid",
+        "phase": "active",
+        "wave": 1,
+        "cleared": 0,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": -1,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 1
+        },
+        "lesson": "defend",
+        "result": null
+      },
+      {
+        "event": "first-wave-won",
+        "phase": "result",
+        "wave": 1,
+        "cleared": 1,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": -1,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 1
+        },
+        "lesson": "hand1",
+        "result": {
+          "wave": 1,
+          "win": true,
+          "boxes": 3,
+          "kills": 3,
+          "escaped": 0,
+          "gold": 38,
+          "first": true
+        }
+      },
+      {
+        "event": "second-defender-during-countdown",
+        "phase": "result",
+        "wave": 1,
+        "cleared": 1,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": 1,
+          "remaining": 18.415600000000225
+        },
+        "inventory": {
+          "wood": 2,
+          "stone": 1
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "lesson": "hand1",
+        "result": {
+          "wave": 1,
+          "win": true,
+          "boxes": 3,
+          "kills": 3,
+          "escaped": 0,
+          "gold": 38,
+          "first": true
+        }
+      },
+      {
+        "event": "wave-two-starts-without-button",
+        "phase": "active",
+        "wave": 2,
+        "cleared": 1,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": 1,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 2,
+          "stone": 1
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "lesson": "defend",
+        "result": null
+      },
+      {
+        "event": "second-wave-won",
+        "phase": "result",
+        "wave": 2,
+        "cleared": 2,
+        "clock": {
+          "version": 1,
+          "armed": true,
+          "scheduledRound": -1,
+          "remaining": 0
+        },
+        "inventory": {
+          "wood": 2,
+          "stone": 1
+        },
+        "owned": {
+          "woodcutter": 1,
+          "arch": 2
+        },
+        "lesson": "hand1",
+        "result": {
+          "wave": 2,
+          "win": true,
+          "boxes": 3,
+          "kills": 4,
+          "escaped": 0,
+          "gold": 46,
+          "first": true
+        }
+      }
+    ],
+    "errors": []
+  },
+  "interval_trial": {
+    "first_attempt_seconds": 60,
+    "finding": "The second archer could not be paid for and placed before wave 2. The QA assertion was strengthened to require a successful paid hire and two actual archers.",
+    "final_opening_interval_seconds": 90,
+    "restarted_from_empty": true,
+    "second_archer_placed_with_seconds_remaining": 18.4156,
+    "second_wave": {
+      "automatic": true,
+      "win": true,
+      "crates": 3
+    }
+  },
+  "scope": {
+    "original_game_unchanged": true,
+    "normal_playthrough_waves": 2,
+    "full_thirty_wave_replay": false,
+    "real_device_touch": false,
+    "user_save_reset": false,
+    "private_save_published": false
+  },
+  "source_archives": {
+    "matching": true,
+    "verified_members": 259,
+    "sha256": "bf465cf4d5311e38139067038683a58dbc2042e50239054618e063f895034307"
+  },
+  "publication": {
+    "verified": false
+  }
+}

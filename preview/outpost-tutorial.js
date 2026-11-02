@@ -5,7 +5,7 @@ window.OutpostTutorial=(()=>{
  const labels={tap:['木を切る','Chop wood','砍树'],carry:['倉庫へ運ぶ','Drag to warehouse','拖到仓库'],upgrade:['強化する','Upgrade','强化'],hire:['雇う','Hire','雇佣'],place:['ここに置く','Place here','放在这里'],blower:['送風機','Blower','鼓风机'],fence:['柵をひく','Draw a fence','拖出栅栏'],watch:['動きを見よう','Watch it work','看看效果'],boost:['風を強くする','Boost wind','加强风力'],ready:['守る ▶','Defend ▶','防守 ▶']};
  const icons={tap:'☝',carry:'↦',upgrade:'↑',hire:'＋',place:'◎',blower:'➜',fence:'⌁',watch:'◉',boost:'➜',ready:'⚑'};
  let panel=null,signature='',clock=0,lastInput=-Infinity;
- function facts(){const units=window.ArmyView?.sim?.soldiers||[],defenders=units.filter(p=>p.id==='arch'&&p.y<310&&window.Outpost?.covers(p,p.u));return {workerPlaced:units.some(p=>p.id==='woodcutter'),defenders:defenders.length,defendersReady:defenders.length>=2};}
+ function facts(){const units=window.ArmyView?.sim?.soldiers||[],defenders=units.filter(p=>p.id==='arch'&&p.y<310&&window.Outpost?.covers(p,p.u));return {workerPlaced:units.some(p=>p.id==='woodcutter'),defenders:defenders.length,defendersReady:defenders.length>=1};}
  function snapshot(){const q=OutpostTutorialCore.step(S,facts());return {...q,title:'',detail:'',action:''};}
  // Only the first two deposits get a gesture demonstration. Afterwards the player chooses how to earn the goal.
  function goalQuote(q=snapshot()){
@@ -26,6 +26,7 @@ window.OutpostTutorial=(()=>{
   if(BattleControl.placement||OutpostCamp.layingRails||q.id==='workerPlace')return {kind:'place',point:null,step:q.id};
   if(q.id==='defend')return {kind:'defend',step:q.id};
   const quote=goalQuote(q);
+  if(quote&&!quote.ready){const type=['wood','stone'].find(t=>(quote.cost?.[t]||0)>(f.inventory[t]||0));if(type){const d=f.drops.find(d=>d.type===type&&!OutpostCamp.isHeld(d)&&!SupplyFactory.isAirborne(d));if(d){const b=SupplyFactory.pileBounds(d);return {kind:'carry',point:{x:(b.left+b.right)/2,y:(b.top+b.bottom)/2},to:{...OutpostCore.WORLD.home},type,step:q.id};}const n=f.nodes.find(n=>n.type===type&&n.stock>0);if(n)return {kind:'tap',point:{x:n.x,y:n.y-(type==='wood'?44:24)},type,step:q.id};}}
   if(q.skill)return {kind:'upgrade',button:true,step:q.id};
   if(q.id==='blower')return {kind:'blower',button:!!quote?.ready,step:q.id};
   if(quote?.unit)return {kind:'hire',button:!!quote.ready,unit:quote.unit,step:q.id};
@@ -58,19 +59,19 @@ window.OutpostTutorial=(()=>{
   hand1:[['鋭い刃先','Sharpened tools','锋利刃口'],['採集力 1 → 2：木3打 → 2打','Gathering power 1 → 2: wood 3 hits → 2','采集力1 → 2：木材3次 → 2次']],
   storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 240 → 360個','Ground items 12 → 24','地面物资上限 12 → 24个']],
   blower:[['送風機で運ぶ','Transport with wind','用风力搬运'],['落下先に風を当て、矢印を倉庫へ向ける','Cover the drop point with wind; aim toward the warehouse','让风覆盖掉落点，箭头朝向仓库']],
-  defenders:[['弓兵を2人配置','Place two archers','放置两名弓箭手'],['上の道に射程を重ねて迎え撃つ','Cover the upper road with their range','让射程覆盖上路']],
+  defenders:[['弓兵を1人配置','Place two archers','放置两名弓箭手'],['北の道に射程を重ねよう。配置すると最初の襲撃が始まります。','Cover the upper road with their range','让射程覆盖上路']],
   defend:[['敵を迎え撃つ','Defend the camp','守卫营地'],['敵をクリック・Spaceで援護','Click enemies or press Space to help','点击敌人或按空格支援']]
  };
  function goalView(q,cue){
   if(cue.basic)return {title:local(labels[cue.kind]),note:'',cost:null,button:''};
-  const goal=goals[q.id]||goals.worker,quote=goalQuote(q),placement=cue.kind==='place';
-  if(quote?.kind==='recipe')return {title:quote.title[LANG]||quote.title.ja,note:quote.description[LANG]||quote.description.ja,cost:quote.cost,button:local(['ツリーで解放','Unlock in tree','在技能树解锁'])};
-  return {title:placement?local(['設置場所を選ぶ','Choose a position','选择放置位置']):local(goal[0]),note:placement?local(['予告を見ながら好きな場所で放す','Release where the preview works for you','查看预览后，在合适的位置松开']):local(goal[1]),cost:placement?null:quote?.cost,button:q.skill?local(['スキルツリー','Skill tree','技能树']):cue.kind==='blower'?local(['設置する','Place','放置']):local(['雇う','Hire','雇佣'])};
+  const goal=goals[q.id]||goals.worker,quote=goalQuote(q),placement=cue.kind==='place';const gather=cue.type?(cue.type==='wood'?'木材':'石材')+'を集めよう。落ちた資材を小屋へ運ぶと使えます。':null;
+  if(quote?.kind==='recipe')return {title:quote.title[LANG]||quote.title.ja,note:gather||quote.description[LANG]||quote.description.ja,cost:quote.cost,button:local(['ツリーで解放','Unlock in tree','在技能树解锁'])};
+  return {title:placement?local(['設置場所を選ぶ','Choose a position','选择放置位置']):local(goal[0]),note:gather|| (placement?local(['予告を見ながら好きな場所で放す','Release where the preview works for you','查看预览后，在合适的位置松开']):local(goal[1])),cost:placement?null:quote?.cost,button:q.skill?local(['スキルツリー','Skill tree','技能树']):cue.kind==='blower'?local(['設置する','Place','放置']):local(['雇う','Hire','雇佣'])};
  }
- function sync(force=false){if(!panel)return;if(!force&&++clock%8)return;const left=Math.ceil(S.outpost.prepRemaining||0);const timer=document.getElementById('introRaidClock');if(timer){timer.hidden=S.outpost.round>0||S.outpost.phase==='active'||OutpostTutorialCore.basicsLearned(S);timer.innerHTML='<canvas width=32 height=28 aria-hidden=true></canvas><span>'+(LANG==='ja'&&S.expedition?.awaitingReady?'◷ 準備中':'◷ '+Math.floor(left/60)+':'+String(left%60).padStart(2,'0'))+'</span>';const art=Outpost.look('rat')?.art,f=art?.frames?.[0];if(f){const c=timer.querySelector('canvas'),k=Math.min(30/f.w,26/f.h);c.getContext('2d').drawImage(art.image,f.x,f.y,f.w,f.h,16-f.w*k/2,27-f.h*k,f.w*k,f.h*k);}timer.classList.toggle('is-near',!S.expedition?.awaitingReady&&left<=45);timer.setAttribute('aria-label',LANG==='ja'&&S.expedition?.awaitingReady?'準備完了まで襲撃時計は停止中':local(['襲撃まで ','Raid in ','袭击倒计时 '])+left+local(['秒',' seconds','秒']));}const t=OutpostTutorialCore.state(S);if(S.outpost.phase==='active'&&!t.started){t.started=true;save();}const q=snapshot();revealOptions(t);const cue=visualCue(),view=goalView(q,cue),inventory=SupplyFactory.state.inventory,key=JSON.stringify([LANG,q.id,q.progress,t.started,S.outpost.phase,cue.kind,cue.unit,!!cue.button,cue.basic,inventory.wood,inventory.stone]);if(key===signature)return;signature=key;
-  panel.hidden=q.id==='complete'||S.outpost.phase==='active';document.body.classList.toggle('learning-worksite',!!cue.basic);document.body.classList.toggle('has-work-goal',!panel.hidden);document.body.dataset.lesson=q.id;
+ function sync(force=false){if(!panel)return;if(!force&&++clock%8)return;const left=Math.ceil(S.outpost.prepRemaining||0);const timer=document.getElementById('introRaidClock');if(timer)timer.hidden=true;const t=OutpostTutorialCore.state(S);if(S.outpost.phase==='active'&&!t.started){t.started=true;save();}const q=snapshot();revealOptions(t);const cue=visualCue(),view=goalView(q,cue),inventory=SupplyFactory.state.inventory,key=JSON.stringify([LANG,q.id,q.progress,t.started,S.outpost.phase,cue.kind,cue.unit,!!cue.button,cue.basic,inventory.wood,inventory.stone]);if(key===signature)return;signature=key;
+  panel.hidden=q.id==='complete'||S.outpost.phase==='active'||S.outpost.cleared>=1;document.body.classList.toggle('learning-worksite',!!cue.basic);document.body.classList.toggle('has-work-goal',!panel.hidden);document.body.dataset.lesson=q.id;
   panel.classList.toggle('is-goal',!cue.basic);panel.dataset.cue=cue.kind;panel.setAttribute('aria-label',view.title);
-  panel.querySelector('.onboarding-kicker').textContent=cue.basic?'':local(['次のおすすめ','Suggested next step','下一步建议']);
+  panel.querySelector('.onboarding-kicker').textContent=cue.basic?'':local(['はじめての拠点づくり','Suggested next step','下一步建议']);
   const emblem=panel.querySelector('.onboarding-icon');emblem.textContent=icons[cue.kind]||'↑';if(cue.unit){const u=UNITS.find(u=>u.id===cue.unit),src=u&&ArmyView.portrait(u);if(src){const img=document.createElement('img');img.src=src;img.alt='';emblem.replaceChildren(img);}}
   panel.querySelector('.onboarding-label').textContent=view.title;panel.querySelector('.onboarding-note').textContent=view.note;
   const costs=panel.querySelector('.onboarding-costs');costs.replaceChildren();
@@ -81,7 +82,7 @@ window.OutpostTutorial=(()=>{
  }
 
  function draw(ctx,{ox,oy,z}){
-  if(!panel||OutpostTutorialCore.basicsLearned(S)||Rework.paused)return;const cue=visualCue(),p=cue.point;if(!p)return;
+  if(!panel||panel.hidden||Rework.paused)return;const cue=visualCue(),p=cue.point;if(!p)return;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,now=performance.now()/1000,phase=reduced?0:(now%2.6)/2.6;
   const x=ox+p.x*z,y=oy+p.y*z,home=cue.to?{x:ox+cue.to.x*z,y:oy+cue.to.y*z}:null;
   ctx.save();

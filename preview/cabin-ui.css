@@ -20,15 +20,25 @@ body.cabin-play #cameraTools{bottom:auto!important;right:auto!important;width:au
 
 @media(pointer:coarse){#cabinDoor{min-height:44px}}
 
-body.cabin-play #field.laying-rails #onboardingGuide,body.cabin-play #field.placing #onboardingGuide{display:none!important}
+body.cabin-play #field.laying-rails #onboardingGuide{display:none!important}
 
 body.cabin-play #fieldExit{display:none!important}#quickbar .slot-locked svg{opacity:.45}#quickbar .slot-locked span{color:#a2b29a}
 
 body.cabin-play #field:not([data-held-item=hand]) #onboardingGuide{display:none!important}
 
 /* The scenery is part of the same physical world, including its camera transform. */
-body.cabin-play #battleWorld>#bgImg{position:absolute;inset:-100px 0 auto;width:100%;height:calc(100% + 100px);object-fit:fill;opacity:1;z-index:0}body.cabin-play #onboardingGuide.is-goal{display:none!important}
+body.cabin-play #battleWorld>#bgImg{position:absolute;inset:-100px 0 auto;width:100%;height:calc(100% + 100px);object-fit:fill;opacity:1;z-index:0}
 body.cabin-play #onboardingGuide{pointer-events:none}
 /* One departure signal beside the material stock; keep the forecast free of duplicate actions. */
 body.cabin-play #raidStart{display:none!important}
 body.cabin-play #raidBoard{grid-template-areas:'heading clock boxes' 'district district district' 'forecast forecast forecast' 'result result result'}
+
+/* The opening lesson belongs to the dock, keeping resource input on clear ground. */
+body.cabin-play #quickbar #onboardingGuide{position:relative;inset:auto;transform:none;max-width:none;width:100%;margin:0 0 5px;padding:0 0 6px;border:0;border-bottom:1px solid #69764d;border-radius:0;background:transparent;box-shadow:none;min-width:0;gap:8px;font-size:12px}
+body.cabin-play #quickbar .onboarding-label{font-size:12px}body.cabin-play #quickbar .onboarding-note{max-width:480px;font-size:10px}body.cabin-play #quickbar .onboarding-kicker{font-size:9px}body.cabin-play #quickbar .onboarding-icon{font-size:20px}body.cabin-play #quickbar .onboarding-costs{margin:0;font-size:11px}body.cabin-play #quickbar #onboardingAction{width:auto;min-height:44px;max-width:116px;padding:5px 9px;font-size:11px}
+body.cabin-play #battleViewport{bottom:var(--field-dock-height,100px)}
+body.cabin-play.has-work-goal #field #cameraTools{top:42px!important}
+body.cabin-play .harvest-detail-purchase{background:#263f2d;border:1px solid #9eac76;border-radius:5px;padding:10px;gap:10px}body.cabin-play #harvestLearn{min-height:46px;font-weight:800;font-size:14px}
+
+#cabinResearchAction{flex:none;padding:9px 14px;border-top:1px solid #879368;background:#263f2d}#cabinResearchAction[hidden]{display:none}body.cabin-play #cabinResearchAction .harvest-detail-purchase{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:0;margin:0;border:0;background:none;gap:6px}#cabinResearchAction .harvest-detail-purchase>div{display:flex;flex-direction:column;gap:2px}#cabinResearchAction .harvest-detail-purchase small{font-size:10px}#cabinResearchAction button{min-height:44px;padding:8px 14px;font:700 12px system-ui}#cabinResearchAction .unified-show-card{margin:0}
+@media(max-height:500px){#cabinResearchAction{padding:5px 14px}#cabinResearchAction .harvest-detail-purchase>div{flex-direction:row;gap:9px;align-items:center}#cabinResearchAction .harvest-detail-purchase small{display:none}}

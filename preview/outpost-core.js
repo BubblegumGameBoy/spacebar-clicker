@@ -99,6 +99,10 @@
   return {version:1,heat:{level:0,conditions:[],seed:0},planVersion:PLAN_VERSION,routeSeen:0,phase:'prep',wave:1,cleared:0,round:0,prepRemaining:240,prepScheduledRound:0,elapsed:0,gateSeconds:1,boxes:3,enemies:[],spawned:0,nextKey:1,kills:0,escaped:0,claimedFirst:[],completed:false,completedAtRound:0,journey:{seconds:0,handWood:0,handStone:0,crewWood:0,crewStone:0,handFood:0,crewFood:0,handIron:0,crewIron:0},result:null};
  }
  // The preparation clock is advanced explicitly by the live game, separately from battle simulation.
+ // The first placed defender starts the clock; later victories lead to timed raids.
+ function waveInterval(state){return state.result?.win&&state.result.wave%3===0?90:state.wave<3?90:75;}
+ function raidClock(state){if(!state.raidClock||state.raidClock.version!==1)state.raidClock={version:1,armed:state.round>0,scheduledRound:state.round,remaining:state.round>0?waveInterval(state):0};return state.raidClock;}
+ function raidClockTick(state,dt,{hasDefender=false,blocked=false,pending=false}={}){if(!state||!Number.isFinite(dt)||dt<0)return false;const c=raidClock(state);if(state.phase==='active'){c.armed=true;c.scheduledRound=-1;return false;}if(state.completed||blocked||state.phase==='result'&&!state.result?.win)return false;if(!c.armed){if(!hasDefender||pending)return false;c.armed=true;c.remaining=0;return true;}if(c.scheduledRound!==state.round){c.scheduledRound=state.round;c.remaining=waveInterval(state);}c.remaining=Math.max(0,c.remaining-dt);return c.remaining<=EPS&&!pending;}
  function preparationSeconds(state){if(!state)return 240;const cut=preparationCut(state);if(state.round===0)return 240-cut;const next=state.result?.win?Math.min(MAX_WAVE,state.result.wave+1):state.wave;return (state.result&&!state.result.win?90:next<=3?90:120)-cut;}
  function preparationTick(state,dt){
   if(!state||state.phase==='active'||state.completed||!Number.isFinite(dt)||dt<=0)return false;
@@ -194,6 +198,7 @@
   state.phase=['prep','active','result'].includes(raw.phase)?raw.phase:'prep';
   state.wave=waveNumber(raw.wave);state.cleared=integer(raw.cleared,0,0,MAX_WAVE);state.round=integer(raw.round,0,0,1e9);
   state.prepScheduledRound=Number.isInteger(raw.prepScheduledRound)&&raw.prepScheduledRound>=0&&raw.prepScheduledRound<=state.round?raw.prepScheduledRound:-1;state.prepRemaining=finite(raw.prepRemaining,240,0,600);
+  if(raw.raidClock?.version===1)state.raidClock={version:1,armed:raw.raidClock.armed===true||state.round>0,scheduledRound:integer(raw.raidClock.scheduledRound,0,0,state.round),remaining:finite(raw.raidClock.remaining,waveInterval(state),0,600)};
   state.elapsed=finite(raw.elapsed,0,0,planFor(state).duration);state.gateSeconds=finite(raw.gateSeconds,1,1,2.5);state.boxes=integer(raw.boxes,3,0,3);
   state.claimedFirst=[...new Set((Array.isArray(raw.claimedFirst)?raw.claimedFirst:[]).slice(0,1024).filter(n=>Number.isInteger(n)&&n>=1&&n<=MAX_WAVE))];
   for(let wave=1;wave<=state.cleared;wave++)if(!state.claimedFirst.includes(wave))state.claimedFirst.push(wave);
@@ -384,5 +389,5 @@
   return spans.map(({points})=>({from:points[0],to:points.at(-1),points,length:points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i].x,p.y-points[i].y),0)}));
  }
  function roadCoverage(center,radius,minRadius=0){return ['upper','lower'].flatMap(lane=>coveredSpans(roadPath(lane,Math.max(...Field.HOLES.map(h=>h.x))),center,radius,minRadius).map(span=>({lane,...span})));}
- return {assaults,Campaign,raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
+ return {raidClock,raidClockTick,waveInterval,assaults,Campaign,raidRules,failureReason,HEAT_TUNE,HEAT,HEAT_IDS,BOSSES,heat,heatModifiers,roundModifiers,preparationCut,roadPath,coveredSpans,roadCoverage,WORLD,MAX_WAVE,PLAN_VERSION,ENEMIES,KINDS,has,burrowed,exposed,canStrike,lengthOf,reveal,modifiers,planFor,fresh,migrate,preparationSeconds,preparationTick,chapter,plan,nextRequirement,start,tick,hit,target,recipe,stats};
 });
