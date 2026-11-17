@@ -46,7 +46,7 @@
  const def=kind=>ENEMIES[kind]||ENEMIES.rat;
  function lengthOf(enemy){const d=def(enemy.kind);return d.sling?Math.min(d.sling.at,pathLength(enemy.lane,enemy.entryX)):d.traits.includes('fly')?flightLength(enemy.lane,enemy.entryX):pathLength(enemy.lane,enemy.entryX);}
  function gateLimit(state,enemy){const d=def(enemy.kind);return d.sling?d.sling.seconds:state.gateSeconds;}
- function burrowed(enemy){const d=def(enemy.kind);if(!d.burrow||!enemy.alive)return false;const t=enemy.travel/pathLength(enemy.lane,enemy.entryX);return t>d.burrow[0]+EPS&&t<d.burrow[1]-EPS;}
+ function burrowed(enemy){if(enemy.invasion&&def(enemy.kind).burrow)return enemy.alive&&((enemy.invasionClock||0)%6)>=4;const d=def(enemy.kind);if(!d.burrow||!enemy.alive)return false;const t=enemy.travel/pathLength(enemy.lane,enemy.entryX);return t>d.burrow[0]+EPS&&t<d.burrow[1]-EPS;}
  // Visible to allies: hidden kinds only while `seen` (set by the battle sim from real ally positions). Burrowed moles never.
  function exposed(enemy){return !burrowed(enemy)&&(!has(enemy,'hidden')||enemy.seen===true);}
  function canStrike(enemy,role){if(!exposed(enemy))return false;if(has(enemy,'fly')&&PIERCE.includes(role))return false;return true;}
@@ -176,7 +176,7 @@
   enemy.y=y+(WORLD.home.y-y)*t;
  }
  // Unit vector of the enemy's current heading (used for the beetle's frontal shell).
- function heading(enemy){const origin=enemy.entryX||WORLD.entryX;if(has(enemy,'fly')){const dx=WORLD.home.x-origin,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<origin-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
+ function heading(enemy){if(enemy.invasion&&enemy.facing)return enemy.facing;const origin=enemy.entryX||WORLD.entryX;if(has(enemy,'fly')){const dx=WORLD.home.x-origin,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}if(enemy.travel<origin-WORLD.turnX)return {x:-1,y:0};const dx=WORLD.home.x-WORLD.turnX,dy=WORLD.home.y-laneY(enemy.lane),d=Math.hypot(dx,dy);return {x:dx/d,y:dy/d};}
  // One source for the live objective and the chapter retry boundary.
  function raidRules(wave,mods,planVersion=PLAN_VERSION){return {boxes:mods?.boxes||3,retryWave:(chapter(wave)-1)*3+1,boss:wave%3===0&&(planVersion>=5||wave===9)?mods?.boss||Campaign.chapter(wave).boss:null};}
  function failureReason(state){const rules=raidRules(state.wave,state.modifiers,state.planVersion);return state.boxes<=0?'crates':rules.boss&&state.enemies.some(e=>e.kind===rules.boss&&!e.alive&&e.hp>0)?'captain':null;}
@@ -260,8 +260,8 @@
  }
  function release(state,parent){
   const split=def(parent.kind).split;if(!split)return [];const d=def(split.kind),out=[];
-  for(let i=0;i<split.count;i++){const child=makeEnemy(state,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r},{parent:parent.key,...(parent.holeId?{holeId:parent.holeId,entryX:parent.entryX}:{}),travel:Math.max(0,Math.min(lengthOf({kind:split.kind,lane:parent.lane,entryX:parent.entryX}),parent.travel-i*9))});
-   if(child.travel>=lengthOf(child)-EPS){child.travel=lengthOf(child);child.atGate=true;}position(child);state.enemies.push(child);out.push(child);}
+  for(let i=0;i<split.count;i++){const child=makeEnemy(state,{kind:split.kind,lane:parent.lane,hp:split.hp||d.hp,speed:d.speed,armor:d.armor,r:d.r},{parent:parent.key,...(parent.holeId?{holeId:parent.holeId,entryX:parent.entryX}:{}),...(parent.invasion?{invasion:true,facing:parent.facing,invasionClock:parent.invasionClock}:{}),travel:Math.max(0,Math.min(lengthOf({kind:split.kind,lane:parent.lane,entryX:parent.entryX}),parent.travel-i*9))});
+   if(child.travel>=lengthOf(child)-EPS){child.travel=lengthOf(child);child.atGate=true;}if(parent.invasion){child.x=parent.x+(i%2?8:-8);child.y=parent.y+i*7;}else position(child);state.enemies.push(child);out.push(child);}
   return out;
  }
  function escape(state,enemy,at=state.elapsed){

@@ -15,7 +15,7 @@
  function recipe(id,branch,cost,requires,title,description){nodes.push({id:'recipe_'+id,kind:'recipe',recipe:id,cardId:id,branch,tier:0,cost,requires,title,description});}
  recipe('woodcutter','hand',{wood:2},[],word('木こりのレシピ','Lumberjack recipe','伐木工配方'),word('木こりの雇用カードが増える。雇用して自分で配置すると、範囲内の木を伐採する。','Adds the lumberjack card. Hire and place one to chop trees in range.','增加伐木工招募卡。招募并自行放置后，砍伐范围内的树木。'));
  recipe('blower','route',{wood:4},['recipe_woodcutter'],word('送風機のレシピ','Blower recipe','鼓风机配方'),word('送風機の設置カードが増える。落下先に風を当てて物資を運ぶ。','Adds the blower card. Use its wind to move items from their landing points.','增加鼓风机建造卡，用风运送掉落物资。'));
- recipe('arch','carry',{wood:2,stone:2},['recipe_woodcutter'],word('弓兵のレシピ','Archer recipe','弓箭手配方'),word('弓兵の雇用カードが増える。道へ射程を重ねて防衛する。','Adds the archer card. Cover a road with its range to defend it.','增加弓箭手招募卡，让射程覆盖道路进行防守。'));
+ recipe('arch','carry',{wood:2,stone:2},['recipe_woodcutter'],word('弓兵のレシピ','Archer recipe','弓箭手配方'),word('弓兵を雇い、敵陣へ出陣できる。飛行する敵にも矢が届く。','Adds the archer card. Cover a road with its range to defend it.','增加弓箭手招募卡，让射程覆盖道路进行防守。'));
  recipe('miner','hand',{wood:4,stone:2},['hand1'],word('採掘師のレシピ','Miner recipe','矿工配方'),word('採掘師の雇用カードが増える。範囲内の岩から石材を採る。','Adds the miner card. Mines rocks inside its working range.','增加矿工招募卡，开采作业范围内的岩石。'));
  recipe('sword','carry',{wood:8,stone:4},['recipe_arch'],word('剣士のレシピ','Swordsman recipe','剑士配方'),word('剣士の雇用カードが増える。近くの敵を減速させ、射手を助ける。','Adds the swordsman card. Slows nearby enemies to help your archers.','增加剑士招募卡，减缓附近敌人，协助弓箭手。'));
  recipe('fence','storage',{wood:4},['recipe_blower'],word('誘導柵のレシピ','Guide fence recipe','导流栅栏配方'),word('誘導柵の設置カードが増える。風で流れる資材を誘導する。','Adds guide fences. Direct materials moved by wind.','增加导流栅栏建造卡，引导被风吹动的物资。'));
@@ -31,7 +31,7 @@
  project('stoneTool1','hand',{wood:30,stone:35},['recipe_miner','hand2'],word('採掘道具 I','Mining tools I','采矿工具 I'),word('採掘師一人の採集間隔を6秒から3秒へ。','Miner gathering interval: 6s → 3s.','每位矿工采集间隔：6秒 → 3秒。'));
  project('stoneTool2','hand',{wood:70,stone:100},['project_stoneTool1','hand3'],word('採掘道具 II','Mining tools II','采矿工具 II'),word('採掘師一人の採集間隔を3秒から2秒へ。','Miner gathering interval: 3s → 2s.','每位矿工采集间隔：3秒 → 2秒。'));
  project('cart','route',{gold:55},['recipe_belt','route1'],word('搬送車輪','Transport wheels','运输车轮'),word('コンベアの実際の搬送速度をさらに25%上げる。','Increase actual conveyor speed by a further 25%.','传送带实际运输速度额外提高25%。'));
- project('gate','storage',{wood:100,stone:60},['recipe_sword','storage3'],word('防衛門','Defence gate','防御门'),word('倉庫前の門を建て、突破してきた敵への対処時間を得る。','Build the gate by the warehouse and gain time to handle escaping enemies.','在仓库前修建防御门，获得应对突破敌人的时间。'));
+ project('gate','storage',{wood:100,stone:60},['recipe_sword','storage3'],word('防衛門','Defence gate','防御门'),word('門で防具を整え、出陣時の味方の最大体力を20%増やす。','Build the gate by the warehouse and gain time to handle escaping enemies.','在仓库前修建防御门，获得应对突破敌人的时间。'));
  project('beacon','carry',{wood:220,stone:160},['project_gate','route3'],word('射手のかがり火','Archer beacon','射手烽火'),word('弓兵の実射程を90から110へ広げる。','Increase actual archer range: 90 → 110.','弓箭手实际射程：90 → 110。'));
  recipe('broom','route',{wood:6,stone:2},['recipe_blower'],word('箒のレシピ','Broom recipe','扫帚配方'),word('箒の製作カードが増える。地面の丸太や石をドラッグで掃く。重い石は動きにくい。','Adds a broom card. Sweep loose logs and stone by dragging; heavy stone moves less.','增加扫帚制作卡。拖动扫动地上的木材与石材，重石较难移动。'));
  project('broomHead','route',{wood:28,stone:16},['recipe_broom','hand1'],word('幅広の箒','Wide broom head','宽扫帚头'),word('掃く幅を60から88へ広げ、押す力を55%上げる。','Sweep width: 60 → 88. Push force +55%.','扫动宽度60→88，推动力量提高55%。'));

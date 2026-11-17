@@ -78,6 +78,7 @@
  function killPoints(r){return Math.max(integer(r.bestKillPoints,0,10),Math.floor(10*r.bestKills/r.total));}
  function wavePoints(r){return (killPoints(r)+(r.cleared?10:0))*(1+.5*(r.heat||0));}
  function entitlement(S){const e=ensure(S),best=new Map();for(const r of e.records)best.set(r.wave,Math.max(best.get(r.wave)||0,wavePoints(r)));const clears=new Set(e.records.filter(r=>r.cleared).map(r=>r.wave)).size,points=[...best.values()].reduce((n,v)=>n+v,0);return Math.floor((points+Math.min(10,clears*2,e.trainingBest))/5);}
+ function claim(S){const e=ensure(S);if(S.outpost?.phase!=='result'||!S.outpost.result?.win||!e.settled.includes(e.run+':'+S.outpost.round))return false;const total=entitlement(S),award=Math.max(0,total-e.claimed);e.coins+=award;e.claimed=Math.max(e.claimed,total);return {award,balance:e.coins};}
  function heatOf(S){return Outpost.heat(S.outpost?.heat).level;}
  function limit(S,kind){return kind==='combat'&&Outpost.heat(S.outpost?.heat).conditions.includes('narrow')?LIMIT-1:LIMIT;}
  // Cramped camp seals one squad the player is using: picked by the run number among active defence squads, shown before departure.
@@ -99,5 +100,5 @@
   S.outpost.prepRemaining=90-Outpost.preparationCut(S.outpost);S.outpost.prepScheduledRound=old.round;S.bossWave=q.startWave;S.clearedBossWave=q.startWave-1;e.awaitingDecision=false;e.awaitingReady=true;project(S);return true;
  }
  function beginPreparation(S){const e=ensure(S);if(!canEdit(S)||!e.awaitingReady||e.groups.some(g=>g.active&&g.pending))return false;e.awaitingReady=false;e.awaitingDecision=false;S.outpost.prepRemaining=90-Outpost.preparationCut(S.outpost);S.outpost.prepScheduledRound=S.outpost.round;return true;}
- return {retryQuote,MAX_HEAT,sealedKey,limit,heatQuote,heatOf,wavePoints,IDS,COUNTS,LIMIT,UNLOCKS,bucket,migrate,ensure,groups,available,canEdit,assignments,groupFor,project,slotQuote,recruit,setAnchor,cancelPending,bench,resume,swap,trainQuote,train,setPolicy,buyFoodQuote,buyFood,unlockQuote,unlock,record,entitlement,departures,quoteReturn,returnHome,retry,beginPreparation};
+ return {claim,retryQuote,MAX_HEAT,sealedKey,limit,heatQuote,heatOf,wavePoints,IDS,COUNTS,LIMIT,UNLOCKS,bucket,migrate,ensure,groups,available,canEdit,assignments,groupFor,project,slotQuote,recruit,setAnchor,cancelPending,bench,resume,swap,trainQuote,train,setPolicy,buyFoodQuote,buyFood,unlockQuote,unlock,record,entitlement,departures,quoteReturn,returnHome,retry,beginPreparation};
 });

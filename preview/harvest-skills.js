@@ -92,7 +92,7 @@ window.HarvestSkills=(()=>{
   recipeNote:['解放すると「仲間・設備」にカードが追加されます。雇用・設置費は別に必要です。','Research adds a card to Allies & equipment. Hiring or building costs extra.','研究后会在「伙伴与设备」中添加卡片，招募或建造费用需另付。'],
   unlocks:['追加されるカード','Card unlocked','解锁卡片'],newCard:['新しいカードを解放！','New card unlocked!','已解锁新卡片！'],showCard:['カードを見る','View card','查看卡片'],cardAdded:['カード追加','Adds a card','添加卡片'],cardUnlocked:['カード解放済み','Card unlocked','卡片已解锁'],
   prerequisites:['先に習得・解放','Requires','前置条件'],noPrerequisites:['拠点からすぐに選べます','Available from the camp root','可从营地起点直接选择'],
-  gold:['G','Gold','金币'],coins:['転生コイン','Rebirth coins','转生币'],food:['食料','Food','食物'],free:['消費なし','No cost','无需消耗'],owned:['習得・解放','learned / unlocked','已习得／解锁'],
+  gold:['G','Gold','金币'],coins:['遠征コイン','Rebirth coins','转生币'],food:['食料','Food','食物'],free:['消費なし','No cost','无需消耗'],owned:['習得・解放','learned / unlocked','已习得／解锁'],
   improveNow:['設備を強化','Improve camp','强化营地'],nodeReady:['選択できます','Ready to choose','可以选择'],graph:['スキルの接続図','Connected skill tree','技能连接图']
  });
  const currencies=['wood','stone','iron','gold','coins'];

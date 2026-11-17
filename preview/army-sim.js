@@ -47,7 +47,7 @@
   releaseOrders(){for(const p of this.soldiers){p.order=null;p.commanded=false;}}
   step(dt,hero){
    if(!Number.isFinite(dt)||dt<0)return [];
-   dt=Math.min(.1,dt);this.time+=dt;const events=[],boss=this.boss,multi=Array.isArray(this.enemies);
+   dt=Math.min(.1,dt);this.time+=dt;if(this.invasion){this.pending=[];for(const p of this.soldiers){if(!p.u.worker||p.enterAt>this.time)continue;p.cooldown-=dt;p.stun=Math.max(0,p.stun-dt);}return [];}const events=[],boss=this.boss,multi=Array.isArray(this.enemies);
    const remaining=[];for(const hit of this.pending){if(hit.token!==boss.token||(hit.targetKey!==undefined&&(!multi||hit.roundToken!==this.round())))continue;if(hit.due>this.time){remaining.push(hit);continue;}const p=hit.p;if(hit.targetKey!==undefined){const target=this.enemies.find(e=>e.key===hit.targetKey);if(!p.stun&&target===hit.target&&target.alive)events.push({...hit,kind:'damage'});}else if(!p.stun&&(hit.heal?Math.hypot(p.x-hero.x,p.y-hero.y)<=this.range(p)+20:this.canHit(p)))events.push({...hit,kind:hit.heal?'heal':'damage'});}this.pending=remaining;
    if(multi){const core=outpostCore||globalThis.OutpostCore;core?.reveal?.(this.outpostState||{enemies:this.enemies},this.soldiers.filter(p=>!p.u.worker&&!p.u.healer&&p.enterAt<=this.time));}
    for(const p of this.soldiers){

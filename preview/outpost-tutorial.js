@@ -2,10 +2,10 @@
 window.OutpostTutorial=(()=>{
  'use strict';
  const local=a=>a[Math.max(0,['ja','en','zh'].indexOf(typeof LANG==='string'?LANG:'ja'))];
- const labels={tap:['木を切る','Chop wood','砍树'],carry:['倉庫へ運ぶ','Drag to warehouse','拖到仓库'],upgrade:['強化する','Upgrade','强化'],hire:['雇う','Hire','雇佣'],place:['ここに置く','Place here','放在这里'],blower:['送風機','Blower','鼓风机'],fence:['柵をひく','Draw a fence','拖出栅栏'],watch:['動きを見よう','Watch it work','看看效果'],boost:['風を強くする','Boost wind','加强风力'],ready:['守る ▶','Defend ▶','防守 ▶']};
+ const labels={tap:['木を切る','Chop wood','砍树'],carry:['倉庫へ運ぶ','Drag to warehouse','拖到仓库'],upgrade:['強化する','Upgrade','强化'],hire:['雇う','Hire','雇佣'],place:['ここに置く','Place here','放在这里'],blower:['送風機','Blower','鼓风机'],fence:['柵をひく','Draw a fence','拖出栅栏'],watch:['動きを見よう','Watch it work','看看效果'],boost:['風を強くする','Boost wind','加强风力'],ready:['出陣を準備','Defend ▶','防守 ▶']};
  const icons={tap:'☝',carry:'↦',upgrade:'↑',hire:'＋',place:'◎',blower:'➜',fence:'⌁',watch:'◉',boost:'➜',ready:'⚑'};
  let panel=null,signature='',clock=0,lastInput=-Infinity;
- function facts(){const units=window.ArmyView?.sim?.soldiers||[],defenders=units.filter(p=>p.id==='arch'&&p.y<310&&window.Outpost?.covers(p,p.u));return {workerPlaced:units.some(p=>p.id==='woodcutter'),defenders:defenders.length,defendersReady:defenders.length>=1};}
+ function facts(){const units=window.ArmyView?.sim?.soldiers||[],defenders=units.filter(p=>p.id==='arch'&&window.Outpost?.covers(p,p.u));return {workerPlaced:units.some(p=>p.id==='woodcutter'),defenders:defenders.length,defendersReady:defenders.length>=1};}
  function snapshot(){const q=OutpostTutorialCore.step(S,facts());return {...q,title:'',detail:'',action:''};}
  // Only the first two deposits get a gesture demonstration. Afterwards the player chooses how to earn the goal.
  function goalQuote(q=snapshot()){
@@ -24,6 +24,7 @@ window.OutpostTutorial=(()=>{
   }
   // Native placement already previews its real footprint and output. Never prescribe an arbitrary spot.
   if(BattleControl.placement||OutpostCamp.layingRails||q.id==='workerPlace')return {kind:'place',point:null,step:q.id};
+  if(window.InvasionCore&&facts().defendersReady&&S.outpost.cleared===0)return {kind:'ready',button:true,step:q.id};
   if(q.id==='defend')return {kind:'defend',step:q.id};
   const quote=goalQuote(q);
   if(quote&&!quote.ready){const type=['wood','stone'].find(t=>(quote.cost?.[t]||0)>(f.inventory[t]||0));if(type){const d=f.drops.find(d=>d.type===type&&!OutpostCamp.isHeld(d)&&!SupplyFactory.isAirborne(d));if(d){const b=SupplyFactory.pileBounds(d);return {kind:'carry',point:{x:(b.left+b.right)/2,y:(b.top+b.bottom)/2},to:{...OutpostCore.WORLD.home},type,step:q.id};}const n=f.nodes.find(n=>n.type===type&&n.stock>0);if(n)return {kind:'tap',point:{x:n.x,y:n.y-(type==='wood'?44:24)},type,step:q.id};}}
@@ -36,7 +37,7 @@ window.OutpostTutorial=(()=>{
  function raidAllowed(){return true;}
  function targetSkill(){const q=snapshot();return q.skill||null;}
  function action(){const q=snapshot(),cue=visualCue();if(window.CabinUI&&(cue.unit||cue.kind==='blower'||cue.kind==='fence')){CabinUI.open();return;}
-  if(cue.kind==='ready')return;
+  if(cue.kind==='ready'){window.InvasionUI?.choose(1);document.getElementById('invasionStart')?.focus();return;}
   if(cue.kind==='upgrade'){window.HarvestSkills?.open(q.skill);return;}
   if(cue.unit){document.querySelector('[data-recruit="'+cue.unit+'"]')?.click();document.getElementById('field').scrollIntoView({block:'start',behavior:'smooth'});sync(true);return;}
   if(cue.kind==='blower'||cue.kind==='fence'){window.PlacementControls?.choose(cue.kind);sync(true);return;}
@@ -59,10 +60,10 @@ window.OutpostTutorial=(()=>{
   hand1:[['鋭い刃先','Sharpened tools','锋利刃口'],['採集力 1 → 2：木3打 → 2打','Gathering power 1 → 2: wood 3 hits → 2','采集力1 → 2：木材3次 → 2次']],
   storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 240 → 360個','Ground items 12 → 24','地面物资上限 12 → 24个']],
   blower:[['送風機で運ぶ','Transport with wind','用风力搬运'],['落下先に風を当て、矢印を倉庫へ向ける','Cover the drop point with wind; aim toward the warehouse','让风覆盖掉落点，箭头朝向仓库']],
-  defenders:[['弓兵を1人配置','Place two archers','放置两名弓箭手'],['北の道に射程を重ねよう。配置すると最初の襲撃が始まります。','Cover the upper road with their range','让射程覆盖上路']],
+  defenders:[['弓兵を1人配置','Place two archers','放置两名弓箭手'],['拠点側の空き地へ配置し、上の陣地選択から出陣しましょう。','Cover the upper road with their range','让射程覆盖上路']],
   defend:[['敵を迎え撃つ','Defend the camp','守卫营地'],['敵をクリック・Spaceで援護','Click enemies or press Space to help','点击敌人或按空格支援']]
  };
- function goalView(q,cue){
+ function goalView(q,cue){if(window.InvasionCore&&cue.kind==='ready')return {title:'北の前哨を選んで出陣',note:'弓兵を配置しました。上の陣地を選び、出陣ボタンを押すと進軍します。',cost:null,button:'北の前哨を選ぶ'};
   if(cue.basic)return {title:local(labels[cue.kind]),note:'',cost:null,button:''};
   const goal=goals[q.id]||goals.worker,quote=goalQuote(q),placement=cue.kind==='place';const gather=cue.type?(cue.type==='wood'?'木材':'石材')+'を集めよう。落ちた資材を小屋へ運ぶと使えます。':null;
   if(quote?.kind==='recipe')return {title:quote.title[LANG]||quote.title.ja,note:gather||quote.description[LANG]||quote.description.ja,cost:quote.cost,button:local(['ツリーで解放','Unlock in tree','在技能树解锁'])};

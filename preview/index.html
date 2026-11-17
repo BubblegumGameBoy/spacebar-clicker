@@ -565,16 +565,17 @@
     backdrop-filter:blur(3px); letter-spacing:.04em; }
   #langBtn:hover{ border-color:#cfab54; color:#fff; }
 </style>
-<link rel="stylesheet" href="rework.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="harvest-skills.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="outpost.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="ground-tools.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="compact-ui.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="outpost-tutorial.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="expedition-ui.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="field-ui.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="inventory-ui.css?v=20261102-first-defender-r1">
-<link rel="stylesheet" href="cabin-ui.css?v=20261102-first-defender-r1">
+<link rel="stylesheet" href="rework.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="harvest-skills.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="invasion-ui.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="outpost.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="ground-tools.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="compact-ui.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="outpost-tutorial.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="expedition-ui.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="field-ui.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="inventory-ui.css?v=20261116-invasion-r1">
+<link rel="stylesheet" href="cabin-ui.css?v=20261116-invasion-r1">
 </head>
 <body>
 <div id="titleScreen">
@@ -698,18 +699,20 @@
 </div></div>
 
 <script>window.__OUTPOST_BUILD__=true;</script>
-<script src="harvest-skill-core.js?v=20261102-first-defender-r1"></script>
-<script src="progression-core.js?v=20261102-first-defender-r1"></script>
-<script src="field-core.js?v=20261102-first-defender-r1"></script>
-<script src="materials-core.js?v=20261102-first-defender-r1"></script>
-<script src="gadget-core.js?v=20261102-first-defender-r1"></script>
-<script src="inventory-core.js?v=20261102-first-defender-r1"></script>
-<script src="campaign-core.js?v=20261102-first-defender-r1"></script>
-<script src="outpost-core.js?v=20261102-first-defender-r1"></script>
-<script src="supply-core.js?v=20261102-first-defender-r1"></script>
-<script src="expedition-core.js?v=20261102-first-defender-r1"></script>
-<script src="game-core.js?v=20261102-first-defender-r1"></script>
-<script src="forest-audio.js?v=20261102-first-defender-r1"></script>
+<script src="harvest-skill-core.js?v=20261116-invasion-r1"></script>
+<script src="progression-core.js?v=20261116-invasion-r1"></script>
+<script src="field-core.js?v=20261116-invasion-r1"></script>
+<script src="materials-core.js?v=20261116-invasion-r1"></script>
+<script src="gadget-core.js?v=20261116-invasion-r1"></script>
+<script src="inventory-core.js?v=20261116-invasion-r1"></script>
+<script src="campaign-core.js?v=20261116-invasion-r1"></script>
+<script src="save-guard.js?v=20261116-invasion-r1"></script>
+<script src="outpost-core.js?v=20261116-invasion-r1"></script>
+<script src="supply-core.js?v=20261116-invasion-r1"></script>
+<script src="expedition-core.js?v=20261116-invasion-r1"></script>
+<script src="invasion-core.js?v=20261116-invasion-r1"></script>
+<script src="game-core.js?v=20261116-invasion-r1"></script>
+<script src="forest-audio.js?v=20261116-invasion-r1"></script>
 <script>
 "use strict";
 const Core=MythosCore;
@@ -1121,7 +1124,7 @@ function weaponSubLevel(){
 let S;
 function zeroUnits(){ const o={}; UNITS.forEach(u=>o[u.id]=0); return o; }
 function freshState(){return Core.fresh(UNITS.map(u=>u.id));}
-let pendingOffline=null,saveAvailable=true;
+let pendingOffline=null,saveAvailable=true,saveGuard=null;
 function load(){
  try{
   const current=localStorage.getItem("sbr2_preview_outpost_save3"),legacy=localStorage.getItem("sbr2_preview_outpost_save2");
@@ -1151,7 +1154,7 @@ if(LAYOUT_MODE){
   history.replaceState(null,"",location.pathname+"?"+PARAMS.toString());
  }
 }
-function save(){if(SHOWCASE)return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{localStorage.setItem("sbr2_preview_outpost_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
+function save(){if(SHOWCASE||saveGuard&&!saveGuard.check())return;if(window.ArmyView?.ready)S.battle=ArmyView.snapshot();S.lastSeen=Date.now();try{if(saveGuard)saveGuard.write(JSON.stringify(S));else localStorage.setItem("sbr2_preview_outpost_save3",JSON.stringify(S));saveAvailable=true;}catch(e){saveAvailable=false;}}
 function earnGold(amount){if(!Number.isFinite(amount)||amount<=0)return;S.gold=Math.min(1e150,S.gold+amount);S.earned=Math.min(1e150,S.earned+amount);}
 function unitOwned(u){return S.owned[u.id]>=1;}
 function unitBuyCost(u){return Core.unitCost(S,u);}
@@ -1921,7 +1924,7 @@ let gpmRate=0,gpmTimer=0,lastGold=0,lastEarned=0,gpmWindow=[];
 function loop(now){
  const dt=Math.min(0.25,(now-lastT)/1000); lastT=now;
  if(comboTimer>0){ comboTimer-=dt; if(comboTimer<=0){ combo=0; $("#comboTag").classList.remove("on"); } }
- if(!window.Rework?.paused&&!window.BattleControl?.defeated&&!document.hidden&&$("#titleScreen").classList.contains("hidden")){unitTick(dt);window.Rework?.tick(dt);}
+ if((!saveGuard||saveGuard.check())&&!window.Rework?.paused&&!window.BattleControl?.defeated&&!document.hidden&&$("#titleScreen").classList.contains("hidden")){unitTick(dt);window.Rework?.tick(dt);}
  if(!LAYOUT_MODE&&!window.ArmyView?.ready)updateOrbitUnits(now);
  gpmTimer+=dt;
  if(gpmTimer>=1){ const earned=Math.max(0,S.earned-lastEarned);lastEarned=S.earned;
@@ -1962,6 +1965,7 @@ if(PARAMS.has("reset")){
  history.replaceState(null,"",location.pathname);
 }
 load();
+if(!SHOWCASE)saveGuard=SaveGuard.install("sbr2_preview_outpost_save3");
 if(SHOWCASE){
  S=freshState();
  S.gold=1e15; S.bossWave=20; S.clearedBossWave=BOSS.length;
@@ -2104,31 +2108,32 @@ window.addEventListener("beforeunload",()=>{save();void syncOnlineScore();});
 })();
 
 </script>
-<script src="army-sim.js?v=20261102-first-defender-r1"></script>
-<script src="army-view.js?v=20261102-first-defender-r1"></script>
+<script src="army-sim.js?v=20261116-invasion-r1"></script>
+<script src="army-view.js?v=20261116-invasion-r1"></script>
 <script src="boss-art.js"></script>
-<script src="battle-control.js?v=20261102-first-defender-r1"></script>
-<script src="ground-physics.js?v=20261102-first-defender-r1"></script>
-<script src="supply-factory.js?v=20261102-first-defender-r1"></script>
-<script src="camp-training.js?v=20261102-first-defender-r1"></script>
-<script src="rail-core.js?v=20261102-first-defender-r1"></script>
-<script src="conveyor-core.js?v=20261102-first-defender-r1"></script>
-<script src="loader-core.js?v=20261102-first-defender-r1"></script>
-<script src="loader-device.js?v=20261102-first-defender-r1"></script>
-<script src="outpost-camp.js?v=20261102-first-defender-r1"></script>
-<script src="outpost-tutorial-core.js?v=20261102-first-defender-r1"></script>
-<script src="outpost-tutorial.js?v=20261102-first-defender-r1"></script>
-<script src="outpost.js?v=20261102-first-defender-r1"></script>
-<script src="rework.js?v=20261102-first-defender-r1"></script>
-<script src="harvest-skills.js?v=20261102-first-defender-r1"></script>
-<script src="placement-controls.js?v=20261102-first-defender-r1"></script>
-<script src="expedition-ui.js?v=20261102-first-defender-r1"></script>
-<script src="expedition-integration.js?v=20261102-first-defender-r1"></script>
-<script src="progression-integration.js?v=20261102-first-defender-r1"></script>
-<script src="field-navigation.js?v=20261102-first-defender-r1"></script>
-<script src="field-ui.js?v=20261102-first-defender-r1"></script>
-<script src="ore-ui.js?v=20261102-first-defender-r1"></script>
-<script src="inventory-ui.js?v=20261102-first-defender-r1"></script>
-<script src="cabin-ui.js?v=20261102-first-defender-r1"></script>
+<script src="battle-control.js?v=20261116-invasion-r1"></script>
+<script src="ground-physics.js?v=20261116-invasion-r1"></script>
+<script src="supply-factory.js?v=20261116-invasion-r1"></script>
+<script src="camp-training.js?v=20261116-invasion-r1"></script>
+<script src="rail-core.js?v=20261116-invasion-r1"></script>
+<script src="conveyor-core.js?v=20261116-invasion-r1"></script>
+<script src="loader-core.js?v=20261116-invasion-r1"></script>
+<script src="loader-device.js?v=20261116-invasion-r1"></script>
+<script src="outpost-camp.js?v=20261116-invasion-r1"></script>
+<script src="outpost-tutorial-core.js?v=20261116-invasion-r1"></script>
+<script src="outpost-tutorial.js?v=20261116-invasion-r1"></script>
+<script src="invasion-ui.js?v=20261116-invasion-r1"></script>
+<script src="outpost.js?v=20261116-invasion-r1"></script>
+<script src="rework.js?v=20261116-invasion-r1"></script>
+<script src="harvest-skills.js?v=20261116-invasion-r1"></script>
+<script src="placement-controls.js?v=20261116-invasion-r1"></script>
+<script src="expedition-ui.js?v=20261116-invasion-r1"></script>
+<script src="expedition-integration.js?v=20261116-invasion-r1"></script>
+<script src="progression-integration.js?v=20261116-invasion-r1"></script>
+<script src="field-navigation.js?v=20261116-invasion-r1"></script>
+<script src="field-ui.js?v=20261116-invasion-r1"></script>
+<script src="ore-ui.js?v=20261116-invasion-r1"></script>
+<script src="inventory-ui.js?v=20261116-invasion-r1"></script>
+<script src="cabin-ui.js?v=20261116-invasion-r1"></script>
 </body>
 </html>

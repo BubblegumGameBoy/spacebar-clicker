@@ -6,6 +6,7 @@
  const HarvestSkills=typeof module==='object'&&module.exports?require('./harvest-skill-core.js'):globalThis.HarvestSkillCore;
  const Expedition=typeof module==='object'&&module.exports?require('./expedition-core.js'):globalThis.ExpeditionCore;
  const Progression=typeof module==='object'&&module.exports?require('./progression-core.js'):globalThis.ProgressionCore;
+ const Invasion=typeof module==='object'&&module.exports?require('./invasion-core.js'):globalThis.InvasionCore;
  const VERSION=3, MAX_LEVEL=500;
  const SKILLS={strike:3,critical:3,rhythm:3,storm:1,haste:3,quartermaster:3,awakening:3,camp:3,covenant:1,fortune:3,bounty:3,memory:3,aurora:1};
  const BRANCHES={storm:['strike','critical','rhythm'],covenant:['haste','quartermaster','awakening','camp'],aurora:['fortune','bounty','memory']};
@@ -47,6 +48,7 @@
  }
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
+  s.invasion=Invasion?.migrate(r.invasion)||null;
   s.expedition=Expedition?.migrate(r.expedition)||null;
   s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),blownWood:integer(r.tutorial.blownWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true,visibleOptions:Object.fromEntries(['worker','blower','defence','upgrade'].map(k=>[k,r.tutorial.visibleOptions?.[k]===true]))}:null;
   s.harvestSkills=HarvestSkills?.migrate(r.harvestSkills)||{carry:0,hand:0,route:0};
@@ -74,7 +76,7 @@
    const known=new Set(ids),rows=Array.isArray(r.battle.units)?r.battle.units:[];
    s.battle={width:Math.max(1,num(r.battle.width,1100,1e6)),height:Math.max(1,num(r.battle.height,500,1e6)),captain:{x:num(r.battle.captain?.x,150,1e6),y:num(r.battle.captain?.y,370,1e6)},units:rows.filter(a=>Array.isArray(a)&&a.length===6&&known.has(a[0])&&a.slice(1).every(Number.isFinite)).map(a=>[a[0],integer(a[1],0,100000),num(a[2],0,1e6),num(a[3],0,1e6),a[4]>=0?num(a[4],0,1e6):-1,a[5]>=0?num(a[5],0,1e6):-1])};
   }
-  s.factory=Supply.migrate(r.factory);s.outpost=(Outpost||globalThis.OutpostCore)?.migrate(r.outpost)||null;s.camp=migrateCamp(r.camp,s.factory);s.captainHp=num(r.captainHp,heroMax(s),heroMax(s));s.goldBonus=mastery(s);if(legacy)s.migrated=true;
+  s.factory=Supply.migrate(r.factory);s.outpost=(Outpost||globalThis.OutpostCore)?.migrate(r.outpost)||null;s.camp=migrateCamp(r.camp,s.factory);Invasion?.restore(s);s.captainHp=num(r.captainHp,heroMax(s),heroMax(s));s.goldBonus=mastery(s);if(legacy)s.migrated=true;
   s.progression=Progression?.migrate(r.progression)||{version:1,recipes:[],legacyPending:Progression?.legacyEvidence(s)===true};
   return s;
  }

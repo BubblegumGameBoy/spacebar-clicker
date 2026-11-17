@@ -5,7 +5,7 @@ window.ArmyView=(()=>{
  const root=()=>document.getElementById('field');
  const outpost=()=>window.__OUTPOST_BUILD__===true;
  function raidState(){return window.Outpost?.ready?Outpost.state():S.outpost;}
- function bindRaid(){if(!outpost())return;const state=raidState();sim.outpostState=state;sim.roundToken=state?.round||0;sim.enemies=state?.phase==='active'?state.enemies:[];}
+ function bindRaid(){if(!outpost())return;const state=raidState();sim.outpostState=state;sim.roundToken=state?.round||0;sim.enemies=state?.phase==='active'?state.enemies:[];sim.invasion=!!S.invasion&&S.invasion.phase!=='idle';}
  const count=()=>Object.values(S.owned).reduce((n,v)=>n+v,0);
  function imageFor(u){
   const evolved=!outpost()&&Core.tier(S.ulvl[u.id]||0)>0;
@@ -81,7 +81,7 @@ window.ArmyView=(()=>{
   if(!viewport)return;
   const restore=lastState!==S;if(restore){sim=new ArmySim.Battle();sim.encounter(encounterId);lastState=S;projectiles=[];accumulator=0;powerClock=0;engagedDps=0;}
   sim.stationary=true;bindRaid();layout();
-  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,minRange:stats?.minRange||0,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?0:Core.healPower(S,u)};});
+  const companies=UNITS.map(u=>{const stats=outpost()?OutpostCore.stats(u.id,S.camp):null;return {...u,count:Math.max(0,(S.owned[u.id]||0)-(S.pending?.[u.id]||0)),interval:stats?.interval??unitIv(u),damage:stats?.damage??unitDmg(u),range:stats?.range,minRange:stats?.minRange||0,speed:u.id==='porter'?145*Math.min(2.5,1+.03*(S.ulvl[u.id]||0)):undefined,heal:outpost()?(u.healer?Core.healPower(S,u):0):Core.healPower(S,u)};});
   sim.sync(companies);slots=sim.soldiers;sortAt=0;
   if(outpost()&&window.ExpeditionCore){const groups=new Map(ExpeditionCore.groups(S).map(g=>[g.key,g])),policies=new Map(ExpeditionCore.assignments(S).map(a=>[a.id+':'+a.index,groups.get(a.groupKey)?.policy||'front']));for(const p of slots)p.policy=policies.get(p.id+':'+p.index)||'front';}
   if(restore&&S.battle){const saved=new Map(S.battle.units.map(row=>[row[0]+':'+row[1],row])),sx=outpost()?1:camera.w/S.battle.width,sy=outpost()?1:camera.h/S.battle.height;for(const p of slots){const row=saved.get(p.id+':'+p.index);if(!row)continue;p.x=ArmySim.clamp(row[2]*sx,p.r+5,camera.w-p.r-5);p.y=ArmySim.clamp(row[3]*sy,sim.ground+p.r+5,camera.h-p.r-20);p.order=null;p.commanded=false;}}
@@ -121,14 +121,15 @@ window.ArmyView=(()=>{
    const elapsed=(sim.time-p.attackAt)*1000,duration=u.anim?.frameMs||120;
    const sequence=u.anim?.sequence||[0,1,2,3,0];
    const active=elapsed>=0&&elapsed<sequence.length*duration;
-   const f=active?sequence[Math.floor(elapsed/duration)]:0;
+   const f=active?sequence[Math.floor(elapsed/duration)]:(raid&&S.invasion?.phase!=='idle'&&p.moving?Math.floor(sim.time*7+p.key)%2:0);
    const sw=img.naturalWidth/(u.anim?.frames||1);
    const chosen=window.BattleControl?.selected(p.key);if(chosen){ctx.strokeStyle='#eacb82';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y,Math.max(5,p.r*z),Math.max(2,p.r*z*.45),0,0,Math.PI*2);ctx.stroke();}
    if(tier){ctx.fillStyle=['','#64dfff66','#d399ff88','#ffd96a99'][tier];ctx.beginPath();ctx.ellipse(x,y-2*z,w*z*.35,3*z,0,0,Math.PI*2);ctx.fill();}
    if(flash?.id===p.id&&now<flash.until){ctx.fillStyle=flash.evolution?'#ffdc8899':'#91eece77';ctx.fillRect(x-w*z*.4,y-h*z-5*z,w*z*.8,2*z);}
-   ctx.globalAlpha=p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
+   if(raid&&Number.isFinite(p.hp)&&S.invasion?.phase!=='idle'){ctx.fillStyle='#302b28';ctx.fillRect(x-16*z,y-h*z-9*z,32*z,5*z);ctx.fillStyle=p.hp>0?'#a2de94':'#cd8d76';ctx.fillRect(x-16*z,y-h*z-9*z,32*z*Math.max(0,p.hp)/p.maxHp,5*z);}
+   ctx.globalAlpha=p.hp===0?.28:p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
    const atlas=spriteAtlas(img,u,h*z,dpr);if(!atlas)continue;const aw=atlas.w/dpr,ah=atlas.h/dpr,ax=atlas.anchorX/dpr,ay=atlas.anchorY/dpr;
-   if(u.worker&&p.workFacing<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
+   if(u.worker&&p.workFacing<0||raid&&S.invasion?.phase!=='idle'&&!u.worker&&p.facingX<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
    // Free placement is legal even when no resource is in reach. Keep the idle state visible after release.
    if(raid&&u.worker&&h*z>10){if(p.workStatusAt==null||sim.time-p.workStatusAt>.3){p.workStatusAt=sim.time;p.workIdle=!window.SupplyFactory?.nearby?.(p,SupplyFactory.resourceTypeForWorker(u.worker));}
     if(p.workIdle){ctx.save();ctx.font='700 '+Math.max(9,10*z)+'px system-ui';ctx.textAlign='center';const label=LANG==='en'?'Idle':LANG==='zh'?'待机':'待機',w=ctx.measureText(label).width+10,by=y-h*z-7;ctx.fillStyle='#4c3d21ee';ctx.strokeStyle='#dfbf75';ctx.lineWidth=1;ctx.beginPath();ctx.rect(x-w/2,by-11,w,15);ctx.fill();ctx.stroke();ctx.fillStyle='#ffe4a3';ctx.fillText(label,x,by);ctx.restore();}}
