@@ -823,7 +823,234 @@
     "long-term retention and release-quality judgement"
   ],
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "date_jst": "2026-11-17",
+    "code_commit": "298f5682738f829c646ab2cd608cee1306db0866",
+    "workflow": {
+      "id": 44021464209,
+      "conclusion": "success",
+      "url": "https://github.com/BubblegumGameBoy/spacebar-clicker/actions/runs/44021464209"
+    },
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261116-invasion-r1&slot=new-game",
+    "canonicalization": "UTF-8 text with LF line endings; compare all 21 changed preview files against the tested local build",
+    "payload": [
+      {
+        "path": "preview/army-sim.js",
+        "matches": true,
+        "sha256": "fe57c1c7aa1350d6d04e05d687ec71a0e54acb3e92aed5a9fbeff34cc7e09674"
+      },
+      {
+        "path": "preview/army-view.js",
+        "matches": true,
+        "sha256": "e7c3aa2e95ea8bd3a90b0ba2abd1e8bca9bbb0e9c68f1c63adbbf969218fb3f8"
+      },
+      {
+        "path": "preview/battle-control.js",
+        "matches": true,
+        "sha256": "4fa060f48e7e0f462c911c2f4e3cfe3765676743693546b5c9ee7d5193f30c0d"
+      },
+      {
+        "path": "preview/build.json",
+        "matches": true,
+        "sha256": "1ca6639ed04c0ce2eba8c56a16bda703b43c3e449d0853ee35d7143a0e46ed43"
+      },
+      {
+        "path": "preview/cabin-ui.js",
+        "matches": true,
+        "sha256": "e9d5e57e4e672b1b4a2bdbddb3f6e456374fbeecabe876da9d31f8254591f15e"
+      },
+      {
+        "path": "preview/expedition-core.js",
+        "matches": true,
+        "sha256": "de30f3416623d200bf502da488987368a01890594c795fb9e914c8991be39927"
+      },
+      {
+        "path": "preview/expedition-ui.js",
+        "matches": true,
+        "sha256": "924f4828388147043e7b1eaa2042059e1efc837b22c3b5198f56ab7c9049d275"
+      },
+      {
+        "path": "preview/field-ui.js",
+        "matches": true,
+        "sha256": "7eef2fa088d35e74160d87bf170996e5f703b9d8491577358275d10f350e7fd8"
+      },
+      {
+        "path": "preview/game-core.js",
+        "matches": true,
+        "sha256": "82166575856c42207ccc6f229c4b56de832b549e7b38dfc8a0befbaca15439bd"
+      },
+      {
+        "path": "preview/harvest-skills.js",
+        "matches": true,
+        "sha256": "49c26a5864a3926547f228ef9b89f572f2b654fa1986f2454ff3dbb9b370ba3f"
+      },
+      {
+        "path": "preview/index.html",
+        "matches": true,
+        "sha256": "3befe4e9552ff2fc03ddcf105aa9d2c62018a4fbad1c2c574a84d590f96cda91"
+      },
+      {
+        "path": "preview/invasion-core.js",
+        "matches": true,
+        "sha256": "d45232b4564aa21b726007227d1945543be0b2d1f183b77b6c03de8459a3e4e2"
+      },
+      {
+        "path": "preview/invasion-ui.css",
+        "matches": true,
+        "sha256": "4ae808501e28b48d6903ea7109d1a884322f7e7abc7bdd286bfb21b6a5f82f69"
+      },
+      {
+        "path": "preview/invasion-ui.js",
+        "matches": true,
+        "sha256": "92bb8a19dfd450fa90acd5e682edab3160c2aea4d34ae9691412cf35f80d956c"
+      },
+      {
+        "path": "preview/inventory-ui.js",
+        "matches": true,
+        "sha256": "3c52543fe8b32552f5d001661f67db08c1a4300ffde61229191c1acd7064c5eb"
+      },
+      {
+        "path": "preview/outpost-camp.js",
+        "matches": true,
+        "sha256": "b22008b010f7e4672b676854e14046668a2932dce988df175c972b2a4f98e152"
+      },
+      {
+        "path": "preview/outpost-core.js",
+        "matches": true,
+        "sha256": "e564d33c52945fb61feab33035be180a660a37c352ad759726390fd576a84867"
+      },
+      {
+        "path": "preview/outpost-tutorial.js",
+        "matches": true,
+        "sha256": "e37c5dc30f69788d3d8bb648f8f71908b3a3d47ed9046e2049713682154d34f6"
+      },
+      {
+        "path": "preview/outpost.js",
+        "matches": true,
+        "sha256": "67ec0aad5e83746951d03af6e360d15023cdaf965613843c3f9bff3bc2680fab"
+      },
+      {
+        "path": "preview/progression-core.js",
+        "matches": true,
+        "sha256": "26d37926dcad4a8c489d9fddc82c88803799f027d9a8cb90d10cea1828ea5431"
+      },
+      {
+        "path": "preview/save-guard.js",
+        "matches": true,
+        "sha256": "f26d68c7914c649e1a07299e378b19b5d7d8dcb23ea49db0bc73fb89966c16f8"
+      }
+    ],
+    "public_fresh_contexts": {
+      "fixture": false,
+      "freshContext": true,
+      "grants": false,
+      "rows": [
+        {
+          "width": 1280,
+          "height": 900,
+          "input": "mouse",
+          "phase": "idle",
+          "conquered": [],
+          "people": 0,
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "boardHeight": 45,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "input": "CDP touch",
+          "phase": "idle",
+          "conquered": [],
+          "people": 0,
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "boardHeight": 45,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "input": "CDP touch",
+          "phase": "idle",
+          "conquered": [],
+          "people": 0,
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "boardHeight": 45,
+          "errors": [],
+          "passed": true
+        }
+      ]
+    },
+    "native_iab": {
+      "opened": true,
+      "kept_as_deliverable": true,
+      "existing_save_continued": true,
+      "visible_stock": {
+        "wood": 2,
+        "stone": 0,
+        "food": 0
+      },
+      "visible_people": 1,
+      "onboarding": "弓兵のレシピ: 石材0/2",
+      "reset": false
+    },
+    "scope": "preview and dev only; original game, Worker, packages and existing artwork unchanged"
   },
   "source_archive": {
     "members": 271,

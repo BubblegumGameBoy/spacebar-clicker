@@ -39,7 +39,7 @@ Node382件通過。マウス1280×900、CDPタッチ390×844／844×390。準備
 
 試遊URL： https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261116-invasion-r1&slot=new-game
 
-公開確認はdev/INVASION_CHECKS.jsonのpublicationを確認する。
+公開配信を確認済み。コードcommit 298f5682738f829c646ab2cd608cee1306db0866、Pages run 44021464209成功。更新21ファイルがUTF8/LFで検証ビルドと一致し、公開3サイズの新規待機・選択・研究・地図を確認。ネイティブ試遊タブでは既存の木2・仲間1・弓兵レシピ案内を保持し、リセットせず継続した。詳細はdev/INVASION_CHECKS.jsonのpublication。
 
 ## 次の制作課題
 
