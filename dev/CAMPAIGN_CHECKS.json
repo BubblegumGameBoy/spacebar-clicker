@@ -431,6 +431,180 @@
   },
   "limitations": "全30陣地はブラウザーで自動操作・時間加速。実機スマートフォンの確認なし。",
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "workflow": 44494855194,
+    "commit": "ce25871645fc988cc54c91e9b9f66ebebb7a3a83",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261119-campaign-r1&slot=campaign",
+    "files": [
+      {
+        "path": "preview/build.json",
+        "matches": true,
+        "sha256": "0444f05bff966a4650f4626388ca06870a65ae00e6a3415c91d21d3e66d9717e"
+      },
+      {
+        "path": "preview/campaign-core.js",
+        "matches": true,
+        "sha256": "b400ab237bcc96c55bd9be326b3674a0a8e93293b6c17c664dc4f7d5859eaaab"
+      },
+      {
+        "path": "preview/index.html",
+        "matches": true,
+        "sha256": "3e4b8330d686e1313b873706a94aa17d6edd955f2ad2940b884cb83a55eb211a"
+      },
+      {
+        "path": "preview/outpost-tutorial.js",
+        "matches": true,
+        "sha256": "e1befee0773ecdbe5eff83cfc63bf91d3b9f7cfb2b4099e2f887ea26f44d66a2"
+      },
+      {
+        "path": "preview/outpost.js",
+        "matches": true,
+        "sha256": "d93aa07a0c54eb7ed1685d23328f408a4db302b8ca20770e587e9f4fa4e67732"
+      },
+      {
+        "path": "preview/rework.js",
+        "matches": true,
+        "sha256": "691a6aece77810e5027ebb4c79ad037890f2d9c90f8bdc5ee706ffb812674187"
+      },
+      {
+        "path": "preview/territory-ui.css",
+        "matches": true,
+        "sha256": "284b19787deeda8529c370d9163ec25a156e093545a647992abd8dfd3492b17a"
+      },
+      {
+        "path": "preview/territory-ui.js",
+        "matches": true,
+        "sha256": "1855fec4688c09a68f736a15f498ca570e28131526546af6fa2ce694e9e09dac"
+      }
+    ],
+    "opening": {
+      "fixture": false,
+      "grants": false,
+      "freshIsolatedContexts": true,
+      "rows": [
+        {
+          "width": 1280,
+          "height": 900,
+          "input": "mouse",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        }
+      ]
+    }
+  },
+  "native_opening": {
+    "events": [
+      "empty-start",
+      "paid-recipe_woodcutter",
+      "paid-placed-woodcutter",
+      "paid-recipe_arch",
+      "paid-placed-arch",
+      "placed-not-auto-started",
+      "map-route-travel",
+      "battlefield-march",
+      "visible-progress",
+      "attacking-gate",
+      "captured-and-returned",
+      "rich-forest-two-physical-logs",
+      "manual-stockpile",
+      "manually-loaded-cart",
+      "cargo-on-map-route",
+      "cart-arrived-not-credited",
+      "unloaded-onto-ground-not-credited",
+      "physical-delivery-to-warehouse",
+      "territory-revisited"
+    ],
+    "clock_accelerated": false,
+    "grants": false,
+    "errors": []
   }
 }
