@@ -1,0 +1,643 @@
+{
+  "version": "20261117-territory-r1",
+  "ruleset": "territory-v19",
+  "date_jst": "2026-11-19",
+  "base_commit": "c4759f85c3393cbb273de20d8a0ad8fbab6f1816",
+  "node": {
+    "passed": 400,
+    "failed": 0
+  },
+  "earned_journey": {
+    "fixture": false,
+    "resources_or_troops_granted": false,
+    "clock_accelerated": false,
+    "measurements": {
+      "minHp": 60,
+      "maxX": 1261.2840416792646,
+      "crewGain": 6,
+      "initialGateHP": 15,
+      "resourceGainPerCompletion": 2
+    },
+    "events": [
+      {
+        "event": "empty-start",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 0
+      },
+      {
+        "event": "paid-recipe_woodcutter",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 0
+      },
+      {
+        "event": "paid-placed-woodcutter",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 0
+      },
+      {
+        "event": "paid-recipe_arch",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 3
+      },
+      {
+        "event": "paid-placed-arch",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 12
+      },
+      {
+        "event": "placed-not-auto-started",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 13
+      },
+      {
+        "event": "map-route-travel",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "crewWood": 13
+      },
+      {
+        "event": "battlefield-march",
+        "scene": "battlefield",
+        "phase": "march",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "gateHP": 15,
+        "crewWood": 13
+      },
+      {
+        "event": "visible-progress",
+        "scene": "battlefield",
+        "phase": "march",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "gateHP": 15,
+        "crewWood": 13
+      },
+      {
+        "event": "attacking-gate",
+        "scene": "battlefield",
+        "phase": "battle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [],
+        "gateHP": 15,
+        "crewWood": 17
+      },
+      {
+        "event": "captured-and-returned",
+        "scene": "battlefield",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 19
+      },
+      {
+        "event": "rich-forest-two-physical-logs",
+        "scene": "territory",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 19
+      },
+      {
+        "event": "manual-stockpile",
+        "scene": "territory",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 20
+      },
+      {
+        "event": "manually-loaded-cart",
+        "scene": "territory",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 20
+      },
+      {
+        "event": "cargo-on-map-route",
+        "scene": "territory",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 20
+      },
+      {
+        "event": "cart-arrived-not-credited",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 20
+      },
+      {
+        "event": "unloaded-onto-ground-not-credited",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 0,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 20
+      },
+      {
+        "event": "physical-delivery-to-warehouse",
+        "scene": "home",
+        "phase": "idle",
+        "inventory": {
+          "wood": 1,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 21
+      },
+      {
+        "event": "territory-revisited",
+        "scene": "territory",
+        "phase": "idle",
+        "inventory": {
+          "wood": 1,
+          "stone": 0
+        },
+        "conquered": [
+          1
+        ],
+        "gateHP": 0,
+        "crewWood": 21
+      }
+    ],
+    "errors": []
+  },
+  "prepared_fixture": {
+    "responsive_simulation": {
+      "fixture": true,
+      "grants": "3 archers, 3 swords, 1 worker, recipes and stock; normal-time native orders/attacks/transport",
+      "rows": [
+        {
+          "width": 1280,
+          "height": 900,
+          "input": "mouse",
+          "passed": true,
+          "physicalDelivery": true,
+          "legacyCampClicksBlocked": true,
+          "saved": [
+            "stockpile",
+            "loaded cargo",
+            "home cart",
+            "map route",
+            "march",
+            "gate assault",
+            "cargo travelling"
+          ],
+          "errors": []
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "input": "CDP touch",
+          "passed": true,
+          "physicalDelivery": true,
+          "legacyCampClicksBlocked": true,
+          "saved": [
+            "stockpile",
+            "loaded cargo",
+            "home cart"
+          ],
+          "errors": []
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "input": "CDP touch",
+          "passed": true,
+          "physicalDelivery": true,
+          "legacyCampClicksBlocked": true,
+          "saved": [
+            "stockpile",
+            "loaded cargo",
+            "home cart"
+          ],
+          "errors": []
+        }
+      ]
+    },
+    "large_army": {
+      "fixture": "29 prior captures and 40 combatants; ordinary time, no damage grants",
+      "peakSimultaneousDefenders": 9,
+      "partyTookDamage": true,
+      "homeSceneResume": true,
+      "win": true,
+      "completed": true,
+      "gateHP": 0,
+      "groups": [
+        {
+          "id": "woodcutter",
+          "count": 1
+        },
+        {
+          "id": "arch",
+          "count": 10
+        },
+        {
+          "id": "arch",
+          "count": 10
+        },
+        {
+          "id": "sword",
+          "count": 10
+        },
+        {
+          "id": "ballista",
+          "count": 10
+        }
+      ],
+      "hp": true,
+      "errors": []
+    },
+    "legacy_save": {
+      "fixture": "previously earned v18 active save; native continuation",
+      "exactOldBattlePreserved": true,
+      "oldNodesPreserved": true,
+      "paidGroupsPreserved": true,
+      "oldBattleWon": true,
+      "newTerritoryVisited": true,
+      "noRepeatGold": true,
+      "errors": []
+    }
+  },
+  "fresh_opening": {
+    "fixture": false,
+    "grants": false,
+    "freshIsolatedContexts": true,
+    "rows": [
+      {
+        "width": 1280,
+        "height": 900,
+        "input": "mouse",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "input": "CDP touch",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "input": "CDP touch",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      }
+    ]
+  },
+  "motion": {
+    "fixture": "art/pose visual fixture, no game-state or save changes",
+    "rows": [
+      {
+        "id": "arch",
+        "poses": [
+          {
+            "mode": "idle",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.23313288598653484,
+            "right": -0.23313288598653484,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.09199539660593016,
+            "right": 0.09199539660593016,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.26389880496008594,
+            "right": 0.26389880496008594,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.09199539660593024,
+            "right": -0.09199539660593024,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          }
+        ]
+      },
+      {
+        "id": "sword",
+        "poses": [
+          {
+            "mode": "idle",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.23313288598653484,
+            "right": -0.23313288598653484,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.09199539660593016,
+            "right": 0.09199539660593016,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.26389880496008594,
+            "right": 0.26389880496008594,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.09199539660593024,
+            "right": -0.09199539660593024,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          }
+        ]
+      },
+      {
+        "id": "ballista",
+        "poses": [
+          {
+            "mode": "idle",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 0.6666666666666666
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 1.6666666666666667
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 3
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 4.166666666666667
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          }
+        ]
+      },
+      {
+        "id": "rat",
+        "poses": [
+          {
+            "mode": "idle",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.23313288598653484,
+            "right": -0.23313288598653484,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.09199539660593016,
+            "right": 0.09199539660593016,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": -0.26389880496008594,
+            "right": 0.26389880496008594,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0.09199539660593024,
+            "right": -0.09199539660593024,
+            "wheel": 0
+          },
+          {
+            "mode": "walk",
+            "left": 0,
+            "right": 0,
+            "wheel": 0
+          }
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "archives": {
+    "files": 284,
+    "identical": true,
+    "sha256": "17606d769c32faf250c17fc0273128a2faa359b0f2d845028125a8d72bd828cc"
+  },
+  "scope_remaining": "通常獲得による全30陣地通しと実機タッチ",
+  "publication": {
+    "status": "pending"
+  }
+}

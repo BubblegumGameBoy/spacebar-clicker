@@ -107,12 +107,12 @@ window.ArmyView=(()=>{
   if(key!==terrainKey){terrainKey=key;ground.style.top=top+'px';ground.style.backgroundSize=tile+'px';ground.style.backgroundPosition=ox+'px '+(oy-top)+'px';}
   const raid=outpost(),view={ox,oy,z};
   if(raid&&window.Outpost?.ready)Outpost.drawGround(ctx,view);
-  window.SupplyFactory?.draw(ctx,view);
+  if(!window.TerritoryUI?.away())window.SupplyFactory?.draw(ctx,view);
   if(sim.time>sortAt||drawOrder.length!==slots.length){drawOrder=slots.slice().sort((a,b)=>a.y-b.y);sortAt=sim.time+.18;}
   // Depth order changes as soldiers walk; offscreen bodies do not consume draw calls.
-  const actors=raid&&window.Outpost?.ready?[...drawOrder,...Outpost.enemies()].sort((a,b)=>a.y-b.y):drawOrder;
+  const sceneOrder=window.TerritoryUI?.ready&&TerritoryUI.enabled()?TerritoryUI.actors():drawOrder;const actors=raid&&window.Outpost?.ready?[...sceneOrder,...Outpost.enemies()].sort((a,b)=>a.y-b.y):sceneOrder;
   for(let i=0;i<actors.length;i++){
-   const p=actors[i];if(!p.u){Outpost.drawEnemy(ctx,view,p);continue;}if(p.enterAt>sim.time)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
+   const p=actors[i];if(!p.u){Outpost.drawEnemy(ctx,view,p);continue;}if(p.enterAt>sim.time||p.deploymentHidden)continue;const u=p.u,img=imageFor(u);if(!img.complete||!img.naturalWidth)continue;
    const tier=raid?0:Math.min(3,Core.tier(S.ulvl[p.id]));
    const crop=img.crop||{x:0,y:0,w:img.naturalWidth/(u.anim?.frames||1),h:img.naturalHeight};
    const h=bodyHeight(u)*(1+tier*.03),w=h*crop.w/crop.h;
@@ -121,7 +121,8 @@ window.ArmyView=(()=>{
    const elapsed=(sim.time-p.attackAt)*1000,duration=u.anim?.frameMs||120;
    const sequence=u.anim?.sequence||[0,1,2,3,0];
    const active=elapsed>=0&&elapsed<sequence.length*duration;
-   const f=active?sequence[Math.floor(elapsed/duration)]:(raid&&S.invasion?.phase!=='idle'&&p.moving?Math.floor(sim.time*7+p.key)%2:0);
+   const motion=window.SpriteGait?.sample(p,sim.time),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,pose=window.SpriteGait?.pose({time:sim.time,distance:motion?.distance||0,key:p.key,moving:motion?.moving,attacking:active,hurtAge:sim.time-(p.hurtAt??-10),dead:p.hp===0,role:p.id==='ballista'?'cart':u.fly?'fly':'foot',reduced});
+   const f=active?sequence[Math.floor(elapsed/duration)]:0;
    const sw=img.naturalWidth/(u.anim?.frames||1);
    const chosen=window.BattleControl?.selected(p.key);if(chosen){ctx.strokeStyle='#eacb82';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y,Math.max(5,p.r*z),Math.max(2,p.r*z*.45),0,0,Math.PI*2);ctx.stroke();}
    if(tier){ctx.fillStyle=['','#64dfff66','#d399ff88','#ffd96a99'][tier];ctx.beginPath();ctx.ellipse(x,y-2*z,w*z*.35,3*z,0,0,Math.PI*2);ctx.fill();}
@@ -129,7 +130,7 @@ window.ArmyView=(()=>{
    if(raid&&Number.isFinite(p.hp)&&S.invasion?.phase!=='idle'){ctx.fillStyle='#302b28';ctx.fillRect(x-16*z,y-h*z-9*z,32*z,5*z);ctx.fillStyle=p.hp>0?'#a2de94':'#cd8d76';ctx.fillRect(x-16*z,y-h*z-9*z,32*z*Math.max(0,p.hp)/p.maxHp,5*z);}
    ctx.globalAlpha=p.hp===0?.28:p.stun?.4:Math.min(1,(sim.time-p.enterAt)*3);
    const atlas=spriteAtlas(img,u,h*z,dpr);if(!atlas)continue;const aw=atlas.w/dpr,ah=atlas.h/dpr,ax=atlas.anchorX/dpr,ay=atlas.anchorY/dpr;
-   if(u.worker&&p.workFacing<0||raid&&S.invasion?.phase!=='idle'&&!u.worker&&p.facingX<0){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
+   const flip=u.worker&&p.workFacing<0||raid&&S.invasion?.phase!=='idle'&&!u.worker&&p.facingX<0;if(pose){SpriteGait.draw(ctx,atlas.canvas,{x:f*atlas.w,y:0,w:atlas.w,h:atlas.h},{x:x-ax,y:y-ay,w:aw,h:ah},pose,{footX:ax,footY:ay,height:h*z,flip});}else if(flip){ctx.save();ctx.translate(x,y);ctx.scale(-1,1);ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,-ax,-ay,aw,ah);ctx.restore();}else ctx.drawImage(atlas.canvas,f*atlas.w,0,atlas.w,atlas.h,x-ax,y-ay,aw,ah);ctx.globalAlpha=1;
    // Free placement is legal even when no resource is in reach. Keep the idle state visible after release.
    if(raid&&u.worker&&h*z>10){if(p.workStatusAt==null||sim.time-p.workStatusAt>.3){p.workStatusAt=sim.time;p.workIdle=!window.SupplyFactory?.nearby?.(p,SupplyFactory.resourceTypeForWorker(u.worker));}
     if(p.workIdle){ctx.save();ctx.font='700 '+Math.max(9,10*z)+'px system-ui';ctx.textAlign='center';const label=LANG==='en'?'Idle':LANG==='zh'?'待机':'待機',w=ctx.measureText(label).width+10,by=y-h*z-7;ctx.fillStyle='#4c3d21ee';ctx.strokeStyle='#dfbf75';ctx.lineWidth=1;ctx.beginPath();ctx.rect(x-w/2,by-11,w,15);ctx.fill();ctx.stroke();ctx.fillStyle='#ffe4a3';ctx.fillText(label,x,by);ctx.restore();}}
@@ -137,8 +138,8 @@ window.ArmyView=(()=>{
   }
   projectiles=projectiles.filter(p=>p.until>sim.time&&(!p.target||(p.roundToken===sim.round()&&p.target.alive)));
   for(const p of projectiles){if(sim.time<p.start)continue;if(p.source){p.x=p.source.x;p.y=p.source.y-27;delete p.source;}if(p.target){p.tx=p.target.x;p.ty=p.target.y-18;}const t=1-(p.until-sim.time)/p.duration,x=ox+(p.x+(p.tx-p.x)*t)*z,y=oy+(p.y+(p.ty-p.y)*t)*z;ctx.strokeStyle=p.heal?'#94edb9':p.col;ctx.lineWidth=Math.max(1,(p.ballista?4:2)*z);ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-(p.tx-p.x)*(p.ballista?.075:.035)*z,y-(p.ty-p.y)*(p.ballista?.075:.035)*z);ctx.stroke();}
-  if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);window.BattleControl?.draw(ctx,view);
-  if(raid){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view);window.FieldUI?.drawBrush?.(ctx,view);window.OreUI?.draw?.(ctx,view); }
+  if(raid)window.Outpost?.drawEnemyUI?.(ctx,view);if(!window.TerritoryUI?.away())window.BattleControl?.draw(ctx,view);
+  if(raid&&!window.TerritoryUI?.away()){window.OutpostCamp?.drawOver(ctx,view);window.OutpostTutorial?.draw?.(ctx,view);window.FieldUI?.drawBrush?.(ctx,view);window.OreUI?.draw?.(ctx,view); }
  }
  function tick(dt){
   if(!viewport||window.BattleControl?.defeated)return;

@@ -7,13 +7,14 @@
  const Expedition=typeof module==='object'&&module.exports?require('./expedition-core.js'):globalThis.ExpeditionCore;
  const Progression=typeof module==='object'&&module.exports?require('./progression-core.js'):globalThis.ProgressionCore;
  const Invasion=typeof module==='object'&&module.exports?require('./invasion-core.js'):globalThis.InvasionCore;
+ const Territory=typeof module==='object'&&module.exports?require('./territory-core.js'):globalThis.TerritoryCore;
  const VERSION=3, MAX_LEVEL=500;
  const SKILLS={strike:3,critical:3,rhythm:3,storm:1,haste:3,quartermaster:3,awakening:3,camp:3,covenant:1,fortune:3,bounty:3,memory:3,aurora:1};
  const BRANCHES={storm:['strike','critical','rhythm'],covenant:['haste','quartermaster','awakening','camp'],aurora:['fortune','bounty','memory']};
  const num=(v,f=0,max=1e150)=>Number.isFinite(Number(v))?Math.max(0,Math.min(max,Number(v))):f;
  const integer=(v,f=0,max=MAX_LEVEL)=>Math.floor(num(v,f,max));
  const skill=(s,id)=>integer(s.skills?.[id],0,SKILLS[id]||0);
- function fresh(ids=[]){return {version:VERSION,progression:Progression?.fresh()||{version:1,recipes:[],legacyPending:false},expedition:null,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
+ function fresh(ids=[]){return {version:VERSION,progression:Progression?.fresh()||{version:1,recipes:[],legacyPending:false},expedition:null,territories:null,tutorial:null,harvestSkills:HarvestSkills?.migrate(null)||{carry:0,hand:0,route:0},gold:350,earned:0,globalWave:1,bossWave:1,bossCycle:1,clearedBossWave:0,runBest:0,prestige:0,renown:0,souls:0,soulsEarned:0,skills:{},goldBonus:1,gameCleared:false,owned:Object.fromEntries(ids.map(id=>[id,0])),ulvl:Object.fromEntries(ids.map(id=>[id,0])),hero:{click:0,gpk:0,crate:0,cmult:0,gold:0,combo:0,aspd:0,vitality:0,armor:0},bossKills:{},codex:[],measureBests:{},measureGift:false,lastSeen:Date.now(),factory:null,outpost:null,camp:null,battle:null,pending:{},pendingRefunds:{},firstWorkerPickup:false,activity:'gather',captainHp:100,bossHp:0,bossHpMax:0};}
  function migrateCamp(raw,factory){
   if(!raw||raw.version!==1||!factory)return null;
   const field=(Outpost||globalThis.OutpostCore).WORLD;
@@ -48,6 +49,7 @@
  }
  function migrate(raw,ids=[],now=Date.now()){
   const r=raw&&typeof raw==='object'?raw:{},s=fresh(ids);
+  s.territories=Territory?.migrate(r.territories)||null;
   s.invasion=Invasion?.migrate(r.invasion)||null;
   s.expedition=Expedition?.migrate(r.expedition)||null;
   s.tutorial=r.tutorial?.version===1?{version:1,started:r.tutorial.started===true,first10:r.tutorial.first10===true,stock30:r.tutorial.stock30===true,woodDelivered:integer(r.tutorial.woodDelivered,0,1e9),stoneDelivered:integer(r.tutorial.stoneDelivered,0,1e9),automaticWood:integer(r.tutorial.automaticWood,0,1e9),blownWood:integer(r.tutorial.blownWood,0,1e9),workerDelivered:r.tutorial.workerDelivered===true,visibleOptions:Object.fromEntries(['worker','blower','defence','upgrade'].map(k=>[k,r.tutorial.visibleOptions?.[k]===true]))}:null;
