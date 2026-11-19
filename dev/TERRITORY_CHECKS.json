@@ -638,6 +638,199 @@
   },
   "scope_remaining": "通常獲得による全30陣地通しと実機タッチ",
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "date_jst": "2026-11-19",
+    "commit": "5e1092e86a18b4262390c84889334dc80d4da161",
+    "workflow": {
+      "id": 44492842645,
+      "conclusion": "success"
+    },
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261117-territory-r1&slot=new-game",
+    "delivery_comparison": "PNG byte for byte, text UTF-8 with LF",
+    "payload": [
+      {
+        "path": "preview/army-view.js",
+        "matches": true,
+        "sha256": "c9534490929d4e9180edf30296f91404f791ca185cd6a381816cd1441f9d1dd9"
+      },
+      {
+        "path": "preview/build.json",
+        "matches": true,
+        "sha256": "3688dc2145c63cdd24062578c39961fab61a8bee067e4d434e016525c5692afe"
+      },
+      {
+        "path": "preview/cabin-ui.js",
+        "matches": true,
+        "sha256": "d461c611486f885e75ddc494443d625462946a8b166c396eb0c7cf64594dadc0"
+      },
+      {
+        "path": "preview/game-core.js",
+        "matches": true,
+        "sha256": "7091b0be278e39a921531b0e6b5cef6b5ce7613dd42c450c58b13e77de7d695f"
+      },
+      {
+        "path": "preview/index.html",
+        "matches": true,
+        "sha256": "bac9dd47a90aee782a10870ebae965833f9f12a1aaff8ed75a5dd4301f7727fd"
+      },
+      {
+        "path": "preview/invasion-core.js",
+        "matches": true,
+        "sha256": "c38aa5ff1dbe74fc74121e906baf0f17174fc511e9f9690fc73fd752cae15add"
+      },
+      {
+        "path": "preview/invasion-ui.js",
+        "matches": true,
+        "sha256": "c9872e6b83c0f07ba917724e83beb572b4dc94972fa0f5ffcee0e1ca99d22da8"
+      },
+      {
+        "path": "preview/inventory-ui.js",
+        "matches": true,
+        "sha256": "3322164f11a728b71f9239b5b25e7b855b5f0485d4ec19f3c402e91dde970191"
+      },
+      {
+        "path": "preview/media/territory-castle-v1.png",
+        "matches": true,
+        "sha256": "85d0e89fbb329e68c9db3b4f3d7169262320ec9e2f03138ec24c3f593de0f1d6"
+      },
+      {
+        "path": "preview/outpost.js",
+        "matches": true,
+        "sha256": "92e6e402eeaafc20ef9d7d96bee411fbc2bebc0afcc99883a4a4c04b3b2d44b7"
+      },
+      {
+        "path": "preview/sprite-gait.js",
+        "matches": true,
+        "sha256": "716e606a0037799b2d2c14445d7b24db7efa7896147cf1ff53a0f5305a461e38"
+      },
+      {
+        "path": "preview/supply-core.js",
+        "matches": true,
+        "sha256": "51607e4d0c6edeff898a9423b4a82d5affe1097a0ffd050b80ac6f2faca4412a"
+      },
+      {
+        "path": "preview/supply-factory.js",
+        "matches": true,
+        "sha256": "51d02ceed46494caaf01e07a4daae6956f2203911bd7e28897816f2fe449a0c4"
+      },
+      {
+        "path": "preview/territory-core.js",
+        "matches": true,
+        "sha256": "4cc86c563d07cd230aedc516aaefe8c7bbffaec008fde46509f68042f4bdd806"
+      },
+      {
+        "path": "preview/territory-ui.css",
+        "matches": true,
+        "sha256": "3187cf417f7aa2946607a8a13532c33bb1c4e51938038f15660c402abec876d3"
+      },
+      {
+        "path": "preview/territory-ui.js",
+        "matches": true,
+        "sha256": "7abeed6608b75808e987c394baff8e5fd6d90d00b36517e556e96d77ca3296b2"
+      }
+    ],
+    "public_opening": {
+      "fixture": false,
+      "grants": false,
+      "freshIsolatedContexts": true,
+      "rows": [
+        {
+          "width": 1280,
+          "height": 900,
+          "input": "mouse",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        }
+      ]
+    }
   }
 }

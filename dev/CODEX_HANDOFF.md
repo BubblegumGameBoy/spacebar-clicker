@@ -15,3 +15,5 @@
 - 公開対象は元ゲームと別の `preview/` と引き継ぎ用の `dev/`。新しい城のPNGは無視対象なので `preview/media/territory-castle-v1.png` を個別にステージする。
 
 試遊URL https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261117-territory-r1&slot=new-game
+
+公開確認済み。Pages run 44492842645が成功し、変更した試遊ファイル16件の一致と公開3画面サイズの起動・攻略地図・研究操作を確認した。
