@@ -25,7 +25,10 @@ window.TerritoryUI=(()=>{
  function visit(id){if(!TerritoryCore.beginTravel(S,'visit',id))return false;Rework.close();sync(true);save();return true;}
  function start(id=selected){if(BattleControl.placement||!InvasionCore.select(S,Number(id))||!InvasionCore.canStart(S,ArmyView.sim.soldiers,{placing:BattleControl.placement}))return false;if(!TerritoryCore.beginTravel(S,'battle',id))return false;Rework.close();SupplyFactory.stopHold?.();OutpostCamp.cancelPreview?.();OutpostCamp.clearSelection?.();sync(true);save();return true;}
  function depart(){return TerritoryCore.conquered(S,selected)?visit(selected):start(selected);}
- function openMap(){if(state().travel)return;selected=S.invasion.phase!=='idle'?state().activeId:S.invasion.selected;renderMap();Rework.openPanel('territoryMapOverlay');}
+ function openMap(){if(state().travel)return;const objective=CampaignCore.objective(S.invasion.conquered);
+  selected=S.invasion.phase!=='idle'?state().activeId:(objective.next||CampaignCore.MAX_WAVE);
+  map.querySelector('.territory-archive').open=false;
+  renderMap();Rework.openPanel('territoryMapOverlay');}
  function mapPoint(id){const r=Math.ceil(id/3)-1,slot=(id-1)%3,row=Math.floor(r/5),col=row?4-r%5:r%5;return {x:125+col*135+(slot-1)*22,y:row?210:88+(slot===2?28:0)};}
  function paintMap(canvas,progress=null){if(!canvas)return;const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,k=w/800;ctx.save();ctx.clearRect(0,0,w,h);ctx.scale(k,k);ctx.fillStyle='#203d2f';ctx.fillRect(0,0,800,280);ctx.strokeStyle='#7c8a5c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(36,143);for(let r=0;r<10;r++){const p=mapPoint(r*3+2);ctx.lineTo(p.x,p.y);}ctx.stroke();ctx.fillStyle='#f2deb0';ctx.font='bold 13px system-ui';ctx.fillText('拠点',15,172);ctx.fillRect(25,130,24,22);
   for(let id=1;id<=30;id++){const p=mapPoint(id),done=TerritoryCore.conquered(S,id),open=InvasionCore.available(S,id);ctx.globalAlpha=done||open?1:.35;ctx.fillStyle=done?'#8bc491':selected===id?'#e5be71':'#9f7555';if(id%3===0&&castle.complete&&castle.naturalWidth)ctx.drawImage(castle,p.x-16,p.y-26,32,32);else{ctx.fillRect(p.x-7,p.y-11,14,14);ctx.fillRect(p.x-8,p.y-16,4,6);ctx.fillRect(p.x+4,p.y-16,4,6);}if(selected===id){ctx.strokeStyle='#ffe8a5';ctx.lineWidth=2;ctx.strokeRect(p.x-18,p.y-28,36,38);}if(id%3===2){ctx.globalAlpha=1;ctx.fillStyle='#ebdcad';ctx.fillText(String(Math.ceil(id/3)),p.x-4,p.y+28);}}
@@ -57,8 +60,82 @@ window.TerritoryUI=(()=>{
   panel.querySelector('div').replaceChildren(...buttons);
   panel.querySelector('p').textContent=heat.conditions.map(InvasionCore.conditionDescription).join(' / ');
  }
- function renderMap(){if(!map)return;const list=map.querySelector('.territory-map-sites');list.replaceChildren();for(let region=1;region<=10;region++){const row=document.createElement('section'),title=document.createElement('b');title.textContent=region+' · '+CampaignCore.chapter(region*3).name;row.append(title);for(let slot=0;slot<3;slot++){const id=(region-1)*3+slot+1,b=document.createElement('button'),done=TerritoryCore.conquered(S,id);b.type='button';b.dataset.territorySite=id;b.setAttribute('aria-pressed',String(selected===id));b.disabled=!done&&!InvasionCore.available(S,id);b.textContent=(done?'✓ ':!InvasionCore.available(S,id)?'🔒 ':'')+InvasionCore.site(id).name;b.onclick=()=>{selected=id;renderMap();};row.append(b);}list.append(row);}
-  const done=TerritoryCore.conquered(S,selected),site=TerritoryCore.entry(S,selected,false),res=TerritoryCore.supplyDescription(selected),plan=OutpostCore.plan(selected,OutpostCore.PLAN_VERSION,OutpostCore.roundModifiers(S.outpost,selected));map.querySelector('.territory-map-detail').textContent=name(selected)+' · 豊かな'+material(res.type)+'採取場 · 採集量2倍 · '+(site?'残量'+site.nodes.reduce((n,r)=>n+r.stock,0)+' / 集積'+site.stockpile.length+' / 荷車'+site.cart.length:'可採量'+res.stock)+(res.type==='iron'?'（採掘研究が必要）':'')+(done?'': ' · 守備隊'+plan.potential+'体 · '+plan.kinds.map(k=>OutpostCore.ENEMIES[k].name[0]).join('・')+' · '+InvasionCore.hint(selected));const b=document.getElementById('territoryDepart');b.textContent=done?'領地へ移動':'ここへ出陣';b.disabled=!!state().travel||S.invasion.phase!=='idle'||!done&&!InvasionCore.canStart(S,ArmyView.sim.soldiers,{placing:BattleControl.placement});renderThreat();paintMap(mapCanvas);
+ function renderMap(){
+  if(!map)return;
+  const objective=CampaignCore.objective(S.invasion.conquered);
+  const list=map.querySelector('.territory-map-sites');
+  const archive=map.querySelector('.territory-map-archive');
+  list.replaceChildren();
+  archive.replaceChildren();
+  map.querySelector('.territory-map-progress').textContent=objective.finished
+   ? '街道解放 · 10 / 10地域'
+   : '街道解放 '+objective.regions+' / '+objective.total+'地域';
+  for(let region=1;region<=objective.total;region++){
+   const row=document.createElement('section');
+   const title=document.createElement('b');
+   title.textContent='第'+region+'地域  '+CampaignCore.chapter(region*3).name;
+   row.append(title);
+   for(let slot=0;slot<3;slot++){
+    const id=(region-1)*3+slot+1;
+    const done=TerritoryCore.conquered(S,id), available=InvasionCore.available(S,id);
+    const button=document.createElement('button');
+    button.type='button';
+    button.dataset.territorySite=id;
+    button.setAttribute('aria-pressed',String(selected===id));
+    button.disabled=!done&&!available;
+    const title=slot===2?CampaignCore.chapter(id).title:InvasionCore.site(id).name;
+    button.textContent=(done?'✓ ':!available?'🔒 ':'')+title;
+    button.onclick=()=>{
+     selected=id;
+     renderMap();
+     map.querySelector('[data-territory-site="'+id+'"]').focus({preventScroll:true});
+    };
+    row.append(button);
+   }
+   (region===objective.region?list:archive).append(row);
+  }
+  const done=TerritoryCore.conquered(S,selected);
+  const site=TerritoryCore.entry(S,selected,false), resource=TerritoryCore.supplyDescription(selected);
+  const plan=OutpostCore.plan(selected,OutpostCore.PLAN_VERSION,OutpostCore.roundModifiers(S.outpost,selected));
+  const army=ArmyView.sim.soldiers.filter(InvasionCore.fighter).length;
+  map.querySelector('.territory-map-detail').textContent=done
+   ? material(resource.type)+'を採集して荷車で持ち帰れます。採集量2倍。'+(site?' 残量'+site.nodes.reduce((n,node)=>n+node.stock,0)+'・積荷'+site.cart.length+'個。':'')
+   : '味方 '+army+'人 ／ 守備隊 '+plan.potential+'体。'+(selected===CampaignCore.MAX_WAVE?'黄昏の王を倒し、城門を破れば街道の解放が完了。':selected%3===0?'城門を破れば次の地域へ。':'制圧すると'+material(resource.type)+'の採取場を確保。採集量2倍。');
+  const tips=map.querySelector('.territory-map-tips');
+  tips.hidden=done;
+  if(!army)tips.textContent='小屋で弓兵を雇い、拠点の空き地に配置すると出陣できます。';
+  else if(Object.values(S.pending||{}).some(n=>n>0)||BattleControl.placement)
+   tips.textContent='配置待ちの仲間を地面に置くと出陣できます。';
+  else if(selected===3)tips.textContent='初めての城攻め。小屋の「編成」で弓兵を3人に増やし、剣士を加えると攻めやすくなります。';
+  else tips.textContent=InvasionCore.hint(selected);
+  const departButton=document.getElementById('territoryDepart');
+  departButton.textContent=done?'領地へ移動':'ここへ出陣';
+  departButton.disabled=!!state().travel||S.invasion.phase!=='idle'||!done&&!InvasionCore.canStart(S,ArmyView.sim.soldiers,{placing:BattleControl.placement});
+  renderThreat();
+  paintMap(mapCanvas);
+ }
+ function guideText(objective, territory, inv){
+  if(state().travel)return '';
+  if(scene()==='territory'){
+   if(territory?.cart.length)return '荷車で資材を拠点へ運び、次の遠征に使おう';
+   if(territory?.drops.length||territory?.stockpile.length)return '採った資材を荷車へドラッグ';
+   const type=territory?.nodes[0]?.type;
+   if(type==='iron'&&!S.camp.oreMining)return '鉄鉱石の採集は、小屋で「鉄鉱採掘」を研究';
+   return material(type)+'を採集して、次の遠征の資材を確保';
+  }
+  if(inv.phase!=='idle')return '';
+  if(objective.finished)return '黄昏の王を倒し、街道を取り戻した';
+  if(state().homeCart.length)return '荷下ろしして、実物を小屋へ届けよう';
+  if(BattleControl.placement||Object.values(S.pending||{}).some(n=>n>0))return '仲間を地面に配置して出陣の準備';
+  if(!objective.regions&&!inv.conquered.length&&!BattleControl.hasCombat)return '最初の目標は弓兵を1人雇うこと';
+  if(scene()==='battlefield'&&!inv.outcome?.win)
+   return '部隊が帰還。小屋で増員するか、攻略地図から再挑戦';
+  const target=objective.next%3===0?CampaignCore.chapter(objective.next).title:InvasionCore.site(objective.next).name;
+  if(scene()==='battlefield'&&inv.outcome?.win){
+   const secured=InvasionCore.site(inv.outcome.wave);
+   return secured.name+'を制圧。次は'+(secured.region===objective.region?target:'第'+objective.region+'地域')+'へ';
+  }
+  return '次は第'+objective.region+'地域 '+target+'へ';
  }
  function dropPoint(item,from='drops'){const t=current();if(!t)return {x:item.x,y:item.y-12};if(from==='drops')return {x:item.x,y:item.y-12};const list=t[from],i=Math.max(0,list.indexOf(item)),box=from==='cart'?TerritoryCore.CART:TerritoryCore.STOCKPILE;return {x:box.x-38+(i%5)*19,y:box.y-48+Math.floor((i%25)/5)*13};}
  function dropBounds(item,from='drops'){const p=dropPoint(item,from);return {left:p.x-14,right:p.x+14,top:p.y-14,bottom:p.y+12,x:p.x,y:p.y};}
@@ -84,16 +161,21 @@ window.TerritoryUI=(()=>{
  }
  function move(e){if(!pointers.has(e.pointerId))return;consume(e);pointers.set(e.pointerId,e);if(panning?.pinch&&pointers.size>1){const ps=[...pointers.values()],mx=(ps[0].clientX+ps[1].clientX)/2,my=(ps[0].clientY+ps[1].clientY)/2,d=Math.hypot(ps[0].clientX-ps[1].clientX,ps[0].clientY-ps[1].clientY);ArmyView.viewAt(panning.point.x,panning.point.y,panning.scale*d/panning.d,mx,my);return;}if(drag)drag.point=ArmyView.point(e.clientX,e.clientY);else if(panning&&!panning.pinch){const dx=e.clientX-panning.x,dy=e.clientY-panning.y;if(Math.hypot(dx,dy)>6)panning.moved=true;if(panning.moved){const vp=document.getElementById('battleViewport');vp.scrollLeft=panning.left-dx;vp.scrollTop=panning.top-dy;}}}
  function up(e){if(!pointers.has(e.pointerId))return;consume(e);if(drag&&e.type!=='pointercancel'){const p=ArmyView.point(e.clientX,e.clientY),to=inRect(p,TerritoryCore.CART)?'cart':inRect(p,TerritoryCore.STOCKPILE)?'stockpile':'drops';TerritoryCore.transferBatch(S,state().activeId,drag.keys,drag.from,to,p);save();}if(panning?.canAttack&&!panning.moved&&e.type==='pointerup')Outpost.manual(ArmyView.point(e.clientX,e.clientY));pointers.delete(e.pointerId);if(!pointers.size){drag=null;nodeHold=null;panning=null;activePointer=null;}sync(true);}
- function sync(force=false){if(!ready)return;const on=enabled(),s=state(),inv=S.invasion;document.body.classList.toggle('territory-build',on);document.body.classList.toggle('territory-away',on&&away());header.hidden=!on;toolbar.hidden=!on||scene()!=='territory';travelPanel.hidden=!on||!s.travel;if(!on)return;const territory=current(),health=Object.values(inv.members).reduce((n,m)=>n+m.hp,0),key=JSON.stringify([s.scene,s.activeId,!!s.travel,s.homeCart.length,inv.phase,inv.selected,inv.conquered,Math.ceil(health),Math.ceil(inv.gateHP||0),territory?.stockpile.length,territory?.cart.length,territory?.dispatch?[territory.dispatch.groupKey,territory.dispatch.x,territory.dispatch.y]:null,pendingGroup,S.pending,BattleControl.placement]);if(!force&&signature===key)return;signature=key;document.getElementById('invasionBoard').hidden=false;const at=scene()==='territory'?name(s.activeId)+' · 集積'+(territory?.stockpile.length||0)+'個':scene()==='battlefield'?(inv.phase==='idle'?(inv.outcome?.win?'制圧・帰還しました':'部隊が帰還しました'):inv.phase==='march'?'進軍中':inv.phase==='return'?'帰還中':inv.sieging?'城門 '+Math.ceil(inv.gateHP)+'/'+inv.gateMax:'交戦中 · 体力'+Math.ceil(health)):'拠点 · '+(inv.phase!=='idle'?'遠征は進行中':'準備時間は無制限');header.querySelector('.territory-scene-name').textContent=at;
-  document.getElementById('territoryHome').hidden=scene()==='home';document.getElementById('territoryArmy').hidden=!(inv.battlefield&&inv.phase!=='idle');document.getElementById('territoryRetreat').hidden=!(inv.battlefield&&['march','battle'].includes(inv.phase));const use=document.getElementById('territoryUse');use.hidden=!(inv.phase==='idle'&&inv.outcome?.win&&scene()!=='territory');use.textContent='領地を使う';const unload=document.getElementById('territoryUnload');unload.hidden=scene()!=='home'||!s.homeCart.length;unload.textContent='荷下ろし '+s.homeCart.length+'個';if(territory){document.getElementById('territorySendCart').textContent=territory.cart.length?'この荷物'+territory.cart.length+'個を拠点へ運ぶ':'拠点へ戻る';const summary=toolbar.querySelector('summary');summary.textContent='荷車 '+territory.cart.length+' / 12 · 派遣/内訳';toolbar.querySelector('.territory-cargo-list').textContent=Object.entries(territory.cart.reduce((r,d)=>(r[d.type]=(r[d.type]||0)+1,r),{})).map(([k,n])=>material(k)+' '+n).join(' / ')||'空荷です。実物を荷車へドラッグして積みます。';const select=document.getElementById('territoryWorker');select.replaceChildren(...ExpeditionCore.groups(S).filter(g=>g.active&&!g.pending&&ExpeditionCore.bucket(g.id)==='production').map(g=>{const o=document.createElement('option');o.value=g.key;o.textContent=({woodcutter:'木こり',miner:'採掘師',farmer:'農家'}[g.id])+' '+g.count+'人';return o;}));document.getElementById('territoryRecall').hidden=!territory.dispatch;}
+ function sync(force=false){if(!ready)return;const on=enabled(),s=state(),inv=S.invasion;document.body.classList.toggle('territory-build',on);document.body.classList.toggle('territory-away',on&&away());header.hidden=!on;toolbar.hidden=!on||scene()!=='territory';travelPanel.hidden=!on||!s.travel;if(!on)return;const territory=current(),health=Object.values(inv.members).reduce((n,m)=>n+m.hp,0),key=JSON.stringify([s.scene,s.activeId,!!s.travel,s.homeCart.length,inv.phase,inv.selected,inv.conquered,Math.ceil(health),Math.ceil(inv.gateHP||0),territory?.stockpile.length,territory?.cart.length,!!territory?.drops.length,BattleControl.hasCombat,territory?.dispatch?[territory.dispatch.groupKey,territory.dispatch.x,territory.dispatch.y]:null,pendingGroup,S.pending,BattleControl.placement]);if(!force&&signature===key)return;signature=key;document.getElementById('invasionBoard').hidden=false;const at=scene()==='territory'?name(s.activeId)+' · 集積'+(territory?.stockpile.length||0)+'個':scene()==='battlefield'?(inv.phase==='idle'?(inv.outcome?.win?'制圧・帰還しました':'部隊が帰還しました'):inv.phase==='march'?'進軍中':inv.phase==='return'?'帰還中':inv.sieging?'城門 '+Math.ceil(inv.gateHP)+'/'+inv.gateMax:'交戦中 · 体力'+Math.ceil(health)):'拠点 · '+(inv.phase!=='idle'?'遠征は進行中':'準備時間は無制限');const objective=CampaignCore.objective(inv.conquered);
+  header.querySelector('.territory-progress').textContent=objective.finished?'街道解放完了':'黄昏の王まで　解放 '+objective.regions+' / '+objective.total+'地域';
+  header.querySelector('.territory-scene-name').textContent=guideText(objective,territory,inv)||at;
+  document.getElementById('territoryEnding').hidden=!objective.finished||inv.phase!=='idle';
+  const mapButton=document.getElementById('territoryMapButton');
+  mapButton.textContent=scene()==='battlefield'&&inv.phase==='idle'&&!objective.finished?'次の攻略先':'攻略地図';
+  document.getElementById('territoryHome').hidden=scene()==='home';document.getElementById('territoryArmy').hidden=!(inv.battlefield&&inv.phase!=='idle');document.getElementById('territoryRetreat').hidden=!(inv.battlefield&&['march','battle'].includes(inv.phase));const use=document.getElementById('territoryUse');use.hidden=!(inv.phase==='idle'&&inv.outcome?.win&&scene()!=='territory');use.textContent='制圧地で採集';const unload=document.getElementById('territoryUnload');unload.hidden=scene()!=='home'||!s.homeCart.length;unload.textContent='荷下ろし '+s.homeCart.length+'個';if(territory){document.getElementById('territorySendCart').textContent=territory.cart.length?'この荷物'+territory.cart.length+'個を拠点へ運ぶ':'拠点へ戻る';const summary=toolbar.querySelector('summary');summary.textContent='荷車 '+territory.cart.length+' / 12 · 派遣/内訳';toolbar.querySelector('.territory-cargo-list').textContent=Object.entries(territory.cart.reduce((r,d)=>(r[d.type]=(r[d.type]||0)+1,r),{})).map(([k,n])=>material(k)+' '+n).join(' / ')||'空荷です。実物を荷車へドラッグして積みます。';const select=document.getElementById('territoryWorker');select.replaceChildren(...ExpeditionCore.groups(S).filter(g=>g.active&&!g.pending&&ExpeditionCore.bucket(g.id)==='production').map(g=>{const o=document.createElement('option');o.value=g.key;o.textContent=({woodcutter:'木こり',miner:'採掘師',farmer:'農家'}[g.id])+' '+g.count+'人';return o;}));document.getElementById('territoryRecall').hidden=!territory.dispatch;}
  }
  function tick(dt){if(!ready)return;for(const e of TerritoryCore.tick(S,dt)){if(e.kind==='battle'){InvasionCore.select(S,e.id);if(!InvasionCore.start(S,ArmyView.sim.soldiers,{battlefield:true,placing:BattleControl.placement})){safelyHome();continue;}ArmyView.sim.encounter(++encounterId);ArmyView.sim.invasion=true;ArmyView.sim.enemies=S.outpost.enemies;ForestAudio.play('raidStart');ArmyView.fit();setTimeout(()=>{if(state().scene==='battlefield'&&S.invasion.phase==='march')focusArmy();},900);}else if(e.kind==='visit'){sync(true);focusYard();}else{sync(true);cameraHome();}sync(true);save();}if(nodeHold&&scene()==='territory'&&!Rework.paused)TerritoryCore.harvest(S,state().activeId,nodeHold,false,null,true);if(state().travel){paintMap(travelPanel.querySelector('canvas'),state().travel);travelPanel.querySelector('b').textContent=(state().travel.kind==='home'?'拠点へ輸送中':name(state().travel.id)+'へ移動中');}uiClock+=dt;saveClock+=dt;if(uiClock>.2){uiClock=0;sync();}if(saveClock>1&&scene()==='territory'){saveClock=0;save();}}
  function safelyHome(){state().scene='home';sync(true);cameraHome();}
- function boot(){if(ready)return;ready=true;state();header=document.createElement('div');header.id='territoryHeader';header.innerHTML='<b class="territory-scene-name"></b><button id="territoryMapButton" type="button">攻略地図</button><button id="territoryArmy" type="button">部隊を見る</button><button id="territoryRetreat" type="button">撤退する</button><button id="territoryUse" type="button">領地を使う</button><button id="territoryUnload" type="button">荷下ろし</button><button id="territoryHome" type="button">拠点を見る</button>';document.getElementById('invasionBoard').append(header);
+ function boot(){if(ready)return;ready=true;state();header=document.createElement('div');header.id='territoryHeader';header.innerHTML='<div class="territory-purpose"><small class="territory-progress"></small><b class="territory-scene-name"></b></div><button id="territoryEnding" type="button" hidden>結末を見る</button><button id="territoryMapButton" type="button">攻略地図</button><button id="territoryArmy" type="button">部隊を見る</button><button id="territoryRetreat" type="button">撤退する</button><button id="territoryUse" type="button">領地を使う</button><button id="territoryUnload" type="button">荷下ろし</button><button id="territoryHome" type="button">拠点を見る</button>';document.getElementById('invasionBoard').append(header);
   toolbar=document.createElement('section');toolbar.id='territoryControls';toolbar.innerHTML='<details><summary></summary><p>現地の資材をドラッグして集積・積載。採取量2倍。研究した手持ち数を使えます。</p><p class="territory-cargo-list"></p><select id="territoryWorker" aria-label="派遣する生産班"></select><button id="territoryDispatch" type="button">選んだ班を派遣・配置</button><button id="territoryRecall" type="button">拠点へ戻す</button><p>派遣班は訪問中の領地だけで稼働し、拠点では作業を止めます。設備は拠点で使えます。</p></details><button id="territorySendCart" type="button"></button>';document.getElementById('field').append(toolbar);
-  map=document.createElement('div');map.id='territoryMapOverlay';map.className='rx-overlay';map.innerHTML='<section class="rx-dialog territory-map-dialog" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="territoryMapTitle"><header><h2 id="territoryMapTitle">攻略地図</h2><button data-territory-close type="button">閉じる</button></header><canvas width="800" height="280" aria-label="拠点と10地域の攻略地図"></canvas><div class="territory-map-sites"></div><p class="territory-map-detail"></p><details class="territory-threat" hidden><summary></summary><div></div><p></p></details><footer><button id="territoryDepart" type="button"></button><button data-territory-close type="button">閉じる</button></footer></section>';document.body.append(map);mapCanvas=map.querySelector('canvas');map.onclick=e=>{if(e.target===map||e.target.closest('[data-territory-close]'))Rework.close();};document.getElementById('territoryDepart').onclick=depart;
+  map=document.createElement('div');map.id='territoryMapOverlay';map.className='rx-overlay';map.innerHTML='<section class="rx-dialog territory-map-dialog" role="dialog" aria-modal="true" tabindex="-1" aria-labelledby="territoryMapTitle"><header><h2 id="territoryMapTitle">攻略地図</h2><button data-territory-close type="button">閉じる</button></header><p class="territory-map-progress"></p><div class="territory-map-sites"></div><p class="territory-map-detail"></p><p class="territory-map-tips"></p><details class="territory-archive"><summary>全地域・制圧済みの領地</summary><canvas width="800" height="280" aria-label="拠点と10地域の攻略地図"></canvas><div class="territory-map-archive"></div></details><details class="territory-threat" hidden><summary></summary><div></div><p></p></details><footer><button id="territoryDepart" type="button"></button><button data-territory-close type="button">閉じる</button></footer></section>';document.body.append(map);mapCanvas=map.querySelector('canvas');map.onclick=e=>{if(e.target===map||e.target.closest('[data-territory-close]'))Rework.close();};document.getElementById('territoryDepart').onclick=depart;
   travelPanel=document.createElement('div');travelPanel.id='territoryTravel';travelPanel.hidden=true;travelPanel.innerHTML='<b></b><canvas width="800" height="280"></canvas>';document.getElementById('field').append(travelPanel);
-  document.getElementById('territoryMapButton').onclick=openMap;document.getElementById('territoryHome').onclick=home;document.getElementById('territoryArmy').onclick=()=>{focusArmy();save();};document.getElementById('territoryRetreat').onclick=()=>{InvasionCore.retreat(S);sync(true);save();};document.getElementById('territoryUse').onclick=()=>visit(S.invasion.outcome.wave);document.getElementById('territorySendCart').onclick=()=>{if(TerritoryCore.sendCart(S,state().activeId)){drag=null;nodeHold=null;sync(true);save();}else Rework.toast('拠点の荷車に積荷が残っています。先に荷下ろししてください');};document.getElementById('territoryUnload').onclick=()=>{const r=TerritoryCore.unload(S);Rework.toast(r.unloaded?'積荷を地面へ荷下ろししました':'地面がいっぱいです',r.remaining?'荷車に残り'+r.remaining+'個':'倉庫へ運ぶと納品されます');if(r.point)ArmyView.viewAt(r.point.x,r.point.y);sync(true);save();};document.getElementById('territoryDispatch').onclick=()=>{pendingGroup=Number(document.getElementById('territoryWorker').value)||null;toolbar.querySelector('details').open=false;sync(true);};document.getElementById('territoryRecall').onclick=()=>{TerritoryCore.recall(S,state().activeId);sync(true);save();};
+  document.getElementById('territoryMapButton').onclick=openMap;document.getElementById('territoryEnding').onclick=()=>Outpost.showEnding();document.getElementById('territoryHome').onclick=home;document.getElementById('territoryArmy').onclick=()=>{focusArmy();save();};document.getElementById('territoryRetreat').onclick=()=>{InvasionCore.retreat(S);sync(true);save();};document.getElementById('territoryUse').onclick=()=>visit(S.invasion.outcome.wave);document.getElementById('territorySendCart').onclick=()=>{if(TerritoryCore.sendCart(S,state().activeId)){drag=null;nodeHold=null;sync(true);save();}else Rework.toast('拠点の荷車に積荷が残っています。先に荷下ろししてください');};document.getElementById('territoryUnload').onclick=()=>{const r=TerritoryCore.unload(S);Rework.toast(r.unloaded?'積荷を地面へ荷下ろししました':'地面がいっぱいです',r.remaining?'荷車に残り'+r.remaining+'個':'倉庫へ運ぶと納品されます');if(r.point)ArmyView.viewAt(r.point.x,r.point.y);sync(true);save();};document.getElementById('territoryDispatch').onclick=()=>{pendingGroup=Number(document.getElementById('territoryWorker').value)||null;toolbar.querySelector('details').open=false;sync(true);};document.getElementById('territoryRecall').onclick=()=>{TerritoryCore.recall(S,state().activeId);sync(true);save();};
   for(const [event,handler]of [['pointerdown',down],['pointermove',move],['pointerup',up],['pointercancel',up]])document.addEventListener(event,handler,true);window.addEventListener('blur',()=>{drag=null;nodeHold=null;pointers.clear();panning=null;});document.addEventListener('keydown',e=>{if(away()&&e.code==='Space'&&!e.target.closest('input,textarea,select')){e.preventDefault();e.stopImmediatePropagation();}} ,true);sync(true);
   // The camera is reconstructed from the saved scene, after the initial layout.
   if('scrollRestoration' in history)history.scrollRestoration='manual';

@@ -15,6 +15,14 @@
  ].map(c=>Object.freeze({...c,kinds:Object.freeze(c.kinds)})));
  const MAX_WAVE=CHAPTERS.length*3;
  const chapter=w=>CHAPTERS[Math.min(CHAPTERS.length-1,Math.max(0,Math.floor(((Number(w)||1)-1)/3)))];
+ const GOAL='黄昏の王を倒し、街道を取り戻す';
+ const PREMISE='黄昏の王が街への道を封鎖した。森の小屋から仲間を集め、10地域を解放しよう。';
+ function objective(conquered=[]){
+  const secured=new Set(conquered);
+  const regions=CHAPTERS.filter((_,i)=>secured.has((i+1)*3)).length;
+  const next=Array.from({length:MAX_WAVE},(_,i)=>i+1).find(id=>!secured.has(id));
+  return {regions,total:CHAPTERS.length,next,finished:next===undefined,region:Math.ceil((next||MAX_WAVE)/3)};
+ }
  function compose(wave,add){const c=chapter(wave),step=(wave-1)%3;
   // Two introduction/practice raids, then a boss encounter. More kinds, not exponential health.
   const count=step===2?18:step===1?24:20;
@@ -24,5 +32,5 @@
  function stronghold(camp={}){const stage=camp.beacon?3:camp.gate?2:(camp.tools?.wood||camp.tools?.stone)?1:0;
   return {stage,name:['森の小屋','職人の拠点','街道の砦','灯火の城'][stage],next:['工具の工房を建てる','見張り門で砦へ','街への灯火で城へ','城を守り、遠征を進める'][stage],project:['woodTool','gate','beacon',null][stage]};
  }
- return {CHAPTERS,MAX_WAVE,chapter,compose,stronghold};
+ return {CHAPTERS,MAX_WAVE,GOAL,PREMISE,objective,chapter,compose,stronghold};
 });

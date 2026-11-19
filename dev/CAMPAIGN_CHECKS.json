@@ -1,0 +1,436 @@
+{
+  "version": "20261119-campaign-r1",
+  "ruleset": "campaign-v20",
+  "date_jst": "2026-11-19",
+  "base": "e8001fb9311efe9c9cfd72b6a9a1db0bbc8503ef",
+  "tests": {
+    "node_passed": 400,
+    "failed": 0
+  },
+  "campaign": {
+    "battles": [
+      {
+        "id": 1,
+        "win": true,
+        "army": [
+          "arch 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 2,
+        "win": true,
+        "army": [
+          "arch 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 3,
+        "win": true,
+        "army": [
+          "arch 3",
+          "sword 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 4,
+        "win": true,
+        "army": [
+          "arch 3",
+          "sword 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 5,
+        "win": true,
+        "army": [
+          "arch 3",
+          "sword 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 6,
+        "win": true,
+        "army": [
+          "arch 3",
+          "sword 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 7,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 3",
+          "ballista 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 8,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 3",
+          "ballista 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 9,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 3",
+          "ballista 1"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 10,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 11,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 12,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 13,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 14,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 15,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 16,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 17,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 18,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 19,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 20,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 21,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 22,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 23,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 24,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 25,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 26,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 27,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 28,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 29,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      },
+      {
+        "id": 30,
+        "win": true,
+        "army": [
+          "arch 6",
+          "sword 6",
+          "ballista 3"
+        ],
+        "gate": 0
+      }
+    ],
+    "totals": {
+      "taps": 142,
+      "territoryTaps": 196,
+      "trips": 23,
+      "wood": 292,
+      "stone": 114,
+      "food": 0
+    },
+    "completed": true,
+    "objective": {
+      "regions": 10,
+      "total": 10,
+      "finished": true,
+      "region": 10
+    },
+    "ending": true,
+    "reload": true,
+    "accelerated": true,
+    "nativeOpeningAndEnding": true
+  },
+  "opening": {
+    "fixture": false,
+    "grants": false,
+    "freshIsolatedContexts": true,
+    "rows": [
+      {
+        "width": 1280,
+        "height": 900,
+        "input": "mouse",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "input": "CDP touch",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      },
+      {
+        "width": 844,
+        "height": 390,
+        "input": "CDP touch",
+        "scene": "home",
+        "travel": null,
+        "phase": "idle",
+        "conquered": [],
+        "stock": {
+          "wood": 0,
+          "stone": 0
+        },
+        "people": 0,
+        "slots": [
+          "hand",
+          "blower",
+          "broom",
+          "belt",
+          "fence",
+          "hopper",
+          "platform",
+          "loader",
+          "magnet"
+        ],
+        "overflow": false,
+        "canvasTop": 77,
+        "viewportTop": 77,
+        "backgroundParent": "battleWorld",
+        "castleLoaded": true,
+        "errors": [],
+        "passed": true
+      }
+    ]
+  },
+  "archives": {
+    "members": 285,
+    "sha256": "e17dcecff70521ec6421fc9a9e1b9ff00ce23a964ef49d8a9d3b27eb8b356247"
+  },
+  "limitations": "全30陣地はブラウザーで自動操作・時間加速。実機スマートフォンの確認なし。",
+  "publication": {
+    "status": "pending"
+  }
+}

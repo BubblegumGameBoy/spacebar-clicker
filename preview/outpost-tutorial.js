@@ -37,7 +37,7 @@ window.OutpostTutorial=(()=>{
  function raidAllowed(){return true;}
  function targetSkill(){const q=snapshot();return q.skill||null;}
  function action(){const q=snapshot(),cue=visualCue();if(window.CabinUI&&(cue.unit||cue.kind==='blower'||cue.kind==='fence')){CabinUI.open();return;}
-  if(cue.kind==='ready'){window.InvasionUI?.choose(1);document.getElementById('invasionStart')?.focus();return;}
+  if(cue.kind==='ready'){if(window.TerritoryUI?.enabled()){TerritoryUI.openMap();document.getElementById('territoryDepart')?.focus();}else{window.InvasionUI?.choose(1);document.getElementById('invasionStart')?.focus();}return;}
   if(cue.kind==='upgrade'){window.HarvestSkills?.open(q.skill);return;}
   if(cue.unit){document.querySelector('[data-recruit="'+cue.unit+'"]')?.click();document.getElementById('field').scrollIntoView({block:'start',behavior:'smooth'});sync(true);return;}
   if(cue.kind==='blower'||cue.kind==='fence'){window.PlacementControls?.choose(cue.kind);sync(true);return;}
@@ -60,11 +60,11 @@ window.OutpostTutorial=(()=>{
   hand1:[['鋭い刃先','Sharpened tools','锋利刃口'],['採集力 1 → 2：木3打 → 2打','Gathering power 1 → 2: wood 3 hits → 2','采集力1 → 2：木材3次 → 2次']],
   storage1:[['置き場を広げる','Expand storage','扩充存储'],['地面に貯められる資材 240 → 360個','Ground items 12 → 24','地面物资上限 12 → 24个']],
   blower:[['送風機で運ぶ','Transport with wind','用风力搬运'],['落下先に風を当て、矢印を倉庫へ向ける','Cover the drop point with wind; aim toward the warehouse','让风覆盖掉落点，箭头朝向仓库']],
-  defenders:[['弓兵を1人配置','Place two archers','放置两名弓箭手'],['拠点側の空き地へ配置し、上の陣地選択から出陣しましょう。','Cover the upper road with their range','让射程覆盖上路']],
+  defenders:[['弓兵を1人配置','Place two archers','放置两名弓箭手'],['拠点の空き地へ置くと、攻略地図から出陣できます。','Cover the upper road with their range','让射程覆盖上路']],
   defend:[['敵を迎え撃つ','Defend the camp','守卫营地'],['敵をクリック・Spaceで援護','Click enemies or press Space to help','点击敌人或按空格支援']]
  };
- function goalView(q,cue){if(window.InvasionCore&&cue.kind==='ready')return {title:'北の前哨を選んで出陣',note:'弓兵を配置しました。上の陣地を選び、出陣ボタンを押すと進軍します。',cost:null,button:'北の前哨を選ぶ'};
-  if(cue.basic)return {title:local(labels[cue.kind]),note:'',cost:null,button:''};
+ function goalView(q,cue){if(window.InvasionCore&&cue.kind==='ready')return {title:'北の前哨を選んで出陣',note:'攻略地図で北の前哨を選びます。制圧すれば次の増員に使える木材を採れます。',cost:null,button:'攻略地図を開く'};
+  if(cue.basic)return {title:local(labels[cue.kind]),note:cue.kind==='tap'?'まず木を押し、落ちた丸太を倉庫へ運びます。':'丸太をつかんで小屋へ。納品すると仲間を雇う資材になります。',cost:null,button:''};
   const goal=goals[q.id]||goals.worker,quote=goalQuote(q),placement=cue.kind==='place';const gather=cue.type?(cue.type==='wood'?'木材':'石材')+'を集めよう。落ちた資材を小屋へ運ぶと使えます。':null;
   if(quote?.kind==='recipe')return {title:quote.title[LANG]||quote.title.ja,note:gather||quote.description[LANG]||quote.description.ja,cost:quote.cost,button:local(['ツリーで解放','Unlock in tree','在技能树解锁'])};
   return {title:placement?local(['設置場所を選ぶ','Choose a position','选择放置位置']):local(goal[0]),note:gather|| (placement?local(['予告を見ながら好きな場所で放す','Release where the preview works for you','查看预览后，在合适的位置松开']):local(goal[1])),cost:placement?null:quote?.cost,button:q.skill?local(['スキルツリー','Skill tree','技能树']):cue.kind==='blower'?local(['設置する','Place','放置']):local(['雇う','Hire','雇佣'])};

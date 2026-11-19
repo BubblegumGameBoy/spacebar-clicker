@@ -4,3 +4,18 @@ body.territory-build #invasionBoard>.invasion-plans,body.territory-build #invasi
 .territory-threat summary{padding:6px 0;cursor:pointer}
 .territory-threat div{display:flex;flex-wrap:wrap;gap:4px}
 .territory-threat p{margin:4px 0}
+
+.territory-purpose{flex:1;min-width:0;display:grid;gap:2px;line-height:1.25;padding:3px 0}
+.territory-progress{color:#b7d59f;font-size:10px}
+.territory-map-progress,.territory-map-tips{margin:0;font-size:12px}
+.territory-map-progress{color:#c4dca8;font-weight:700}
+.territory-map-tips{color:#d4ccb0}
+.territory-map-sites{grid-template-columns:1fr;min-height:0;flex:none}
+.territory-archive{overflow:auto;min-height:0;max-height:40dvh}
+.territory-archive summary{padding:8px 0;cursor:pointer}
+.territory-archive canvas{display:block;width:100%;max-height:19dvh;object-fit:contain;background:#203d2f}
+.territory-map-archive{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:4px}
+.territory-map-archive section{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:#283a2c;padding:4px}
+.territory-map-archive section b{grid-column:1/-1;font-size:11px}
+.territory-map-archive button{font-size:11px}
+@media(max-width:600px){.territory-purpose{flex-basis:120px}.territory-archive{max-height:35dvh}}
