@@ -1,6 +1,6 @@
 # Mythos Slayers II — 最小引き継ぎ
 
-更新 2026-11-19 JST。完成版 `20261119-campaign-r1`、ルール `campaign-v20`。まずこのファイルを読む。既存の編集ソースは中身を確認してから使う。
+更新 2026-11-19 JST。完成版 `20261119-campaign-r2`、ルール `campaign-v20`。まずこのファイルを読む。既存の編集ソースは中身を確認してから使う。
 
 プレイヤーの目的は「黄昏の王を倒し、街道を取り戻す」。タイトルで目的を示し、拠点の上部で解放地域数と次の行動を伝える。最初は木と石を納めて弓兵を雇い、攻略地図から出陣する。地図は現在の地域を優先し、過去の領地と全体図を折りたたむ。初制圧後は次の攻略先と資材採集を選べる。各地域の二つの前哨を落とすと城に挑める。最後の城を落としたら、10地域の解放と小屋から育てた拠点を結末で振り返る。結末はクリア後に再表示できる。
 
@@ -16,6 +16,6 @@
 - 編集用の `2/`、追加のtest/toolsは `python -X utf8 tools/package_sequel_source.py` で両アーカイブに同期し、内容を検証する。QA出力はリポジトリ外。生セーブ・プレイヤーIDは公開しない。
 - 公開対象は元ゲームと別の `preview/` と引き継ぎ用の `dev/`。新しい城のPNGは無視対象なので `preview/media/territory-castle-v1.png` を個別にステージする。
 
-完成版URL https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261119-campaign-r1&slot=campaign
+完成版URL https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261119-campaign-r2&slot=campaign
 
-公開確認済み。Pages run 44494855194が成功し、更新8ファイルの一致、公開3画面サイズでの起動・攻略地図・研究を確認した。
+完成レビューでは、撤退・敗退のあとに同じ陣地を選び直し、小屋の編成へ直接進めるよう修正。攻略地図のMでの開閉と、戦場のボタンにフォーカスした時のSpace操作も直した。レビューと公開の証跡は `dev/CAMPAIGN_REVIEW.json`。
