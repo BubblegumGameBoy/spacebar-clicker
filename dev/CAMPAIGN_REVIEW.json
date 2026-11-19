@@ -322,7 +322,135 @@
     "failed": 0
   },
   "publication": {
-    "status": "pending"
+    "status": "verified",
+    "workflow": 44498314548,
+    "commit": "ba77a4bb0f8992d44a50c8f185a384c1149adb5e",
+    "url": "https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261119-campaign-r2&slot=campaign",
+    "files": [
+      {
+        "path": "preview/build.json",
+        "matches": true,
+        "sha256": "a003526d57fd148b02377d38a519a43e8091d29cf5c340ad0997e910fad573db"
+      },
+      {
+        "path": "preview/index.html",
+        "matches": true,
+        "sha256": "5f84e5a69289179100ac3b46325b16d46882ae65080bfd9f03fbcbf8c3bf115b"
+      },
+      {
+        "path": "preview/inventory-ui.js",
+        "matches": true,
+        "sha256": "e3617a239dc84048729f0928b2528dc7d713241142c3e5207deff69d88f43f72"
+      },
+      {
+        "path": "preview/territory-ui.js",
+        "matches": true,
+        "sha256": "91f6efa2a02159c872715bfc2d852e172f571928769967342befe61227c66a8f"
+      }
+    ],
+    "opening": {
+      "fixture": false,
+      "grants": false,
+      "freshIsolatedContexts": true,
+      "rows": [
+        {
+          "width": 1280,
+          "height": 900,
+          "input": "mouse",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 390,
+          "height": 844,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        },
+        {
+          "width": 844,
+          "height": 390,
+          "input": "CDP touch",
+          "scene": "home",
+          "travel": null,
+          "phase": "idle",
+          "conquered": [],
+          "stock": {
+            "wood": 0,
+            "stone": 0
+          },
+          "people": 0,
+          "slots": [
+            "hand",
+            "blower",
+            "broom",
+            "belt",
+            "fence",
+            "hopper",
+            "platform",
+            "loader",
+            "magnet"
+          ],
+          "overflow": false,
+          "canvasTop": 77,
+          "viewportTop": 77,
+          "backgroundParent": "battleWorld",
+          "castleLoaded": true,
+          "errors": [],
+          "passed": true
+        }
+      ]
+    }
   },
   "native_recovery": {
     "scenarios": [

@@ -19,3 +19,5 @@
 完成版URL https://play.bubblegumgameboy.com/spacebar-clicker/preview/?v=20261119-campaign-r2&slot=campaign
 
 完成レビューでは、撤退・敗退のあとに同じ陣地を選び直し、小屋の編成へ直接進めるよう修正。攻略地図のMでの開閉と、戦場のボタンにフォーカスした時のSpace操作も直した。レビューと公開の証跡は `dev/CAMPAIGN_REVIEW.json`。
+
+Pages run 44498314548で公開。更新4ファイルの一致、公開3画面サイズで起動・攻略地図・研究を確認。
